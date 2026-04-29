@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GOalign</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #F7F8FA;
+      --surface:  #FFFFFF;
+      --border:   #E4E7EC;
+      --text-1:   #101828;
+      --text-2:   #475467;
+      --text-3:   #98A2B3;
+      --accent:   #0597F2;
+      --accent-2: #E0F3FE;
+      --r-sm: 8px;
+      --r-md: 12px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ──────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+    }
+    .nav-logo {
+      font-size: 15px; font-weight: 800; letter-spacing: -0.4px;
+      color: var(--text-1); cursor: pointer; user-select: none;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .nav-logomark { flex-shrink: 0; display: flex; }
+    .nav-right { display: flex; align-items: center; gap: 6px; }
+    .nav-link {
+      font-size: 13px; font-weight: 500; color: var(--text-2);
+      cursor: pointer; padding: 6px 12px; border-radius: var(--r-sm);
+      background: none; border: none; font-family: inherit;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-link:hover { color: var(--text-1); background: var(--bg); }
+
+    /* ── SHARED BUTTONS ───────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--r-sm);
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; border: none;
+      transition: background 0.15s, transform 0.1s;
+      font-family: inherit; white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #0480CE; }
+    .btn-ghost { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: var(--bg); }
+    .btn-danger { background: transparent; color: #D92D20; border: 1px solid #FECDCA; }
+    .btn-danger:hover { background: #FEF3F2; }
+
+    /* ── PAGES ────────────────────────────────────── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── TYPE BADGES ──────────────────────────────── */
+    .type-badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.2px;
+    }
+    .badge-External   { background: #EBF8FF; color: #0597F2; }
+    .badge-Internship { background: #E3F4FD; color: #0480CE; }
+    .badge-Project    { background: #DCF0FC; color: #0369A1; }
+    .badge-Club       { background: #D4ECFB; color: #035F9B; }
+
+
+    /* ════════════════════════════════════════════════
+       LANDING PAGE
+    ════════════════════════════════════════════════ */
+    .lp-wrap { background: #fff; }
+    .lp-container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* — Hero — */
+    .lp-hero {
+      padding: 104px 0 96px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+    }
+    .lp-hero::after {
+      content: '';
+      position: absolute; top: -160px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(5,151,242,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .lp-eyebrow {
+      display: inline-block;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.3px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-2); padding: 4px 14px;
+      border-radius: 999px; margin-bottom: 26px;
+    }
+    .lp-h1 {
+      font-size: 52px; font-weight: 800; letter-spacing: -1.4px;
+      line-height: 1.13; color: var(--text-1);
+      max-width: 780px; margin: 0 auto 22px;
+    }
+    .lp-h1 em { font-style: normal; color: var(--accent); }
+    .lp-hero-sub {
+      font-size: 17px; color: var(--text-2); line-height: 1.7;
+      max-width: 500px; margin: 0 auto 40px;
+    }
+    .lp-hero-actions {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .btn-lg {
+      padding: 13px 28px; font-size: 14px; border-radius: 10px;
+    }
+    .btn-lg-outline {
+      padding: 13px 28px; font-size: 14px; font-weight: 600;
+      border-radius: 10px; background: transparent;
+      color: var(--text-2); border: 1px solid var(--border);
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .btn-lg-outline:hover { background: var(--bg); }
+
+    /* — Section base — */
+    .lp-section {
+      padding: 88px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .lp-section-alt { background: var(--bg); }
+    .lp-eyebrow-sm {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .lp-h2 {
+      font-size: 34px; font-weight: 800; letter-spacing: -0.7px;
+      line-height: 1.2; color: var(--text-1); margin-bottom: 44px;
+    }
+    .lp-body {
+      font-size: 15px; color: var(--text-2); line-height: 1.8;
+    }
+
+    /* — Problem — */
+    .lp-problem-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .lp-problem-card {
+      background: var(--surface); border-radius: var(--r-md);
+      padding: 28px 24px; border: 1px solid var(--border);
+    }
+    .lp-num {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      color: var(--accent); margin-bottom: 14px;
+    }
+    .lp-problem-card p { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+
+    /* — Solution — */
+    .lp-solution-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .lp-solution-grid .lp-h2 { margin-bottom: 18px; }
+    .lp-pdca-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .lp-pdca-block {
+      border-radius: var(--r-md); padding: 22px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .lp-pdca-block-label {
+      font-size: 13px; font-weight: 600; color: var(--text-1);
+    }
+    .lp-pdca-pill {
+      width: 34px; height: 34px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; color: #fff;
+    }
+    .pdca-bl-p { background: rgba(27,79,216,0.1); }
+    .pdca-bl-p .lp-pdca-pill { background: #1B4FD8; }
+    .pdca-bl-d { background: rgba(29,185,84,0.1); }
+    .pdca-bl-d .lp-pdca-pill { background: #1DB954; }
+    .pdca-bl-c { background: rgba(255,107,53,0.1); }
+    .pdca-bl-c .lp-pdca-pill { background: #FF6B35; }
+    .pdca-bl-a { background: rgba(124,58,237,0.1); }
+    .pdca-bl-a .lp-pdca-pill { background: #7C3AED; }
+
+    /* — How it Works — */
+    .lp-steps {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: start; gap: 0;
+    }
+    .lp-step {
+      background: var(--surface); border-radius: var(--r-md);
+      padding: 28px 24px; border: 1px solid var(--border);
+    }
+    .lp-step-arrow {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 14px; padding-top: 34px;
+      color: var(--text-3); font-size: 20px; line-height: 1;
+    }
+    .lp-step-title {
+      font-size: 16px; font-weight: 700; letter-spacing: -0.2px;
+      color: var(--text-1); margin-bottom: 10px; margin-top: 12px;
+    }
+    .lp-step-desc { font-size: 13px; color: var(--text-2); line-height: 1.7; }
+
+    /* — Target — */
+    .lp-target-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+    }
+    .lp-target-card {
+      background: var(--surface); border-radius: var(--r-md);
+      padding: 28px 24px; border: 1px solid var(--border);
+    }
+    .lp-target-icon { margin-bottom: 16px; }
+    .lp-target-title {
+      font-size: 15px; font-weight: 700; letter-spacing: -0.2px;
+      color: var(--text-1); margin-bottom: 8px;
+    }
+    .lp-target-desc { font-size: 13px; color: var(--text-2); line-height: 1.7; }
+
+    /* — Final CTA — */
+    .lp-cta-band {
+      background: #0B0F19;
+      padding: 88px 0;
+      text-align: center;
+    }
+    .lp-cta-band h2 {
+      font-size: 38px; font-weight: 800; letter-spacing: -0.8px;
+      line-height: 1.2; color: #fff; margin-bottom: 14px;
+    }
+    .lp-cta-band p {
+      font-size: 15px; color: #6B7280; margin-bottom: 34px;
+    }
+    .btn-cta-band {
+      background: var(--accent); color: #fff;
+      padding: 14px 32px; font-size: 14px; font-weight: 700;
+      border-radius: 10px; border: none; cursor: pointer;
+      font-family: inherit; transition: background 0.15s, transform 0.1s;
+    }
+    .btn-cta-band:hover { background: #0480CE; }
+    .btn-cta-band:active { transform: scale(0.97); }
+    .lp-email-form {
+      display: flex; align-items: center; gap: 10px;
+      max-width: 460px; margin: 0 auto;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .lp-email-input {
+      flex: 1; min-width: 220px;
+      padding: 13px 16px; border-radius: 10px;
+      border: 1px solid #2D3748; background: #161B27;
+      color: #fff; font-size: 14px; font-family: inherit;
+      outline: none; transition: border-color 0.15s;
+    }
+    .lp-email-input::placeholder { color: #4A5568; }
+    .lp-email-input:focus { border-color: var(--accent); }
+    .lp-email-thanks {
+      font-size: 16px; font-weight: 600;
+      color: #1DB954; margin-top: 8px;
+    }
+
+    /* — Footer — */
+    .lp-footer {
+      background: #0B0F19; border-top: 1px solid #1C2432;
+      padding: 22px 0;
+    }
+    .lp-footer .lp-container {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .lp-footer-logo { font-size: 13px; font-weight: 700; color: #fff; }
+    .lp-footer-copy { font-size: 12px; color: #374151; }
+
+
+    /* ════════════════════════════════════════════════
+       MAIN PAGE (Archive)
+    ════════════════════════════════════════════════ */
+    .container { max-width: 1040px; margin: 0 auto; padding: 40px 24px; }
+    .page-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+    }
+    .page-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.4px; }
+    .page-header p  { font-size: 13px; color: var(--text-3); margin-top: 4px; }
+
+    .cards-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;
+    }
+    .exp-card {
+      background: var(--surface); border-radius: var(--r-md);
+      padding: 22px 24px; border: 1px solid var(--border);
+      cursor: pointer; display: flex; flex-direction: column;
+      transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .exp-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      border-color: #93D5FA; transform: translateY(-1px);
+    }
+    .card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .card-period-top { font-size: 11px; color: var(--text-3); font-weight: 500; }
+    .card-title { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; line-height: 1.4; margin-bottom: 6px; }
+    .card-role  { font-size: 12px; color: var(--text-2); margin-bottom: 10px; }
+    .card-summary {
+      font-size: 13px; color: var(--text-2); line-height: 1.65; flex: 1;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .card-footer {
+      margin-top: 16px; padding-top: 14px;
+      border-top: 1px solid var(--border); display: flex; gap: 12px;
+    }
+    .pdca-chip { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--text-3); }
+    .pdca-dot  { width: 6px; height: 6px; border-radius: 50%; }
+    .dot-p { background: #1B4FD8; }
+    .dot-d { background: #1DB954; }
+    .dot-c { background: #FF6B35; }
+    .dot-a { background: #7C3AED; }
+
+    .empty-state {
+      grid-column: 1 / -1; display: flex; flex-direction: column;
+      align-items: center; padding: 80px 20px; color: var(--text-3); text-align: center;
+    }
+    .empty-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--border); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 22px; }
+    .empty-state h3 { font-size: 15px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; }
+    .empty-state p  { font-size: 13px; }
+
+
+    /* ════════════════════════════════════════════════
+       FORM PAGE
+    ════════════════════════════════════════════════ */
+    .form-container { max-width: 700px; margin: 0 auto; padding: 40px 24px; }
+    .form-header { margin-bottom: 24px; }
+    .form-header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+    .form-header p  { font-size: 13px; color: var(--text-3); margin-top: 5px; }
+
+    .form-card {
+      background: var(--surface); border-radius: var(--r-md);
+      padding: 24px; border: 1px solid var(--border); margin-bottom: 14px;
+    }
+    .form-card-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-3); margin-bottom: 20px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+    .form-hint { font-size: 11px; color: var(--text-3); margin-bottom: 6px; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 9px 12px;
+      border: 1px solid var(--border); border-radius: var(--r-sm);
+      font-size: 13px; color: var(--text-1); outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      font-family: inherit; background: var(--surface);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--text-3); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(5,151,242,0.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 96px; }
+
+    .pdca-field-label { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+    .pdca-pill {
+      width: 22px; height: 22px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .pill-P { background: #1B4FD8; }
+    .pill-D { background: #1DB954; }
+    .pill-C { background: #FF6B35; }
+    .pill-A { background: #7C3AED; }
+    .form-actions { display: flex; gap: 10px; justify-content: flex-end; padding: 6px 0 24px; }
+
+
+    /* ════════════════════════════════════════════════
+       DETAIL PAGE
+    ════════════════════════════════════════════════ */
+    .detail-container { max-width: 760px; margin: 0 auto; padding: 40px 24px; }
+    .detail-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+
+    .detail-hero {
+      background: var(--surface); border-radius: var(--r-md);
+      padding: 28px 32px; border: 1px solid var(--border); margin-bottom: 14px;
+    }
+    .detail-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .detail-period-text { font-size: 12px; color: var(--text-3); font-weight: 500; }
+    .detail-title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 6px; }
+    .detail-role-text { font-size: 13px; color: var(--text-2); }
+    .detail-role-text strong { color: var(--text-1); font-weight: 600; }
+    .detail-summary { font-size: 14px; color: var(--text-2); line-height: 1.75; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+    .analysis-card {
+      background: var(--surface); border-radius: var(--r-md);
+      padding: 24px; border: 1px solid var(--border);
+      margin-bottom: 14px; position: relative; overflow: hidden;
+    }
+    .analysis-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #38B2F5 0%, #035F9B 100%);
+    }
+    .analysis-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .analysis-title  { font-size: 14px; font-weight: 700; }
+    .analysis-beta   { font-size: 10px; font-weight: 600; color: var(--accent); background: var(--accent-2); padding: 2px 8px; border-radius: 999px; }
+    .analysis-sub    { font-size: 11px; color: var(--text-3); margin-bottom: 18px; }
+    .analysis-row    { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .analysis-box    { background: var(--bg); border-radius: var(--r-sm); padding: 16px; }
+    .analysis-box-label { font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+    .label-strength  { color: #027A48; }
+    .label-improve   { color: #B54708; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+    .tag-strength { background: #ECFDF3; color: #027A48; border: 1px solid #A9EFC5; }
+    .tag-improve  { background: #FFFAEB; color: #B54708; border: 1px solid #FEDF89; }
+
+    .pdca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .pdca-card { background: var(--surface); border-radius: var(--r-md); padding: 22px; border: 1px solid var(--border); }
+    .pdca-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .pdca-card-title { font-size: 14px; font-weight: 700; }
+    .pdca-card-sub   { font-size: 11px; color: var(--text-3); }
+    .pdca-card-body  { font-size: 13px; color: var(--text-2); line-height: 1.75; white-space: pre-wrap; }
+    .pdca-empty { color: var(--text-3); font-style: italic; }
+
+
+    /* ── TOAST ────────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(72px);
+      background: var(--text-1); color: #fff;
+      padding: 10px 20px; border-radius: var(--r-sm);
+      font-size: 13px; font-weight: 500;
+      transition: transform 0.25s cubic-bezier(.22,.68,0,1.2);
+      z-index: 999; pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 820px) {
+      .lp-h1 { font-size: 38px; letter-spacing: -0.8px; }
+      .lp-h2 { font-size: 26px; }
+      .lp-problem-grid { grid-template-columns: 1fr; }
+      .lp-solution-grid { grid-template-columns: 1fr; gap: 36px; }
+      .lp-steps { grid-template-columns: 1fr; }
+      .lp-step-arrow { display: none; }
+      .lp-cta-band h2 { font-size: 28px; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .nav-link { display: none; }
+      .lp-container { padding: 0 16px; }
+      .lp-hero { padding: 64px 0 56px; }
+      .lp-section { padding: 60px 0; }
+      .container, .form-container, .detail-container { padding: 24px 16px; }
+      .form-row { grid-template-columns: 1fr; }
+      .pdca-grid { grid-template-columns: 1fr; }
+      .analysis-row { grid-template-columns: 1fr; }
+      .detail-hero { padding: 22px 20px; }
+      .detail-title { font-size: 20px; }
+      .lp-target-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('landing')">
+    <svg class="nav-logomark" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="28" height="28" rx="7" fill="#0597F2"/>
+      <rect x="6" y="6" width="7" height="7" rx="1.5" fill="white"/>
+      <rect x="6" y="15" width="7" height="7" rx="1.5" fill="white"/>
+      <rect x="15" y="6" width="7" height="7" rx="1.5" fill="white"/>
+      <rect x="19" y="15" width="4" height="4" rx="1" fill="white"/>
+    </svg>
+    GOalign
+  </div>
+  <div class="nav-right">
+    <button class="nav-link" onclick="showPage('main')">My Experiences</button>
+    <button class="btn btn-primary" onclick="showPage('form')">+ Add Experience</button>
+  </div>
+</nav>
+
+
+<!-- ══════════ LANDING PAGE ══════════ -->
+<div id="page-landing" class="page active lp-wrap">
+
+  <!-- Hero -->
+  <section class="lp-hero">
+    <div class="lp-container">
+      <div class="lp-eyebrow">AI-Powered Career Tool</div>
+      <h1 class="lp-h1">
+        75% of resumes never reach a human.<br>
+        Not from lack of experience —<br>
+        but <em>the wrong language</em>.
+      </h1>
+      <p class="lp-hero-sub">
+        GOalign uses AI to restructure your experience through the PDCA framework
+        and extract the exact keywords companies are looking for.
+      </p>
+      <div class="lp-hero-actions">
+        <button class="btn btn-primary btn-lg" onclick="showPage('form')">
+          Start Structuring My Experience
+        </button>
+        <button class="btn-lg-outline" onclick="showPage('main')">
+          View My Archive
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="lp-section">
+    <div class="lp-container">
+      <div class="lp-eyebrow-sm">The Problem</div>
+      <h2 class="lp-h2">You have the experience.<br>The ATS just can't read it.</h2>
+      <div class="lp-problem-grid">
+        <div class="lp-problem-card">
+          <div class="lp-num">01</div>
+          <p>Most applicants have solid experience — internships, projects, clubs — but write about it in the wrong language for the role they're targeting.</p>
+        </div>
+        <div class="lp-problem-card">
+          <div class="lp-num">02</div>
+          <p>ATS systems scan for specific keywords from job descriptions. If your resume doesn't match, it never reaches a recruiter — regardless of your actual qualifications.</p>
+        </div>
+        <div class="lp-problem-card">
+          <div class="lp-num">03</div>
+          <p>The gap isn't ability. It's translation. You need to reframe what you've done in the language of what companies are hiring for.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution -->
+  <section class="lp-section lp-section-alt">
+    <div class="lp-container">
+      <div class="lp-solution-grid">
+        <div>
+          <div class="lp-eyebrow-sm">The Solution</div>
+          <h2 class="lp-h2">Reinterpret your experience<br>from 3 angles.</h2>
+          <p class="lp-body">
+            GOalign structures your experience through the PDCA framework,
+            then reinterprets it from three perspectives — <strong>job function,
+            industry, and role</strong> — to surface the precise keywords
+            recruiters and ATS systems are scanning for.
+          </p>
+        </div>
+        <div class="lp-pdca-grid">
+          <div class="lp-pdca-block pdca-bl-p">
+            <div class="lp-pdca-pill">P</div>
+            <div class="lp-pdca-block-label">Plan</div>
+          </div>
+          <div class="lp-pdca-block pdca-bl-d">
+            <div class="lp-pdca-pill">D</div>
+            <div class="lp-pdca-block-label">Do</div>
+          </div>
+          <div class="lp-pdca-block pdca-bl-c">
+            <div class="lp-pdca-pill">C</div>
+            <div class="lp-pdca-block-label">Check</div>
+          </div>
+          <div class="lp-pdca-block pdca-bl-a">
+            <div class="lp-pdca-pill">A</div>
+            <div class="lp-pdca-block-label">Act</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section class="lp-section">
+    <div class="lp-container">
+      <div class="lp-eyebrow-sm">How It Works</div>
+      <h2 class="lp-h2">Three steps to passing the ATS<br>and landing the interview.</h2>
+      <div class="lp-steps">
+        <div class="lp-step">
+          <div class="lp-num">01</div>
+          <div class="lp-step-title">Input</div>
+          <div class="lp-step-desc">Enter your experience using the PDCA structure. Guided prompts help you capture goals, actions, results, and learnings — the details that matter most.</div>
+        </div>
+        <div class="lp-step-arrow">→</div>
+        <div class="lp-step">
+          <div class="lp-num">02</div>
+          <div class="lp-step-title">Analyze</div>
+          <div class="lp-step-desc">AI extracts keywords from three perspectives: job function, industry context, and target role — giving you a multi-angle view of your experience's value.</div>
+        </div>
+        <div class="lp-step-arrow">→</div>
+        <div class="lp-step">
+          <div class="lp-num">03</div>
+          <div class="lp-step-title">Match</div>
+          <div class="lp-step-desc">Paste the target job description to get a fit score and a prioritized improvement guide — so you know exactly what to highlight for each application.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Target -->
+  <section class="lp-section lp-section-alt">
+    <div class="lp-container">
+      <div class="lp-eyebrow-sm">Who It's For</div>
+      <h2 class="lp-h2">Built for students and entry-level<br>job seekers in the US market.</h2>
+      <div class="lp-target-grid">
+        <div class="lp-target-card">
+          <div class="lp-target-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0597F2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+          <div class="lp-target-title">The Overlooked Achiever</div>
+          <div class="lp-target-desc">Has the experience, but keeps getting filtered out before a human even reads their resume.</div>
+        </div>
+        <div class="lp-target-card">
+          <div class="lp-target-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0597F2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 16V4m0 0L3 8m4-4l4 4"/>
+              <path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+            </svg>
+          </div>
+          <div class="lp-target-title">The Career Pivoter</div>
+          <div class="lp-target-desc">Switching roles or industries — with transferable skills that don't map neatly to a new job title.</div>
+        </div>
+        <div class="lp-target-card">
+          <div class="lp-target-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0597F2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18"/>
+              <path d="M12 3c-2.5 2.5-3.5 5.5-3.5 9s1 6.5 3.5 9"/>
+              <path d="M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9"/>
+            </svg>
+          </div>
+          <div class="lp-target-title">The International Applicant</div>
+          <div class="lp-target-desc">Navigating cultural and language gaps to align their background with US hiring expectations.</div>
+        </div>
+        <div class="lp-target-card">
+          <div class="lp-target-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0597F2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 1l4 4-4 4"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <path d="M7 23l-4-4 4-4"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+          </div>
+          <div class="lp-target-title">The Repeat Applicant</div>
+          <div class="lp-target-desc">Applying to dozens of roles with the same resume — without knowing what's actually causing the rejections.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Band -->
+  <section class="lp-cta-band">
+    <div class="lp-container">
+      <h2>Your experience is already there.<br>Let's make it readable.</h2>
+      <p>Be the first to know when we launch.</p>
+      <div class="lp-email-form" id="lp-email-form">
+        <input type="email" id="lp-email-input" class="lp-email-input"
+          placeholder="Enter your email address"
+          onkeydown="if(event.key==='Enter') submitEmail()">
+        <button class="btn-cta-band" onclick="submitEmail()">Get Early Access</button>
+      </div>
+      <div class="lp-email-thanks" id="lp-email-thanks" style="display:none;">
+        Thank you! We'll be in touch.
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="lp-footer">
+    <div class="lp-container">
+      <span class="lp-footer-logo">GOalign</span>
+      <span class="lp-footer-copy">© 2026. All rights reserved.</span>
+    </div>
+  </footer>
+
+</div>
+
+
+<!-- ══════════ MAIN PAGE ══════════ -->
+<div id="page-main" class="page">
+  <div class="container">
+    <div class="page-header">
+      <div>
+        <h1>My Experiences</h1>
+        <p id="exp-count">Loading...</p>
+      </div>
+    </div>
+    <div class="cards-grid" id="cards-grid"></div>
+  </div>
+</div>
+
+
+<!-- ══════════ FORM PAGE ══════════ -->
+<div id="page-form" class="page">
+  <div class="form-container">
+    <div class="form-header">
+      <h1>Add Experience</h1>
+      <p>Structured with PDCA to make writing applications effortless.</p>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title">Basic Info</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Title *</label>
+          <p class="form-hint">Short name of the activity</p>
+          <input type="text" id="f-name" placeholder="e.g. Marketing Intern at Kakao">
+        </div>
+        <div class="form-group">
+          <label>Type *</label>
+          <p class="form-hint">Select a category</p>
+          <select id="f-type">
+            <option value="">Select type</option>
+            <option value="External">External Activity</option>
+            <option value="Internship">Internship</option>
+            <option value="Project">Project</option>
+            <option value="Club">Club</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Period *</label>
+          <p class="form-hint">Start – End dates</p>
+          <input type="text" id="f-period" placeholder="e.g. Mar 2024 – Aug 2024">
+        </div>
+        <div class="form-group">
+          <label>Role *</label>
+          <p class="form-hint">Your position or title</p>
+          <input type="text" id="f-role" placeholder="e.g. Team Lead, Developer">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>One-line Summary</label>
+        <p class="form-hint">A single sentence shown on the card</p>
+        <input type="text" id="f-summary" placeholder="e.g. Led brand campaign that grew SNS followers by 30%">
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title">PDCA Analysis</div>
+      <div class="form-group">
+        <div class="pdca-field-label">
+          <div class="pdca-pill pill-P">P</div>
+          <label style="margin:0">Plan — Goal &amp; Motivation</label>
+        </div>
+        <p class="form-hint">Why did you join? What were you hoping to achieve?</p>
+        <textarea id="f-plan" placeholder="e.g. I applied to gain hands-on marketing experience and improve my content strategy skills."></textarea>
+      </div>
+      <div class="form-group">
+        <div class="pdca-field-label">
+          <div class="pdca-pill pill-D">D</div>
+          <label style="margin:0">Do — Actions &amp; Execution</label>
+        </div>
+        <p class="form-hint">What did you actually do? Be specific about your role.</p>
+        <textarea id="f-do" placeholder="e.g. Built a weekly content calendar, managed Instagram feed planning, and ran monthly campaigns."></textarea>
+      </div>
+      <div class="form-group">
+        <div class="pdca-field-label">
+          <div class="pdca-pill pill-C">C</div>
+          <label style="margin:0">Check — Results &amp; Feedback</label>
+        </div>
+        <p class="form-hint">What were the outcomes? Numbers make it stronger.</p>
+        <textarea id="f-check" placeholder="e.g. Average post likes grew from 150 to 320. Received positive feedback from the mentor."></textarea>
+      </div>
+      <div class="form-group">
+        <div class="pdca-field-label">
+          <div class="pdca-pill pill-A">A</div>
+          <label style="margin:0">Act — Learnings &amp; Growth</label>
+        </div>
+        <p class="form-hint">What did you learn? How will you apply it next time?</p>
+        <textarea id="f-act" placeholder="e.g. Learned the value of data-driven decisions. Next time, I'll define KPIs more clearly at the outset."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="showPage('main')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveExperience()">Save Experience</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ DETAIL PAGE ══════════ -->
+<div id="page-detail" class="page">
+  <div class="detail-container">
+    <div class="detail-nav">
+      <button class="btn btn-ghost" onclick="showPage('main')">← Back</button>
+      <button class="btn btn-danger" onclick="deleteExperience()">Delete</button>
+    </div>
+
+    <div class="detail-hero">
+      <div class="detail-meta">
+        <span class="type-badge" id="d-type-badge"></span>
+        <span class="detail-period-text" id="d-period"></span>
+      </div>
+      <div class="detail-title" id="d-title"></div>
+      <div class="detail-role-text">Role &nbsp;·&nbsp; <strong id="d-role"></strong></div>
+      <div class="detail-summary" id="d-summary"></div>
+    </div>
+
+    <div class="analysis-card">
+      <div class="analysis-header">
+        <div class="analysis-title">AI Analysis</div>
+        <span class="analysis-beta">Beta</span>
+      </div>
+      <div class="analysis-sub">Sample analysis — full AI integration coming soon.</div>
+      <div class="analysis-row">
+        <div class="analysis-box">
+          <div class="analysis-box-label label-strength">Strengths</div>
+          <div class="tag-list" id="d-strengths"></div>
+        </div>
+        <div class="analysis-box">
+          <div class="analysis-box-label label-improve">Areas to Improve</div>
+          <div class="tag-list" id="d-improvements"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdca-grid">
+      <div class="pdca-card">
+        <div class="pdca-card-head">
+          <div class="pdca-pill pill-P">P</div>
+          <div><div class="pdca-card-title">Plan</div><div class="pdca-card-sub">Goal &amp; Motivation</div></div>
+        </div>
+        <div class="pdca-card-body" id="d-plan"></div>
+      </div>
+      <div class="pdca-card">
+        <div class="pdca-card-head">
+          <div class="pdca-pill pill-D">D</div>
+          <div><div class="pdca-card-title">Do</div><div class="pdca-card-sub">Actions &amp; Execution</div></div>
+        </div>
+        <div class="pdca-card-body" id="d-do"></div>
+      </div>
+      <div class="pdca-card">
+        <div class="pdca-card-head">
+          <div class="pdca-pill pill-C">C</div>
+          <div><div class="pdca-card-title">Check</div><div class="pdca-card-sub">Results &amp; Feedback</div></div>
+        </div>
+        <div class="pdca-card-body" id="d-check"></div>
+      </div>
+      <div class="pdca-card">
+        <div class="pdca-card-head">
+          <div class="pdca-pill pill-A">A</div>
+          <div><div class="pdca-card-title">Act</div><div class="pdca-card-sub">Learnings &amp; Growth</div></div>
+        </div>
+        <div class="pdca-card-body" id="d-act"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const STORAGE_KEY = 'exp_archive_v1';
+  let currentDetailId = null;
+
+  const SAMPLE_DATA = [
+    {
+      id: 'sample_1',
+      name: 'Marketing Intern — WithCompany',
+      type: 'Internship',
+      period: 'Mar 2024 – Aug 2024',
+      role: 'Growth Marketing Intern',
+      summary: 'Built SNS content strategy that grew Instagram followers by 40% and improved ad conversion rate',
+      plan: 'I joined to gain real marketing experience before my full-time job search.\n\nMy goal was to apply SNS marketing and data analysis skills to a live product and learn how to measure content performance.',
+      do: 'Planned and published Instagram & blog content (3×/week), ran A/B tests on Meta ad campaigns, and wrote weekly traffic analysis reports using Google Analytics.\n\nAlso produced competitive benchmarking decks and presented them at strategy meetings.',
+      check: 'Instagram followers grew from 2,300 → 3,220 (~40%) during the internship.\n\nCTR on my campaigns improved by 1.8% vs. baseline, and I received a return offer from my manager.',
+      act: 'I developed a habit of backing every decision with data.\n\nI also recognized a gap in budget management skills, which led me to earn a Google Ads certification afterwards. Next time, I will define KPIs more precisely upfront.',
+      strengths: ['Strategic Thinking', 'Data Analysis', 'Execution', 'Self-Direction'],
+      improvements: ['Quantifying Impact', 'Budget Management Experience']
+    },
+    {
+      id: 'sample_2',
+      name: 'SOPT Campus Startup Club — Planning Team',
+      type: 'Club',
+      period: 'Mar 2023 – Dec 2023',
+      role: 'Planning Member → Team Lead',
+      summary: 'Led app service planning and redefined core features after conducting 20 user interviews',
+      plan: 'I wanted hands-on product planning experience and to learn how to collaborate with designers and developers.\n\nSpecifically, I aimed to go through the full product cycle: problem definition → solution design → validation.',
+      do: 'Conducted in-depth interviews with 20 target users and synthesized insights to reprioritize features.\n\nWrote wireframes and feature specs, facilitated bi-weekly syncs with the dev team, and took over as Team Lead in the second semester, managing 6 members.',
+      check: 'Successfully launched an iOS app within 6 months and acquired 500 early users.\n\nUser-interview-driven features received qualitative feedback for contributing to improved retention.',
+      act: 'I deeply felt the importance of hypothesis-driven planning.\n\nIn future projects, I will set quantitative success metrics (DAU, retention) before launch to measure outcomes more clearly.',
+      strengths: ['Leadership', 'User Research', 'Documentation', 'Cross-functional Collaboration'],
+      improvements: ['Quantifying Outcomes', 'Post-launch Metric Tracking']
+    }
+  ];
+
+  function loadData() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_DATA));
+      return SAMPLE_DATA;
+    }
+    try { return JSON.parse(raw); }
+    catch(e) { return SAMPLE_DATA; }
+  }
+
+  function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    if (page === 'main') renderCards();
+    if (page === 'form') clearForm();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderCards() {
+    const data  = loadData();
+    const grid  = document.getElementById('cards-grid');
+    const count = document.getElementById('exp-count');
+
+    count.textContent = `${data.length} experience${data.length !== 1 ? 's' : ''} saved`;
+
+    if (data.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📂</div>
+          <h3>No experiences yet</h3>
+          <p>Click "Add Experience" to log your first one.</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = data.map(exp => `
+      <div class="exp-card" onclick="showDetail('${exp.id}')">
+        <div class="card-top">
+          <span class="type-badge badge-${exp.type}">${exp.type}</span>
+          <span class="card-period-top">${escHtml(exp.period)}</span>
+        </div>
+        <div class="card-title">${escHtml(exp.name)}</div>
+        <div class="card-role">${escHtml(exp.role)}</div>
+        <div class="card-summary">${escHtml(exp.summary || 'No summary provided.')}</div>
+        <div class="card-footer">
+          <span class="pdca-chip"><span class="pdca-dot dot-p"></span>Plan</span>
+          <span class="pdca-chip"><span class="pdca-dot dot-d"></span>Do</span>
+          <span class="pdca-chip"><span class="pdca-dot dot-c"></span>Check</span>
+          <span class="pdca-chip"><span class="pdca-dot dot-a"></span>Act</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function showDetail(id) {
+    const data = loadData();
+    const exp  = data.find(e => e.id === id);
+    if (!exp) return;
+
+    currentDetailId = id;
+
+    document.getElementById('d-type-badge').textContent = exp.type;
+    document.getElementById('d-type-badge').className   = `type-badge badge-${exp.type}`;
+    document.getElementById('d-period').textContent     = exp.period;
+    document.getElementById('d-title').textContent      = exp.name;
+    document.getElementById('d-role').textContent       = exp.role;
+    document.getElementById('d-summary').textContent    = exp.summary || '';
+
+    const set = (elId, val) => {
+      const el = document.getElementById(elId);
+      if (val && val.trim()) {
+        el.textContent = val;
+        el.classList.remove('pdca-empty');
+      } else {
+        el.textContent = 'Nothing written yet.';
+        el.classList.add('pdca-empty');
+      }
+    };
+    set('d-plan',  exp.plan);
+    set('d-do',    exp.do);
+    set('d-check', exp.check);
+    set('d-act',   exp.act);
+
+    const strengths    = exp.strengths    || ['Planning', 'Execution', 'Teamwork'];
+    const improvements = exp.improvements || ['Quantifying outcomes'];
+
+    document.getElementById('d-strengths').innerHTML =
+      strengths.map(k => `<span class="tag tag-strength">${escHtml(k)}</span>`).join('');
+    document.getElementById('d-improvements').innerHTML =
+      improvements.map(k => `<span class="tag tag-improve">${escHtml(k)}</span>`).join('');
+
+    showPage('detail');
+  }
+
+  function clearForm() {
+    ['f-name','f-type','f-period','f-role','f-summary','f-plan','f-do','f-check','f-act']
+      .forEach(id => { document.getElementById(id).value = ''; });
+  }
+
+  function saveExperience() {
+    const name   = document.getElementById('f-name').value.trim();
+    const type   = document.getElementById('f-type').value;
+    const period = document.getElementById('f-period').value.trim();
+    const role   = document.getElementById('f-role').value.trim();
+
+    if (!name || !type || !period || !role) {
+      showToast('Please fill in all required fields.');
+      return;
+    }
+
+    const newExp = {
+      id: 'exp_' + Date.now(),
+      name, type, period, role,
+      summary:      document.getElementById('f-summary').value.trim(),
+      plan:         document.getElementById('f-plan').value.trim(),
+      do:           document.getElementById('f-do').value.trim(),
+      check:        document.getElementById('f-check').value.trim(),
+      act:          document.getElementById('f-act').value.trim(),
+      strengths:    ['Planning', 'Execution', 'Teamwork'],
+      improvements: ['Quantifying outcomes', 'Add specific numbers']
+    };
+
+    const data = loadData();
+    data.unshift(newExp);
+    saveData(data);
+    showToast('Experience saved!');
+    showPage('main');
+  }
+
+  function deleteExperience() {
+    if (!confirm('Delete this experience? This cannot be undone.')) return;
+    const data = loadData().filter(e => e.id !== currentDetailId);
+    saveData(data);
+    showToast('Experience deleted.');
+    showPage('main');
+  }
+
+  function submitEmail() {
+    const email = document.getElementById('lp-email-input').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('lp-email-input').focus();
+      return;
+    }
+    document.getElementById('lp-email-form').style.display = 'none';
+    document.getElementById('lp-email-thanks').style.display = 'block';
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  renderCards();
+</script>
+</body>
+</html>
