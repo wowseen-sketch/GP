@@ -1067,14 +1067,36 @@
     showPage('main');
   }
 
-  function submitEmail() {
+  async function submitEmail() {
     const email = document.getElementById('lp-email-input').value.trim();
     if (!email || !email.includes('@')) {
       document.getElementById('lp-email-input').focus();
       return;
     }
-    document.getElementById('lp-email-form').style.display = 'none';
-    document.getElementById('lp-email-thanks').style.display = 'block';
+    const SUPABASE_URL = 'https://ovrcmolacpcjsghqgxlb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_gGI6ImU-4BHVdXRk7tTahA_g_zhi6st';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email })
+      });
+      if (res.status === 409) {
+        document.getElementById('lp-email-form').style.display = 'none';
+        document.getElementById('lp-email-thanks').style.display = 'block';
+        document.getElementById('lp-email-thanks').textContent = "You're already on the list!";
+        return;
+      }
+      document.getElementById('lp-email-form').style.display = 'none';
+      document.getElementById('lp-email-thanks').style.display = 'block';
+    } catch(e) {
+      showToast('Something went wrong. Please try again.');
+    }
   }
 
   function showToast(msg) {
