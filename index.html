@@ -218,11 +218,12 @@
     .lp-steps {
       display: grid;
       grid-template-columns: 1fr auto 1fr auto 1fr;
-      align-items: start; gap: 0;
+      align-items: stretch; gap: 0;
     }
     .lp-step {
       background: var(--surface); border-radius: var(--r-md);
       padding: 28px 24px; border: 1px solid var(--border);
+      min-height: 180px;
     }
     .lp-step-arrow {
       display: flex; align-items: center; justify-content: center;
@@ -328,8 +329,9 @@
     }
     .card-top {
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 12px;
+      gap: 6px; margin-bottom: 12px;
     }
+    .card-top-left { display: flex; align-items: center; gap: 6px; }
     .card-period-top { font-size: 11px; color: var(--text-3); font-weight: 500; }
     .card-title { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; line-height: 1.4; margin-bottom: 6px; }
     .card-role  { font-size: 12px; color: var(--text-2); margin-bottom: 10px; }
@@ -908,7 +910,8 @@
       check: 'Instagram followers grew from 2,300 → 3,220 (~40%) during the internship.\n\nCTR on my campaigns improved by 1.8% vs. baseline, and I received a return offer from my manager.',
       act: 'I developed a habit of backing every decision with data.\n\nI also recognized a gap in budget management skills, which led me to earn a Google Ads certification afterwards. Next time, I will define KPIs more precisely upfront.',
       strengths: ['Strategic Thinking', 'Data Analysis', 'Execution', 'Self-Direction'],
-      improvements: ['Quantifying Impact', 'Budget Management Experience']
+      improvements: ['Quantifying Impact', 'Budget Management Experience'],
+      isSample: true
     },
     {
       id: 'sample_2',
@@ -922,7 +925,8 @@
       check: 'Successfully launched an iOS app within 6 months and acquired 500 early users.\n\nUser-interview-driven features received qualitative feedback for contributing to improved retention.',
       act: 'I deeply felt the importance of hypothesis-driven planning.\n\nIn future projects, I will set quantitative success metrics (DAU, retention) before launch to measure outcomes more clearly.',
       strengths: ['Leadership', 'User Research', 'Documentation', 'Cross-functional Collaboration'],
-      improvements: ['Quantifying Outcomes', 'Post-launch Metric Tracking']
+      improvements: ['Quantifying Outcomes', 'Post-launch Metric Tracking'],
+      isSample: true
     }
   ];
 
@@ -932,7 +936,14 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_DATA));
       return SAMPLE_DATA;
     }
-    try { return JSON.parse(raw); }
+    try {
+      const parsed = JSON.parse(raw);
+      if (!parsed.some(e => 'isSample' in e)) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_DATA));
+        return SAMPLE_DATA;
+      }
+      return parsed;
+    }
     catch(e) { return SAMPLE_DATA; }
   }
 
@@ -968,7 +979,10 @@
     grid.innerHTML = data.map(exp => `
       <div class="exp-card" onclick="showDetail('${exp.id}')">
         <div class="card-top">
-          <span class="type-badge badge-${exp.type}">${exp.type}</span>
+          <span class="card-top-left">
+            ${exp.isSample ? `<span class="type-badge" style="background:#E5E5E5;color:#666666;font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600">Example</span>` : ''}
+            <span class="type-badge badge-${exp.type}">${exp.type}</span>
+          </span>
           <span class="card-period-top">${escHtml(exp.period)}</span>
         </div>
         <div class="card-title">${escHtml(exp.name)}</div>
