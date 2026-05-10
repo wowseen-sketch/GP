@@ -409,7 +409,45 @@
     .pill-D { background: #1DB954; }
     .pill-C { background: #FF6B35; }
     .pill-A { background: #7C3AED; }
-    .form-actions { display: flex; gap: 10px; justify-content: flex-end; padding: 6px 0 24px; }
+    .form-actions {
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 6px 0 32px;
+    }
+    .form-actions .btn-ghost { align-self: flex-start; }
+    .form-actions .btn-primary { width: 100%; padding: 14px; font-size: 15px; justify-content: center; }
+
+    .pv-loading-wrap {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 65vh; gap: 18px; text-align: center;
+    }
+    .spinner {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 3px solid var(--border); border-top-color: #2563EB;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .pv-loading-text { font-size: 18px; font-weight: 700; color: var(--text-1); }
+    .pv-loading-sub  { font-size: 13px; color: var(--text-3); }
+
+    .pv-result-wrap  { padding-bottom: 60px; }
+    .pv-container    { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+    .pv-nav          { padding: 20px 0 16px; }
+    .pv-hero {
+      background: var(--surface); border-radius: var(--r-md);
+      padding: 24px; margin-bottom: 20px;
+    }
+    .pv-hero-meta    { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .pv-hero-period  { font-size: 13px; color: var(--text-3); }
+    .pv-hero-title   { font-size: 22px; font-weight: 700; color: var(--text-1); margin-bottom: 6px; }
+    .pv-hero-role    { font-size: 13px; color: var(--text-2); margin-bottom: 8px; }
+    .pv-hero-summary { font-size: 14px; color: var(--text-2); }
+    .pv-save-row     { padding: 24px 0 0; }
+    .btn-save-full {
+      width: 100%; padding: 16px; border: none; border-radius: var(--r-sm);
+      background: #2563EB; color: #fff; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: background .15s;
+    }
+    .btn-save-full:hover { background: #1D4ED8; }
 
 
     /* ════════════════════════════════════════════════
@@ -452,6 +490,13 @@
     .tag-strength { background: #ECFDF3; color: #027A48; border: 1px solid #A9EFC5; }
     .tag-improve  { background: #FFFAEB; color: #B54708; border: 1px solid #FEDF89; }
 
+    .pdca-wrapper {
+      border: 1px solid var(--border); border-radius: var(--r-md);
+      overflow: hidden; margin-bottom: 14px;
+    }
+    .pdca-wrapper .pdca-grid { gap: 1px; background: var(--border); margin-bottom: 0; }
+    .pdca-wrapper .pdca-card { border-radius: 0; border: none; display: flex; flex-direction: column; }
+    .pdca-wrapper .pdca-card-body { flex: 1; overflow-y: auto; min-height: 0; }
     .pdca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
     .pdca-card { background: var(--surface); border-radius: var(--r-md); padding: 22px; border: 1px solid var(--border); }
     .pdca-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
@@ -815,7 +860,85 @@
 
     <div class="form-actions">
       <button class="btn btn-ghost" onclick="showPage('main')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveExperience()">Save Experience</button>
+      <button class="btn btn-primary" id="analyze-btn" onclick="analyzeAndPreview()">Analyze &amp; build my block</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ PREVIEW PAGE ══════════ -->
+<div id="page-preview" class="page">
+  <div class="pv-loading-wrap" id="pv-loading">
+    <div class="spinner"></div>
+    <div class="pv-loading-text">Analyzing your experience…</div>
+    <div class="pv-loading-sub">Powered by Groq AI · Usually takes a few seconds</div>
+  </div>
+  <div class="pv-result-wrap" id="pv-result" style="display:none">
+    <div class="pv-container">
+      <div class="pv-nav">
+        <button class="btn btn-ghost" onclick="backToForm()">← Edit</button>
+      </div>
+      <div class="pv-hero">
+        <div class="pv-hero-meta">
+          <span class="type-badge" id="pv-type-badge"></span>
+          <span class="pv-hero-period" id="pv-period"></span>
+        </div>
+        <div class="pv-hero-title" id="pv-title"></div>
+        <div class="pv-hero-role">Role &nbsp;·&nbsp; <strong id="pv-role"></strong></div>
+        <div class="pv-hero-summary" id="pv-summary"></div>
+      </div>
+      <div class="pdca-wrapper">
+        <div class="pdca-grid">
+          <div class="pdca-card">
+            <div class="pdca-card-head">
+              <div class="pdca-pill pill-P">P</div>
+              <div><div class="pdca-card-title">Plan</div><div class="pdca-card-sub">Goal &amp; Motivation</div></div>
+            </div>
+            <div class="pdca-card-body" id="pv-plan"></div>
+          </div>
+          <div class="pdca-card">
+            <div class="pdca-card-head">
+              <div class="pdca-pill pill-D">D</div>
+              <div><div class="pdca-card-title">Do</div><div class="pdca-card-sub">Actions &amp; Execution</div></div>
+            </div>
+            <div class="pdca-card-body" id="pv-do"></div>
+          </div>
+          <div class="pdca-card">
+            <div class="pdca-card-head">
+              <div class="pdca-pill pill-C">C</div>
+              <div><div class="pdca-card-title">Check</div><div class="pdca-card-sub">Results &amp; Feedback</div></div>
+            </div>
+            <div class="pdca-card-body" id="pv-check"></div>
+          </div>
+          <div class="pdca-card">
+            <div class="pdca-card-head">
+              <div class="pdca-pill pill-A">A</div>
+              <div><div class="pdca-card-title">Act</div><div class="pdca-card-sub">Learnings &amp; Growth</div></div>
+            </div>
+            <div class="pdca-card-body" id="pv-act"></div>
+          </div>
+        </div>
+      </div>
+      <div class="analysis-card">
+        <div class="analysis-header">
+          <div class="analysis-title">AI Analysis</div>
+          <span class="analysis-beta">Beta</span>
+        </div>
+        <div class="analysis-sub" id="pv-analysis-sub">Powered by Groq AI</div>
+        <div class="analysis-row">
+          <div class="analysis-box">
+            <div class="analysis-box-label label-strength">Strengths</div>
+            <div class="tag-list" id="pv-strengths"></div>
+          </div>
+          <div class="analysis-box">
+            <div class="analysis-box-label label-improve">Areas to Improve</div>
+            <div class="tag-list" id="pv-improvements"></div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-save-row">
+        <button class="btn-save-full" onclick="saveExperience()">Save this block</button>
+      </div>
     </div>
   </div>
 </div>
@@ -839,12 +962,45 @@
       <div class="detail-summary" id="d-summary"></div>
     </div>
 
+    <div class="pdca-wrapper">
+      <div class="pdca-grid">
+        <div class="pdca-card">
+          <div class="pdca-card-head">
+            <div class="pdca-pill pill-P">P</div>
+            <div><div class="pdca-card-title">Plan</div><div class="pdca-card-sub">Goal &amp; Motivation</div></div>
+          </div>
+          <div class="pdca-card-body" id="d-plan"></div>
+        </div>
+        <div class="pdca-card">
+          <div class="pdca-card-head">
+            <div class="pdca-pill pill-D">D</div>
+            <div><div class="pdca-card-title">Do</div><div class="pdca-card-sub">Actions &amp; Execution</div></div>
+          </div>
+          <div class="pdca-card-body" id="d-do"></div>
+        </div>
+        <div class="pdca-card">
+          <div class="pdca-card-head">
+            <div class="pdca-pill pill-C">C</div>
+            <div><div class="pdca-card-title">Check</div><div class="pdca-card-sub">Results &amp; Feedback</div></div>
+          </div>
+          <div class="pdca-card-body" id="d-check"></div>
+        </div>
+        <div class="pdca-card">
+          <div class="pdca-card-head">
+            <div class="pdca-pill pill-A">A</div>
+            <div><div class="pdca-card-title">Act</div><div class="pdca-card-sub">Learnings &amp; Growth</div></div>
+          </div>
+          <div class="pdca-card-body" id="d-act"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="analysis-card">
       <div class="analysis-header">
         <div class="analysis-title">AI Analysis</div>
         <span class="analysis-beta">Beta</span>
       </div>
-      <div class="analysis-sub">Sample analysis — full AI integration coming soon.</div>
+      <div class="analysis-sub" id="d-analysis-sub">Powered by Groq AI</div>
       <div class="analysis-row">
         <div class="analysis-box">
           <div class="analysis-box-label label-strength">Strengths</div>
@@ -856,37 +1012,6 @@
         </div>
       </div>
     </div>
-
-    <div class="pdca-grid">
-      <div class="pdca-card">
-        <div class="pdca-card-head">
-          <div class="pdca-pill pill-P">P</div>
-          <div><div class="pdca-card-title">Plan</div><div class="pdca-card-sub">Goal &amp; Motivation</div></div>
-        </div>
-        <div class="pdca-card-body" id="d-plan"></div>
-      </div>
-      <div class="pdca-card">
-        <div class="pdca-card-head">
-          <div class="pdca-pill pill-D">D</div>
-          <div><div class="pdca-card-title">Do</div><div class="pdca-card-sub">Actions &amp; Execution</div></div>
-        </div>
-        <div class="pdca-card-body" id="d-do"></div>
-      </div>
-      <div class="pdca-card">
-        <div class="pdca-card-head">
-          <div class="pdca-pill pill-C">C</div>
-          <div><div class="pdca-card-title">Check</div><div class="pdca-card-sub">Results &amp; Feedback</div></div>
-        </div>
-        <div class="pdca-card-body" id="d-check"></div>
-      </div>
-      <div class="pdca-card">
-        <div class="pdca-card-head">
-          <div class="pdca-pill pill-A">A</div>
-          <div><div class="pdca-card-title">Act</div><div class="pdca-card-sub">Learnings &amp; Growth</div></div>
-        </div>
-        <div class="pdca-card-body" id="d-act"></div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -895,7 +1020,23 @@
 
 <script>
   const STORAGE_KEY = 'exp_archive_v1';
+  const SUPABASE_URL = 'https://ovrcmolacpcjsghqgxlb.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
   let currentDetailId = null;
+
+  function showStoredAnalysis(exp) {
+    const strengths    = exp.strength_keywords || exp.strengths    || [];
+    const improvements = exp.gap_keywords      || exp.improvements || [];
+    const sub          = document.getElementById('d-analysis-sub');
+
+    document.getElementById('d-strengths').innerHTML =
+      strengths.length
+        ? strengths.map(k => `<span class="tag tag-strength">${escHtml(k)}</span>`).join('')
+        : '<span style="font-size:.85rem;color:var(--text-3)">No data</span>';
+    document.getElementById('d-improvements').innerHTML =
+      improvements.map(k => `<span class="tag tag-improve">${escHtml(k)}</span>`).join('');
+    if (sub) sub.textContent = 'Powered by Groq AI';
+  }
 
   const SAMPLE_DATA = [
     {
@@ -1027,23 +1168,28 @@
     set('d-check', exp.check);
     set('d-act',   exp.act);
 
-    const strengths    = exp.strengths    || ['Planning', 'Execution', 'Teamwork'];
-    const improvements = exp.improvements || ['Quantifying outcomes'];
-
-    document.getElementById('d-strengths').innerHTML =
-      strengths.map(k => `<span class="tag tag-strength">${escHtml(k)}</span>`).join('');
-    document.getElementById('d-improvements').innerHTML =
-      improvements.map(k => `<span class="tag tag-improve">${escHtml(k)}</span>`).join('');
-
     showPage('detail');
+    equalizeCardHeights('#page-detail');
+    showStoredAnalysis(exp);
   }
 
   function clearForm() {
     ['f-name','f-type','f-period','f-role','f-summary','f-plan','f-do','f-check','f-act']
       .forEach(id => { document.getElementById(id).value = ''; });
+    _pendingExp      = null;
+    _pendingKeywords = null;
   }
 
-  function saveExperience() {
+  function backToForm() {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-form').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  let _pendingExp      = null;
+  let _pendingKeywords = null;
+
+  async function analyzeAndPreview() {
     const name   = document.getElementById('f-name').value.trim();
     const type   = document.getElementById('f-type').value;
     const period = document.getElementById('f-period').value.trim();
@@ -1054,22 +1200,99 @@
       return;
     }
 
-    const newExp = {
+    _pendingExp = {
       id: 'exp_' + Date.now(),
       name, type, period, role,
-      summary:      document.getElementById('f-summary').value.trim(),
-      plan:         document.getElementById('f-plan').value.trim(),
-      do:           document.getElementById('f-do').value.trim(),
-      check:        document.getElementById('f-check').value.trim(),
-      act:          document.getElementById('f-act').value.trim(),
-      strengths:    ['Planning', 'Execution', 'Teamwork'],
-      improvements: ['Quantifying outcomes', 'Add specific numbers']
+      summary: document.getElementById('f-summary').value.trim(),
+      plan:    document.getElementById('f-plan').value.trim(),
+      do:      document.getElementById('f-do').value.trim(),
+      check:   document.getElementById('f-check').value.trim(),
+      act:     document.getElementById('f-act').value.trim(),
+    };
+    _pendingKeywords = null;
+
+    // 로딩 화면으로 전환
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-preview').classList.add('active');
+    document.getElementById('pv-loading').style.display = 'flex';
+    document.getElementById('pv-result').style.display  = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/analyze-experience`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+        },
+        body: JSON.stringify({
+          activity_name: _pendingExp.name,
+          plan:          _pendingExp.plan,
+          do:            _pendingExp.do,
+          check:         _pendingExp.check,
+          action:        _pendingExp.act,
+        }),
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { strength_keywords = [], gap_keywords = [] } = await res.json();
+      _pendingKeywords = { strength_keywords, gap_keywords };
+
+      document.getElementById('pv-strengths').innerHTML =
+        strength_keywords.map(k => `<span class="tag tag-strength">${escHtml(k)}</span>`).join('');
+      document.getElementById('pv-improvements').innerHTML =
+        gap_keywords.map(k => `<span class="tag tag-improve">${escHtml(k)}</span>`).join('');
+      document.getElementById('pv-analysis-sub').textContent = 'Powered by Groq AI';
+
+    } catch (err) {
+      console.error('Analysis failed:', err);
+      _pendingKeywords = { strength_keywords: [], gap_keywords: [] };
+      document.getElementById('pv-strengths').innerHTML =
+        '<span style="font-size:.85rem;color:#888">Analysis unavailable</span>';
+      document.getElementById('pv-improvements').innerHTML = '';
+      document.getElementById('pv-analysis-sub').textContent = 'AI analysis unavailable — you can still save.';
+    }
+
+    // PDCA 읽기 전용 채우기
+    const exp = _pendingExp;
+    document.getElementById('pv-type-badge').textContent = exp.type;
+    document.getElementById('pv-type-badge').className   = `type-badge badge-${exp.type}`;
+    document.getElementById('pv-period').textContent     = exp.period;
+    document.getElementById('pv-title').textContent      = exp.name;
+    document.getElementById('pv-role').textContent       = exp.role;
+    document.getElementById('pv-summary').textContent    = exp.summary || '';
+
+    const setPv = (elId, val) => {
+      const el = document.getElementById(elId);
+      if (val && val.trim()) { el.textContent = val; el.classList.remove('pdca-empty'); }
+      else { el.textContent = 'Nothing written yet.'; el.classList.add('pdca-empty'); }
+    };
+    setPv('pv-plan',  exp.plan);
+    setPv('pv-do',    exp.do);
+    setPv('pv-check', exp.check);
+    setPv('pv-act',   exp.act);
+
+    document.getElementById('pv-loading').style.display = 'none';
+    document.getElementById('pv-result').style.display  = 'block';
+    equalizeCardHeights('#pv-result');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function saveExperience() {
+    if (!_pendingExp) return;
+
+    const newExp = {
+      ..._pendingExp,
+      strength_keywords: _pendingKeywords?.strength_keywords ?? [],
+      gap_keywords:      _pendingKeywords?.gap_keywords      ?? [],
     };
 
     const data = loadData();
     data.unshift(newExp);
     saveData(data);
-    showToast('Experience saved!');
+    _pendingExp      = null;
+    _pendingKeywords = null;
+    showToast('Block saved!');
     showPage('main');
   }
 
@@ -1087,8 +1310,6 @@
       document.getElementById('lp-email-input').focus();
       return;
     }
-    const SUPABASE_URL = 'https://ovrcmolacpcjsghqgxlb.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
         method: 'POST',
@@ -1118,6 +1339,16 @@
     t.textContent = msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  function equalizeCardHeights(wrapperSelector) {
+    const cards = [...document.querySelectorAll(wrapperSelector + ' .pdca-card')];
+    if (!cards.length) return;
+    cards.forEach(c => c.style.height = 'auto');
+    requestAnimationFrame(() => {
+      const max = Math.max(...cards.map(c => c.offsetHeight));
+      cards.forEach(c => c.style.height = max + 'px');
+    });
   }
 
   function escHtml(str) {
