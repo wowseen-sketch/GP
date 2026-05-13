@@ -1,0 +1,2587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>GOalign — Career Matching Platform</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:           #111827;
+    --ink-2:         #374151;
+    --ink-3:         #6B7280;
+    --ink-4:         #9CA3AF;
+    --surface:       #F9FAFB;
+    --surface-2:     #F3F4F6;
+    --surface-3:     #E5E7EB;
+    --white:         #FFFFFF;
+    --accent:        #38BDE0;
+    --accent-2:      #0081DD;
+    --accent-dark:   #0066B8;
+    --accent-light:  #EBF8FF;
+    --accent-mid:    #BAF0FF;
+    --accent-vivid:  #77FFE4;
+    --success:       #059669;
+    --success-light: #F0FDF4;
+    --warn:          #D97706;
+    --warn-light:    #FEFCE8;
+    --danger:        #DC2626;
+    --danger-light:  #FFF1F2;
+    --border:        #E5E7EB;
+    --border-strong: #D1D5DB;
+    --ff-head: 'Pretendard', sans-serif;
+    --ff-mono: 'Pretendard', sans-serif;
+    --r:  8px;
+    --rl: 12px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow:    0 4px 16px rgba(0,0,0,0.08);
+  }
+
+  html, body { width: 100%; min-height: 100vh; background: var(--surface); font-family: var(--ff-head); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+  /* ── PAGE SYSTEM ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; align-items: center;
+    height: 56px; padding: 0 28px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 16px; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.01em; margin-right: 24px; cursor: pointer;
+    text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #0081DD, #38BDE0, #77FFE4);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px;
+  }
+  .nav-breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--ink-3); margin-right: 32px;
+  }
+  .nav-breadcrumb-sep { color: var(--border-strong); }
+  .nav-breadcrumb-current { color: var(--ink); font-weight: 500; }
+  .nav-tabs { display: flex; gap: 2px; flex: 1; }
+  .nav-tab {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 500; letter-spacing: -0.01em;
+    color: var(--ink-3); padding: 6px 14px;
+    border-radius: var(--r); border: none; background: none; cursor: pointer;
+    transition: all 0.15s; text-decoration: none;
+  }
+  .nav-tab i { font-size: 15px; }
+  .nav-tab:hover { color: var(--ink); background: var(--surface-2); }
+  .nav-tab.active { color: var(--accent-2); background: var(--accent-light); }
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .nav-icon-btn {
+    width: 34px; height: 34px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-3); font-size: 16px; cursor: pointer;
+    transition: all 0.12s;
+  }
+  .nav-icon-btn:hover { border-color: var(--border-strong); color: var(--ink); }
+  .nav-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, #0081DD, #38BDE0);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    position: relative;
+  }
+  .nav-avatar-dot {
+    position: absolute; bottom: 1px; right: 1px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #22C55E; border: 2px solid var(--white);
+  }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; padding-top: 56px; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 220px; flex-shrink: 0; background: var(--white);
+    border-right: 1px solid var(--border); padding: 20px 0;
+    position: fixed; top: 56px; left: 0; bottom: 0;
+    overflow-y: auto; z-index: 100;
+  }
+  .sb-section { margin-bottom: 24px; }
+  .sb-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--ink-4); text-transform: uppercase;
+    padding: 0 16px; margin-bottom: 4px;
+  }
+  .sb-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 16px; font-size: 13px; font-weight: 500;
+    color: var(--ink-3); border-left: 2px solid transparent;
+    cursor: pointer; transition: all 0.12s; border-radius: 0;
+  }
+  .sb-item i { font-size: 16px; }
+  .sb-item:hover { background: var(--surface); color: var(--ink); }
+  .sb-item.active { background: var(--accent-light); color: var(--accent-2); border-left-color: var(--accent); font-weight: 600; }
+  .sb-badge {
+    margin-left: auto; font-size: 10px; font-weight: 600;
+    padding: 2px 7px; border-radius: 99px;
+    background: var(--surface-2); color: var(--ink-4);
+  }
+  .sb-badge.blue { background: var(--accent-mid); color: var(--accent-2); }
+  .sb-divider { height: 1px; background: var(--border); margin: 8px 16px 16px; }
+
+  /* ── MAIN ── */
+  .main { margin-left: 220px; flex: 1; min-height: calc(100vh - 56px); display: flex; flex-direction: column; }
+
+  /* ════════════════════════════════════════
+     PAGE 1 · DASHBOARD
+  ════════════════════════════════════════ */
+  .hero {
+    background: var(--white); padding: 56px 56px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--accent); margin-bottom: 8px; text-transform: uppercase;
+  }
+  .hero-title { font-size: 36px; font-weight: 800; color: var(--ink); line-height: 1.2; margin-bottom: 10px; letter-spacing: -0.02em; }
+  .hero-title em { color: var(--accent); font-style: normal; }
+  .hero-sub { font-size: 15px; color: var(--ink-3); line-height: 1.7; max-width: 500px; margin-top: 10px; }
+  .hero-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0; }
+  .hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .hero-date { font-size: 12px; color: var(--ink-4); }
+  .hero-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-3); }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; }
+  .hero-actions { display: flex; gap: 14px; margin-top: 32px; }
+  .btn-blue {
+    font-size: 13px; font-weight: 600; color: #fff;
+    background: linear-gradient(135deg, #0081DD 0%, #38BDE0 60%, #77FFE4 100%);
+    border: none; padding: 9px 20px;
+    border-radius: var(--r); cursor: pointer; transition: opacity 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-blue:hover { opacity: 0.88; }
+  .btn-outline-white {
+    font-size: 13px; font-weight: 500; color: var(--ink-2);
+    background: none; border: 1px solid var(--border-strong);
+    padding: 9px 20px; border-radius: var(--r); cursor: pointer;
+    transition: all 0.12s;
+  }
+  .btn-outline-white:hover { border-color: var(--accent); color: var(--accent); }
+
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(3, 1fr) 2fr;
+    border-top: 1px solid var(--border); margin-top: 28px;
+  }
+  .stat-cell {
+    padding: 20px 24px; background: var(--white);
+    border-right: 1px solid var(--border);
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num { font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 5px; }
+  .stat-num sup { font-size: 13px; color: var(--accent); vertical-align: super; }
+  .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; color: var(--ink-4); text-transform: uppercase; }
+  .stat-delta { display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; font-size: 11px; color: var(--success); font-weight: 500; }
+
+  .home-body { padding: 32px 48px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+
+  .card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--rl); overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+  }
+  .card-title { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink); }
+  .card-title i { font-size: 15px; color: var(--accent); }
+  .card-link { font-size: 12px; font-weight: 500; color: var(--accent); cursor: pointer; }
+  .card-body { padding: 16px 18px; }
+
+  .exp-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .exp-item:last-child { border-bottom: none; }
+  .exp-dot-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; }
+  .exp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .exp-dot.gray { background: var(--surface-3); }
+  .exp-line { width: 1px; flex: 1; background: var(--border); min-height: 20px; }
+  .exp-content { flex: 1; }
+  .exp-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .exp-meta { font-size: 11px; color: var(--ink-4); margin-bottom: 7px; }
+  .exp-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px; font-weight: 500; padding: 3px 9px;
+    border-radius: 99px; border: 1px solid var(--border-strong);
+    color: var(--ink-2); background: var(--surface-2);
+  }
+  .tag.blue { border-color: var(--accent-mid); color: var(--accent-2); background: var(--accent-light); }
+
+  .match-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+  .match-item:last-child { border-bottom: none; }
+  .co-logo { width: 36px; height: 36px; border-radius: var(--r); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .co-info { flex: 1; }
+  .co-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .co-role { font-size: 11px; color: var(--ink-4); margin-top: 2px; }
+  .co-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+  .co-score { font-size: 13px; font-weight: 700; color: var(--success); }
+  .co-score.mid { color: var(--warn); }
+  .score-bar { width: 64px; height: 4px; background: var(--surface-3); border-radius: 99px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #0081DD, #38BDE0); }
+  .score-fill.mid { background: var(--warn); }
+
+  /* ════════════════════════════════════════
+     PAGE 2 · ADD EXPERIENCE
+  ════════════════════════════════════════ */
+  .page-header {
+    background: var(--white);
+    padding: 32px 48px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+  }
+  .page-title {
+    font-size: 24px; font-weight: 800; color: var(--ink);
+    letter-spacing: -0.02em; margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 14px; color: var(--ink-3); line-height: 1.6;
+  }
+  .page-tabs { display: flex; margin-top: 20px; gap: 2px; }
+  .page-tab {
+    font-size: 13px; font-weight: 500; padding: 10px 18px;
+    color: var(--ink-3); cursor: pointer;
+    border-bottom: 2px solid transparent; transition: all 0.15s;
+  }
+  .page-tab.active { color: var(--accent-2); border-bottom-color: var(--accent); }
+  .page-tab:hover { color: var(--ink); }
+
+  .form-body { padding: 32px 40px; max-width: 900px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-full { grid-column: 1 / -1; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--ink-2); text-transform: uppercase;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .form-label-count { font-size: 11px; font-weight: 400; color: var(--ink-4); text-transform: none; letter-spacing: 0; }
+  .form-input {
+    font-family: var(--ff-head); font-size: 13px; color: var(--ink);
+    background: var(--white); border: 1px solid var(--border-strong);
+    border-radius: var(--r); padding: 10px 13px; outline: none;
+    transition: border 0.12s; width: 100%;
+  }
+  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(6,182,212,0.1); }
+  .form-textarea { resize: vertical; min-height: 100px; font-family: var(--ff-head); font-size: 13px; line-height: 1.6; }
+  .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px;
+  }
+  .form-hint { font-size: 11px; color: var(--ink-4); margin-top: 2px; }
+
+  .kw-area {
+    border: 1.5px dashed var(--border-strong); border-radius: var(--r);
+    padding: 10px; min-height: 60px; display: flex; flex-wrap: wrap;
+    gap: 6px; align-items: flex-start; background: var(--surface);
+  }
+  .kw-tag {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 500; padding: 4px 10px;
+    background: var(--accent-light); color: var(--accent-2);
+    border-radius: 99px; border: 1px solid var(--accent-mid);
+  }
+  .kw-tag button { background: none; border: none; cursor: pointer; color: var(--accent-2); font-size: 14px; line-height: 1; padding: 0; margin-left: 2px; }
+
+  .char-count { font-size: 11px; color: var(--ink-4); text-align: right; margin-top: 3px; }
+
+  .impact-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 14px; margin-top: 6px;
+  }
+  .impact-box-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px; }
+  .impact-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .impact-row:last-child { margin-bottom: 0; }
+  .impact-prefix { font-size: 12px; font-weight: 500; color: var(--ink-3); white-space: nowrap; }
+  .impact-input {
+    flex: 1; font-family: var(--ff-head); font-size: 13px; color: var(--ink);
+    background: var(--white); border: 1px solid var(--border-strong);
+    border-radius: var(--r); padding: 8px 11px; outline: none;
+  }
+  .impact-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(6,182,212,0.1); }
+
+  .ai-box {
+    background: var(--ink); border-radius: var(--rl);
+    padding: 16px 20px; margin-top: 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .ai-box-icon { font-size: 22px; color: var(--accent); flex-shrink: 0; }
+  .ai-box-text { flex: 1; }
+  .ai-box-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+  .ai-box-sub { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+  .ai-box-btn {
+    font-size: 12px; font-weight: 600;
+    background: linear-gradient(135deg, #0081DD, #38BDE0, #77FFE4);
+    color: #fff; border: none; padding: 9px 18px;
+    border-radius: var(--r); cursor: pointer; white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .ai-box-btn:hover { opacity: 0.88; }
+
+  .form-section-title {
+    font-size: 13px; font-weight: 600; color: var(--ink);
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    margin-bottom: 18px; margin-top: 28px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .form-section-title i { font-size: 16px; color: var(--accent); }
+
+  .form-actions {
+    display: flex; gap: 8px; margin-top: 28px;
+    padding-top: 20px; border-top: 1px solid var(--border);
+    align-items: center;
+  }
+  .form-actions-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .btn-primary-lg {
+    font-size: 13px; font-weight: 600; color: #fff;
+    background: linear-gradient(135deg, #0081DD 0%, #38BDE0 100%);
+    border: none; padding: 10px 24px;
+    border-radius: var(--r); cursor: pointer; transition: opacity 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-primary-lg:hover { opacity: 0.88; }
+  .btn-secondary-lg {
+    font-size: 13px; font-weight: 500; color: var(--ink-2);
+    background: var(--white); border: 1px solid var(--border-strong);
+    padding: 10px 20px; border-radius: var(--r); cursor: pointer;
+    transition: all 0.12s;
+  }
+  .btn-secondary-lg:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-ai-lg {
+    font-size: 13px; font-weight: 500; color: var(--ink-2);
+    background: var(--surface-2); border: 1px solid var(--border);
+    padding: 10px 18px; border-radius: var(--r); cursor: pointer;
+    display: flex; align-items: center; gap: 6px; transition: all 0.12s;
+  }
+  .btn-ai-lg i { font-size: 14px; color: var(--accent); }
+  .btn-ai-lg:hover { border-color: var(--accent); }
+
+  /* preview panel */
+  .add-layout { display: grid; grid-template-columns: 1fr 288px; gap: 0; }
+  .add-form-col { padding: 28px 40px; border-right: 1px solid var(--border); }
+  .add-preview-col { padding: 24px 20px; background: var(--surface); }
+  .preview-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-4); margin-bottom: 12px;
+  }
+  .preview-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--rl); overflow: hidden; box-shadow: var(--shadow-sm);
+  }
+  .preview-card-accent { height: 3px; background: var(--accent); }
+  .preview-card-body { padding: 14px 16px; }
+  .preview-cat { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 4px; }
+  .preview-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .preview-period { font-size: 11px; color: var(--ink-4); margin-bottom: 9px; }
+  .preview-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .preview-footer {
+    padding: 9px 16px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .preview-score-label { font-size: 10px; color: var(--ink-4); }
+  .preview-score-val { font-size: 12px; font-weight: 700; color: var(--accent); }
+
+  .tips-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--rl); padding: 14px 16px; margin-top: 12px;
+  }
+  .tips-title { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .tips-title i { font-size: 14px; color: var(--accent); }
+  .tip-item { display: flex; gap: 8px; font-size: 12px; color: var(--ink-3); line-height: 1.6; margin-bottom: 6px; }
+  .tip-item:last-child { margin-bottom: 0; }
+  .tip-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+
+  /* ════════════════════════════════════════
+     PAGE 3 · MATCHING
+  ════════════════════════════════════════ */
+  .match-page-header { background: var(--white); padding: 28px 40px 0; border-bottom: 1px solid var(--border); }
+  .page-steps { display: flex; align-items: center; margin-top: 20px; gap: 2px; }
+  .step {
+    display: flex; align-items: center; gap: 8px; padding: 10px 18px;
+    font-size: 12px; font-weight: 500; color: var(--ink-4);
+    border-bottom: 2px solid transparent; cursor: pointer;
+  }
+  .step.done { color: var(--ink-3); }
+  .step.active { color: var(--accent-2); border-bottom-color: var(--accent); }
+  .step-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600;
+    background: var(--surface-2); color: var(--ink-4);
+  }
+  .step.done .step-num { background: var(--success-light); color: var(--success); }
+  .step.active .step-num { background: var(--accent); color: #fff; }
+  .step-arrow { color: var(--border-strong); font-size: 14px; padding: 0 2px; }
+
+  .three-col { display: grid; grid-template-columns: 240px 1fr 280px; flex: 1; }
+
+  .co-panel { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+  .co-panel-head { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
+  .co-panel-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 9px; }
+  .co-search-box {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: var(--r); padding: 0 10px;
+  }
+  .co-search-box i { font-size: 14px; color: var(--ink-4); }
+  .co-search-box input { background: none; border: none; outline: none; font-family: var(--ff-head); font-size: 12px; color: var(--ink); padding: 7px 0; width: 100%; }
+  .co-list { flex: 1; overflow-y: auto; }
+  .co-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.12s; }
+  .co-item:hover { background: var(--surface); }
+  .co-item.active { background: var(--accent-light); }
+  .co-item.active .co-item-name { color: var(--accent-2); }
+  .co-logo-sm { width: 36px; height: 36px; border-radius: var(--r); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .co-item-info { flex: 1; }
+  .co-item-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .co-item-industry { font-size: 11px; color: var(--ink-4); margin-top: 2px; }
+  .co-score-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 99px; }
+  .co-score-badge.high { background: var(--success-light); color: var(--success); }
+  .co-score-badge.mid  { background: var(--warn-light); color: var(--warn); }
+  .co-score-badge.low  { background: var(--surface-2); color: var(--ink-4); }
+  .co-add-row { display: flex; align-items: center; gap: 8px; padding: 12px 18px; font-size: 12px; font-weight: 500; color: var(--accent); cursor: pointer; border-top: 1px solid var(--border); }
+
+  .detail-panel { padding: 24px 28px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+
+  .co-hero { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+  .co-hero-left { display: flex; gap: 14px; align-items: flex-start; }
+  .co-logo-lg { width: 52px; height: 52px; border-radius: var(--rl); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+  .co-hero-name { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+  .co-hero-sub { font-size: 12px; color: var(--ink-3); margin-bottom: 9px; }
+  .co-meta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .co-meta-item { font-size: 11px; color: var(--ink-4); display: flex; align-items: center; gap: 4px; }
+
+  .score-panel {
+    background: var(--ink); border-radius: var(--rl); padding: 20px 24px;
+    display: grid; grid-template-columns: 120px 1px 1fr; gap: 20px; align-items: center;
+  }
+  .score-big { font-size: 48px; font-weight: 700; color: var(--accent); line-height: 1; }
+  .score-big span { font-size: 18px; color: rgba(255,255,255,0.25); }
+  .score-grade { font-size: 11px; font-weight: 600; color: #22C55E; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+  .score-divider { background: rgba(255,255,255,0.08); align-self: stretch; }
+  .score-rows { display: flex; flex-direction: column; gap: 9px; }
+  .score-row { display: flex; align-items: center; gap: 10px; }
+  .score-row-lbl { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.4); width: 80px; }
+  .score-row-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; }
+  .score-row-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #0081DD, #38BDE0, #77FFE4); }
+  .score-row-fill.teal { background: #22C55E; }
+  .score-row-val { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5); width: 22px; text-align: right; }
+
+  .role-list { display: flex; flex-direction: column; gap: 7px; }
+  .role-item {
+    display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+    background: var(--surface); border-radius: var(--r); border: 1px solid var(--border);
+  }
+  .role-item.top { background: var(--accent-light); border-color: var(--accent-mid); }
+  .role-rank { font-family: var(--ff-mono); font-size: 11px; color: var(--ink-3); width: 20px; }
+  .role-rank.gold { color: var(--accent); }
+  .role-info { flex: 1; }
+  .role-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .role-item.top .role-name { color: var(--accent); }
+  .role-dept { font-family: var(--ff-mono); font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+  .role-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+  .rtag { font-family: var(--ff-mono); font-size: 10px; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--border-strong); color: var(--ink-3); background: var(--white); }
+  .role-score-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+  .role-pct { font-size: 13px; font-weight: 700; }
+  .role-pct.high { color: var(--success); }
+  .role-pct.mid  { color: var(--warn); }
+  .role-bar { width: 64px; height: 4px; background: var(--surface-3); border-radius: 99px; overflow: hidden; }
+  .role-fill { height: 100%; border-radius: 99px; background: var(--success); }
+  .role-fill.mid { background: var(--warn); }
+  .role-apply { font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: var(--r); border: 1px solid var(--border-strong); color: var(--ink-2); background: var(--white); cursor: pointer; transition: all 0.12s; }
+  .role-apply.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .kw-match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .kw-col-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px; }
+  .kw-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+  .kw-pill { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 99px; border: 1px solid; }
+  .kw-pill.matched { background: #F0F9FF; color: #0369A1; border-color: #BAE6FD; }
+  .kw-pill.partial  { background: #FFFBEB; color: #92400E; border-color: #FDE68A; }
+  .kw-pill.missing  { background: #FFF1F2; color: #9F1239; border-color: #FECDD3; }
+
+  .exp-match-list { display: flex; flex-direction: column; gap: 7px; }
+  .exp-match-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r); border: 1px solid var(--border); background: var(--white); box-shadow: var(--shadow-sm); }
+  .exp-match-icon { width: 28px; height: 28px; border-radius: var(--r); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .exp-match-icon.blue  { background: var(--accent-light); color: var(--accent); }
+  .exp-match-icon.green { background: var(--success-light); color: var(--success); }
+  .exp-match-icon.amber { background: var(--warn-light); color: var(--warn); }
+  .exp-match-info { flex: 1; }
+  .exp-match-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 1px; }
+  .exp-match-meta { font-size: 11px; color: var(--ink-4); }
+  .exp-match-contrib { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--accent-light); color: var(--accent-2); }
+
+  .analysis-panel { background: var(--white); border-left: 1px solid var(--border); padding: 20px 18px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; }
+  .an-title { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px; }
+  .gauge-list { display: flex; flex-direction: column; gap: 10px; }
+  .gauge-item {}
+  .gauge-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .gauge-lbl { font-size: 12px; font-weight: 500; color: var(--ink-2); }
+  .gauge-val { font-size: 11px; font-weight: 600; color: var(--ink-3); }
+  .gauge-track { height: 5px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+  .gauge-fill { height: 100%; border-radius: 99px; }
+  .gauge-fill.blue  { background: linear-gradient(90deg, #0081DD, #38BDE0); }
+  .gauge-fill.green { background: var(--success); }
+  .gauge-fill.amber { background: var(--warn); }
+  .gauge-fill.teal  { background: #0D9488; }
+  .compare-item { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: var(--r); border: 1px solid var(--border); background: var(--surface); margin-bottom: 5px; }
+  .compare-item.current { border-color: var(--accent-mid); background: var(--accent-light); }
+  .compare-item:last-child { margin-bottom: 0; }
+  .compare-logo { width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; }
+  .compare-name { font-size: 12px; font-weight: 600; color: var(--ink); flex: 1; }
+  .compare-item.current .compare-name { color: var(--accent-2); }
+  .compare-bar-wrap { width: 56px; }
+  .compare-bar { height: 3px; background: var(--surface-3); border-radius: 99px; overflow: hidden; }
+  .compare-fill { height: 100%; border-radius: 99px; background: var(--success); }
+  .compare-fill.accent { background: var(--accent); }
+  .compare-pct { font-size: 11px; font-weight: 600; color: var(--ink-2); width: 28px; text-align: right; }
+  .compare-item.current .compare-pct { color: var(--accent-2); }
+  .insight-item { padding: 10px 12px; border-radius: var(--r); border: 1px solid var(--border); background: var(--white); margin-bottom: 6px; box-shadow: var(--shadow-sm); }
+  .insight-item:last-child { margin-bottom: 0; }
+  .insight-head { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .i-icon { font-size: 13px; }
+  .i-icon.green { color: var(--success); }
+  .i-icon.amber { color: var(--warn); }
+  .i-icon.blue  { color: var(--accent); }
+  .i-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .i-tag.green { color: var(--success); }
+  .i-tag.amber { color: var(--warn); }
+  .i-tag.blue  { color: var(--accent-2); }
+  .i-text { font-size: 12px; color: var(--ink-3); line-height: 1.6; }
+  .divider-line { height: 1px; background: var(--border); }
+
+  .bottom-cta {
+    padding: 14px 40px; background: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cta-info { font-size: 13px; color: var(--ink-3); }
+  .cta-info strong { font-weight: 600; color: var(--ink); }
+  .cta-actions { display: flex; gap: 8px; }
+  .btn-outline {
+    font-size: 12px; font-weight: 500; color: var(--ink-2); background: none;
+    border: 1px solid var(--border-strong); padding: 8px 16px;
+    border-radius: var(--r); cursor: pointer; display: flex; align-items: center; gap: 5px;
+    transition: all 0.12s;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-primary {
+    font-size: 12px; font-weight: 600; color: #fff;
+    background: linear-gradient(135deg, #0081DD, #38BDE0);
+    border: none; padding: 8px 18px; border-radius: var(--r); cursor: pointer;
+    display: flex; align-items: center; gap: 5px; transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary i { font-size: 13px; }
+
+  /* ════════════════════════════════════════
+     PAGE 4 · REPORT
+  ════════════════════════════════════════ */
+  .report-hero { background: var(--white); border-bottom: 1px solid var(--border); }
+  .report-hero-top { padding: 28px 40px 22px; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .report-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; }
+  .report-title { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .report-sub { font-size: 13px; color: var(--ink-3); margin-bottom: 12px; }
+  .report-meta-row { display: flex; gap: 16px; }
+  .report-meta-item { font-size: 11px; color: var(--ink-4); display: flex; align-items: center; gap: 5px; }
+  .report-actions { display: flex; gap: 8px; }
+  .btn-ghost {
+    font-size: 12px; font-weight: 500; color: var(--ink-2); background: none;
+    border: 1px solid var(--border-strong); padding: 7px 14px;
+    border-radius: var(--r); cursor: pointer; display: flex; align-items: center; gap: 5px;
+    transition: all 0.12s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-white {
+    font-size: 12px; font-weight: 600; color: #fff; background: var(--accent);
+    border: none; padding: 7px 14px; border-radius: var(--r);
+    cursor: pointer; display: flex; align-items: center; gap: 5px;
+  }
+
+  .summary-bar { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--border); }
+  .sum-cell { padding: 18px 24px; border-right: 1px solid var(--border); }
+  .sum-cell:last-child { border-right: none; }
+  .sum-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; color: var(--ink-4); text-transform: uppercase; margin-bottom: 5px; }
+  .sum-val { font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1; }
+  .sum-val.accent { color: var(--accent-2); }
+  .sum-val.green  { color: var(--success); }
+  .sum-sub { font-size: 11px; color: var(--ink-4); margin-top: 3px; }
+
+  .report-body { padding: 20px 40px 28px; display: grid; grid-template-columns: 1fr 1fr 240px; gap: 16px; }
+  .col-span-2 { grid-column: span 2; }
+  .side-col { display: flex; flex-direction: column; gap: 12px; grid-row: span 3; }
+
+  .top-match-card { background: var(--ink); border-radius: var(--rl); overflow: hidden; grid-column: span 2; }
+  .tm-head { padding: 16px 20px 12px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; }
+  .tm-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+  .tm-badge { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 99px; background: rgba(34,197,94,0.15); color: #22C55E; }
+  .tm-body { padding: 16px 20px; display: grid; grid-template-columns: auto 1px 1fr; gap: 20px; align-items: center; }
+  .tm-score-num { font-size: 52px; font-weight: 700; background: linear-gradient(135deg, #38BDE0, #77FFE4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+  .tm-score-num span { font-size: 20px; color: rgba(255,255,255,0.25); }
+  .tm-score-sub { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 5px; }
+  .tm-divider { background: rgba(255,255,255,0.08); align-self: stretch; }
+  .tm-co-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .tm-co-role { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
+  .tm-rows { display: flex; flex-direction: column; gap: 8px; }
+  .tm-row { display: flex; align-items: center; gap: 10px; }
+  .tm-row-lbl { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.4); width: 84px; }
+  .tm-row-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; }
+  .tm-row-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #0081DD, #38BDE0, #77FFE4); }
+  .tm-row-fill.teal { background: #22C55E; }
+  .tm-row-val { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.5); width: 24px; text-align: right; }
+
+  .rank-item { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border-radius: var(--r); border: 1px solid var(--border); background: var(--white); margin-bottom: 7px; box-shadow: var(--shadow-sm); }
+  .rank-item:last-child { margin-bottom: 0; }
+  .rank-item.first { background: var(--accent-light); border-color: var(--accent-mid); }
+  .rank-num { font-size: 12px; font-weight: 600; color: var(--ink-4); width: 20px; }
+  .rank-num.gold { color: var(--accent-2); }
+  .rank-logo { width: 32px; height: 32px; border-radius: var(--r); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+  .rank-info { flex: 1; }
+  .rank-co { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .rank-item.first .rank-co { color: var(--accent-2); }
+  .rank-role { font-size: 11px; color: var(--ink-4); margin-top: 1px; }
+  .rank-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .rank-pct { font-size: 14px; font-weight: 700; }
+  .rank-pct.high { color: var(--success); }
+  .rank-pct.mid  { color: var(--warn); }
+  .rank-bar { width: 52px; height: 3px; background: var(--surface-3); border-radius: 99px; overflow: hidden; }
+  .rank-fill { height: 100%; border-radius: 99px; background: var(--success); }
+  .rank-fill.mid { background: var(--warn); }
+
+  .kw-section { margin-bottom: 12px; }
+  .kw-section:last-child { margin-bottom: 0; }
+  .kw-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .kw-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .kw-dot.blue  { background: var(--accent); }
+  .kw-dot.green { background: var(--success); }
+  .kw-dot.gray  { background: var(--surface-3); }
+  .kw-strong { background: #F0F9FF; color: #0369A1; border-color: #BAE6FD; }
+  .kw-medium { background: #F0FDF4; color: #166534; border-color: #BBF7D0; }
+  .kw-weak   { background: var(--surface-2); color: var(--ink-4); border-color: var(--border-strong); }
+
+  .tl-item { display: flex; gap: 12px; padding: 0 0 16px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-left { display: flex; flex-direction: column; align-items: center; }
+  .tl-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 4px; }
+  .tl-dot.green { background: var(--success); }
+  .tl-line { width: 1px; flex: 1; background: var(--border); margin-top: 4px; }
+  .tl-content { flex: 1; }
+  .tl-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+  .tl-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .tl-period { font-size: 11px; color: var(--ink-4); flex-shrink: 0; }
+  .tl-meta { font-size: 11px; color: var(--ink-4); margin-bottom: 5px; }
+  .tl-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 6px; }
+  .tl-tag { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 99px; border: 1px solid var(--border-strong); color: var(--ink-4); background: var(--surface-2); }
+  .tl-tag.blue { border-color: var(--accent-mid); color: var(--accent-2); background: var(--accent-light); }
+  .tl-impact { font-size: 12px; color: var(--ink-2); line-height: 1.6; padding: 7px 11px; background: var(--surface); border-radius: var(--r); border-left: 2px solid var(--accent); }
+
+  .gap-item { padding: 11px 13px; border-radius: var(--r); border: 1px solid var(--border); background: var(--white); box-shadow: var(--shadow-sm); }
+  .gap-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+  .gap-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .gap-status { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 99px; }
+  .gap-status.missing { background: var(--danger-light); color: var(--danger); }
+  .gap-status.partial { background: var(--warn-light); color: var(--warn); }
+  .gap-desc { font-size: 12px; color: var(--ink-3); line-height: 1.6; margin-bottom: 6px; }
+  .gap-action { font-size: 11px; font-weight: 500; color: var(--accent); display: flex; align-items: center; gap: 4px; cursor: pointer; }
+
+  .my-dash-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .my-stat-row { display: flex; align-items: center; justify-content: space-between; }
+  .my-stat-lbl { font-size: 12px; color: var(--ink-3); }
+  .my-stat-val { font-size: 12px; font-weight: 600; color: var(--ink); }
+  .my-stat-val.accent { color: var(--accent-2); }
+  .my-stat-val.green  { color: var(--success); }
+  .archive-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .archive-item:last-child { border-bottom: none; }
+  .archive-ver { font-size: 10px; font-weight: 600; color: var(--ink-4); width: 28px; }
+  .archive-date { font-size: 11px; color: var(--ink-4); flex: 1; }
+  .archive-score { font-size: 11px; font-weight: 600; color: var(--success); }
+  .archive-dl { font-size: 14px; color: var(--ink-4); cursor: pointer; }
+
+  .report-insight-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .gap-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+  .bottom-bar {
+    padding: 14px 40px; background: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .bottom-info { font-size: 13px; color: var(--ink-3); }
+  .bottom-info strong { font-weight: 600; color: var(--ink); }
+  .bottom-actions { display: flex; gap: 8px; }
+
+  /* ── STATUS BAR (reference design) ── */
+  .status-bar {
+    position: fixed; bottom: 0; left: 220px; right: 0; z-index: 100;
+    height: 36px; background: var(--ink); border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; padding: 0 24px; gap: 20px;
+  }
+  .status-bar-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+  .status-bar-dot { width: 6px; height: 6px; border-radius: 50%; background: #22C55E; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.5 } }
+  .status-bar-text { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.02em; }
+  .status-bar-sep { width: 1px; height: 14px; background: rgba(255,255,255,0.1); }
+  .status-bar-right { display: flex; align-items: center; gap: 8px; }
+  .status-readiness { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4); }
+  .status-readiness-val { font-size: 11px; font-weight: 700; color: var(--accent); }
+  .status-readiness-bar { width: 80px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; }
+  .status-readiness-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #0081DD, #38BDE0, #77FFE4); }
+
+  /* add bottom padding so content isn't behind status bar */
+  .main { padding-bottom: 36px; }
+
+  /* ── SIDEBAR COLLAPSE ── */
+  .sidebar { transition: width 0.22s cubic-bezier(.4,0,.2,1); overflow: hidden; }
+  .sidebar.collapsed { width: 56px; }
+  .sidebar.collapsed .sb-text { display: none; }
+  .sidebar.collapsed .sb-label { display: none; }
+  .sidebar.collapsed .sb-divider { margin: 8px; }
+  .sidebar.collapsed .sb-item { justify-content: center; padding: 9px 0; }
+  .sidebar.collapsed .sb-section { margin-bottom: 8px; }
+  .sidebar.collapsed + .main { margin-left: 56px; }
+  .sidebar.collapsed ~ .status-bar { left: 56px; }
+  .sb-toggle-btn {
+    display: flex; align-items: center; justify-content: flex-end;
+    padding: 10px 14px 2px; cursor: pointer; color: var(--ink-4);
+    font-size: 17px; transition: color 0.15s;
+  }
+  .sb-toggle-btn:hover { color: var(--accent); }
+  .sidebar.collapsed .sb-toggle-btn { justify-content: center; padding: 10px 0 2px; }
+  .sb-text { display: inline; }
+
+  /* ── NAV LINKS hidden ── */
+  .nav-links { flex: 1; }
+
+  /* ════ BLOCK STORAGE ════ */
+  .blk-section { display: flex; flex-direction: column; gap: 14px; }
+  .blk-section-header { display: flex; align-items: center; gap: 10px; }
+  .blk-section-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .blk-section-title { font-size: 12px; font-weight: 700; color: var(--ink); white-space: nowrap; letter-spacing: 0.01em; }
+  .blk-section-count { font-size: 11px; font-weight: 600; color: var(--ink-4); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
+  .blk-section-line { flex: 1; height: 1px; background: var(--border); }
+
+  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+  .blk-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--rl); overflow: hidden; display: flex; flex-direction: column;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    box-shadow: var(--shadow-sm);
+  }
+  .blk-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+  .blk-card-top { border-top: 3px solid transparent; }
+  .blk-card-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  .blk-cat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+  .blk-card-title { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .blk-card-period { font-size: 11px; color: var(--ink-4); }
+  .blk-card-desc { font-size: 12px; color: var(--ink-3); line-height: 1.6; margin-top: 2px; }
+  .blk-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+  .blk-card-footer {
+    padding: 9px 16px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .blk-add {
+    border: 1.5px dashed var(--border-strong) !important; background: var(--surface) !important;
+    cursor: pointer; align-items: center; justify-content: center; min-height: 130px;
+    box-shadow: none !important;
+  }
+  .blk-add:hover { border-color: var(--accent) !important; background: var(--accent-light) !important; }
+  .blk-add:hover i, .blk-add:hover div { color: var(--accent) !important; }
+
+  .blk-filter {
+    font-size: 12px; font-weight: 500; padding: 6px 14px;
+    border: 1px solid var(--border-strong); border-radius: 99px;
+    background: var(--white); color: var(--ink-3); cursor: pointer; transition: all 0.12s;
+  }
+  .blk-filter:hover { border-color: var(--accent); color: var(--accent-2); }
+  .blk-filter.active { background: var(--accent-light); color: var(--accent-2); border-color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="nav">
+  <div class="nav-logo" onclick="navigate('dashboard')">
+    <div class="nav-logo-icon"><i class="ti ti-target-arrow" style="font-size:17px"></i></div>
+    <span>GOalign</span>
+  </div>
+  <div class="nav-breadcrumb" id="nav-breadcrumb">
+    <span>Resume</span>
+    <span class="nav-breadcrumb-sep">›</span>
+    <span class="nav-breadcrumb-current" id="nav-breadcrumb-page">Dashboard</span>
+  </div>
+  <div class="nav-tabs" style="flex:1"></div>
+  <div class="nav-right">
+    <div class="nav-icon-btn"><i class="ti ti-bell"></i></div>
+    <div class="nav-icon-btn"><i class="ti ti-settings"></i></div>
+    <div class="nav-avatar">JW<div class="nav-avatar-dot"></div></div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-toggle-btn" onclick="toggleSidebar()" title="Collapse sidebar">
+      <i class="ti ti-layout-sidebar-left-collapse" id="sb-toggle-icon"></i>
+    </div>
+    <div class="sb-content" id="sb-content">
+      <div class="sb-section">
+        <div class="sb-label">Main</div>
+        <div class="sb-item" id="sb-dashboard" onclick="navigate('dashboard')"><i class="ti ti-layout-dashboard"></i> <span class="sb-text">Dashboard</span></div>
+        <div class="sb-item" id="sb-add" onclick="navigate('add')"><i class="ti ti-plus"></i> <span class="sb-text">Add Experience <span class="sb-badge blue">new</span></span></div>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-section">
+        <div class="sb-label">Experience</div>
+        <div class="sb-item" id="sb-blocks" onclick="navigate('blocks')"><i class="ti ti-stack"></i> <span class="sb-text">Experience Archiving <span class="sb-badge">12</span></span></div>
+        <div class="sb-item" id="sb-match" onclick="navigate('match')"><i class="ti ti-building"></i> <span class="sb-text">Company / Job Match</span></div>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-section">
+        <div class="sb-label">Results</div>
+        <div class="sb-item" id="sb-matchstore" onclick="navigate('matchstore')"><i class="ti ti-database"></i> <span class="sb-text">Match Archiving <span class="sb-badge blue">3</span></span></div>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-section">
+        <div class="sb-label">Account</div>
+        <div class="sb-item"><i class="ti ti-user"></i> <span class="sb-text">Profile</span></div>
+        <div class="sb-item"><i class="ti ti-settings"></i> <span class="sb-text">Settings</span></div>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-section">
+        <div class="sb-label">Support</div>
+        <div class="sb-item" onclick="openFeedbackModal()" style="cursor:pointer;">
+          <i class="ti ti-message-report"></i>
+          <span class="sb-text">Send Feedback</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <main class="main">
+
+    <!-- ════ PAGE: DASHBOARD ════ -->
+    <div id="page-dashboard" class="page active">
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="hero-eyebrow">DASHBOARD</div>
+            <div class="hero-title">Welcome back, <em>Ji-won</em><br>Keep building your career</div>
+            <div class="hero-sub">You have 12 experience blocks saved. Start matching analysis with 3 companies today.</div>
+            <div class="hero-actions">
+              <button class="btn-blue" onclick="navigate('add')"><i class="ti ti-plus" style="font-size:14px"></i> Add Experience</button>
+              <button class="btn-outline-white" onclick="navigate('match')"><i class="ti ti-building" style="font-size:14px"></i> Company Analysis</button>
+            </div>
+          </div>
+          <div class="hero-right">
+            <div class="hero-date">May 12, 2025</div>
+            <div class="hero-status"><div class="status-dot"></div> Analysis Ready</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUMMARY STATS -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);background:var(--white);">
+        <div style="padding:20px 48px;border-right:1px solid var(--border);">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px;">TOTAL BLOCKS</div>
+          <div style="font-size:32px;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-0.02em;">12</div>
+          <div style="font-size:12px;color:var(--success);margin-top:4px;display:flex;align-items:center;gap:3px;"><i class="ti ti-trending-up" style="font-size:13px;"></i> +2 this month</div>
+        </div>
+        <div style="padding:20px 32px;border-right:1px solid var(--border);">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px;">CORE KEYWORDS</div>
+          <div style="font-size:32px;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-0.02em;">24</div>
+          <div style="font-size:12px;color:var(--accent-2);margin-top:4px;display:flex;align-items:center;gap:3px;"><i class="ti ti-tag" style="font-size:13px;"></i> 14 job · 10 competency</div>
+        </div>
+        <div style="padding:20px 32px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px;">COMPANIES ANALYZED</div>
+          <div style="font-size:32px;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-0.02em;">3</div>
+          <div style="font-size:12px;color:var(--success);margin-top:4px;display:flex;align-items:center;gap:3px;"><i class="ti ti-check" style="font-size:13px;"></i> Analysis complete</div>
+        </div>
+      </div>
+
+      <!-- MAIN BODY: 3:1 -->
+      <div style="display:grid;grid-template-columns:3fr 1fr;border-right:none;">
+
+        <!-- LEFT COL -->
+        <div style="border-right:1px solid var(--border);display:flex;flex-direction:column;gap:0;">
+
+          <!-- Mind Map -->
+          <div style="padding:24px 32px 0;">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-hierarchy-2"></i> Experience Mind Map</div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <span style="font-size:11px;color:var(--ink-4);">12 blocks · 24 keywords</span>
+                  <div class="card-link" onclick="navigate('blocks')">Edit Blocks →</div>
+                </div>
+              </div>
+              <div id="mindmap-wrap" style="background:var(--surface);position:relative;overflow:hidden;height:360px;">
+                <svg id="mindmap-svg" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:100%;position:absolute;top:0;left:0;"></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Competency Distribution -->
+          <div style="padding:24px 32px 0;">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-chart-radar"></i> Competency Distribution</div>
+                <div style="font-size:11px;color:var(--ink-4);">Based on keyword category weight</div>
+              </div>
+              <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+                <div style="display:flex;flex-direction:column;gap:14px;">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span style="font-weight:600;color:var(--ink);">Strategy &amp; Planning</span><span style="font-weight:700;color:var(--ink);">92%</span></div>
+                    <div style="height:5px;background:var(--surface-2);border-radius:99px;overflow:hidden;"><div style="width:92%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span style="font-weight:600;color:var(--ink);">Data &amp; Analysis</span><span style="font-weight:700;color:var(--ink);">78%</span></div>
+                    <div style="height:5px;background:var(--surface-2);border-radius:99px;overflow:hidden;"><div style="width:78%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span style="font-weight:600;color:var(--ink);">Leadership &amp; Org</span><span style="font-weight:700;color:var(--ink);">65%</span></div>
+                    <div style="height:5px;background:var(--surface-2);border-radius:99px;overflow:hidden;"><div style="width:65%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span style="font-weight:600;color:var(--ink);">Marketing &amp; Content</span><span style="font-weight:700;color:var(--ink);">58%</span></div>
+                    <div style="height:5px;background:var(--surface-2);border-radius:99px;overflow:hidden;"><div style="width:58%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-2);display:inline-block;"></span> Job Keywords</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                      <span class="kw-pill kw-strong">GTM</span><span class="kw-pill kw-strong">B2B</span><span class="kw-pill kw-strong">SQL</span><span class="kw-pill kw-medium">Tableau</span><span class="kw-pill kw-medium">A/B Test</span><span class="kw-pill kw-weak">Excel</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;"></span> Competency</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                      <span class="kw-pill kw-strong">Strategy</span><span class="kw-pill kw-strong">Leadership</span><span class="kw-pill kw-strong">OKR</span><span class="kw-pill kw-medium">Cross-functional</span><span class="kw-pill kw-weak">Communication</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company Match Ranking -->
+          <div style="padding:24px 32px 0;">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-trophy"></i> Company Match Ranking</div>
+                <div class="card-link" onclick="navigate('match')">Add Company →</div>
+              </div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+                <!-- 1st -->
+                <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--r);">
+                  <div style="font-size:20px;font-weight:800;color:var(--accent-2);width:22px;">1</div>
+                  <div style="width:38px;height:38px;border-radius:9px;background:#03C75A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">NV</div>
+                  <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:var(--ink);">Naver</div><div style="font-size:12px;color:var(--ink-4);">Service Planner · Platform</div></div>
+                  <div style="text-align:right;margin-right:12px;"><div style="font-size:22px;font-weight:800;color:var(--success);">87%</div><div style="font-size:10px;color:var(--ink-4);">Top 15%</div></div>
+                  <button onclick="navigate('matchstore')" class="btn-primary" style="display:flex;align-items:center;gap:5px;font-size:12px;padding:8px 14px;"><i class="ti ti-chart-bar" style="font-size:14px;"></i> Report</button>
+                </div>
+                <!-- 2nd -->
+                <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);">
+                  <div style="font-size:20px;font-weight:800;color:var(--ink-4);width:22px;">2</div>
+                  <div style="width:38px;height:38px;border-radius:9px;background:#1A1A1A;color:#FFE000;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">KK</div>
+                  <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:var(--ink);">Kakao</div><div style="font-size:12px;color:var(--ink-4);">PM · Platform CIC</div></div>
+                  <div style="text-align:right;margin-right:12px;"><div style="font-size:22px;font-weight:800;color:var(--success);">73%</div><div style="font-size:10px;color:var(--ink-4);">Top 28%</div></div>
+                  <button onclick="navigate('matchstore')" class="btn-outline" style="font-size:12px;padding:8px 14px;">Report</button>
+                </div>
+                <!-- 3rd -->
+                <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);">
+                  <div style="font-size:20px;font-weight:800;color:var(--ink-4);width:22px;">3</div>
+                  <div style="width:38px;height:38px;border-radius:9px;background:#0064FF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">TN</div>
+                  <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:var(--ink);">Toss</div><div style="font-size:12px;color:var(--ink-4);">Growth Marketer · Finance</div></div>
+                  <div style="text-align:right;margin-right:12px;"><div style="font-size:22px;font-weight:800;color:var(--warn);">68%</div><div style="font-size:10px;color:var(--ink-4);">Top 35%</div></div>
+                  <button onclick="navigate('matchstore')" class="btn-outline" style="font-size:12px;padding:8px 14px;">Report</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Insights -->
+          <div style="padding:24px 32px 32px;">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-sparkles"></i> AI Comprehensive Insights</div>
+              </div>
+              <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                <div style="padding:14px;background:var(--success-light);border-radius:var(--r);border:1px solid rgba(5,150,105,0.12);">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--success);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-shield-check" style="font-size:13px;"></i> Your Strengths</div>
+                  <div style="font-size:12px;color:var(--ink-2);line-height:1.65;">GTM + B2B strategy experience is a strong differentiator for PM and planning roles.</div>
+                </div>
+                <div style="padding:14px;background:var(--warn-light);border-radius:var(--r);border:1px solid rgba(217,119,6,0.18);">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--warn);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-alert-circle" style="font-size:13px;"></i> Common Gaps</div>
+                  <div style="font-size:12px;color:var(--ink-2);line-height:1.65;">Agile and A/B testing blocks are missing across all 3 JDs. Adding them could boost scores by up to +12%.</div>
+                </div>
+                <div style="padding:14px;background:var(--accent-light);border-radius:var(--r);border:1px solid var(--accent-mid);">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-2);margin-bottom:8px;display:flex;align-items:center;gap:5px;"><i class="ti ti-bulb" style="font-size:13px;"></i> Next Actions</div>
+                  <div style="font-size:12px;color:var(--ink-2);line-height:1.65;">Add quantifiable metrics to Data Analysis block. Naver match could reach 93%+.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COL -->
+        <div style="padding:24px 20px 32px;background:var(--surface);display:flex;flex-direction:column;gap:16px;">
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><i class="ti ti-bolt"></i> Quick Actions</div>
+            </div>
+            <div class="card-body" style="padding:10px;">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div onclick="navigate('add')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.12s;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='var(--accent-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+                  <i class="ti ti-plus" style="font-size:16px;color:var(--accent);"></i>
+                  <div><div style="font-size:12px;font-weight:600;color:var(--ink);">Add Experience</div><div style="font-size:10px;color:var(--ink-4);">New block → Screen 2</div></div>
+                  <i class="ti ti-chevron-right" style="font-size:13px;color:var(--ink-4);margin-left:auto;"></i>
+                </div>
+                <div onclick="navigate('match')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.12s;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='var(--accent-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+                  <i class="ti ti-building" style="font-size:16px;color:var(--accent);"></i>
+                  <div><div style="font-size:12px;font-weight:600;color:var(--ink);">Company Analysis</div><div style="font-size:10px;color:var(--ink-4);">Start analysis → Screen 4</div></div>
+                  <i class="ti ti-chevron-right" style="font-size:13px;color:var(--ink-4);margin-left:auto;"></i>
+                </div>
+                <div onclick="navigate('blocks')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.12s;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='var(--accent-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+                  <i class="ti ti-stack" style="font-size:16px;color:var(--accent);"></i>
+                  <div><div style="font-size:12px;font-weight:600;color:var(--ink);">My Blocks</div><div style="font-size:10px;color:var(--ink-4);">12 saved</div></div>
+                  <i class="ti ti-chevron-right" style="font-size:13px;color:var(--ink-4);margin-left:auto;"></i>
+                </div>
+                <div onclick="navigate('matchstore')" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);cursor:pointer;transition:all 0.12s;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='var(--accent-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+                  <i class="ti ti-chart-bar" style="font-size:16px;color:var(--accent);"></i>
+                  <div><div style="font-size:12px;font-weight:600;color:var(--ink);">View Report</div><div style="font-size:10px;color:var(--ink-4);">Analysis results</div></div>
+                  <i class="ti ti-chevron-right" style="font-size:13px;color:var(--ink-4);margin-left:auto;"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><i class="ti ti-clock"></i> Recent Activity</div>
+            </div>
+            <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+                <div style="width:28px;height:28px;border-radius:var(--r);background:var(--accent-light);color:var(--accent-2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;"><i class="ti ti-plus"></i></div>
+                <div style="flex:1;"><div style="font-size:12px;color:var(--ink);line-height:1.5;"><strong style="font-weight:600;">GTM Strategy block</strong> saved</div><div style="font-size:10px;color:var(--ink-4);margin-top:2px;">Today 14:23</div></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+                <div style="width:28px;height:28px;border-radius:var(--r);background:var(--success-light);color:var(--success);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;"><i class="ti ti-check"></i></div>
+                <div style="flex:1;"><div style="font-size:12px;color:var(--ink);line-height:1.5;">Naver analysis <strong style="font-weight:600;">completed</strong></div><div style="font-size:10px;color:var(--ink-4);margin-top:2px;">Today 11:05</div></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;">
+                <div style="width:28px;height:28px;border-radius:var(--r);background:var(--warn-light);color:var(--warn);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;"><i class="ti ti-edit"></i></div>
+                <div style="flex:1;"><div style="font-size:12px;color:var(--ink);line-height:1.5;"><strong style="font-weight:600;">OKR Design</strong> keywords updated</div><div style="font-size:10px;color:var(--ink-4);margin-top:2px;">Yesterday 16:47</div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PAGE: ADD EXPERIENCE ════ -->
+    <div id="page-add" class="page">
+
+      <div class="page-header">
+        <div class="page-eyebrow">NEW EXPERIENCE</div>
+        <div class="page-title">Add Experience</div>
+        <div class="page-sub">Enter your activity details — AI will extract key competencies and suggest a block</div>
+      </div>
+
+      <!-- Two-column: form (left wide) + tips (right narrow) -->
+      <div style="display:grid;grid-template-columns:1fr 300px;min-height:calc(100vh - 200px);">
+
+        <!-- FORM COL -->
+        <div style="padding:36px 48px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:32px;">
+
+          <!-- ① Basic Info -->
+          <div>
+            <div class="form-section-title" style="margin-top:0"><i class="ti ti-info-circle"></i> Basic Info</div>
+            <div class="form-grid">
+              <div class="form-group form-full">
+                <label class="form-label">Activity Title *<span class="form-label-count">0 / 80</span></label>
+                <input class="form-input" type="text" placeholder="e.g. New Product Launch Campaign Planning & Execution">
+                <div class="form-hint">Describe clearly what activity you were involved in</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Activity Type *</label>
+                <select class="form-input form-select">
+                  <option value="">Select</option>
+                  <option>Project</option>
+                  <option>Work Experience</option>
+                  <option>Leadership</option>
+                  <option>Education / Certification</option>
+                  <option>Extracurricular</option>
+                  <option>Internship</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Organization / Company</label>
+                <input class="form-input" type="text" placeholder="e.g. OO Company Marketing Team">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Start Date *</label>
+                <input class="form-input" type="month" value="2024-01">
+              </div>
+              <div class="form-group" style="position:relative;">
+                <label class="form-label" style="justify-content:space-between;">
+                  End Date *
+                  <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--ink-3);text-transform:none;letter-spacing:0;cursor:pointer;">
+                    <input type="checkbox" style="accent-color:var(--accent)"> I currently work here
+                  </label>
+                </label>
+                <input class="form-input" type="month" value="2024-06">
+              </div>
+              <div class="form-group form-full">
+                <label class="form-label">Role</label>
+                <input class="form-input" type="text" placeholder="e.g. Project Lead, Team Member, Planning Lead, etc.">
+              </div>
+              <div class="form-group form-full">
+                <label class="form-label">Description & Contributions *<span class="form-label-count">0 / 1000</span></label>
+                <textarea class="form-input form-textarea" placeholder="What problem did you solve? How did you approach it? What did you lead?&#10;The more specific you write, the more accurate keywords will be extracted." style="min-height:140px"></textarea>
+                <div class="form-hint">Focus on 'Action + Context'. Use bullet points for readability.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ② Quantifiable Outcome -->
+          <div>
+            <div class="form-section-title" style="margin-top:0"><i class="ti ti-award"></i> Quantifiable Outcome</div>
+            <div class="impact-box">
+              <div class="impact-box-label">Outcomes expressible in numbers — speak louder than words</div>
+              <div class="impact-row">
+                <div class="impact-prefix">① Measurable outcome</div>
+                <input class="impact-input" type="text" placeholder="e.g. MAU increased 15%, conversion rate improved 23%">
+              </div>
+              <div class="impact-row">
+                <div class="impact-prefix">② Scale / scope</div>
+                <input class="impact-input" type="text" placeholder="e.g. Collaborated with 3 teams, managed $100K budget">
+              </div>
+              <div class="impact-row">
+                <div class="impact-prefix">③ Period achievement</div>
+                <input class="impact-input" type="text" placeholder="e.g. Achieved 130% of target within 6 months">
+              </div>
+            </div>
+          </div>
+
+          <!-- ③ Failure & Improvement (optional) -->
+          <div>
+            <div class="form-section-title" style="margin-top:0">
+              <i class="ti ti-refresh"></i> Failure & Improvement
+              <span style="margin-left:auto;font-size:11px;font-weight:500;color:var(--ink-4);background:var(--surface-2);padding:2px 9px;border-radius:99px;">Optional</span>
+            </div>
+            <textarea class="form-input form-textarea" placeholder="Initial launch faced performance lag; addressed by optimizing state management and lazy loading assets." style="min-height:80px;"></textarea>
+            <div class="form-hint" style="margin-top:6px;">Optional. High-quality blocks include how you handled setbacks.</div>
+          </div>
+
+          <!-- Bottom actions: Save Draft + Analyze -->
+          <div style="display:flex;gap:10px;padding-top:8px;border-top:1px solid var(--border);align-items:center;">
+            <button class="btn-secondary-lg" onclick="navigate('blocks')" style="color:var(--ink-4);">Cancel</button>
+            <button class="btn-secondary-lg" style="display:flex;align-items:center;gap:6px;">
+              <i class="ti ti-device-floppy" style="font-size:15px;"></i> Save Draft
+            </button>
+            <div style="margin-left:auto;">
+              <button onclick="openAnalysisModal()" style="
+                display:flex;align-items:center;gap:8px;
+                font-size:14px;font-weight:700;color:#fff;
+                background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);
+                border:none;padding:12px 28px;border-radius:var(--rl);
+                cursor:pointer;transition:opacity 0.15s;letter-spacing:-0.01em;
+              " onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                <i class="ti ti-sparkles" style="font-size:16px;"></i>
+                Analyze Experience
+              </button>
+            </div>
+          </div>
+
+        </div><!-- end form col -->
+
+        <!-- TIPS COL -->
+        <div style="padding:28px 22px;background:var(--surface);display:flex;flex-direction:column;gap:14px;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;">
+
+          <!-- Writing Tips -->
+          <div class="tips-card">
+            <div class="tips-title"><i class="ti ti-bulb"></i> Writing Tips</div>
+            <div class="tip-item"><div class="tip-dot"></div> Always include outcomes that can be expressed as <strong>numbers</strong></div>
+            <div class="tip-item"><div class="tip-dot"></div> "Planned and executed, improving X by Y%" scores higher than just "planned"</div>
+            <div class="tip-item"><div class="tip-dot"></div> Adding <strong>team size, budget, and duration</strong> makes your impact clearer</div>
+            <div class="tip-item"><div class="tip-dot"></div> Mentioning departments or stakeholders highlights <strong>cross-functional</strong> skills</div>
+          </div>
+
+          <!-- Input Tips -->
+          <div class="tips-card">
+            <div class="tips-title" style="color:var(--accent-2)"><i class="ti ti-text-size"></i> Input Tips</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;gap:9px;align-items:flex-start;">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);color:var(--accent-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</div>
+                <div style="font-size:12px;color:var(--ink-2);line-height:1.5;">Start bullets with <strong>strong action verbs</strong> (e.g., Spearheaded, Orchestrated, Optimized).</div>
+              </div>
+              <div style="display:flex;gap:9px;align-items:flex-start;">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);color:var(--accent-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</div>
+                <div style="font-size:12px;color:var(--ink-2);line-height:1.5;">Specify the <strong>size and scale</strong> of your team or project budget.</div>
+              </div>
+              <div style="display:flex;gap:9px;align-items:flex-start;">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);color:var(--accent-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div>
+                <div style="font-size:12px;color:var(--ink-2);line-height:1.5;">Mention <strong>technologies</strong> or specific methodologies used.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Readiness meter -->
+          <div class="tips-card" style="background:var(--ink);border-color:transparent;">
+            <div style="font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px;">BLOCK READINESS</div>
+            <div style="font-size:32px;font-weight:800;background:linear-gradient(135deg,#38BDE0,#77FFE4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:4px;">65%</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px;">Add quantifiable outcomes to reach 80%+</div>
+            <div style="height:5px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;">
+              <div style="width:65%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0,#77FFE4);border-radius:99px;"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PAGE: BLOCKS ════ -->
+    <div id="page-blocks" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">BLOCK STORAGE</div>
+        <div class="page-title">Experience Archiving</div>
+        <div class="page-sub">Search and manage your saved experience blocks by category</div>
+      </div>
+
+      <!-- Top Bar: Search + Category Filter + Add Button -->
+      <div style="padding:16px 44px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;position:sticky;top:52px;z-index:50;">
+        <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r);padding:0 12px;flex:1;max-width:320px">
+          <i class="ti ti-search" style="color:var(--ink-3);font-size:14px"></i>
+          <input type="text" placeholder="Search blocks, skills, or companies..." style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:8px 0;width:100%">
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-left:4px">
+          <span style="font-size:11px;color:var(--ink-3);font-weight:500;margin-right:2px">Activity Type</span>
+          <div class="blk-filter active" onclick="filterBlocks('all', this)">All</div>
+          <div class="blk-filter" onclick="filterBlocks('project', this)">Project</div>
+          <div class="blk-filter" onclick="filterBlocks('work', this)">Work Experience</div>
+          <div class="blk-filter" onclick="filterBlocks('leadership', this)">Leadership</div>
+          <div class="blk-filter" onclick="filterBlocks('education', this)">Education</div>
+          <div class="blk-filter" onclick="filterBlocks('extra', this)">Extracurricular</div>
+        </div>
+        <div style="margin-left:auto">
+          <button class="btn-blue" onclick="navigate('add')"><i class="ti ti-plus" style="font-size:13px"></i> Add Experience</button>
+        </div>
+      </div>
+
+      <!-- Category Sections -->
+      <div style="padding:32px 44px;display:flex;flex-direction:column;gap:36px;">
+
+        <!-- PROJECT -->
+        <div class="blk-section" data-category="project">
+          <div class="blk-section-header">
+            <div class="blk-section-dot" style="background:var(--accent)"></div>
+            <div class="blk-section-title">Project</div>
+            <div class="blk-section-count">2</div>
+            <div class="blk-section-line"></div>
+          </div>
+          <div class="blk-grid">
+            <div class="blk-card" data-type="project">
+              <div class="blk-card-top" style="border-top-color:var(--accent)"></div>
+              <div class="blk-card-body">
+                <div class="blk-cat-label" style="color:var(--accent)">Project</div>
+                <div class="blk-card-title">New Product GTM Strategy</div>
+                <div class="blk-card-period">2023.03 – 2023.08 · 6 months</div>
+                <div class="blk-card-desc">Led end-to-end go-to-market strategy for a new B2B SaaS product, coordinating across marketing, sales, and product teams.</div>
+                <div class="blk-card-tags">
+                  <span class="tag blue">Strategic Planning</span>
+                  <span class="tag blue">GTM</span>
+                  <span class="tag">B2B</span>
+                </div>
+              </div>
+              <div class="blk-card-footer">
+                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
+              </div>
+            </div>
+            <div class="blk-card" data-type="project">
+              <div class="blk-card-top" style="border-top-color:var(--accent)"></div>
+              <div class="blk-card-body">
+                <div class="blk-cat-label" style="color:var(--accent)">Project</div>
+                <div class="blk-card-title">App Renewal UX Research</div>
+                <div class="blk-card-period">2021.09 – 2021.12 · 4 months</div>
+                <div class="blk-card-desc">Conducted in-depth user interviews and usability testing to inform a full redesign of the mobile app experience.</div>
+                <div class="blk-card-tags">
+                  <span class="tag">UX Research</span>
+                  <span class="tag">Interview</span>
+                </div>
+              </div>
+              <div class="blk-card-footer">
+                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
+              </div>
+            </div>
+            <div class="blk-card blk-add" onclick="navigate('add')" data-type="project">
+              <i class="ti ti-plus" style="font-size:22px;color:var(--ink-3)"></i>
+              <div style="font-size:13px;color:var(--ink-3);margin-top:8px">Add Block</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WORK EXPERIENCE -->
+        <div class="blk-section" data-category="work">
+          <div class="blk-section-header">
+            <div class="blk-section-dot" style="background:#C47A00"></div>
+            <div class="blk-section-title">Work Experience</div>
+            <div class="blk-section-count">2</div>
+            <div class="blk-section-line"></div>
+          </div>
+          <div class="blk-grid">
+            <div class="blk-card" data-type="work">
+              <div class="blk-card-top" style="border-top-color:#C47A00"></div>
+              <div class="blk-card-body">
+                <div class="blk-cat-label" style="color:#C47A00">Work Experience</div>
+                <div class="blk-card-title">Data-Driven User Analysis Project</div>
+                <div class="blk-card-period">2022.11 – 2023.02 · 4 months</div>
+                <div class="blk-card-desc">Built interactive dashboards using SQL and Tableau to surface key user behavior patterns for product decisions.</div>
+                <div class="blk-card-tags">
+                  <span class="tag">SQL</span>
+                  <span class="tag">Tableau</span>
+                  <span class="tag">Data Analysis</span>
+                </div>
+              </div>
+              <div class="blk-card-footer">
+                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
+              </div>
+            </div>
+            <div class="blk-card" data-type="work">
+              <div class="blk-card-top" style="border-top-color:#C47A00"></div>
+              <div class="blk-card-body">
+                <div class="blk-cat-label" style="color:#C47A00">Work Experience</div>
+                <div class="blk-card-title">Content Marketing Campaign</div>
+                <div class="blk-card-period">2022.01 – 2022.06 · 6 months</div>
+                <div class="blk-card-desc">Planned and executed a multi-channel content marketing campaign covering SNS, blog, and newsletter to grow brand awareness.</div>
+                <div class="blk-card-tags">
+                  <span class="tag">Content</span>
+                  <span class="tag">SNS Marketing</span>
+                </div>
+              </div>
+              <div class="blk-card-footer">
+                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-clock" style="font-size:13px;color:var(--warn)"></i><span style="font-size:11px;font-weight:500;color:var(--warn);letter-spacing:0.03em">NEEDS OUTCOME</span></div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
+              </div>
+            </div>
+            <div class="blk-card blk-add" onclick="navigate('add')" data-type="work">
+              <i class="ti ti-plus" style="font-size:22px;color:var(--ink-3)"></i>
+              <div style="font-size:13px;color:var(--ink-3);margin-top:8px">Add Block</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEADERSHIP -->
+        <div class="blk-section" data-category="leadership">
+          <div class="blk-section-header">
+            <div class="blk-section-dot" style="background:var(--success)"></div>
+            <div class="blk-section-title">Leadership</div>
+            <div class="blk-section-count">1</div>
+            <div class="blk-section-line"></div>
+          </div>
+          <div class="blk-grid">
+            <div class="blk-card" data-type="leadership">
+              <div class="blk-card-top" style="border-top-color:var(--success)"></div>
+              <div class="blk-card-body">
+                <div class="blk-cat-label" style="color:var(--success)">Leadership</div>
+                <div class="blk-card-title">Team OKR Design & Operations</div>
+                <div class="blk-card-period">2022.07 – 2022.10 · 4 months</div>
+                <div class="blk-card-desc">Designed and facilitated OKR cycles for a cross-functional team of 12, driving alignment across product, design, and engineering.</div>
+                <div class="blk-card-tags">
+                  <span class="tag">OKR</span>
+                  <span class="tag">Leadership</span>
+                  <span class="tag">Cross-functional</span>
+                </div>
+              </div>
+              <div class="blk-card-footer">
+                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>
+                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
+              </div>
+            </div>
+            <div class="blk-card blk-add" onclick="navigate('add')" data-type="leadership">
+              <i class="ti ti-plus" style="font-size:22px;color:var(--ink-3)"></i>
+              <div style="font-size:13px;color:var(--ink-3);margin-top:8px">Add Block</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDUCATION (empty state) -->
+        <div class="blk-section" data-category="education">
+          <div class="blk-section-header">
+            <div class="blk-section-dot" style="background:#8B5CF6"></div>
+            <div class="blk-section-title">Education / Certification</div>
+            <div class="blk-section-count">0</div>
+            <div class="blk-section-line"></div>
+          </div>
+          <div class="blk-grid">
+            <div class="blk-card blk-add" onclick="navigate('add')" data-type="education">
+              <i class="ti ti-plus" style="font-size:22px;color:var(--ink-3)"></i>
+              <div style="font-size:13px;color:var(--ink-3);margin-top:8px">Add Block</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXTRACURRICULAR (empty state) -->
+        <div class="blk-section" data-category="extra">
+          <div class="blk-section-header">
+            <div class="blk-section-dot" style="background:#EC4899"></div>
+            <div class="blk-section-title">Extracurricular</div>
+            <div class="blk-section-count">0</div>
+            <div class="blk-section-line"></div>
+          </div>
+          <div class="blk-grid">
+            <div class="blk-card blk-add" onclick="navigate('add')" data-type="extra">
+              <i class="ti ti-plus" style="font-size:22px;color:var(--ink-3)"></i>
+              <div style="font-size:13px;color:var(--ink-3);margin-top:8px">Add Block</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════ PAGE: MATCH ════ -->
+    <!-- ════ PAGE: COMPANY / JOB INPUT ════ -->
+    <div id="page-match" class="page">
+
+      <div class="page-header">
+        <div class="page-eyebrow">COMPANY · JOB INPUT</div>
+        <div class="page-title">Company / Job Input</div>
+        <div class="page-sub">Enter the company and role, upload the JD — AI will analyze your fit score</div>
+      </div>
+
+      <!-- Two col: form left, saved list right -->
+      <div style="display:grid;grid-template-columns:1fr 340px;min-height:calc(100vh - 200px);">
+
+        <!-- FORM COL -->
+        <div style="padding:36px 48px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:32px;">
+
+          <!-- ① Company + Job Title -->
+          <div>
+            <div class="form-section-title" style="margin-top:0;"><i class="ti ti-building"></i> Company · Job Info</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Company Name *</label>
+                <div style="position:relative;">
+                  <input class="form-input" type="text" placeholder="e.g. Naver, Google, Apple" id="company-input" oninput="filterSuggest(this.value)">
+                  <!-- autocomplete dropdown -->
+                  <div id="company-suggest" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1px solid var(--border-strong);border-radius:var(--r);box-shadow:var(--shadow);z-index:50;overflow:hidden;">
+                    <div class="suggest-item" onclick="selectCompany('Naver','NV','#03C75A','#fff')"><div style="width:28px;height:28px;border-radius:6px;background:#03C75A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">NV</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Naver</div><div style="font-size:11px;color:var(--ink-4);">IT · Platform</div></div></div>
+                    <div class="suggest-item" onclick="selectCompany('Kakao','KK','#1A1A1A','#FFE000')"><div style="width:28px;height:28px;border-radius:6px;background:#1A1A1A;color:#FFE000;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">KK</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Kakao</div><div style="font-size:11px;color:var(--ink-4);">IT · Social</div></div></div>
+                    <div class="suggest-item" onclick="selectCompany('Toss','TN','#0064FF','#fff')"><div style="width:28px;height:28px;border-radius:6px;background:#0064FF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">TN</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Toss</div><div style="font-size:11px;color:var(--ink-4);">Fintech · Finance</div></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Job Title *</label>
+                <input class="form-input" type="text" placeholder="e.g. Product Manager, Service Planner">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Department / Team <span style="font-size:10px;color:var(--ink-4);font-weight:400;text-transform:none;letter-spacing:0;">(Optional)</span></label>
+                <input class="form-input" type="text" placeholder="e.g. Service Dev. Division, Platform CIC">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Experience Level <span style="font-size:10px;color:var(--ink-4);font-weight:400;text-transform:none;letter-spacing:0;">(Optional)</span></label>
+                <select class="form-input form-select">
+                  <option value="">Select</option>
+                  <option>Entry Level</option>
+                  <option>1+ Years</option>
+                  <option>2+ Years</option>
+                  <option>3+ Years</option>
+                  <option>5+ Years</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ② JD Upload (Required) -->
+          <div>
+            <div class="form-section-title" style="margin-top:0;"><i class="ti ti-file-description"></i> JD File Upload <span style="margin-left:6px;font-size:11px;background:var(--danger-light);color:var(--danger);padding:2px 9px;border-radius:99px;font-weight:600;">Required</span></div>
+
+            <div id="jd-dropzone" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border-strong)'" ondrop="handleDrop(event,'jd')" style="border:2px dashed var(--border-strong);border-radius:var(--rl);padding:32px;text-align:center;cursor:pointer;background:var(--surface);transition:border-color 0.15s;" onclick="document.getElementById('jd-file').click()">
+              <i class="ti ti-upload" style="font-size:28px;color:var(--ink-4);margin-bottom:10px;display:block;"></i>
+              <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Drop your JD file here or click to upload</div>
+              <div style="font-size:12px;color:var(--ink-4);">PDF, DOCX, TXT · Max 10MB</div>
+              <input type="file" id="jd-file" accept=".pdf,.docx,.txt" style="display:none;" onchange="handleFileSelect(this,'jd')">
+            </div>
+
+            <!-- uploaded state (hidden by default) -->
+            <div id="jd-uploaded" style="display:none;margin-top:10px;padding:13px 16px;background:var(--success-light);border:1px solid rgba(5,150,105,0.2);border-radius:var(--r);display:none;align-items:center;gap:12px;">
+              <i class="ti ti-file-check" style="font-size:20px;color:var(--success);flex-shrink:0;"></i>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:600;color:var(--ink);" id="jd-filename">ServicePlanner_JD.pdf</div>
+                <div style="font-size:11px;color:var(--ink-4);">Uploaded · 2.3MB</div>
+              </div>
+              <button onclick="removeFile('jd')" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:16px;"><i class="ti ti-x"></i></button>
+            </div>
+          </div>
+
+          <!-- ③ IR Materials Upload (Optional) -->
+          <div>
+            <div class="form-section-title" style="margin-top:0;"><i class="ti ti-chart-line"></i> IR Materials Upload <span style="margin-left:6px;font-size:11px;background:var(--surface-2);color:var(--ink-4);padding:2px 9px;border-radius:99px;font-weight:600;">Optional</span></div>
+            <div style="font-size:13px;color:var(--ink-3);margin-bottom:14px;line-height:1.6;">Upload IR reports or business documents for deeper company strategy alignment analysis</div>
+
+            <div id="ir-dropzone" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border-strong)'" ondrop="handleDrop(event,'ir')" style="border:2px dashed var(--border-strong);border-radius:var(--rl);padding:24px;text-align:center;cursor:pointer;background:var(--surface);transition:border-color 0.15s;" onclick="document.getElementById('ir-file').click()">
+              <i class="ti ti-presentation-analytics" style="font-size:24px;color:var(--ink-4);margin-bottom:8px;display:block;"></i>
+              <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;">IR Materials Upload (Optional)</div>
+              <div style="font-size:12px;color:var(--ink-4);">PDF · Max 20MB</div>
+              <input type="file" id="ir-file" accept=".pdf" style="display:none;" onchange="handleFileSelect(this,'ir')">
+            </div>
+
+            <div id="ir-uploaded" style="display:none;margin-top:10px;padding:13px 16px;background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--r);align-items:center;gap:12px;">
+              <i class="ti ti-file-check" style="font-size:20px;color:var(--accent-2);flex-shrink:0;"></i>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:600;color:var(--ink);" id="ir-filename">Naver_IR_2024.pdf</div>
+                <div style="font-size:11px;color:var(--ink-4);">Uploaded · 8.1MB</div>
+              </div>
+              <button onclick="removeFile('ir')" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:16px;"><i class="ti ti-x"></i></button>
+            </div>
+          </div>
+
+          <!-- Bottom actions -->
+          <div style="display:flex;gap:10px;padding-top:8px;border-top:1px solid var(--border);align-items:center;">
+            <button class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;color:var(--ink-4);">
+              <i class="ti ti-device-floppy" style="font-size:14px;"></i> Save Draft
+            </button>
+            <div style="margin-left:auto;">
+              <button onclick="openBlockRecommendModal()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);border:none;padding:12px 28px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                <i class="ti ti-sparkles" style="font-size:16px;"></i> Start Fit Analysis
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Saved Companies -->
+        <div style="padding:28px 24px;background:var(--surface);display:flex;flex-direction:column;gap:16px;">
+
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);">Companies in Analysis <span style="background:var(--accent-light);color:var(--accent-2);padding:2px 8px;border-radius:99px;font-size:11px;">3</span></div>
+
+          <!-- saved company cards -->
+          <div style="display:flex;flex-direction:column;gap:10px;">
+
+            <div style="background:var(--white);border:1.5px solid var(--accent-mid);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow-sm);">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="width:34px;height:34px;border-radius:8px;background:#03C75A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">NV</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:var(--ink);">Naver</div>
+                  <div style="font-size:11px;color:var(--ink-4);">Service Planner · Service Dev. Division</div>
+                </div>
+                <div style="font-size:13px;font-weight:800;color:var(--success);">87%</div>
+              </div>
+              <div style="height:3px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:10px;"><div style="width:87%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:10px;font-weight:600;color:var(--success);background:var(--success-light);padding:2px 8px;border-radius:99px;display:flex;align-items:center;gap:3px;"><i class="ti ti-file-check" style="font-size:11px;"></i> JD Uploaded</span>
+                <span style="font-size:10px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:2px 8px;border-radius:99px;">Analysis Complete</span>
+                <button onclick="navigate('matchstore')" style="margin-left:auto;font-size:11px;font-weight:600;color:var(--accent-2);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;">Report <i class="ti ti-chevron-right" style="font-size:12px;"></i></button>
+              </div>
+            </div>
+
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow-sm);">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="width:34px;height:34px;border-radius:8px;background:#1A1A1A;color:#FFE000;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">KK</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:var(--ink);">Kakao</div>
+                  <div style="font-size:11px;color:var(--ink-4);">PM · Platform CIC</div>
+                </div>
+                <div style="font-size:13px;font-weight:800;color:var(--success);">73%</div>
+              </div>
+              <div style="height:3px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:10px;"><div style="width:73%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:10px;font-weight:600;color:var(--success);background:var(--success-light);padding:2px 8px;border-radius:99px;display:flex;align-items:center;gap:3px;"><i class="ti ti-file-check" style="font-size:11px;"></i> JD Uploaded</span>
+                <span style="font-size:10px;font-weight:600;color:var(--success);background:var(--success-light);padding:2px 8px;border-radius:99px;">Analysis Complete</span>
+              </div>
+            </div>
+
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow-sm);">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="width:34px;height:34px;border-radius:8px;background:#0064FF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">TN</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:var(--ink);">Toss</div>
+                  <div style="font-size:11px;color:var(--ink-4);">Growth Marketer · Finance</div>
+                </div>
+                <div style="font-size:13px;font-weight:800;color:var(--warn);">—</div>
+              </div>
+              <div style="height:3px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:10px;"></div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:10px;font-weight:600;color:var(--warn);background:var(--warn-light);padding:2px 8px;border-radius:99px;display:flex;align-items:center;gap:3px;"><i class="ti ti-upload" style="font-size:11px;"></i> JD Required</span>
+                <span style="font-size:10px;font-weight:600;color:var(--ink-4);background:var(--surface-2);padding:2px 8px;border-radius:99px;">Not Analyzed</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- add new hint -->
+          <div style="border:1.5px dashed var(--border-strong);border-radius:var(--rl);padding:18px;text-align:center;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border-strong)'">
+            <i class="ti ti-plus" style="font-size:20px;color:var(--ink-4);margin-bottom:6px;display:block;"></i>
+            <div style="font-size:12px;font-weight:600;color:var(--ink-4);">Add New Company</div>
+          </div>
+
+          <!-- tips -->
+          <div class="tips-card" style="margin-top:4px;">
+            <div class="tips-title"><i class="ti ti-bulb"></i> Upload Tips</div>
+            <div class="tip-item"><div class="tip-dot"></div> The original <strong>job posting PDF</strong> gives the most accurate results</div>
+            <div class="tip-item"><div class="tip-dot"></div> IR materials enable deeper company strategy alignment analysis</div>
+            <div class="tip-item"><div class="tip-dot"></div> Use the <strong>exact job title</strong> as written in the job posting</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ BLOCK RECOMMEND MODAL ════ -->
+    <div id="block-recommend-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;">
+      <div onclick="closeBlockRecommendModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
+      <div style="position:relative;width:680px;max-width:92vw;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.22s ease;max-height:88vh;">
+
+        <!-- header -->
+        <div style="background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);padding:22px 28px;flex-shrink:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;"><i class="ti ti-sparkles" style="font-size:18px;color:#fff;"></i></div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;">Block Recommendations</div>
+                <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Naver · Service Planner</div>
+              </div>
+            </div>
+            <button onclick="closeBlockRecommendModal()" style="background:rgba(255,255,255,0.2);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button>
+          </div>
+        </div>
+
+        <!-- body -->
+        <div style="padding:24px 28px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:20px;">
+
+          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">5</strong> to use in the analysis.</div>
+
+          <!-- recommended blocks (auto-selected) -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-2);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-star-filled" style="font-size:12px;"></i> Recommended · Auto-selected</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+
+              <div class="rec-block selected" onclick="toggleBlock(this)">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Project</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">New Product GTM Strategy</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2024.01 – 2024.06 · 6 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">Strategic Planning</span><span class="tag blue">GTM</span><span class="tag">B2B</span></div>
+                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+              <div class="rec-block selected" onclick="toggleBlock(this)">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Work Experience</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Data-Driven User Analysis</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.11 – 2023.02 · 4 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">SQL</span><span class="tag blue">Tableau</span><span class="tag">Data Analysis</span></div>
+                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+              <div class="rec-block selected" onclick="toggleBlock(this)">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Leadership</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Team OKR Design & Operations</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.07 – 2022.10 · 4 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">OKR</span><span class="tag blue">Leadership</span><span class="tag">Cross-functional</span></div>
+                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- other blocks -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+
+              <div class="rec-block" onclick="toggleBlock(this)" style="opacity:0.65;">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.05em;">Work Experience</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Content Marketing Campaign</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.01 – 2022.06 · 6 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag">Content</span><span class="tag">SNS Marketing</span></div>
+                <div class="rec-check" style="display:none;"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+              <div class="rec-block" onclick="toggleBlock(this)" style="opacity:0.65;">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.05em;">Project</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">App Renewal UX Research</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2021.09 – 2021.12 · 4 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag">UX Research</span><span class="tag">Interview</span></div>
+                <div class="rec-check" style="display:none;"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- footer -->
+        <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
+          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> blocks selected</div>
+          <button onclick="closeBlockRecommendModal()" class="btn-secondary-lg" style="margin-left:auto;">Cancel</button>
+          <button onclick="closeBlockRecommendModal();navigate('matchstore')" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+            <i class="ti ti-chart-bar" style="font-size:15px;"></i> Analyze with These Blocks
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════ PAGE: MATCH ARCHIVING ════ -->
+    <div id="page-matchstore" class="page">
+
+      <!-- HEADER -->
+      <div class="page-header">
+        <div class="page-eyebrow">MATCH ARCHIVING</div>
+        <div class="page-title">Match Archiving</div>
+        <div class="page-sub">View job fit scores and keyword analysis results by company — with improvement guides</div>
+      </div>
+
+      <!-- THREE-COL LAYOUT -->
+      <div style="display:grid;grid-template-columns:260px 1fr 300px;height:calc(100vh - 56px - 36px - 117px);overflow:hidden;">
+
+        <!-- LEFT: Company List -->
+        <div style="border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--white);overflow:hidden;">
+
+          <!-- Search -->
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r);padding:0 11px;">
+              <i class="ti ti-search" style="font-size:14px;color:var(--ink-4);"></i>
+              <input type="text" placeholder="Search companies..." style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:8px 0;width:100%;">
+            </div>
+          </div>
+
+          <!-- Company list -->
+          <div style="flex:1;overflow-y:auto;">
+
+            <!-- Active item -->
+            <div onclick="selectMatchCo(this)" style="display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;background:var(--accent-light);border-left:3px solid var(--accent);border-bottom:1px solid var(--border);">
+              <div style="width:38px;height:38px;border-radius:9px;background:#03C75A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">NV</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:700;color:var(--ink);">Naver</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-top:1px;">Service Planner</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:15px;font-weight:800;color:var(--success);">87%</div>
+                <div style="font-size:10px;color:var(--ink-4);">Top 15%</div>
+              </div>
+            </div>
+
+            <div onclick="selectMatchCo(this)" style="display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;border-left:3px solid transparent;border-bottom:1px solid var(--border);transition:background 0.12s;" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
+              <div style="width:38px;height:38px;border-radius:9px;background:#1A1A1A;color:#FFE000;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">KK</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:700;color:var(--ink);">Kakao</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-top:1px;">PM · Platform CIC</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:15px;font-weight:800;color:var(--success);">73%</div>
+                <div style="font-size:10px;color:var(--ink-4);">Top 28%</div>
+              </div>
+            </div>
+
+            <div onclick="selectMatchCo(this)" style="display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;border-left:3px solid transparent;border-bottom:1px solid var(--border);transition:background 0.12s;" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
+              <div style="width:38px;height:38px;border-radius:9px;background:#0064FF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">TN</div>
+              <div style="flex:1;">
+                <div style="font-size:13px;font-weight:700;color:var(--ink);">Toss</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-top:1px;">Growth Marketer</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:15px;font-weight:800;color:var(--warn);">68%</div>
+                <div style="font-size:10px;color:var(--ink-4);">Top 35%</div>
+              </div>
+            </div>
+
+            <!-- Add new -->
+            <div onclick="navigate('match')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;color:var(--accent-2);font-size:13px;font-weight:600;border-bottom:1px solid var(--border);transition:background 0.12s;" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
+              <i class="ti ti-plus" style="font-size:16px;"></i> Add Company
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER: Analysis Result -->
+        <div style="overflow-y:auto;display:flex;flex-direction:column;gap:0;">
+
+          <!-- Company hero -->
+          <div style="padding:24px 32px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="width:52px;height:52px;border-radius:12px;background:#03C75A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;">NV</div>
+              <div>
+                <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">Naver</div>
+                <div style="font-size:13px;color:var(--ink-4);margin-top:2px;">Service Planner · Service Dev. Division · 3+ Years</div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                  <span style="font-size:11px;font-weight:600;color:var(--success);background:var(--success-light);padding:3px 10px;border-radius:99px;">Analysis Complete</span>
+                  <span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 10px;border-radius:99px;">JD Uploaded</span>
+                </div>
+              </div>
+            </div>
+            <button onclick="navigate('matchstore')" class="btn-primary" style="display:flex;align-items:center;gap:6px;white-space:nowrap;"><i class="ti ti-chart-bar" style="font-size:14px;"></i> Full Report</button>
+          </div>
+
+          <!-- Score panel -->
+          <div style="margin:20px 32px 0;">
+            <div style="background:var(--ink);border-radius:var(--rl);padding:20px 24px;display:grid;grid-template-columns:130px 1px 1fr;gap:20px;align-items:center;">
+              <div>
+                <div style="font-size:10px;letter-spacing:0.08em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:8px;">JOB FIT SCORE</div>
+                <div style="font-size:52px;font-weight:800;background:linear-gradient(135deg,#38BDE0,#77FFE4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">87<span style="font-size:20px;-webkit-text-fill-color:rgba(255,255,255,0.25);background:none;">%</span></div>
+                <div style="font-size:11px;color:#22C55E;margin-top:5px;display:flex;align-items:center;gap:4px;"><i class="ti ti-trending-up"></i> Top 15%</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.08);align-self:stretch;"></div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;color:rgba(255,255,255,0.4);width:110px;">Job Fit</span><div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;"><div style="width:92%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div><span style="font-size:11px;color:rgba(255,255,255,0.5);width:24px;text-align:right;">92</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;color:rgba(255,255,255,0.4);width:110px;">Keyword Match</span><div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;"><div style="width:85%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div><span style="font-size:11px;color:rgba(255,255,255,0.5);width:24px;text-align:right;">85</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;color:rgba(255,255,255,0.4);width:110px;">Diversity</span><div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;"><div style="width:78%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div><span style="font-size:11px;color:rgba(255,255,255,0.5);width:24px;text-align:right;">78</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;color:rgba(255,255,255,0.4);width:110px;">Duration</span><div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;"><div style="width:88%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div><span style="font-size:11px;color:rgba(255,255,255,0.5);width:24px;text-align:right;">88</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Keyword Match Analysis -->
+          <div style="margin:20px 32px 0;">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-tag"></i> Keyword Match Analysis</div>
+                <div style="display:flex;gap:12px;font-size:11px;">
+                  <span style="color:var(--success);font-weight:600;">● Matched 9</span>
+                  <span style="color:var(--warn);font-weight:600;">● Partial 4</span>
+                  <span style="color:var(--danger);font-weight:600;">● Missing 3</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                  <div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:5px;"><i class="ti ti-user" style="font-size:13px;color:var(--accent-2);"></i> My Keywords</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                      <span class="kw-pill matched">Strategic Planning</span>
+                      <span class="kw-pill matched">GTM</span>
+                      <span class="kw-pill matched">Data Analysis</span>
+                      <span class="kw-pill matched">OKR</span>
+                      <span class="kw-pill matched">B2B</span>
+                      <span class="kw-pill partial">SQL</span>
+                      <span class="kw-pill partial">UX Research</span>
+                      <span class="kw-pill partial">Leadership</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:5px;"><i class="ti ti-building" style="font-size:13px;color:var(--accent-2);"></i> JD Required</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                      <span class="kw-pill matched">Strategic Planning</span>
+                      <span class="kw-pill matched">GTM</span>
+                      <span class="kw-pill matched">Service Planning</span>
+                      <span class="kw-pill matched">B2B</span>
+                      <span class="kw-pill missing">Agile</span>
+                      <span class="kw-pill missing">A/B Testing</span>
+                      <span class="kw-pill missing">KPI Design</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Improvement Guide -->
+          <div style="margin:20px 32px 28px;">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i class="ti ti-map"></i> Improvement Guide</div>
+                <div style="font-size:11px;color:var(--ink-4);">AI-generated suggestions based on JD gaps</div>
+              </div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:14px;">
+
+                <!-- Rewrite direction -->
+                <div>
+                  <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-edit" style="font-size:14px;color:var(--accent-2);"></i> Experience Rewrite Direction</div>
+                  <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="padding:12px 14px;background:var(--surface);border-radius:var(--r);border-left:3px solid var(--accent);">
+                      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;">GTM Strategy Block</div>
+                      <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Add A/B testing and KPI setting language. Replace "planned and executed" with specific user funnel improvements and measurable conversion metrics.</div>
+                    </div>
+                    <div style="padding:12px 14px;background:var(--surface);border-radius:var(--r);border-left:3px solid var(--accent);">
+                      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;">Data Analysis Block</div>
+                      <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Emphasize service planning decisions driven by data. Mention DAU, retention rate, or funnel drop-off metrics to match Naver's analytical service planner profile.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="height:1px;background:var(--border);"></div>
+
+                <!-- Keyword gap -->
+                <div>
+                  <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-key" style="font-size:14px;color:var(--warn);"></i> Keywords to Acquire</div>
+                  <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--warn-light);border-radius:var(--r);border:1px solid rgba(217,119,6,0.18);">
+                      <span class="kw-pill missing" style="flex-shrink:0;">Agile</span>
+                      <div style="font-size:12px;color:var(--ink-2);line-height:1.6;">Referenced 4x in JD. Add a sprint-based project experience block — even a side project counts.</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--warn-light);border-radius:var(--r);border:1px solid rgba(217,119,6,0.18);">
+                      <span class="kw-pill missing" style="flex-shrink:0;">A/B Testing</span>
+                      <div style="font-size:12px;color:var(--ink-2);line-height:1.6;">Referenced 3x. Mention any experiment or hypothesis-driven test from your GTM or UX research work.</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--warn-light);border-radius:var(--r);border:1px solid rgba(217,119,6,0.18);">
+                      <span class="kw-pill missing" style="flex-shrink:0;">KPI Design</span>
+                      <div style="font-size:12px;color:var(--ink-2);line-height:1.6;">Referenced 2x. Add to OKR Design block — your OKR work naturally overlaps with KPI setting.</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Analysis Panel -->
+        <div style="border-left:1px solid var(--border);background:var(--surface);overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:18px;">
+
+          <!-- Competency gauge -->
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">Competency Distribution</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div class="gauge-item"><div class="gauge-header"><span class="gauge-lbl">Strategy / Planning</span><span class="gauge-val">92%</span></div><div class="gauge-track"><div class="gauge-fill blue" style="width:92%"></div></div></div>
+              <div class="gauge-item"><div class="gauge-header"><span class="gauge-lbl">Data / Analysis</span><span class="gauge-val">78%</span></div><div class="gauge-track"><div class="gauge-fill teal" style="width:78%"></div></div></div>
+              <div class="gauge-item"><div class="gauge-header"><span class="gauge-lbl">Leadership / Org</span><span class="gauge-val">65%</span></div><div class="gauge-track"><div class="gauge-fill green" style="width:65%"></div></div></div>
+              <div class="gauge-item"><div class="gauge-header"><span class="gauge-lbl">Marketing / Content</span><span class="gauge-val">58%</span></div><div class="gauge-track"><div class="gauge-fill amber" style="width:58%"></div></div></div>
+            </div>
+          </div>
+
+          <div style="height:1px;background:var(--border-strong);"></div>
+
+          <!-- Company comparison -->
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">Company Comparison</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r);background:var(--accent-light);border:1px solid var(--accent-mid);">
+                <div style="width:24px;height:24px;border-radius:5px;background:#03C75A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">NV</div>
+                <span style="font-size:12px;font-weight:600;color:var(--accent-2);flex:1;">Naver</span>
+                <div style="width:48px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:87%;height:100%;background:var(--accent);border-radius:99px;"></div></div>
+                <span style="font-size:12px;font-weight:700;color:var(--accent-2);width:32px;text-align:right;">87%</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r);background:var(--white);border:1px solid var(--border);">
+                <div style="width:24px;height:24px;border-radius:5px;background:#1A1A1A;color:#FFE000;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">KK</div>
+                <span style="font-size:12px;font-weight:600;color:var(--ink-2);flex:1;">Kakao</span>
+                <div style="width:48px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:73%;height:100%;background:var(--success);border-radius:99px;"></div></div>
+                <span style="font-size:12px;font-weight:700;color:var(--ink-2);width:32px;text-align:right;">73%</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r);background:var(--white);border:1px solid var(--border);">
+                <div style="width:24px;height:24px;border-radius:5px;background:#0064FF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">TN</div>
+                <span style="font-size:12px;font-weight:600;color:var(--ink-2);flex:1;">Toss</span>
+                <div style="width:48px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:68%;height:100%;background:var(--warn);border-radius:99px;"></div></div>
+                <span style="font-size:12px;font-weight:700;color:var(--ink-2);width:32px;text-align:right;">68%</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="height:1px;background:var(--border-strong);"></div>
+
+          <!-- AI Insights -->
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">AI Insights</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="padding:11px 13px;background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);">
+                <div style="font-size:10px;font-weight:700;color:var(--success);margin-bottom:4px;display:flex;align-items:center;gap:4px;"><i class="ti ti-circle-check" style="font-size:13px;"></i> Strength</div>
+                <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">GTM + B2B signals are a strong fit. Cross-functional leadership differentiates you for PM roles.</div>
+              </div>
+              <div style="padding:11px 13px;background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);">
+                <div style="font-size:10px;font-weight:700;color:var(--warn);margin-bottom:4px;display:flex;align-items:center;gap:4px;"><i class="ti ti-alert-circle" style="font-size:13px;"></i> Needs Work</div>
+                <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">Agile and A/B testing are missing. Adding these blocks could boost score by +12%.</div>
+              </div>
+              <div style="padding:11px 13px;background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);">
+                <div style="font-size:10px;font-weight:700;color:var(--accent-2);margin-bottom:4px;display:flex;align-items:center;gap:4px;"><i class="ti ti-bulb" style="font-size:13px;"></i> Next Action</div>
+                <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">Add DAU metrics to Data Analysis block — Naver score could reach 93%+.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+  </main>
+</div>
+
+<!-- ═══════════ FEEDBACK MODAL ═══════════ -->
+<div id="feedback-modal" style="display:none;position:fixed;inset:0;z-index:600;align-items:center;justify-content:center;">
+  <div onclick="closeFeedbackModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.45);backdrop-filter:blur(5px);"></div>
+  <div style="position:relative;width:480px;max-width:92vw;background:var(--white);border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.16);overflow:hidden;animation:modalIn 0.22s ease;">
+
+    <!-- Header -->
+    <div style="padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;">
+      <div>
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px;">
+          <i class="ti ti-message-report" style="font-size:20px;color:var(--accent);"></i>
+          <span style="font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">Send Feedback</span>
+        </div>
+        <div style="font-size:13px;color:var(--ink-4);margin-left:29px;">Issues, suggestions, or improvements — we read every one.</div>
+      </div>
+      <button onclick="closeFeedbackModal()" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:18px;padding:2px;line-height:1;"><i class="ti ti-x"></i></button>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:22px 28px;display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Type -->
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Type</div>
+        <div style="display:flex;gap:7px;" id="fb-type-group">
+          <button class="fb-type active" onclick="selectFbType(this)"><i class="ti ti-bug"></i> Bug</button>
+          <button class="fb-type" onclick="selectFbType(this)"><i class="ti ti-adjustments"></i> Improvement</button>
+          <button class="fb-type" onclick="selectFbType(this)"><i class="ti ti-bulb"></i> Suggestion</button>
+          <button class="fb-type" onclick="selectFbType(this)"><i class="ti ti-heart"></i> Compliment</button>
+        </div>
+      </div>
+
+      <!-- Related page -->
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Related Page</div>
+        <select class="form-input form-select" style="font-size:13px;">
+          <option value="">Select a page</option>
+          <option>Dashboard</option>
+          <option>Add Experience</option>
+          <option>Experience Archiving</option>
+          <option>Company / Job Match</option>
+          <option>Match Archiving</option>
+          <option>General / Other</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Message <span style="color:var(--danger);">*</span></div>
+        <textarea id="fb-text" class="form-input form-textarea" placeholder="Describe the issue or your suggestion in detail..." style="min-height:110px;resize:vertical;"></textarea>
+      </div>
+
+      <!-- Priority -->
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Priority</div>
+        <div style="display:flex;gap:20px;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer;"><input type="radio" name="fb-priority" value="low" style="accent-color:var(--accent);"> Low</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer;"><input type="radio" name="fb-priority" value="medium" checked style="accent-color:var(--accent);"> Medium</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer;"><input type="radio" name="fb-priority" value="high" style="accent-color:var(--accent);"> High</label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
+      <button onclick="closeFeedbackModal()" class="btn-secondary-lg">Cancel</button>
+      <div style="margin-left:auto;">
+        <button onclick="submitFeedback()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <i class="ti ti-send" style="font-size:14px;"></i> Submit Feedback
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="fb-toast" style="display:none;position:fixed;bottom:60px;right:24px;z-index:700;background:var(--ink);color:#fff;padding:13px 20px;border-radius:var(--rl);font-size:13px;font-weight:500;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.22);">
+  <i class="ti ti-circle-check" style="font-size:17px;color:#77FFE4;"></i> Feedback submitted — thank you!
+</div>
+
+<style>
+  .fb-type {
+    display:flex; align-items:center; gap:5px;
+    font-size:12px; font-weight:600; padding:7px 13px;
+    border-radius:var(--r); border:1px solid var(--border-strong);
+    background:var(--white); color:var(--ink-3); cursor:pointer;
+    transition:all 0.12s; font-family:var(--ff-head);
+  }
+  .fb-type i { font-size:13px; }
+  .fb-type:hover { border-color:var(--accent); color:var(--accent-2); }
+  .fb-type.active { background:var(--accent-light); color:var(--accent-2); border-color:var(--accent); }
+</style>
+
+<!-- ═══════════ ANALYSIS RESULT MODAL ═══════════ -->
+<div id="analysis-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;">
+  <!-- backdrop -->
+  <div onclick="closeAnalysisModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
+
+  <!-- modal card -->
+  <div style="position:relative;width:90vw;max-width:1100px;height:88vh;max-height:800px;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.22);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.24s ease;">
+
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);padding:22px 28px;flex-shrink:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">
+            <i class="ti ti-sparkles" style="font-size:20px;color:#fff;"></i>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;">Analysis Complete</div>
+            <div style="font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.02em;">New Product GTM Strategy</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.65);">Marketing · 2024.01 – 2024.06 · 6 months</div>
+          <button onclick="closeAnalysisModal()" style="background:rgba(255,255,255,0.2);border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;margin-left:8px;">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY: 5-part grid, PDCA = 3/5, Analysis = 2/5 -->
+    <div style="display:grid;grid-template-columns:3fr 2fr;flex:1;overflow:hidden;">
+
+      <!-- LEFT: PDCA Structured Experience -->
+      <div style="padding:28px 32px;border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:#fff;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);">PDCA Structured Experience</div>
+          <span style="font-size:11px;color:var(--ink-4);background:var(--surface-2);padding:3px 10px;border-radius:99px;font-weight:500;">AI Organized</span>
+        </div>
+
+        <!-- P -->
+        <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
+          <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">P</div>
+            <span style="font-size:12px;font-weight:700;color:var(--ink);">Plan — Problem & Goal</span>
+          </div>
+          <div style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;">
+            Identified the need for a structured <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">go-to-market strategy</mark> for a new <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">B2B SaaS product</mark> entering a competitive market. Goal was to achieve 30% market penetration within 6 months.
+          </div>
+        </div>
+
+        <!-- D -->
+        <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
+          <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">D</div>
+            <span style="font-size:12px;font-weight:700;color:var(--ink);">Do — Action Taken</span>
+          </div>
+          <div style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;">
+            Led <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">cross-functional collaboration</mark> across marketing, sales, and product teams. Executed <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">strategic planning</mark> sessions and developed positioning documents and <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">GTM playbook</mark>.
+          </div>
+        </div>
+
+        <!-- C -->
+        <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
+          <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">C</div>
+            <span style="font-size:12px;font-weight:700;color:var(--ink);">Check — Results & Metrics</span>
+          </div>
+          <div style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;">
+            Achieved <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">MAU 15% increase</mark> and <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">conversion rate improved 23%</mark> within the campaign period. Pipeline exceeded target by 130%.
+          </div>
+        </div>
+
+        <!-- A -->
+        <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
+          <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">A</div>
+            <span style="font-size:12px;font-weight:700;color:var(--ink);">Act — Improvement & Learnings</span>
+          </div>
+          <div style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;">
+            Initial launch faced <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">performance lag</mark>; addressed by optimizing state management and lazy loading assets. Applied learnings to subsequent product launches.
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Analysis Results (2/5) -->
+      <div style="padding:28px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:24px;background:var(--surface);">
+
+        <!-- Competencies -->
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Extracted Competencies</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+                <span style="font-size:13px;font-weight:600;color:var(--ink);">Strategic Planning</span>
+                <span style="font-size:13px;font-weight:700;color:var(--ink);">92%</span>
+              </div>
+              <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:92%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+                <span style="font-size:13px;font-weight:600;color:var(--ink);">GTM Execution</span>
+                <span style="font-size:13px;font-weight:700;color:var(--ink);">85%</span>
+              </div>
+              <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:85%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+                <span style="font-size:13px;font-weight:600;color:var(--ink);">Cross-functional</span>
+                <span style="font-size:13px;font-weight:700;color:var(--ink);">78%</span>
+              </div>
+              <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:78%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+                <span style="font-size:13px;font-weight:600;color:var(--ink);">B2B Strategy</span>
+                <span style="font-size:13px;font-weight:700;color:var(--ink);">71%</span>
+              </div>
+              <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:71%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div style="height:1px;background:var(--border);"></div>
+
+        <!-- Keywords -->
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">Extracted Keywords</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;">
+            <span class="kw-tag">Strategic Planning <button>×</button></span>
+            <span class="kw-tag">GTM <button>×</button></span>
+            <span class="kw-tag">B2B <button>×</button></span>
+            <span class="kw-tag">Cross-functional <button>×</button></span>
+            <span class="kw-tag">Marketing <button>×</button></span>
+            <span class="kw-tag">OKR <button>×</button></span>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div style="height:1px;background:var(--border);"></div>
+
+        <!-- Insights — mono color, clean -->
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">AI Insights</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:13px 15px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);">
+              <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:5px;"><i class="ti ti-circle-check" style="color:var(--success);"></i> Strength</div>
+              <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Strong GTM + B2B signals. Cross-functional leadership is a clear differentiator for PM roles.</div>
+            </div>
+            <div style="padding:13px 15px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);">
+              <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:5px;"><i class="ti ti-alert-circle" style="color:var(--warn);"></i> Needs Improvement</div>
+              <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Add specific metrics — DAU, churn %, revenue impact — to boost match score.</div>
+            </div>
+            <div style="padding:13px 15px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);">
+              <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:5px;"><i class="ti ti-bulb" style="color:var(--accent);"></i> Recommended</div>
+              <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Adding A/B test + Agile blocks could boost your match score by up to <strong style="color:var(--ink);">+12%</strong>.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
+      <button onclick="closeAnalysisModal()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-edit" style="font-size:14px;"></i> Edit More</button>
+      <button class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-sparkles" style="font-size:14px;color:var(--accent);"></i> Re-analyze</button>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+        <div style="font-size:12px;color:var(--ink-4);">Ready to save this experience?</div>
+        <button onclick="closeAnalysisModal();navigate('blocks')" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:12px 24px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <i class="ti ti-database" style="font-size:15px;"></i> Save as Block
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @keyframes modalIn { from { opacity:0; transform:translateY(20px) scale(0.97); } to { opacity:1; transform:none; } }
+
+  /* ── SUGGEST DROPDOWN ── */
+  .suggest-item { display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background 0.1s; }
+  .suggest-item:hover { background:var(--surface); }
+
+  /* ── REC BLOCK ── */
+  .rec-block { position:relative;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--rl);background:var(--white);cursor:pointer;transition:all 0.15s; }
+  .rec-block:hover { border-color:var(--accent); }
+  .rec-block.selected { border-color:var(--accent);background:var(--accent-light);opacity:1 !important; }
+  .rec-check { position:absolute;top:14px;right:14px;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center; }
+  .rec-block:not(.selected) .rec-check { display:none; }
+</style>
+<div class="status-bar" id="status-bar">
+  <div class="status-bar-left">
+    <div class="status-bar-dot"></div>
+    <span class="status-bar-text" id="status-bar-text">ANALYZING CONTENT QUALITY</span>
+    <div class="status-bar-sep"></div>
+    <span class="status-bar-text">LAST SAVED: 2 MINS AGO</span>
+    <div class="status-bar-sep"></div>
+    <span class="status-bar-text">5 BLOCKS TOTAL</span>
+  </div>
+  <div class="status-bar-right">
+    <span class="status-readiness">READINESS</span>
+    <div class="status-readiness-bar"><div class="status-readiness-fill" style="width:78%"></div></div>
+    <span class="status-readiness-val">78%</span>
+  </div>
+</div>
+
+<script>
+  const pages = ['dashboard','add','blocks','match','matchstore'];
+  const pageTitles = {
+    dashboard:  'Dashboard',
+    add:        'Add Experience',
+    blocks:     'Experience Blocks',
+    match:      'Matching Analysis',
+    matchstore: 'Match Archiving'
+  };
+
+  function selectMatchCo(el) {
+    // reset all
+    el.closest('div[style*="overflow-y:auto"]').querySelectorAll('[onclick^="selectMatchCo"]').forEach(item => {
+      item.style.background = '';
+      item.style.borderLeft = '3px solid transparent';
+    });
+    el.style.background = 'var(--accent-light)';
+    el.style.borderLeft = '3px solid var(--accent)';
+  }
+
+  function openFeedbackModal() {
+    document.getElementById('feedback-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeFeedbackModal() {
+    document.getElementById('feedback-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function selectFbType(el) {
+    document.querySelectorAll('.fb-type').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function submitFeedback() {
+    const text = document.getElementById('fb-text').value.trim();
+    if (!text) { document.getElementById('fb-text').focus(); return; }
+    closeFeedbackModal();
+    document.getElementById('fb-text').value = '';
+    const toast = document.getElementById('fb-toast');
+    toast.style.display = 'flex';
+    setTimeout(() => { toast.style.display = 'none'; }, 3200);
+  }
+
+  function openBlockRecommendModal() {
+    document.getElementById('block-recommend-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeBlockRecommendModal() {
+    document.getElementById('block-recommend-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function toggleBlock(el) {
+    el.classList.toggle('selected');
+    const count = document.querySelectorAll('.rec-block.selected').length;
+    const counter = document.getElementById('selected-count');
+    if (counter) counter.textContent = count;
+  }
+  function filterSuggest(val) {
+    const box = document.getElementById('company-suggest');
+    if (!box) return;
+    box.style.display = val.length > 0 ? 'block' : 'none';
+  }
+  function selectCompany(name) {
+    const input = document.getElementById('company-input');
+    if (input) input.value = name;
+    const box = document.getElementById('company-suggest');
+    if (box) box.style.display = 'none';
+  }
+  function handleFileSelect(input, type) {
+    if (!input.files.length) return;
+    const file = input.files[0];
+    document.getElementById(type+'-dropzone').style.display = 'none';
+    const up = document.getElementById(type+'-uploaded');
+    up.style.display = 'flex';
+    document.getElementById(type+'-filename').textContent = file.name;
+  }
+  function handleDrop(e, type) {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    document.getElementById(type+'-dropzone').style.display = 'none';
+    const up = document.getElementById(type+'-uploaded');
+    up.style.display = 'flex';
+    document.getElementById(type+'-filename').textContent = file.name;
+  }
+  function removeFile(type) {
+    document.getElementById(type+'-dropzone').style.display = 'block';
+    document.getElementById(type+'-uploaded').style.display = 'none';
+    document.getElementById(type+'-file').value = '';
+  }
+
+  function openAnalysisModal() {
+    const m = document.getElementById('analysis-modal');
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAnalysisModal() {
+    const m = document.getElementById('analysis-modal');
+    m.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // ── MIND MAP ──────────────────────────────
+  function renderMindmap() {
+    const wrap = document.getElementById('mindmap-wrap');
+    const svg  = document.getElementById('mindmap-svg');
+    if (!wrap || !svg) return;
+
+    const W = wrap.offsetWidth  || 700;
+    const H = wrap.offsetHeight || 420;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('width',  W);
+    svg.setAttribute('height', H);
+
+    // center node position (slightly left of center)
+    const cx = W * 0.42, cy = H * 0.5;
+
+    const branches = [
+      { label: 'GTM Strategy',    sub: ['B2B', 'Product Launch', 'OKR'],          angle: -140, color: '#0081DD', len: Math.min(W,H)*0.24 },
+      { label: 'Data & Analysis', sub: ['SQL', 'Tableau', 'Dashboard'],            angle:  -65, color: '#0099CC', len: Math.min(W,H)*0.26 },
+      { label: 'UX Research',     sub: ['User Interview', 'Prototyping', 'A/B Test'], angle: 10, color: '#38BDE0', len: Math.min(W,H)*0.27 },
+      { label: 'Leadership',      sub: ['Cross-functional', 'OKR', 'Agile'],       angle:  75, color: '#1AB8B0', len: Math.min(W,H)*0.25 },
+      { label: 'Marketing',       sub: ['SNS', 'Content', 'Campaign'],             angle: 145, color: '#77FFE4', len: Math.min(W,H)*0.24 },
+    ];
+
+    let html = `<defs>
+      <radialGradient id="cg" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#38BDE0"/>
+        <stop offset="100%" stop-color="#0081DD"/>
+      </radialGradient>
+      <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>`;
+
+    // dot-grid background
+    for (let x = 16; x < W; x += 30) for (let y = 16; y < H; y += 30)
+      html += `<circle cx="${x}" cy="${y}" r="1.4" fill="#D1D5DB" opacity="0.55"/>`;
+
+    branches.forEach(b => {
+      const rad = b.angle * Math.PI / 180;
+      const bx  = cx + Math.cos(rad) * b.len;
+      const by  = cy + Math.sin(rad) * b.len;
+      const qx  = cx + Math.cos(rad) * b.len * 0.45;
+      const qy  = cy + Math.sin(rad) * b.len * 0.45 - 18;
+
+      // main curved line
+      html += `<path d="M${cx},${cy} Q${qx},${qy} ${bx},${by}"
+        stroke="${b.color}" stroke-width="2.5" fill="none" opacity="0.75" stroke-linecap="round"/>`;
+
+      // branch pill
+      const tw = Math.max(b.label.length * 7 + 26, 80);
+      html += `<rect x="${bx-tw/2}" y="${by-15}" width="${tw}" height="30" rx="15"
+        fill="${b.color}" opacity="0.13"/>
+        <rect x="${bx-tw/2}" y="${by-15}" width="${tw}" height="30" rx="15"
+        fill="none" stroke="${b.color}" stroke-width="1.5" opacity="0.6"/>
+        <text x="${bx}" y="${by+5.5}" text-anchor="middle"
+        font-family="Pretendard,sans-serif" font-size="12.5" font-weight="700" fill="${b.color}">${b.label}</text>`;
+
+      // sub-keyword nodes
+      b.sub.forEach((kw, i) => {
+        const spread = (i - (b.sub.length - 1) / 2) * 40;
+        const sRad = rad + spread * Math.PI / 180;
+        const sLen = b.len * 0.52;
+        const sx = bx + Math.cos(sRad) * sLen;
+        const sy = by + Math.sin(sRad) * sLen;
+
+        html += `<line x1="${bx}" y1="${by}" x2="${sx}" y2="${sy}"
+          stroke="${b.color}" stroke-width="1.3" stroke-dasharray="4 3" opacity="0.45"/>`;
+
+        const sw = Math.max(kw.length * 6.4 + 18, 50);
+        html += `<rect x="${sx-sw/2}" y="${sy-12}" width="${sw}" height="24" rx="12"
+          fill="white" stroke="${b.color}" stroke-width="1.2" opacity="0.8"/>
+          <text x="${sx}" y="${sy+4.5}" text-anchor="middle"
+          font-family="Pretendard,sans-serif" font-size="11" font-weight="500" fill="${b.color}">${kw}</text>`;
+      });
+    });
+
+    // center node glow ring
+    html += `<circle cx="${cx}" cy="${cy}" r="54" fill="#38BDE0" opacity="0.08"/>`;
+    html += `<circle cx="${cx}" cy="${cy}" r="42" fill="url(#cg)" filter="url(#glow)"/>`;
+    html += `<circle cx="${cx}" cy="${cy}" r="42" fill="none" stroke="white" stroke-width="2" opacity="0.25"/>`;
+    html += `<text x="${cx}" y="${cy-8}" text-anchor="middle"
+      font-family="Pretendard,sans-serif" font-size="14" font-weight="800" fill="white">Ji-won</text>`;
+    html += `<text x="${cx}" y="${cy+10}" text-anchor="middle"
+      font-family="Pretendard,sans-serif" font-size="10.5" font-weight="500" fill="rgba(255,255,255,0.8)">12 experiences</text>`;
+
+    // legend bottom-right
+    const lgx = W - 20, lgy = H - 58;
+    [['#0081DD','Project'],['#38BDE0','Work Exp.'],['#77FFE4','UX / Research']].forEach(([c,l],i) => {
+      html += `<circle cx="${lgx - 110}" cy="${lgy + i*18}" r="5" fill="${c}"/>`;
+      html += `<text x="${lgx - 100}" y="${lgy + i*18 + 4.5}"
+        font-family="Pretendard,sans-serif" font-size="11" fill="#9CA3AF">${l}</text>`;
+    });
+
+    svg.innerHTML = html;
+  }
+
+  window.addEventListener('load', () => { setTimeout(renderMindmap, 60); });
+  window.addEventListener('resize', renderMindmap);
+
+  // ── FILTER BLOCKS ─────────────────────────
+  function filterBlocks(category, el) {
+    document.querySelectorAll('.blk-filter').forEach(f => f.classList.remove('active'));
+    el.classList.add('active');
+    const sections = document.querySelectorAll('.blk-section');
+    sections.forEach(sec => {
+      sec.style.display = (category === 'all' || sec.dataset.category === category) ? '' : 'none';
+    });
+  }
+
+  function navigate(target) {
+    pages.forEach(p => {
+      const el = document.getElementById('page-' + p);
+      if (el) el.classList.remove('active');
+      const nav = document.getElementById('nav-' + p);
+      const sb  = document.getElementById('sb-' + p);
+      if (nav) nav.classList.remove('active');
+      if (sb)  sb.classList.remove('active');
+    });
+
+    const page = document.getElementById('page-' + target);
+    if (page) page.classList.add('active');
+
+    const nav = document.getElementById('nav-' + target);
+    const sb  = document.getElementById('sb-' + target);
+    if (nav) nav.classList.add('active');
+    if (sb)  sb.classList.add('active');
+
+    // update breadcrumb
+    const bc = document.getElementById('nav-breadcrumb-page');
+    if (bc) bc.textContent = pageTitles[target] || target;
+
+    // scroll to top
+    window.scrollTo(0, 0);
+  }
+
+  let sidebarCollapsed = false;
+  function toggleSidebar() {
+    sidebarCollapsed = !sidebarCollapsed;
+    const sb = document.getElementById('sidebar');
+    const main = sb.nextElementSibling;
+    const icon = document.getElementById('sb-toggle-icon');
+    if (sidebarCollapsed) {
+      sb.classList.add('collapsed');
+      if (main) main.style.marginLeft = '56px';
+      icon.className = 'ti ti-layout-sidebar-left-expand';
+    } else {
+      sb.classList.remove('collapsed');
+      if (main) main.style.marginLeft = '220px';
+      icon.className = 'ti ti-layout-sidebar-left-collapse';
+    }
+  }
+</script>
+</body>
+</html>
