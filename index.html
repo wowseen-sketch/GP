@@ -6,6 +6,7 @@
 <title>GOalign — Career Matching Platform</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -814,6 +815,137 @@
   }
   .blk-filter:hover { border-color: var(--accent); color: var(--accent-2); }
   .blk-filter.active { background: var(--accent-light); color: var(--accent-2); border-color: var(--accent); font-weight: 600; }
+
+  /* ── AUTH PAGES (login / signup) ── */
+  .auth-wrap {
+    min-height: calc(100vh - 56px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px 20px;
+    background:
+      radial-gradient(ellipse 600px 400px at 50% 0%, rgba(56,189,224,0.10), transparent 60%),
+      var(--surface);
+  }
+  .auth-card {
+    width: 100%; max-width: 440px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 36px 28px;
+    box-shadow: 0 12px 40px rgba(17,24,39,0.06);
+  }
+  .auth-brand {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 22px;
+  }
+  .auth-brand-mark {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #0081DD 0%, #38BDE0 60%, #77FFE4 100%);
+    color: #fff; font-weight: 800; font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,129,221,0.25);
+    letter-spacing: -0.01em;
+  }
+  .auth-brand-name {
+    font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em;
+  }
+  .auth-title {
+    font-size: 24px; font-weight: 800; color: var(--ink);
+    letter-spacing: -0.02em; margin-bottom: 6px;
+  }
+  .auth-sub {
+    font-size: 13px; color: var(--ink-3);
+    line-height: 1.55; margin-bottom: 24px;
+  }
+  .auth-form { display: flex; flex-direction: column; gap: 14px; }
+  .auth-field { display: flex; flex-direction: column; gap: 6px; }
+  .auth-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--ink-4);
+  }
+  .auth-error {
+    display: none;
+    font-size: 12px; color: var(--danger);
+    background: var(--danger-light);
+    border: 1px solid rgba(220,38,38,0.18);
+    border-radius: var(--r);
+    padding: 9px 12px;
+    line-height: 1.45;
+  }
+  .auth-error.show { display: block; }
+  .auth-submit {
+    margin-top: 4px;
+    font-size: 14px; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg, #0081DD 0%, #38BDE0 60%, #77FFE4 100%);
+    border: none; padding: 12px 20px;
+    border-radius: var(--rl); cursor: pointer;
+    transition: opacity 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    letter-spacing: -0.01em;
+    font-family: var(--ff-head);
+  }
+  .auth-submit:hover:not(:disabled) { opacity: 0.88; }
+  .auth-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+  .auth-spinner {
+    display: none; font-size: 16px;
+    animation: authSpin 0.8s linear infinite;
+  }
+  .auth-submit.loading .auth-submit-label { opacity: 0.75; }
+  .auth-submit.loading .auth-spinner { display: inline-block; }
+  @keyframes authSpin { to { transform: rotate(360deg); } }
+  .auth-switch {
+    margin-top: 22px; padding-top: 18px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 13px; color: var(--ink-3);
+  }
+  .auth-switch a {
+    color: var(--accent-2); font-weight: 600;
+    text-decoration: none; margin-left: 4px;
+    cursor: pointer;
+  }
+  .auth-switch a:hover { text-decoration: underline; }
+
+  /* ── USER MENU DROPDOWN (avatar click) ── */
+  .user-menu {
+    display: none;
+    position: fixed; top: 60px; right: 24px; z-index: 700;
+    width: 240px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(17,24,39,0.12);
+    overflow: hidden;
+    animation: menuIn 0.14s ease;
+  }
+  .user-menu.show { display: block; }
+  @keyframes menuIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .user-menu-head {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .user-menu-email {
+    font-size: 12px; font-weight: 600; color: var(--ink);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .user-menu-status {
+    font-size: 10px; color: var(--ink-4); margin-top: 2px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .user-menu-status::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%; background: #22C55E;
+  }
+  .user-menu-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 11px 16px;
+    font-size: 13px; color: var(--ink-2);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .user-menu-item:hover { background: var(--surface); }
+  .user-menu-item i { font-size: 15px; color: var(--ink-3); }
+  .user-menu-item.danger { color: var(--danger); }
+  .user-menu-item.danger i { color: var(--danger); }
 </style>
 </head>
 <body>
@@ -832,7 +964,10 @@
   <div class="nav-right">
     <div class="nav-icon-btn"><i class="ti ti-bell"></i></div>
     <div class="nav-icon-btn"><i class="ti ti-settings"></i></div>
-    <div class="nav-avatar">JW<div class="nav-avatar-dot"></div></div>
+    <div class="nav-avatar" id="nav-avatar" onclick="onAvatarClick(event)" title="Account">
+      <span id="nav-avatar-initials">?</span>
+      <div class="nav-avatar-dot" id="nav-avatar-dot" style="display:none;"></div>
+    </div>
   </div>
 </nav>
 
@@ -863,7 +998,13 @@
       <div class="sb-divider"></div>
       <div class="sb-section">
         <div class="sb-label">Account</div>
-        <div class="sb-item"><i class="ti ti-user"></i> <span class="sb-text">Profile</span></div>
+        <div class="sb-item" id="sb-profile" onclick="onProfileClick()" style="cursor:pointer;">
+          <i class="ti ti-user"></i>
+          <span class="sb-text">
+            <span>Profile</span>
+            <div id="sb-profile-email" style="font-size:10px;color:var(--ink-4);margin-top:2px;line-height:1.3;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;">Not signed in</div>
+          </span>
+        </div>
         <div class="sb-item"><i class="ti ti-settings"></i> <span class="sb-text">Settings</span></div>
       </div>
       <div class="sb-divider"></div>
@@ -2128,8 +2269,91 @@
       </div>
     </div>
 
+    <!-- ════ PAGE: LOGIN ════ -->
+    <div id="page-login" class="page">
+      <div class="auth-wrap">
+        <div class="auth-card">
+          <div class="auth-brand">
+            <div class="auth-brand-mark">G</div>
+            <div class="auth-brand-name">GOalign</div>
+          </div>
+          <div class="auth-title">Welcome back</div>
+          <div class="auth-sub">Sign in to save your experience blocks and matching results.</div>
+
+          <form class="auth-form" onsubmit="return handleLoginSubmit(event)">
+            <div class="auth-field">
+              <label class="auth-label" for="login-email">Email</label>
+              <input id="login-email" class="form-input" type="email" placeholder="you@example.com" required autocomplete="email">
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="login-password">Password</label>
+              <input id="login-password" class="form-input" type="password" placeholder="••••••••" required minlength="6" autocomplete="current-password">
+            </div>
+            <div id="login-error" class="auth-error"></div>
+            <button type="submit" id="login-submit" class="auth-submit">
+              <span class="auth-submit-label">Sign in</span>
+              <i class="ti ti-loader-2 auth-spinner"></i>
+            </button>
+          </form>
+
+          <div class="auth-switch">
+            Don't have an account?
+            <a onclick="navigate('signup')">Create one</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PAGE: SIGNUP ════ -->
+    <div id="page-signup" class="page">
+      <div class="auth-wrap">
+        <div class="auth-card">
+          <div class="auth-brand">
+            <div class="auth-brand-mark">G</div>
+            <div class="auth-brand-name">GOalign</div>
+          </div>
+          <div class="auth-title">Create your account</div>
+          <div class="auth-sub">Start saving your experience analysis and job matches.</div>
+
+          <form class="auth-form" onsubmit="return handleSignupSubmit(event)">
+            <div class="auth-field">
+              <label class="auth-label" for="signup-email">Email</label>
+              <input id="signup-email" class="form-input" type="email" placeholder="you@example.com" required autocomplete="email">
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="signup-password">Password</label>
+              <input id="signup-password" class="form-input" type="password" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password">
+              <div class="form-hint">6 characters minimum.</div>
+            </div>
+            <div id="signup-error" class="auth-error"></div>
+            <button type="submit" id="signup-submit" class="auth-submit">
+              <span class="auth-submit-label">Create account</span>
+              <i class="ti ti-loader-2 auth-spinner"></i>
+            </button>
+          </form>
+
+          <div class="auth-switch">
+            Already have an account?
+            <a onclick="navigate('login')">Sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   </main>
+</div>
+
+<!-- ═══════════ USER MENU (avatar dropdown) ═══════════ -->
+<div id="user-menu" class="user-menu">
+  <div class="user-menu-head">
+    <div class="user-menu-email" id="user-menu-email">—</div>
+    <div class="user-menu-status">Signed in</div>
+  </div>
+  <div class="user-menu-item danger" onclick="signOutUser()">
+    <i class="ti ti-logout"></i>
+    <span>Sign out</span>
+  </div>
 </div>
 
 <!-- ═══════════ FEEDBACK MODAL ═══════════ -->
@@ -2435,14 +2659,70 @@
   </div>
 </div>
 
+<!-- ═══════════ AUTH REQUIRED MODAL ═══════════ -->
+<div id="auth-required-modal" style="display:none;position:fixed;inset:0;z-index:650;align-items:center;justify-content:center;">
+  <div onclick="closeAuthRequiredModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.45);backdrop-filter:blur(5px);"></div>
+  <div style="position:relative;width:440px;max-width:92vw;background:var(--white);border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.16);overflow:hidden;animation:modalIn 0.22s ease;">
+
+    <!-- Header -->
+    <div style="padding:24px 28px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;">
+      <div>
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px;">
+          <i class="ti ti-lock" style="font-size:20px;color:var(--accent-2);"></i>
+          <span style="font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">Sign in to continue</span>
+        </div>
+        <div id="auth-required-sub" style="font-size:13px;color:var(--ink-3);margin-left:29px;line-height:1.5;">Create a free account to keep your work.</div>
+      </div>
+      <button onclick="closeAuthRequiredModal()" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:18px;padding:2px;line-height:1;"><i class="ti ti-x"></i></button>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:20px 28px 4px;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);">
+          <i class="ti ti-check" style="font-size:16px;color:var(--accent-2);"></i>
+          Save experience blocks across sessions
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);">
+          <i class="ti ti-check" style="font-size:16px;color:var(--accent-2);"></i>
+          Run AI analysis on your experience
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);">
+          <i class="ti ti-check" style="font-size:16px;color:var(--accent-2);"></i>
+          Track company / job match results
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:18px 28px 22px;display:flex;align-items:center;gap:10px;">
+      <button onclick="closeAuthRequiredModal()" class="btn-secondary-lg" style="font-size:13px;">Maybe later</button>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button onclick="goAuthFromModal('login')" class="btn-secondary-lg" style="font-size:13px;">Sign in</button>
+        <button onclick="goAuthFromModal('signup')" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:10px 18px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;font-family:var(--ff-head);" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <i class="ti ti-user-plus" style="font-size:14px;"></i> Create account
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
-  const pages = ['dashboard','add','blocks','match','matchstore'];
+  // ── SUPABASE CLIENT ──────────────────────────
+  const SUPABASE_URL = 'https://ovrcmolacpcjsghqgxlb.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
+  const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const pages = ['dashboard','add','blocks','match','matchstore','login','signup'];
   const pageTitles = {
     dashboard:  'Dashboard',
     add:        'Add Experience',
     blocks:     'Experience Blocks',
     match:      'Matching Analysis',
-    matchstore: 'Match Archiving'
+    matchstore: 'Match Archiving',
+    login:      'Sign In',
+    signup:     'Sign Up'
   };
 
   function selectMatchCo(el) {
@@ -2765,6 +3045,223 @@
       icon.className = 'ti ti-layout-sidebar-left-collapse';
     }
   }
+
+  // ═══════════════════════════════════════════════
+  // ── AUTH STATE & UI ───────────────────────────
+  // ═══════════════════════════════════════════════
+  let currentUser = null;  // { id, email, initials } when signed in, null otherwise
+
+  function getInitials(email) {
+    if (!email) return '?';
+    const local = email.split('@')[0] || '';
+    return (local.slice(0, 2) || '?').toUpperCase();
+  }
+
+  function normalizeUser(u) {
+    if (!u) return null;
+    return { id: u.id, email: u.email || '', initials: getInitials(u.email) };
+  }
+
+  function renderAuthUI() {
+    const initialsEl = document.getElementById('nav-avatar-initials');
+    const dotEl      = document.getElementById('nav-avatar-dot');
+    const sbEmailEl  = document.getElementById('sb-profile-email');
+    const menuEmail  = document.getElementById('user-menu-email');
+
+    if (currentUser) {
+      if (initialsEl) initialsEl.textContent = currentUser.initials;
+      if (dotEl)      dotEl.style.display = 'block';
+      if (sbEmailEl)  sbEmailEl.textContent = currentUser.email;
+      if (menuEmail)  menuEmail.textContent = currentUser.email;
+    } else {
+      if (initialsEl) initialsEl.textContent = '?';
+      if (dotEl)      dotEl.style.display = 'none';
+      if (sbEmailEl)  sbEmailEl.textContent = 'Not signed in';
+      if (menuEmail)  menuEmail.textContent = '—';
+      closeUserMenu();
+    }
+  }
+
+  async function refreshAuthState() {
+    const { data: { session } } = await supa.auth.getSession();
+    currentUser = normalizeUser(session ? session.user : null);
+    renderAuthUI();
+  }
+
+  // Listen for auth changes from other tabs / token refresh / signOut
+  supa.auth.onAuthStateChange((_event, session) => {
+    currentUser = normalizeUser(session ? session.user : null);
+    renderAuthUI();
+  });
+
+  // ── ERROR & LOADING HELPERS ───────────────────
+  function showAuthError(form, msg) {
+    const el = document.getElementById(form + '-error');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  function clearAuthError(form) {
+    const el = document.getElementById(form + '-error');
+    if (!el) return;
+    el.textContent = '';
+    el.classList.remove('show');
+  }
+  function setAuthLoading(form, loading) {
+    const btn = document.getElementById(form + '-submit');
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.classList.toggle('loading', loading);
+  }
+
+  // ── AUTH ACTIONS ──────────────────────────────
+  async function signUpUser(email, password) {
+    const { data, error } = await supa.auth.signUp({ email, password });
+    if (error) return { ok: false, error: error.message };
+    // Confirm email is OFF in this project, so a session is returned immediately.
+    if (!data.session) return { ok: false, error: 'Account created but no session returned. Check email confirmation settings.' };
+    return { ok: true };
+  }
+
+  async function signInUser(email, password) {
+    const { error } = await supa.auth.signInWithPassword({ email, password });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  }
+
+  async function signOutUser() {
+    closeUserMenu();
+    await supa.auth.signOut();
+    // onAuthStateChange will fire → renderAuthUI clears UI.
+    navigate('dashboard');
+  }
+
+  // ── FORM HANDLERS (wired from page-login / page-signup forms) ──
+  async function handleLoginSubmit(event) {
+    event.preventDefault();
+    clearAuthError('login');
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    setAuthLoading('login', true);
+    const res = await signInUser(email, password);
+    setAuthLoading('login', false);
+    if (!res.ok) { showAuthError('login', res.error); return false; }
+    document.getElementById('login-password').value = '';
+    navigate('dashboard');
+    return false;
+  }
+
+  async function handleSignupSubmit(event) {
+    event.preventDefault();
+    clearAuthError('signup');
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    setAuthLoading('signup', true);
+    const res = await signUpUser(email, password);
+    setAuthLoading('signup', false);
+    if (!res.ok) { showAuthError('signup', res.error); return false; }
+    document.getElementById('signup-password').value = '';
+    navigate('dashboard');
+    return false;
+  }
+
+  // ── AVATAR + USER MENU ────────────────────────
+  function onAvatarClick(event) {
+    if (event) event.stopPropagation();
+    if (!currentUser) { navigate('login'); return; }
+    toggleUserMenu();
+  }
+
+  function onProfileClick() {
+    if (!currentUser) navigate('login');
+    // When signed in, sidebar Profile is currently informational only.
+  }
+
+  function toggleUserMenu() {
+    const menu = document.getElementById('user-menu');
+    if (!menu) return;
+    menu.classList.toggle('show');
+  }
+  function closeUserMenu() {
+    const menu = document.getElementById('user-menu');
+    if (menu) menu.classList.remove('show');
+  }
+
+  // Close menu on outside click
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('user-menu');
+    const avatar = document.getElementById('nav-avatar');
+    if (!menu || !menu.classList.contains('show')) return;
+    if (menu.contains(e.target) || (avatar && avatar.contains(e.target))) return;
+    closeUserMenu();
+  });
+
+  // ── BOOTSTRAP ─────────────────────────────────
+  window.addEventListener('load', refreshAuthState);
+
+  // ═══════════════════════════════════════════════
+  // ── GATING (auth-required-modal + wrappers) ───
+  // ═══════════════════════════════════════════════
+  const AUTH_INTENT_COPY = {
+    save:    'Sign in to save your work and pick up where you left off.',
+    analyze: 'Sign in to run AI analysis on your experience.',
+    match:   'Sign in to start fit analysis with companies.',
+    default: 'Create a free account to keep your work.'
+  };
+
+  function openAuthRequiredModal(intent) {
+    closeUserMenu();
+    const sub = document.getElementById('auth-required-sub');
+    if (sub) sub.textContent = AUTH_INTENT_COPY[intent] || AUTH_INTENT_COPY.default;
+    const m = document.getElementById('auth-required-modal');
+    if (!m) return;
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAuthRequiredModal() {
+    const m = document.getElementById('auth-required-modal');
+    if (!m) return;
+    m.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function goAuthFromModal(target) {
+    closeAuthRequiredModal();
+    navigate(target);  // 'login' or 'signup'
+  }
+
+  // ── WRAP NAMED HANDLERS (Analyze Experience, Start Fit Analysis) ──
+  // openAnalysisModal / openBlockRecommendModal are top-level function declarations,
+  // so they live on window. Reassigning at top level updates the global binding,
+  // which inline onclick="openAnalysisModal()" handlers resolve through.
+  const _origOpenAnalysisModal = openAnalysisModal;
+  openAnalysisModal = function() {
+    if (!currentUser) return openAuthRequiredModal('analyze');
+    return _origOpenAnalysisModal();
+  };
+
+  const _origOpenBlockRecommendModal = openBlockRecommendModal;
+  openBlockRecommendModal = function() {
+    if (!currentUser) return openAuthRequiredModal('match');
+    return _origOpenBlockRecommendModal();
+  };
+
+  // ── DELEGATED GATING for "Save Draft" buttons ──
+  // These buttons currently have no onclick handlers (placeholder UI), so we
+  // can't wrap a function. Use document-level delegation to gate clicks
+  // without modifying the existing 5-page markup. When a save handler is
+  // added later, this delegation still runs first; if the user is signed in
+  // we fall through and let the button's own handler execute.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const txt = (btn.textContent || '').trim();
+    if (txt !== 'Save Draft') return;
+    if (!btn.closest('#page-add, #page-match')) return;
+    if (currentUser) return;  // signed in: don't interfere
+    e.preventDefault();
+    e.stopPropagation();
+    openAuthRequiredModal('save');
+  }, true);  // capture phase so we run before any future onclick handlers
 </script>
 </body>
 </html>
