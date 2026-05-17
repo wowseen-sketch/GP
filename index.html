@@ -1389,11 +1389,11 @@
           <div class="form-grid">
             <div class="form-group form-full">
               <label class="form-label">Activity Title *</label>
-              <input class="form-input" type="text" placeholder="e.g. New Product Launch Campaign Planning & Execution">
+              <input id="exp-title" class="form-input" type="text" placeholder="e.g. New Product Launch Campaign Planning & Execution">
             </div>
             <div class="form-group">
               <label class="form-label">Activity Type *</label>
-              <select class="form-input form-select">
+              <select id="exp-activity-type" class="form-input form-select">
                 <option value="">Select</option>
                 <option>Project</option>
                 <option>Work Experience</option>
@@ -1405,24 +1405,24 @@
             </div>
             <div class="form-group">
               <label class="form-label">Organization / Company</label>
-              <input class="form-input" type="text" placeholder="e.g. Google, Stanford Club, etc.">
+              <input id="exp-org" class="form-input" type="text" placeholder="e.g. Google, Stanford Club, etc.">
             </div>
             <div class="form-group">
               <label class="form-label">Start Date *</label>
-              <input class="form-input" type="month" value="2024-01">
+              <input id="exp-start" class="form-input" type="month" value="2024-01">
             </div>
             <div class="form-group">
               <label class="form-label" style="justify-content:space-between;">
                 End Date *
                 <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--ink-3);text-transform:none;letter-spacing:0;cursor:pointer;">
-                  <input type="checkbox" style="accent-color:var(--accent)"> Currently ongoing
+                  <input id="exp-current" type="checkbox" style="accent-color:var(--accent)"> Currently ongoing
                 </label>
               </label>
-              <input class="form-input" type="month" value="2024-06">
+              <input id="exp-end" class="form-input" type="month" value="2024-06">
             </div>
             <div class="form-group form-full">
               <label class="form-label">Your Role</label>
-              <input class="form-input" type="text" placeholder="e.g. Project Lead, Team Member, Planning Lead">
+              <input id="exp-role" class="form-input" type="text" placeholder="e.g. Project Lead, Team Member, Planning Lead">
             </div>
           </div>
         </div>
@@ -1450,11 +1450,11 @@
           <div style="display:flex;flex-direction:column;gap:14px;">
             <div class="form-group form-full" style="margin:0;">
               <label class="form-label" style="display:flex;align-items:center;gap:6px;">① Goal</label>
-              <input class="form-input" type="text" placeholder='e.g. "Increase new member sign-ups by 50 within one semester"'>
+              <input id="exp-goal" class="form-input" type="text" placeholder='e.g. "Increase new member sign-ups by 50 within one semester"'>
             </div>
             <div class="form-group form-full" style="margin:0;">
               <label class="form-label">② Strategy</label>
-              <input class="form-input" type="text" placeholder='e.g. "Launched a peer referral program and redesigned the intro session"'>
+              <input id="exp-strategy" class="form-input" type="text" placeholder='e.g. "Launched a peer referral program and redesigned the intro session"'>
             </div>
           </div>
         </div>
@@ -1474,11 +1474,11 @@
           <div style="display:flex;flex-direction:column;gap:14px;">
             <div class="form-group form-full" style="margin:0;">
               <label class="form-label">① Your actions <span style="font-size:10px;color:var(--ink-4);font-weight:400;text-transform:none;letter-spacing:0;">(TIP: highlight what YOU led)</span></label>
-              <textarea class="form-input form-textarea" placeholder='e.g. "Built 60 surveys, led weekly data reviews, managed vendor calls"' style="min-height:80px;"></textarea>
+              <textarea id="exp-actions" class="form-input form-textarea" placeholder='e.g. "Built 60 surveys, led weekly data reviews, managed vendor calls"' style="min-height:80px;"></textarea>
             </div>
             <div class="form-group form-full" style="margin:0;">
               <label class="form-label" style="display:flex;align-items:center;gap:8px;">③ Unexpected challenge &amp; how you handled it <span style="font-size:10px;color:var(--ink-4);font-weight:400;text-transform:none;letter-spacing:0;background:var(--surface-2);padding:2px 8px;border-radius:99px;">Optional</span></label>
-              <input class="form-input" type="text" placeholder='e.g. "Two members quit mid-project; I split their tasks and kept the deadline"'>
+              <input id="exp-challenge" class="form-input" type="text" placeholder='e.g. "Two members quit mid-project; I split their tasks and kept the deadline"'>
             </div>
           </div>
         </div>
@@ -1497,7 +1497,7 @@
           </div>
           <div class="form-group form-full" style="margin:0;">
             <label class="form-label">① Measurable outcome</label>
-            <input class="form-input" type="text" placeholder='e.g. "Recruited 240 members — 120% of our 200 target, within 6 weeks"'>
+            <input id="exp-outcome" class="form-input" type="text" placeholder='e.g. "Recruited 240 members — 120% of our 200 target, within 6 weeks"'>
           </div>
         </div>
 
@@ -1516,11 +1516,11 @@
           <div style="display:flex;flex-direction:column;gap:14px;">
             <div class="form-group form-full" style="margin:0;">
               <label class="form-label">① Key takeaway</label>
-              <input class="form-input" type="text" placeholder='e.g. "I realized I&apos;d been optimizing the wrong metric the entire time"'>
+              <input id="exp-takeaway" class="form-input" type="text" placeholder='e.g. "I realized I&apos;d been optimizing the wrong metric the entire time"'>
             </div>
             <div class="form-group form-full" style="margin:0;">
               <label class="form-label" style="display:flex;align-items:center;gap:8px;">② Applied elsewhere <span style="font-size:10px;color:var(--ink-4);font-weight:400;text-transform:none;letter-spacing:0;background:var(--surface-2);padding:2px 8px;border-radius:99px;">Optional</span></label>
-              <input class="form-input" type="text" placeholder='e.g. "Applied the same audit process to our next campaign — caught the issue in week one"'>
+              <input id="exp-applied" class="form-input" type="text" placeholder='e.g. "Applied the same audit process to our next campaign — caught the issue in week one"'>
             </div>
           </div>
         </div>
@@ -1580,53 +1580,18 @@
         </div>
       </div>
 
-      <!-- Category Sections -->
-      <div style="padding:32px 44px;display:flex;flex-direction:column;gap:36px;">
+      <!-- Category Sections (populated by loadUserBlocks; seed cards removed) -->
+      <div id="blocks-sections" style="padding:32px 44px;display:flex;flex-direction:column;gap:36px;">
 
         <!-- PROJECT -->
         <div class="blk-section" data-category="project">
           <div class="blk-section-header">
             <div class="blk-section-dot" style="background:var(--accent)"></div>
             <div class="blk-section-title">Project</div>
-            <div class="blk-section-count">2</div>
+            <div class="blk-section-count">0</div>
             <div class="blk-section-line"></div>
           </div>
           <div class="blk-grid">
-            <div class="blk-card" data-type="project">
-              <div class="blk-card-top" style="border-top-color:var(--accent)"></div>
-              <div class="blk-card-body">
-                <div class="blk-cat-label" style="color:var(--accent)">Project</div>
-                <div class="blk-card-title">New Product GTM Strategy</div>
-                <div class="blk-card-period">2023.03 – 2023.08 · 6 months</div>
-                <div class="blk-card-desc">Led end-to-end go-to-market strategy for a new B2B SaaS product, coordinating across marketing, sales, and product teams.</div>
-                <div class="blk-card-tags">
-                  <span class="tag blue">Strategic Planning</span>
-                  <span class="tag blue">GTM</span>
-                  <span class="tag">B2B</span>
-                </div>
-              </div>
-              <div class="blk-card-footer">
-                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
-              </div>
-            </div>
-            <div class="blk-card" data-type="project">
-              <div class="blk-card-top" style="border-top-color:var(--accent)"></div>
-              <div class="blk-card-body">
-                <div class="blk-cat-label" style="color:var(--accent)">Project</div>
-                <div class="blk-card-title">App Renewal UX Research</div>
-                <div class="blk-card-period">2021.09 – 2021.12 · 4 months</div>
-                <div class="blk-card-desc">Conducted in-depth user interviews and usability testing to inform a full redesign of the mobile app experience.</div>
-                <div class="blk-card-tags">
-                  <span class="tag">UX Research</span>
-                  <span class="tag">Interview</span>
-                </div>
-              </div>
-              <div class="blk-card-footer">
-                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
-              </div>
-            </div>
             <div class="blk-card blk-add" onclick="navigate('add')" data-type="project">
               <i class="ti ti-plus" style="font-size:22px;color:var(--ink-3)"></i>
               <div style="font-size:13px;color:var(--ink-3);margin-top:8px">Add Block</div>
@@ -1639,45 +1604,10 @@
           <div class="blk-section-header">
             <div class="blk-section-dot" style="background:#C47A00"></div>
             <div class="blk-section-title">Work Experience</div>
-            <div class="blk-section-count">2</div>
+            <div class="blk-section-count">0</div>
             <div class="blk-section-line"></div>
           </div>
           <div class="blk-grid">
-            <div class="blk-card" data-type="work">
-              <div class="blk-card-top" style="border-top-color:#C47A00"></div>
-              <div class="blk-card-body">
-                <div class="blk-cat-label" style="color:#C47A00">Work Experience</div>
-                <div class="blk-card-title">Data-Driven User Analysis Project</div>
-                <div class="blk-card-period">2022.11 – 2023.02 · 4 months</div>
-                <div class="blk-card-desc">Built interactive dashboards using SQL and Tableau to surface key user behavior patterns for product decisions.</div>
-                <div class="blk-card-tags">
-                  <span class="tag">SQL</span>
-                  <span class="tag">Tableau</span>
-                  <span class="tag">Data Analysis</span>
-                </div>
-              </div>
-              <div class="blk-card-footer">
-                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
-              </div>
-            </div>
-            <div class="blk-card" data-type="work">
-              <div class="blk-card-top" style="border-top-color:#C47A00"></div>
-              <div class="blk-card-body">
-                <div class="blk-cat-label" style="color:#C47A00">Work Experience</div>
-                <div class="blk-card-title">Content Marketing Campaign</div>
-                <div class="blk-card-period">2022.01 – 2022.06 · 6 months</div>
-                <div class="blk-card-desc">Planned and executed a multi-channel content marketing campaign covering SNS, blog, and newsletter to grow brand awareness.</div>
-                <div class="blk-card-tags">
-                  <span class="tag">Content</span>
-                  <span class="tag">SNS Marketing</span>
-                </div>
-              </div>
-              <div class="blk-card-footer">
-                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-clock" style="font-size:13px;color:var(--warn)"></i><span style="font-size:11px;font-weight:500;color:var(--warn);letter-spacing:0.03em">NEEDS OUTCOME</span></div>
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
-              </div>
-            </div>
             <div class="blk-card blk-add" onclick="navigate('add')" data-type="work">
               <i class="ti ti-plus" style="font-size:22px;color:var(--ink-3)"></i>
               <div style="font-size:13px;color:var(--ink-3);margin-top:8px">Add Block</div>
@@ -1690,28 +1620,10 @@
           <div class="blk-section-header">
             <div class="blk-section-dot" style="background:var(--success)"></div>
             <div class="blk-section-title">Leadership</div>
-            <div class="blk-section-count">1</div>
+            <div class="blk-section-count">0</div>
             <div class="blk-section-line"></div>
           </div>
           <div class="blk-grid">
-            <div class="blk-card" data-type="leadership">
-              <div class="blk-card-top" style="border-top-color:var(--success)"></div>
-              <div class="blk-card-body">
-                <div class="blk-cat-label" style="color:var(--success)">Leadership</div>
-                <div class="blk-card-title">Team OKR Design & Operations</div>
-                <div class="blk-card-period">2022.07 – 2022.10 · 4 months</div>
-                <div class="blk-card-desc">Designed and facilitated OKR cycles for a cross-functional team of 12, driving alignment across product, design, and engineering.</div>
-                <div class="blk-card-tags">
-                  <span class="tag">OKR</span>
-                  <span class="tag">Leadership</span>
-                  <span class="tag">Cross-functional</span>
-                </div>
-              </div>
-              <div class="blk-card-footer">
-                <div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>
-                <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
-              </div>
-            </div>
             <div class="blk-card blk-add" onclick="navigate('add')" data-type="leadership">
               <i class="ti ti-plus" style="font-size:22px;color:var(--ink-3)"></i>
               <div style="font-size:13px;color:var(--ink-3);margin-top:8px">Add Block</div>
@@ -1719,7 +1631,7 @@
           </div>
         </div>
 
-        <!-- EDUCATION (empty state) -->
+        <!-- EDUCATION -->
         <div class="blk-section" data-category="education">
           <div class="blk-section-header">
             <div class="blk-section-dot" style="background:#8B5CF6"></div>
@@ -1735,7 +1647,7 @@
           </div>
         </div>
 
-        <!-- EXTRACURRICULAR (empty state) -->
+        <!-- EXTRACURRICULAR -->
         <div class="blk-section" data-category="extra">
           <div class="blk-section-header">
             <div class="blk-section-dot" style="background:#EC4899"></div>
@@ -1751,6 +1663,29 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- Empty state (signed in, zero rows) -->
+      <div id="blocks-empty" style="display:none;padding:80px 44px;text-align:center;">
+        <i class="ti ti-stack" style="font-size:48px;color:var(--ink-4);"></i>
+        <div style="font-size:18px;font-weight:700;color:var(--ink);margin-top:16px;">No experience blocks yet</div>
+        <div style="font-size:13px;color:var(--ink-4);margin-top:8px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.5;">Add your first experience and let AI extract the keywords, competencies, and insights from it.</div>
+        <button onclick="navigate('add')" style="margin-top:20px;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:12px 24px;border-radius:var(--rl);cursor:pointer;">
+          <i class="ti ti-plus" style="font-size:15px;"></i> Add your first
+        </button>
+      </div>
+
+      <!-- Signed-out state -->
+      <div id="blocks-signedout" style="display:none;padding:80px 44px;text-align:center;">
+        <i class="ti ti-lock" style="font-size:48px;color:var(--ink-4);"></i>
+        <div style="font-size:18px;font-weight:700;color:var(--ink);margin-top:16px;">Sign in to see your saved blocks</div>
+        <div style="font-size:13px;color:var(--ink-4);margin-top:8px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.5;">Your experience blocks are tied to your account so they're available wherever you sign in.</div>
+        <div style="margin-top:20px;display:flex;justify-content:center;gap:10px;">
+          <button onclick="navigate('login')" style="display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:12px 24px;border-radius:var(--rl);cursor:pointer;">
+            <i class="ti ti-login" style="font-size:15px;"></i> Sign in
+          </button>
+          <button onclick="navigate('signup')" class="btn-secondary-lg">Create account</button>
+        </div>
       </div>
     </div>
 
@@ -2501,6 +2436,11 @@
   <i class="ti ti-circle-check" style="font-size:17px;color:#77FFE4;"></i> Feedback submitted — thank you!
 </div>
 
+<!-- Save Toast (experience blocks) -->
+<div id="save-toast" style="display:none;position:fixed;bottom:60px;right:24px;z-index:700;background:var(--ink);color:#fff;padding:13px 20px;border-radius:var(--rl);font-size:13px;font-weight:500;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.22);">
+  <i class="ti ti-circle-check" style="font-size:17px;color:#77FFE4;"></i> <span class="save-toast-text">Saved</span>
+</div>
+
 <style>
   .fb-type {
     display:flex; align-items:center; gap:5px;
@@ -2531,11 +2471,11 @@
           </div>
           <div>
             <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;">Analysis Complete</div>
-            <div style="font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.02em;">New Product GTM Strategy</div>
+            <div id="am-title" style="font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.02em;">New Product GTM Strategy</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <div style="font-size:12px;color:rgba(255,255,255,0.65);">Marketing · 2024.01 – 2024.06 · 6 months</div>
+          <div id="am-subtitle" style="font-size:12px;color:rgba(255,255,255,0.65);">Marketing · 2024.01 – 2024.06 · 6 months</div>
           <button onclick="closeAnalysisModal()" style="background:rgba(255,255,255,0.2);border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;margin-left:8px;">
             <i class="ti ti-x"></i>
           </button>
@@ -2559,7 +2499,7 @@
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">P</div>
             <span style="font-size:12px;font-weight:700;color:var(--ink);">Plan — Problem & Goal</span>
           </div>
-          <div style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;">
+          <div id="am-plan" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;">
             Identified the need for a structured <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">go-to-market strategy</mark> for a new <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">B2B SaaS product</mark> entering a competitive market. Goal was to achieve 30% market penetration within 6 months.
           </div>
         </div>
@@ -2570,7 +2510,7 @@
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">D</div>
             <span style="font-size:12px;font-weight:700;color:var(--ink);">Do — Action Taken</span>
           </div>
-          <div style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;">
+          <div id="am-do" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;">
             Led <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">cross-functional collaboration</mark> across marketing, sales, and product teams. Executed <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">strategic planning</mark> sessions and developed positioning documents and <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">GTM playbook</mark>.
           </div>
         </div>
@@ -2581,7 +2521,7 @@
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">C</div>
             <span style="font-size:12px;font-weight:700;color:var(--ink);">Check — Results & Metrics</span>
           </div>
-          <div style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;">
+          <div id="am-check" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;">
             Achieved <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">MAU 15% increase</mark> and <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">conversion rate improved 23%</mark> within the campaign period. Pipeline exceeded target by 130%.
           </div>
         </div>
@@ -2592,7 +2532,7 @@
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">A</div>
             <span style="font-size:12px;font-weight:700;color:var(--ink);">Act — Improvement & Learnings</span>
           </div>
-          <div style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;">
+          <div id="am-act" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;">
             Initial launch faced <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">performance lag</mark>; addressed by optimizing state management and lazy loading assets. Applied learnings to subsequent product launches.
           </div>
         </div>
@@ -2682,8 +2622,8 @@
       <button onclick="closeAnalysisModal()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-edit" style="font-size:14px;"></i> Edit More</button>
       <button class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-sparkles" style="font-size:14px;color:var(--accent);"></i> Re-analyze</button>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
-        <div style="font-size:12px;color:var(--ink-4);">Ready to save this experience?</div>
-        <button onclick="closeAnalysisModal();navigate('blocks')" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:12px 24px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+        <div id="am-status" style="font-size:12px;color:var(--ink-4);">Ready to save this experience?</div>
+        <button id="save-block-btn" onclick="saveExperienceBlock()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:12px 24px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
           <i class="ti ti-database" style="font-size:15px;"></i> Save as Block
         </button>
       </div>
@@ -2948,6 +2888,7 @@
 
   function openAnalysisModal() {
     const m = document.getElementById('analysis-modal');
+    populateAnalysisModal(collectAddFormData());
     m.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
@@ -2955,6 +2896,354 @@
     const m = document.getElementById('analysis-modal');
     m.style.display = 'none';
     document.body.style.overflow = '';
+  }
+
+  // ── EXPERIENCE BLOCKS: helpers ─────────────────
+  // Map DB activity_type values to page-blocks section keys.
+  function activityTypeToCategory(type) {
+    const map = {
+      'Project': 'project',
+      'Work Experience': 'work',
+      'Internship': 'work',
+      'Leadership': 'leadership',
+      'Education / Certification': 'education',
+      'Extracurricular': 'extra',
+    };
+    return map[type] || 'project';
+  }
+
+  // Read all 14 page-add form fields into a plain object.
+  function collectAddFormData() {
+    const val = id => (document.getElementById(id)?.value || '').trim();
+    const isCurrent = document.getElementById('exp-current')?.checked || false;
+    // <input type="month"> returns "YYYY-MM"; pad to a valid DATE.
+    const monthToDate = m => m ? `${m}-01` : null;
+    return {
+      title:               val('exp-title'),
+      activity_type:       val('exp-activity-type'),
+      organization:        val('exp-org'),
+      start_date:          monthToDate(val('exp-start')),
+      end_date:            isCurrent ? null : monthToDate(val('exp-end')),
+      is_current:          isCurrent,
+      role:                val('exp-role'),
+      goal:                val('exp-goal'),
+      strategy:            val('exp-strategy'),
+      actions:             val('exp-actions'),
+      failure_improvement: val('exp-challenge'),
+      outcome_measurable:  val('exp-outcome'),
+      takeaway:            val('exp-takeaway'),
+      applied:             val('exp-applied'),
+    };
+  }
+
+  // Populate analysis modal from page-add form data.
+  // TODO: replace with real AI call — for now this just echoes user input
+  // back into the modal layout. competencies/keywords/insights on the right
+  // side of the modal remain as static mock until real analysis is wired up.
+  function populateAnalysisModal(data) {
+    const setText = (id, txt) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = txt;
+    };
+
+    setText('am-title', data.title || 'Untitled Experience');
+
+    // Subtitle: "{type} · {start} – {end} · {duration}"
+    const fmtMonth = d => d ? d.slice(0, 7).replace('-', '.') : null;
+    const start = fmtMonth(data.start_date);
+    const end   = data.is_current ? 'Present' : fmtMonth(data.end_date);
+    const subParts = [];
+    if (data.activity_type) subParts.push(data.activity_type);
+    if (start || end) {
+      let period = `${start || '?'} – ${end || '?'}`;
+      // Duration only when both endpoints are real dates.
+      if (data.start_date && (data.end_date || data.is_current)) {
+        const s = new Date(data.start_date);
+        const e = data.is_current ? new Date() : new Date(data.end_date);
+        if (!isNaN(s) && !isNaN(e)) {
+          const months = (e.getFullYear() - s.getFullYear()) * 12
+                       + (e.getMonth() - s.getMonth()) + 1;
+          if (months > 0) {
+            const yrs = Math.floor(months / 12), mos = months % 12;
+            const parts = [];
+            if (yrs) parts.push(`${yrs} year${yrs > 1 ? 's' : ''}`);
+            if (mos) parts.push(`${mos} month${mos > 1 ? 's' : ''}`);
+            if (parts.length) period += ` · ${parts.join(' ')}`;
+          }
+        }
+      }
+      subParts.push(period);
+    }
+    setText('am-subtitle', subParts.join(' · '));
+
+    // PDCA bodies — plain text only (no AI highlighting yet).
+    const join = (parts, sep) => parts.filter(Boolean).join(sep);
+
+    setText('am-plan', join([
+      data.goal     && `Goal: ${data.goal}`,
+      data.strategy && `Strategy: ${data.strategy}`,
+    ], '\n') || '(no plan provided)');
+
+    setText('am-do', join([
+      data.actions,
+      data.failure_improvement && `Challenge & response: ${data.failure_improvement}`,
+    ], '\n\n') || '(no actions described)');
+
+    setText('am-check', data.outcome_measurable || '(no outcome provided)');
+
+    setText('am-act', join([
+      data.takeaway,
+      data.applied && `Applied elsewhere: ${data.applied}`,
+    ], '\n\n') || '(no learnings provided)');
+  }
+
+  // TODO: replace with real AI call — these are placeholder values used
+  // as the competencies/keywords/insights of every saved block until the
+  // analysis pipeline is wired up. Mirrors what the modal currently renders.
+  const MOCK_AI_RESULT = {
+    competencies: [
+      { name: 'Strategic Planning', score: 92 },
+      { name: 'GTM Execution',      score: 85 },
+      { name: 'Cross-functional',   score: 78 },
+      { name: 'B2B Strategy',       score: 71 },
+    ],
+    keywords: ['Strategic Planning', 'GTM', 'B2B', 'Cross-functional', 'Marketing', 'OKR'],
+    insights: [
+      { type: 'strength',    text: 'Strong GTM + B2B signals. Cross-functional leadership is a clear differentiator for PM roles.' },
+      { type: 'improvement', text: 'Add specific metrics — DAU, churn %, revenue impact — to boost match score.' },
+      { type: 'recommended', text: 'Adding A/B test + Agile blocks could boost your match score by up to +12%.' },
+    ],
+  };
+
+  // Inline status line in the analysis modal footer (default / saving / error).
+  function setAnalysisModalStatus(msg, isError) {
+    const el = document.getElementById('am-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = isError ? 'var(--danger)' : 'var(--ink-4)';
+  }
+
+  // Persist the current experience block. Wired to the modal's "Save as Block" button.
+  async function saveExperienceBlock() {
+    // 1. Auth gate. RLS would also block, but failing fast avoids a 401 round-trip.
+    if (!currentUser) {
+      closeAnalysisModal();
+      openAuthRequiredModal('save');
+      return;
+    }
+
+    const data = collectAddFormData();
+
+    // 2. Validate the same fields marked "*" in the form.
+    if (!data.title) {
+      setAnalysisModalStatus('Title is required', true); return;
+    }
+    if (!data.activity_type) {
+      setAnalysisModalStatus('Activity type is required', true); return;
+    }
+    if (!data.start_date) {
+      setAnalysisModalStatus('Start date is required', true); return;
+    }
+    if (!data.is_current && !data.end_date) {
+      setAnalysisModalStatus('End date is required (or mark as currently ongoing)', true); return;
+    }
+
+    // 3. Build payload. AI fields are mock; everything else comes from the form.
+    const payload = {
+      user_id: currentUser.id,
+      ...data,
+      // TODO: replace with real AI call
+      competencies: MOCK_AI_RESULT.competencies,
+      keywords:     MOCK_AI_RESULT.keywords,
+      insights:     MOCK_AI_RESULT.insights,
+    };
+
+    // 4. UI feedback during the round-trip.
+    const btn = document.getElementById('save-block-btn');
+    setAnalysisModalStatus('Saving…', false);
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+
+    // 5. Insert.
+    const { error } = await supa.from('experience_blocks').insert(payload);
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+
+    if (error) {
+      setAnalysisModalStatus(`Save failed: ${error.message}`, true);
+      return;
+    }
+
+    // 6. Success: reset status, close modal, toast, navigate to blocks page.
+    setAnalysisModalStatus('Ready to save this experience?', false);
+    closeAnalysisModal();
+    showSaveToast('Experience block saved');
+    navigate('blocks');
+  }
+
+  // ── EXPERIENCE BLOCKS: load / render ───────────
+  // Section visual identity per category (matches the static section dots/labels).
+  const CATEGORY_STYLE = {
+    project:    { color: 'var(--accent)', label: 'Project' },
+    work:       { color: '#C47A00',       label: 'Work Experience' },
+    leadership: { color: 'var(--success)',label: 'Leadership' },
+    education:  { color: '#8B5CF6',       label: 'Education / Certification' },
+    extra:      { color: '#EC4899',       label: 'Extracurricular' },
+  };
+
+  // Minimal HTML escaper for user-supplied text rendered via innerHTML.
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Remove previously rendered (Supabase-sourced) cards so re-renders don't stack.
+  function clearDynamicBlocks() {
+    document.querySelectorAll('.blk-card.dyn').forEach(el => el.remove());
+    // Reset all section counts to zero; renderBlocks() will repopulate.
+    document.querySelectorAll('.blk-section-count').forEach(el => el.textContent = '0');
+  }
+
+  // Build a single .blk-card DOM node from a Supabase row.
+  function buildBlockCard(row, cat) {
+    const style = CATEGORY_STYLE[cat] || CATEGORY_STYLE.project;
+
+    // Period: "YYYY.MM – YYYY.MM · N months"
+    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : null;
+    const start = fmt(row.start_date);
+    const end   = row.is_current ? 'Present' : fmt(row.end_date);
+    let period  = `${start || '?'} – ${end || '?'}`;
+    if (row.start_date && (row.end_date || row.is_current)) {
+      const s = new Date(row.start_date);
+      const e = row.is_current ? new Date() : new Date(row.end_date);
+      if (!isNaN(s) && !isNaN(e)) {
+        const months = (e.getFullYear() - s.getFullYear()) * 12
+                     + (e.getMonth() - s.getMonth()) + 1;
+        if (months > 0) {
+          const yrs = Math.floor(months / 12), mos = months % 12;
+          const parts = [];
+          if (yrs) parts.push(`${yrs} year${yrs > 1 ? 's' : ''}`);
+          if (mos) parts.push(`${mos} month${mos > 1 ? 's' : ''}`);
+          if (parts.length) period += ` · ${parts.join(' ')}`;
+        }
+      }
+    }
+
+    // Description snippet: prefer actions, fall back to goal/outcome.
+    const desc = row.actions || row.goal || row.outcome_measurable || '';
+
+    // Tags: up to 3 keywords from the JSONB array.
+    const kws = Array.isArray(row.keywords) ? row.keywords.slice(0, 3) : [];
+    const tagsHtml = kws.map(k => `<span class="tag">${escapeHtml(k)}</span>`).join('');
+
+    // Footer status: outcome present vs missing.
+    const hasOutcome = !!(row.outcome_measurable && row.outcome_measurable.trim());
+    const footerHtml = hasOutcome
+      ? `<div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>`
+      : `<div style="display:flex;align-items:center;gap:6px"><i class="ti ti-clock" style="font-size:13px;color:var(--warn)"></i><span style="font-size:11px;font-weight:500;color:var(--warn);letter-spacing:0.03em">NEEDS OUTCOME</span></div>`;
+
+    const el = document.createElement('div');
+    el.className = 'blk-card dyn';
+    el.dataset.type = cat;
+    el.innerHTML = `
+      <div class="blk-card-top" style="border-top-color:${style.color}"></div>
+      <div class="blk-card-body">
+        <div class="blk-cat-label" style="color:${style.color}">${escapeHtml(style.label)}</div>
+        <div class="blk-card-title">${escapeHtml(row.title || 'Untitled')}</div>
+        <div class="blk-card-period">${escapeHtml(period)}</div>
+        <div class="blk-card-desc">${escapeHtml(desc)}</div>
+        <div class="blk-card-tags">${tagsHtml}</div>
+      </div>
+      <div class="blk-card-footer">
+        ${footerHtml}
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
+      </div>
+    `;
+    return el;
+  }
+
+  // Distribute rows into the 5 category sections (in-place, before each "Add Block" tile).
+  function renderBlocks(rows) {
+    clearDynamicBlocks();
+
+    const buckets = { project: [], work: [], leadership: [], education: [], extra: [] };
+    rows.forEach(r => {
+      const cat = activityTypeToCategory(r.activity_type);
+      if (buckets[cat]) buckets[cat].push(r);
+    });
+
+    Object.entries(buckets).forEach(([cat, list]) => {
+      const section = document.querySelector(`.blk-section[data-category="${cat}"]`);
+      if (!section) return;
+      const grid    = section.querySelector('.blk-grid');
+      const addCard = grid.querySelector('.blk-add');
+      list.forEach(row => grid.insertBefore(buildBlockCard(row, cat), addCard));
+      const countEl = section.querySelector('.blk-section-count');
+      if (countEl) countEl.textContent = list.length;
+    });
+  }
+
+  // Entry point: called whenever the Blocks page is entered (see navigate()).
+  // Handles three states — signed-out, signed-in empty, signed-in with rows.
+  async function loadUserBlocks() {
+    const sectionsEl  = document.getElementById('blocks-sections');
+    const emptyEl     = document.getElementById('blocks-empty');
+    const signedOutEl = document.getElementById('blocks-signedout');
+    if (!sectionsEl || !emptyEl || !signedOutEl) return;
+
+    // Reset
+    sectionsEl.style.display  = 'none';
+    emptyEl.style.display     = 'none';
+    signedOutEl.style.display = 'none';
+
+    if (!currentUser) {
+      clearDynamicBlocks();
+      signedOutEl.style.display = '';
+      return;
+    }
+
+    const { data, error } = await supa
+      .from('experience_blocks')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      // Surface the error but keep sections visible so the user isn't lost.
+      console.error('loadUserBlocks failed:', error);
+      showSaveToast(`Failed to load blocks: ${error.message}`, true);
+      clearDynamicBlocks();
+      sectionsEl.style.display = '';
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      clearDynamicBlocks();
+      emptyEl.style.display = '';
+      return;
+    }
+
+    sectionsEl.style.display = '';
+    renderBlocks(data);
+  }
+
+  // Lightweight toast for save success/error.
+  function showSaveToast(msg, isError) {
+    const t = document.getElementById('save-toast');
+    if (!t) return;
+    const textEl = t.querySelector('.save-toast-text');
+    const icon   = t.querySelector('i');
+    if (textEl) textEl.textContent = msg;
+    if (icon) {
+      icon.className = isError ? 'ti ti-alert-circle' : 'ti ti-circle-check';
+      icon.style.color = isError ? '#FF7676' : '#77FFE4';
+    }
+    t.style.display = 'flex';
+    clearTimeout(showSaveToast._t);
+    showSaveToast._t = setTimeout(() => { t.style.display = 'none'; }, 2400);
   }
 
   // ── MIND MAP ──────────────────────────────
@@ -3091,6 +3380,9 @@
 
     // scroll to top
     window.scrollTo(0, 0);
+
+    // Refresh dynamic content when entering the Blocks page.
+    if (target === 'blocks') loadUserBlocks();
   }
 
   let sidebarCollapsed = false;
@@ -3162,6 +3454,13 @@
       if (active && (active.id === 'page-login' || active.id === 'page-signup')) {
         navigate('dashboard');
       }
+    }
+    // If we're on the Blocks page when auth state changes (e.g. sign-out via
+    // the user menu), refresh it so we don't leave the previous user's cards
+    // visible in the DOM.
+    const activePage = document.querySelector('.page.active');
+    if (activePage && activePage.id === 'page-blocks') {
+      loadUserBlocks();
     }
   });
 
