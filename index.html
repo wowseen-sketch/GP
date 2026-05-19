@@ -3000,22 +3000,25 @@
     setAnalysisModalStatus('Analyzing…', false);
 
     const empty = { work_activities: [], software_skills: [], transferable_skills: [], competency_keywords: [] };
+    const requestBody = {
+      goal:                data.goal,
+      strategy:            data.strategy,
+      actions:             data.actions,
+      failure_improvement: data.failure_improvement,
+      outcome_measurable:  data.outcome_measurable,
+      takeaway:            data.takeaway,
+      applied:             data.applied,
+    };
+    console.log('[runAnalysis] invoking analyze-experience with body:', requestBody);
     try {
       const { data: aiData, error: fnError } = await supa.functions.invoke('analyze-experience', {
-        body: {
-          goal:                data.goal,
-          strategy:            data.strategy,
-          actions:             data.actions,
-          failure_improvement: data.failure_improvement,
-          outcome_measurable:  data.outcome_measurable,
-          takeaway:            data.takeaway,
-          applied:             data.applied,
-        },
+        body: requestBody,
       });
       if (fnError) throw fnError;
+      console.log('[runAnalysis] response:', aiData);
       _cachedAnalysis = aiData;
     } catch (err) {
-      console.error('AI analysis failed:', err);
+      console.error('[runAnalysis] AI analysis failed:', err);
       _cachedAnalysis = empty;
       setAnalysisModalStatus('AI analysis failed — you can still save', false);
     }
