@@ -2541,77 +2541,45 @@
       <!-- RIGHT: Analysis Results (2/5) -->
       <div style="padding:28px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:24px;background:var(--surface);">
 
-        <!-- Competencies -->
-        <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Extracted Competencies</div>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-                <span style="font-size:13px;font-weight:600;color:var(--ink);">Strategic Planning</span>
-                <span style="font-size:13px;font-weight:700;color:var(--ink);">92%</span>
-              </div>
-              <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:92%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-                <span style="font-size:13px;font-weight:600;color:var(--ink);">GTM Execution</span>
-                <span style="font-size:13px;font-weight:700;color:var(--ink);">85%</span>
-              </div>
-              <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:85%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-                <span style="font-size:13px;font-weight:600;color:var(--ink);">Cross-functional</span>
-                <span style="font-size:13px;font-weight:700;color:var(--ink);">78%</span>
-              </div>
-              <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:78%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-                <span style="font-size:13px;font-weight:600;color:var(--ink);">B2B Strategy</span>
-                <span style="font-size:13px;font-weight:700;color:var(--ink);">71%</span>
-              </div>
-              <div style="height:4px;background:var(--border);border-radius:99px;overflow:hidden;"><div style="width:71%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div>
-            </div>
-          </div>
+        <!-- Loading state -->
+        <div id="am-analysis-loading" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;flex:1;padding:40px 0;">
+          <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:#0081DD;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+          <div style="font-size:13px;color:var(--ink-4);">Analyzing with AI…</div>
         </div>
 
-        <!-- Divider -->
-        <div style="height:1px;background:var(--border);"></div>
+        <!-- Result state -->
+        <div id="am-analysis-result" style="display:flex;flex-direction:column;gap:24px;">
 
-        <!-- Keywords -->
-        <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">Extracted Keywords</div>
-          <div style="display:flex;flex-wrap:wrap;gap:7px;">
-            <span class="kw-tag">Strategic Planning <button>×</button></span>
-            <span class="kw-tag">GTM <button>×</button></span>
-            <span class="kw-tag">B2B <button>×</button></span>
-            <span class="kw-tag">Cross-functional <button>×</button></span>
-            <span class="kw-tag">Marketing <button>×</button></span>
-            <span class="kw-tag">OKR <button>×</button></span>
+          <!-- Work Activities -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Work Activities</div>
+            <div id="am-work-activities" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
           </div>
-        </div>
 
-        <!-- Divider -->
-        <div style="height:1px;background:var(--border);"></div>
+          <div style="height:1px;background:var(--border);"></div>
 
-        <!-- Insights — mono color, clean -->
-        <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">AI Insights</div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div style="padding:13px 15px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);">
-              <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:5px;"><i class="ti ti-circle-check" style="color:var(--success);"></i> Strength</div>
-              <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Strong GTM + B2B signals. Cross-functional leadership is a clear differentiator for PM roles.</div>
-            </div>
-            <div style="padding:13px 15px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);">
-              <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:5px;"><i class="ti ti-alert-circle" style="color:var(--warn);"></i> Needs Improvement</div>
-              <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Add specific metrics — DAU, churn %, revenue impact — to boost match score.</div>
-            </div>
-            <div style="padding:13px 15px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);">
-              <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:5px;"><i class="ti ti-bulb" style="color:var(--accent);"></i> Recommended</div>
-              <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Adding A/B test + Agile blocks could boost your match score by up to <strong style="color:var(--ink);">+12%</strong>.</div>
-            </div>
+          <!-- Transferable Skills -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Transferable Skills</div>
+            <div id="am-transferable-skills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
           </div>
+
+          <div style="height:1px;background:var(--border);"></div>
+
+          <!-- Software Skills -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Software Skills</div>
+            <div id="am-software-skills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          </div>
+
+          <div style="height:1px;background:var(--border);"></div>
+
+          <!-- Competency Keywords -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Competency Keywords</div>
+            <div id="am-competency-keywords" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          </div>
+
         </div>
 
       </div>
@@ -2997,24 +2965,6 @@
     ], '\n\n') || '(no learnings provided)');
   }
 
-  // TODO: replace with real AI call — these are placeholder values used
-  // as the competencies/keywords/insights of every saved block until the
-  // analysis pipeline is wired up. Mirrors what the modal currently renders.
-  const MOCK_AI_RESULT = {
-    competencies: [
-      { name: 'Strategic Planning', score: 92 },
-      { name: 'GTM Execution',      score: 85 },
-      { name: 'Cross-functional',   score: 78 },
-      { name: 'B2B Strategy',       score: 71 },
-    ],
-    keywords: ['Strategic Planning', 'GTM', 'B2B', 'Cross-functional', 'Marketing', 'OKR'],
-    insights: [
-      { type: 'strength',    text: 'Strong GTM + B2B signals. Cross-functional leadership is a clear differentiator for PM roles.' },
-      { type: 'improvement', text: 'Add specific metrics — DAU, churn %, revenue impact — to boost match score.' },
-      { type: 'recommended', text: 'Adding A/B test + Agile blocks could boost your match score by up to +12%.' },
-    ],
-  };
-
   // Inline status line in the analysis modal footer (default / saving / error).
   function setAnalysisModalStatus(msg, isError) {
     const el = document.getElementById('am-status');
@@ -3023,9 +2973,17 @@
     el.style.color = isError ? 'var(--danger)' : 'var(--ink-4)';
   }
 
+  function renderAnalysisTags(elId, items) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.innerHTML = items.length
+      ? items.map(k => `<span class="kw-tag" style="cursor:default;">${escapeHtml(k)}</span>`).join('')
+      : `<span style="font-size:12px;color:var(--ink-4);">None identified</span>`;
+  }
+
   // Persist the current experience block. Wired to the modal's "Save as Block" button.
   async function saveExperienceBlock() {
-    // 1. Auth gate. RLS would also block, but failing fast avoids a 401 round-trip.
+    // 1. Auth gate.
     if (!currentUser) {
       closeAnalysisModal();
       openAuthRequiredModal('save');
@@ -3034,7 +2992,7 @@
 
     const data = collectAddFormData();
 
-    // 2. Validate the same fields marked "*" in the form.
+    // 2. Validate required fields.
     if (!data.title) {
       setAnalysisModalStatus('Title is required', true); return;
     }
@@ -3048,22 +3006,55 @@
       setAnalysisModalStatus('End date is required (or mark as currently ongoing)', true); return;
     }
 
-    // 3. Build payload. AI fields are mock; everything else comes from the form.
+    // 3. Show loading state and disable save button.
+    const btn = document.getElementById('save-block-btn');
+    const loadingEl = document.getElementById('am-analysis-loading');
+    const resultEl  = document.getElementById('am-analysis-result');
+    setAnalysisModalStatus('Analyzing…', false);
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (loadingEl) { loadingEl.style.display = 'flex'; }
+    if (resultEl)  { resultEl.style.display  = 'none'; }
+
+    // 4. Call the AI analysis edge function.
+    let aiResult = { work_activities: [], software_skills: [], transferable_skills: [], competency_keywords: [] };
+    try {
+      const { data: aiData, error: fnError } = await supa.functions.invoke('analyze-experience', {
+        body: {
+          goal:                data.goal,
+          strategy:            data.strategy,
+          actions:             data.actions,
+          failure_improvement: data.failure_improvement,
+          outcome_measurable:  data.outcome_measurable,
+          takeaway:            data.takeaway,
+          applied:             data.applied,
+        },
+      });
+      if (fnError) throw fnError;
+      aiResult = aiData;
+    } catch (err) {
+      console.error('AI analysis failed:', err);
+      setAnalysisModalStatus('AI analysis failed — saving without analysis', false);
+    }
+
+    // 5. Populate modal right panel with AI results.
+    if (loadingEl) { loadingEl.style.display = 'none'; }
+    if (resultEl)  { resultEl.style.display  = 'flex'; }
+    renderAnalysisTags('am-work-activities',     aiResult.work_activities     || []);
+    renderAnalysisTags('am-transferable-skills', aiResult.transferable_skills || []);
+    renderAnalysisTags('am-software-skills',     aiResult.software_skills     || []);
+    renderAnalysisTags('am-competency-keywords', aiResult.competency_keywords || []);
+
+    // 6. Build payload and insert.
     const payload = {
       user_id: currentUser.id,
       ...data,
-      // TODO: replace with real AI call
-      competencies: MOCK_AI_RESULT.competencies,
-      keywords:     MOCK_AI_RESULT.keywords,
-      insights:     MOCK_AI_RESULT.insights,
+      work_activities:     aiResult.work_activities     || [],
+      software_skills:     aiResult.software_skills     || [],
+      transferable_skills: aiResult.transferable_skills || [],
+      competency_keywords: aiResult.competency_keywords || [],
     };
 
-    // 4. UI feedback during the round-trip.
-    const btn = document.getElementById('save-block-btn');
     setAnalysisModalStatus('Saving…', false);
-    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
-
-    // 5. Insert.
     const { error } = await supa.from('experience_blocks').insert(payload);
 
     if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
@@ -3073,7 +3064,7 @@
       return;
     }
 
-    // 6. Success: reset status, close modal, toast, navigate to blocks page.
+    // 7. Success: reset, close, toast, navigate.
     setAnalysisModalStatus('Ready to save this experience?', false);
     closeAnalysisModal();
     showSaveToast('Experience block saved');
@@ -3137,7 +3128,7 @@
     const desc = row.actions || row.goal || row.outcome_measurable || '';
 
     // Tags: up to 3 keywords from the JSONB array.
-    const kws = Array.isArray(row.keywords) ? row.keywords.slice(0, 3) : [];
+    const kws = Array.isArray(row.competency_keywords) ? row.competency_keywords.slice(0, 3) : [];
     const tagsHtml = kws.map(k => `<span class="tag">${escapeHtml(k)}</span>`).join('');
 
     // Footer status: outcome present vs missing.
