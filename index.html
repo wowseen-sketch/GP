@@ -2588,7 +2588,7 @@
     <!-- FOOTER -->
     <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
       <button onclick="closeAnalysisModal()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-edit" style="font-size:14px;"></i> Edit More</button>
-      <button class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-sparkles" style="font-size:14px;color:var(--accent);"></i> Re-analyze</button>
+      <button onclick="runAnalysis()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-sparkles" style="font-size:14px;color:var(--accent);"></i> Re-analyze</button>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
         <div id="am-status" style="font-size:12px;color:var(--ink-4);">Ready to save this experience?</div>
         <button id="save-block-btn" onclick="saveExperienceBlock()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:12px 24px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
@@ -2855,10 +2855,12 @@
   }
 
   function openAnalysisModal() {
+    _cachedAnalysis = null;
     const m = document.getElementById('analysis-modal');
     populateAnalysisModal(collectAddFormData());
     m.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    runAnalysis();
   }
   function closeAnalysisModal() {
     const m = document.getElementById('analysis-modal');
@@ -2981,6 +2983,57 @@
       : `<span style="font-size:12px;color:var(--ink-4);">None identified</span>`;
   }
 
+  // Cache for the most recent AI analysis result. Reset each time the modal opens.
+  let _cachedAnalysis = null;
+
+  // Call the analyze-experience edge function, render results in the right panel,
+  // and cache the result for saveExperienceBlock to reuse.
+  async function runAnalysis() {
+    const data = collectAddFormData();
+    const loadingEl = document.getElementById('am-analysis-loading');
+    const resultEl  = document.getElementById('am-analysis-result');
+    const reBtn     = document.querySelector('[onclick="runAnalysis()"]');
+
+    if (loadingEl) { loadingEl.style.display = 'flex'; }
+    if (resultEl)  { resultEl.style.display  = 'none'; }
+    if (reBtn)     { reBtn.disabled = true; reBtn.style.opacity = '0.5'; }
+    setAnalysisModalStatus('Analyzing…', false);
+
+    const empty = { work_activities: [], software_skills: [], transferable_skills: [], competency_keywords: [] };
+    try {
+      const { data: aiData, error: fnError } = await supa.functions.invoke('analyze-experience', {
+        body: {
+          goal:                data.goal,
+          strategy:            data.strategy,
+          actions:             data.actions,
+          failure_improvement: data.failure_improvement,
+          outcome_measurable:  data.outcome_measurable,
+          takeaway:            data.takeaway,
+          applied:             data.applied,
+        },
+      });
+      if (fnError) throw fnError;
+      _cachedAnalysis = aiData;
+    } catch (err) {
+      console.error('AI analysis failed:', err);
+      _cachedAnalysis = empty;
+      setAnalysisModalStatus('AI analysis failed — you can still save', false);
+    }
+
+    if (loadingEl) { loadingEl.style.display = 'none'; }
+    if (resultEl)  { resultEl.style.display  = 'flex'; }
+    if (reBtn)     { reBtn.disabled = false; reBtn.style.opacity = ''; }
+
+    renderAnalysisTags('am-work-activities',     _cachedAnalysis.work_activities     || []);
+    renderAnalysisTags('am-transferable-skills', _cachedAnalysis.transferable_skills || []);
+    renderAnalysisTags('am-software-skills',     _cachedAnalysis.software_skills     || []);
+    renderAnalysisTags('am-competency-keywords', _cachedAnalysis.competency_keywords || []);
+
+    if (_cachedAnalysis.competency_keywords?.length) {
+      setAnalysisModalStatus('Ready to save this experience?', false);
+    }
+  }
+
   // Persist the current experience block. Wired to the modal's "Save as Block" button.
   async function saveExperienceBlock() {
     // 1. Auth gate.
@@ -3006,45 +3059,16 @@
       setAnalysisModalStatus('End date is required (or mark as currently ongoing)', true); return;
     }
 
-    // 3. Show loading state and disable save button.
+    // 3. If analysis hasn't completed yet, run it now.
+    if (!_cachedAnalysis) await runAnalysis();
+
+    const aiResult = _cachedAnalysis || {};
+
+    // 4. Insert.
     const btn = document.getElementById('save-block-btn');
-    const loadingEl = document.getElementById('am-analysis-loading');
-    const resultEl  = document.getElementById('am-analysis-result');
-    setAnalysisModalStatus('Analyzing…', false);
+    setAnalysisModalStatus('Saving…', false);
     if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
-    if (loadingEl) { loadingEl.style.display = 'flex'; }
-    if (resultEl)  { resultEl.style.display  = 'none'; }
 
-    // 4. Call the AI analysis edge function.
-    let aiResult = { work_activities: [], software_skills: [], transferable_skills: [], competency_keywords: [] };
-    try {
-      const { data: aiData, error: fnError } = await supa.functions.invoke('analyze-experience', {
-        body: {
-          goal:                data.goal,
-          strategy:            data.strategy,
-          actions:             data.actions,
-          failure_improvement: data.failure_improvement,
-          outcome_measurable:  data.outcome_measurable,
-          takeaway:            data.takeaway,
-          applied:             data.applied,
-        },
-      });
-      if (fnError) throw fnError;
-      aiResult = aiData;
-    } catch (err) {
-      console.error('AI analysis failed:', err);
-      setAnalysisModalStatus('AI analysis failed — saving without analysis', false);
-    }
-
-    // 5. Populate modal right panel with AI results.
-    if (loadingEl) { loadingEl.style.display = 'none'; }
-    if (resultEl)  { resultEl.style.display  = 'flex'; }
-    renderAnalysisTags('am-work-activities',     aiResult.work_activities     || []);
-    renderAnalysisTags('am-transferable-skills', aiResult.transferable_skills || []);
-    renderAnalysisTags('am-software-skills',     aiResult.software_skills     || []);
-    renderAnalysisTags('am-competency-keywords', aiResult.competency_keywords || []);
-
-    // 6. Build payload and insert.
     const payload = {
       user_id: currentUser.id,
       ...data,
@@ -3054,7 +3078,6 @@
       competency_keywords: aiResult.competency_keywords || [],
     };
 
-    setAnalysisModalStatus('Saving…', false);
     const { error } = await supa.from('experience_blocks').insert(payload);
 
     if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
@@ -3064,7 +3087,7 @@
       return;
     }
 
-    // 7. Success: reset, close, toast, navigate.
+    // 5. Success.
     setAnalysisModalStatus('Ready to save this experience?', false);
     closeAnalysisModal();
     showSaveToast('Experience block saved');
