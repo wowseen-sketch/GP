@@ -779,31 +779,77 @@
   .blk-section-count { font-size: 11px; font-weight: 600; color: var(--ink-4); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
   .blk-section-line { flex: 1; height: 1px; background: var(--border); }
 
-  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  /* ── 파일철 그리드 ── */
+  .blk-grid { display: flex; flex-direction: column; gap: 0; }
 
+  /* 파일철 카드 */
   .blk-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--rl); overflow: hidden; display: flex; flex-direction: column;
-    transition: box-shadow 0.15s, border-color 0.15s;
-    box-shadow: var(--shadow-sm);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    display: flex; flex-direction: row; align-items: center;
+    padding: 0;
+    transition: background 0.12s, border-color 0.12s;
+    border-bottom: none;
+    position: relative;
   }
-  .blk-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
-  .blk-card-top { border-top: 3px solid transparent; }
-  .blk-card-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 5px; }
-  .blk-cat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
-  .blk-card-title { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .blk-card:first-child { border-radius: 12px 12px 0 0; }
+  .blk-card.blk-last { border-bottom: 1px solid var(--border); border-radius: 0 0 12px 12px; }
+  .blk-card:only-child { border-radius: 12px; border-bottom: 1px solid var(--border); }
+  .blk-card:hover { background: var(--surface); }
+
+  /* 왼쪽 컬러 탭 */
+  .blk-card-tab {
+    width: 4px; align-self: stretch; border-radius: 0; flex-shrink: 0;
+  }
+  .blk-card:first-child .blk-card-tab { border-top-left-radius: 12px; }
+  .blk-card.blk-last .blk-card-tab { border-bottom-left-radius: 12px; }
+  .blk-card:only-child .blk-card-tab { border-radius: 12px 0 0 12px; }
+
+  /* 카테고리 배지 */
+  .blk-cat-badge {
+    width: 72px; flex-shrink: 0; padding: 0 12px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; text-align: center; line-height: 1.3;
+  }
+
+  /* 메인 콘텐츠 */
+  .blk-card-body {
+    flex: 1; padding: 14px 16px 14px 0;
+    display: flex; flex-direction: column; gap: 4px;
+    border-left: 1px solid var(--border);
+  }
+  .blk-card-title { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.3; }
   .blk-card-period { font-size: 11px; color: var(--ink-4); }
-  .blk-card-desc { font-size: 12px; color: var(--ink-3); line-height: 1.6; margin-top: 2px; }
-  .blk-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
-  .blk-card-footer {
-    padding: 9px 16px; border-top: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
+  .blk-card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .blk-card-desc { display: none; }
+  .blk-card-top { display: none; }
+  .blk-card-footer { display: none; }
+  .blk-cat-label { display: none; }
+
+  /* 수정 아이콘 */
+  .blk-card-edit {
+    padding: 0 20px; flex-shrink: 0;
+    font-size: 15px; color: var(--ink-4); cursor: pointer;
+    transition: color 0.12s;
+  }
+  .blk-card-edit:hover { color: var(--accent-2); }
+
+  /* 구분선 */
+  .blk-card + .blk-card { border-top: 1px solid var(--border); }
+
+  /* 태그 스타일 */
+  .blk-tag-file {
+    font-size: 10px; font-weight: 500; color: var(--ink-3);
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 2px 8px; border-radius: 99px;
   }
 
   .blk-add {
     border: 1.5px dashed var(--border-strong) !important; background: var(--surface) !important;
-    cursor: pointer; align-items: center; justify-content: center; min-height: 130px;
-    box-shadow: none !important;
+    cursor: pointer; align-items: center; justify-content: center; min-height: 52px;
+    box-shadow: none !important; border-radius: 12px !important;
+    margin-top: 8px; flex-direction: row; gap: 6px; padding: 0 16px !important;
   }
   .blk-add:hover { border-color: var(--accent) !important; background: var(--accent-light) !important; }
   .blk-add:hover i, .blk-add:hover div { color: var(--accent) !important; }
@@ -3229,22 +3275,22 @@
       ? `<div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>`
       : `<div style="display:flex;align-items:center;gap:6px"><i class="ti ti-clock" style="font-size:13px;color:var(--warn)"></i><span style="font-size:11px;font-weight:500;color:var(--warn);letter-spacing:0.03em">NEEDS OUTCOME</span></div>`;
 
+    // 키워드 태그 (최대 3개)
+    const keywords = (row.competency_keywords || row.job_keywords || []).slice(0, 3);
+    const kwHtml = keywords.map(k => `<span class="blk-tag-file">${escapeHtml(k)}</span>`).join('');
+
     const el = document.createElement('div');
     el.className = 'blk-card dyn';
     el.dataset.type = cat;
     el.innerHTML = `
-      <div class="blk-card-top" style="border-top-color:${style.color}"></div>
+      <div class="blk-card-tab" style="background:${style.color}"></div>
+      <div class="blk-cat-badge" style="color:${style.color}">${escapeHtml(style.label)}</div>
       <div class="blk-card-body">
-        <div class="blk-cat-label" style="color:${style.color}">${escapeHtml(style.label)}</div>
         <div class="blk-card-title">${escapeHtml(row.title || 'Untitled')}</div>
         <div class="blk-card-period">${escapeHtml(period)}</div>
-        <div class="blk-card-desc">${escapeHtml(desc)}</div>
-        <div class="blk-card-tags">${tagsHtml}</div>
+        <div class="blk-card-tags">${kwHtml}</div>
       </div>
-      <div class="blk-card-footer">
-        ${footerHtml}
-        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
-      </div>
+      <div class="blk-card-edit"><i class="ti ti-edit"></i></div>
     `;
     return el;
   }
@@ -3265,6 +3311,10 @@
       const grid    = section.querySelector('.blk-grid');
       const addCard = grid.querySelector('.blk-add');
       list.forEach(row => grid.insertBefore(buildBlockCard(row, cat), addCard));
+      // 마지막 동적 카드에 blk-last 클래스 추가 (둥근 하단 모서리)
+      const dynCards = grid.querySelectorAll('.blk-card.dyn');
+      dynCards.forEach(c => c.classList.remove('blk-last'));
+      if (dynCards.length > 0) dynCards[dynCards.length - 1].classList.add('blk-last');
       const countEl = section.querySelector('.blk-section-count');
       if (countEl) countEl.textContent = list.length;
     });
