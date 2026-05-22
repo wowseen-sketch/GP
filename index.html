@@ -1633,7 +1633,7 @@
       </div>
 
       <!-- Category Sections (populated by loadUserBlocks; seed cards removed) -->
-      <div id="blocks-sections" style="padding:14px 44px 14px;display:flex;flex-direction:column;gap:8px;">
+      <div id="blocks-sections" style="padding:4px 44px 4px;display:flex;flex-direction:column;gap:4px;">
 
         <!-- PROJECT -->
         <div class="blk-section" data-category="project">
@@ -3248,7 +3248,7 @@
     el.dataset.type = cat;
     el.innerHTML = `
       <div class="blk-folder-svg">
-        <svg viewBox="0 4 240 196" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 4 240 172" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="fb-${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="${fc}" stop-opacity="1"/>
@@ -3262,7 +3262,7 @@
               <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="${fc}" flood-opacity="0.28"/>
             </filter>
             <clipPath id="fc-${uid}">
-              <path d="M10,48 L230,48 Q240,48 240,58 L240,192 Q240,200 230,200 L10,200 Q0,200 0,192 L0,58 Q0,48 10,48 Z"/>
+              <path d="M10,48 L230,48 Q240,48 240,58 L240,166 Q240,176 230,176 L10,176 Q0,176 0,166 L0,58 Q0,48 10,48 Z"/>
             </clipPath>
           </defs>
 
@@ -3271,50 +3271,49 @@
                 fill="${fc}" opacity="0.75"/>
 
           <!-- 본체 -->
-          <path d="M10,48 L230,48 Q240,48 240,58 L240,192 Q240,200 230,200 L10,200 Q0,200 0,192 L0,58 Q0,48 10,48 Z"
+          <path d="M10,48 L230,48 Q240,48 240,58 L240,166 Q240,176 230,176 L10,176 Q0,176 0,166 L0,58 Q0,48 10,48 Z"
                 fill="url(#fb-${uid})" filter="url(#fs-${uid})"/>
 
           <!-- 상단 광택 -->
-          <rect x="0" y="48" width="240" height="28" fill="url(#fh-${uid})" clip-path="url(#fc-${uid})"/>
+          <rect x="0" y="48" width="240" height="24" fill="url(#fh-${uid})" clip-path="url(#fc-${uid})"/>
 
           <!-- 카테고리 -->
-          <text x="16" y="70" font-family="system-ui,sans-serif" font-size="7" font-weight="700"
+          <text x="14" y="64" font-family="system-ui,sans-serif" font-size="6.5" font-weight="700"
                 letter-spacing="1.5" fill="white" opacity="0.7">${escapeHtml(style.label).toUpperCase()}</text>
 
-          <!-- 제목 (2줄, 잘림없이) -->
-          <foreignObject x="8" y="74" width="224" height="44">
+          <!-- 제목 (1줄, 잘림없이 작게) -->
+          <foreignObject x="8" y="68" width="224" height="34">
             <div xmlns="http://www.w3.org/1999/xhtml"
-              style="font-family:system-ui,sans-serif;font-size:12px;font-weight:800;color:white;line-height:1.35;padding:0 8px;word-break:break-word;">
+              style="font-family:system-ui,sans-serif;font-size:10px;font-weight:800;color:white;line-height:1.3;padding:0 6px;word-break:break-word;">
               ${escapeHtml(row.title || 'Untitled')}
             </div>
           </foreignObject>
 
           <!-- 기간 -->
-          <text x="16" y="126" font-family="system-ui,sans-serif" font-size="8" fill="white" opacity="0.6">
+          <text x="14" y="108" font-family="system-ui,sans-serif" font-size="7.5" fill="white" opacity="0.6">
             ${escapeHtml(period)}
           </text>
 
-          <!-- 키워드 (흰색 작은 텍스트, 최대 3개 가로로) -->
+          <!-- 키워드 3개 가로, 균등 분배 -->
           ${(() => {
             const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,3);
-            let x = 16;
-            return kws.map((k) => {
-              const label = k.length > 14 ? k.slice(0,14)+'…' : k;
-              const tw = label.length * 5.8 + 16;
-              const el = `
-                <rect x="${x}" y="134" width="${tw}" height="16" rx="8" fill="rgba(255,255,255,0.22)"/>
-                <text x="${x+8}" y="${134+11}" font-family="system-ui,sans-serif" font-size="8" font-weight="600" fill="white">${escapeHtml(label)}</text>
+            const totalW = 212;
+            const tagW = Math.floor(totalW / 3) - 4;
+            return kws.map((k, i) => {
+              const label = k.length > 10 ? k.slice(0,10)+'…' : k;
+              const bx = 14 + i * (tagW + 4);
+              return `
+                <rect x="${bx}" y="116" width="${tagW}" height="15" rx="7" fill="rgba(255,255,255,0.2)"/>
+                <text x="${bx + tagW/2}" y="127" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" font-weight="600" fill="white">${escapeHtml(label)}</text>
               `;
-              x += tw + 6;
-              return x < 230 ? el : '';
             }).join('');
           })()}
 
           <!-- Edit -->
-          <text x="195" y="184" font-family="system-ui,sans-serif" font-size="8" fill="white" opacity="0.45">Edit ✎</text>
+          <text x="196" y="162" font-family="system-ui,sans-serif" font-size="7.5" fill="white" opacity="0.45">Edit ✎</text>
 
           <!-- 하단 음영 -->
-          <path d="M0,178 L240,178 L240,190 Q240,200 230,200 L10,200 Q0,200 0,190 Z"
+          <path d="M0,154 L240,154 L240,166 Q240,176 230,176 L10,176 Q0,176 0,166 Z"
                 fill="black" opacity="0.07"/>
         </svg>
       </div>
