@@ -779,7 +779,7 @@
   .blk-section-count { font-size: 11px; font-weight: 600; color: var(--ink-4); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
   .blk-section-line { flex: 1; height: 1px; background: var(--border); }
 
-  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; grid-auto-rows: 1fr; align-items: start; }
 
   /* 폴더 카드 */
   .blk-card {
@@ -3247,7 +3247,7 @@
     el.dataset.type = cat;
     el.innerHTML = `
       <div class="blk-folder-svg">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 200 224" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="fb-${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="${fc}" stop-opacity="1"/>
@@ -3261,7 +3261,7 @@
               <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="${fc}" flood-opacity="0.3"/>
             </filter>
             <clipPath id="fc-${uid}">
-              <path d="M10,52 L190,52 Q200,52 200,62 L200,190 Q200,200 190,200 L10,200 Q0,200 0,190 L0,62 Q0,52 10,52 Z"/>
+              <path d="M10,52 L190,52 Q200,52 200,62 L200,214 Q200,224 190,224 L10,224 Q0,224 0,214 L0,62 Q0,52 10,52 Z"/>
             </clipPath>
           </defs>
 
@@ -3270,40 +3270,48 @@
                 fill="${fc}" opacity="0.78"/>
 
           <!-- 본체 -->
-          <path d="M10,52 L190,52 Q200,52 200,62 L200,190 Q200,200 190,200 L10,200 Q0,200 0,190 L0,62 Q0,52 10,52 Z"
+          <path d="M10,52 L190,52 Q200,52 200,62 L200,214 Q200,224 190,224 L10,224 Q0,224 0,214 L0,62 Q0,52 10,52 Z"
                 fill="url(#fb-${uid})" filter="url(#fs-${uid})"/>
 
           <!-- 상단 광택 -->
           <rect x="0" y="52" width="200" height="36" fill="url(#fh-${uid})" clip-path="url(#fc-${uid})"/>
 
           <!-- 내용 카드 (흰 배경) -->
-          <rect x="14" y="88" width="172" height="100" rx="8" fill="white" opacity="0.92"/>
+          <rect x="14" y="88" width="172" height="126" rx="8" fill="white" opacity="0.92"/>
 
           <!-- 카테고리 라벨 -->
-          <text x="26" y="106" font-family="system-ui,sans-serif" font-size="8" font-weight="700"
+          <text x="26" y="104" font-family="system-ui,sans-serif" font-size="7.5" font-weight="700"
                 letter-spacing="1" fill="${fc}" opacity="0.9">${escapeHtml(style.label)}</text>
 
           <!-- 제목 (최대 2줄) -->
-          <foreignObject x="14" y="110" width="172" height="46">
+          <foreignObject x="14" y="108" width="172" height="40">
             <div xmlns="http://www.w3.org/1999/xhtml"
-              style="font-family:system-ui,sans-serif;font-size:11px;font-weight:700;color:#1a2233;line-height:1.35;padding:0 12px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
+              style="font-family:system-ui,sans-serif;font-size:10.5px;font-weight:700;color:#1a2233;line-height:1.35;padding:0 12px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
               ${escapeHtml(row.title || 'Untitled')}
             </div>
           </foreignObject>
 
           <!-- 기간 -->
-          <text x="26" y="162" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">
+          <text x="26" y="154" font-family="system-ui,sans-serif" font-size="8" fill="#9CA3AF">
             ${escapeHtml(period)}
           </text>
 
-          <!-- 구분선 -->
-          <line x1="14" y1="170" x2="186" y2="170" stroke="#E5E7EB" stroke-width="1"/>
+          <!-- 키워드 태그 (최대 2개) -->
+          <foreignObject x="14" y="158" width="172" height="36">
+            <div xmlns="http://www.w3.org/1999/xhtml"
+              style="display:flex;flex-wrap:wrap;gap:3px;padding:0 12px;">
+              ${(tagsHtml ? tagsHtml.split('</span>').slice(0,2).join('</span>') + (tagsHtml.split('</span>').length > 2 ? '' : '') : '')}
+            </div>
+          </foreignObject>
 
-          <!-- Edit 아이콘 -->
-          <text x="160" y="183" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">Edit</text>
+          <!-- 구분선 -->
+          <line x1="14" y1="200" x2="186" y2="200" stroke="#E5E7EB" stroke-width="1"/>
+
+          <!-- Edit -->
+          <text x="158" y="212" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">Edit ✎</text>
 
           <!-- 하단 음영 -->
-          <path d="M0,178 L200,178 L200,190 Q200,200 190,200 L10,200 Q0,200 0,190 Z"
+          <path d="M0,202 L200,202 L200,214 Q200,224 190,224 L10,224 Q0,224 0,214 Z"
                 fill="black" opacity="0.06"/>
         </svg>
       </div>
