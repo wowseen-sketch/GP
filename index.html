@@ -3251,43 +3251,42 @@
     el.dataset.type = cat;
     el.innerHTML = `
       <div class="blk-folder-svg">
-        <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 200 155" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="fb-${uid}" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="${fc}" stop-opacity="0.88"/>
-              <stop offset="100%" stop-color="${fc}" stop-opacity="0.65"/>
+              <stop offset="0%" stop-color="${fc}"/>
+              <stop offset="100%" stop-color="${fc}" stop-opacity="0.78"/>
             </linearGradient>
-            <linearGradient id="ft-${uid}" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="${fc}" stop-opacity="1"/>
-              <stop offset="100%" stop-color="${fc}" stop-opacity="0.82"/>
-            </linearGradient>
-            <filter id="fs-${uid}">
-              <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="${fc}" flood-opacity="0.22"/>
+            <filter id="fs-${uid}" x="-8%" y="-8%" width="116%" height="130%">
+              <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="${fc}" flood-opacity="0.28"/>
             </filter>
           </defs>
 
-          <!-- 탭: 왼쪽 위, 본체보다 살짝 작은 높이 -->
-          <path d="M14,52 L14,38 Q14,30 22,30 L78,30 Q86,30 90,38 L96,52 Z"
-                fill="url(#ft-${uid})"/>
+          <!-- 탭 (왼쪽, 본체 위에 붙음) -->
+          <path d="M16,54 L16,40 Q16,32 24,32 L80,32 Q88,32 92,40 L98,54 Z"
+                fill="${fc}" opacity="0.82"/>
 
-          <!-- 본체: 탭 바로 아래부터 -->
-          <rect x="14" y="50" width="172" height="100" rx="14" ry="14"
-                fill="url(#fb-${uid})" filter="url(#fs-${uid})"/>
+          <!-- 본체 전체를 하나의 path로: 탭 없는 오른쪽 위는 둥글게, 탭 있는 왼쪽 위는 탭과 이어짐 -->
+          <path d="
+            M16,54
+            L186,54
+            Q194,54 194,62
+            L194,141
+            Q194,149 186,149
+            L14,149
+            Q6,149 6,141
+            L6,62
+            Q6,54 14,54
+            Z"
+            fill="url(#fb-${uid})" filter="url(#fs-${uid})"/>
 
-          <!-- 탭과 본체 이음새 자연스럽게: 본체 위쪽 코너만 오른쪽 -->
-          <rect x="14" y="50" width="172" height="20" rx="0" ry="0" fill="url(#fb-${uid})"/>
-          <rect x="14" y="50" width="172" height="20"
-                rx="0" fill="url(#fb-${uid})"/>
+          <!-- 상단 광택 -->
+          <path d="M16,54 L186,54 Q194,54 194,62 L194,80 L6,80 L6,62 Q6,54 14,54 Z"
+                fill="white" opacity="0.14"/>
 
-          <!-- 상단 하이라이트 -->
-          <rect x="14" y="50" width="172" height="32" rx="14" ry="14"
-                fill="white" opacity="0.13"/>
-
-          <!-- 페이퍼/문서 느낌 (탭 안) -->
-          <rect x="38" y="20" width="44" height="34" rx="5"
-                fill="white" opacity="0.28"/>
-          <rect x="44" y="16" width="32" height="38" rx="4"
-                fill="white" opacity="0.18"/>
+          <!-- 하단 살짝 어둡게 (입체감) -->
+          <path d="M6,130 L194,130 L194,141 Q194,149 186,149 L14,149 Q6,149 6,141 Z"
+                fill="black" opacity="0.06"/>
         </svg>
       </div>
       <div class="blk-folder-info">
