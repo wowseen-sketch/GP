@@ -779,32 +779,64 @@
   .blk-section-count { font-size: 11px; font-weight: 600; color: var(--ink-4); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
   .blk-section-line { flex: 1; height: 1px; background: var(--border); }
 
-  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
+  /* 폴더 전체 래퍼 */
   .blk-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--rl); overflow: hidden; display: flex; flex-direction: column;
-    transition: box-shadow 0.15s, border-color 0.15s;
-    box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column;
+    transition: transform 0.15s, box-shadow 0.15s;
+    background: transparent; border: none; border-radius: 0;
+    box-shadow: none; overflow: visible;
+    cursor: pointer;
   }
-  .blk-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
-  .blk-card-top { border-top: 3px solid transparent; }
-  .blk-card-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 5px; }
-  .blk-cat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
-  .blk-card-title { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .blk-card:hover { transform: translateY(-3px); }
+  .blk-card:hover .blk-folder-body { box-shadow: 0 8px 24px rgba(0,0,0,0.13); }
+
+  /* 폴더 탭 (위에 튀어나온 부분) */
+  .blk-card-top {
+    height: 14px;
+    width: 48%;
+    border-radius: 6px 6px 0 0;
+    margin-left: 10px;
+    border: 1.5px solid transparent;
+    border-bottom: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 폴더 본체 */
+  .blk-folder-body {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 0 8px 8px 8px;
+    background: var(--white);
+    padding: 14px 14px 12px;
+    display: flex; flex-direction: column; gap: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    position: relative; z-index: 0;
+    min-height: 120px;
+  }
+
+  .blk-cat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .blk-card-title { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.35; }
   .blk-card-period { font-size: 11px; color: var(--ink-4); }
-  .blk-card-desc { font-size: 12px; color: var(--ink-3); line-height: 1.6; margin-top: 2px; }
-  .blk-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+  .blk-card-desc { display: none; }
+  .blk-card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
   .blk-card-footer {
-    padding: 9px 16px; border-top: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: flex-end;
+    margin-top: auto; padding-top: 8px;
+    border-top: 1px solid var(--border);
   }
+  .blk-card-body { display: contents; }
 
   .blk-add {
     border: 1.5px dashed var(--border-strong) !important; background: var(--surface) !important;
     cursor: pointer; align-items: center; justify-content: center; min-height: 130px;
-    box-shadow: none !important;
+    box-shadow: none !important; border-radius: 8px !important;
+    flex-direction: column; gap: 6px;
   }
+  .blk-add .blk-card-top { display: none; }
+  .blk-add .blk-folder-body { display: none; }
   .blk-add:hover { border-color: var(--accent) !important; background: var(--accent-light) !important; }
   .blk-add:hover i, .blk-add:hover div { color: var(--accent) !important; }
 
@@ -3233,17 +3265,17 @@
     el.className = 'blk-card dyn';
     el.dataset.type = cat;
     el.innerHTML = `
-      <div class="blk-card-top" style="border-top-color:${style.color}"></div>
-      <div class="blk-card-body">
+      <div class="blk-card-top" style="background:${style.color}20; border-color:${style.color}; border-bottom:none;"></div>
+      <div class="blk-folder-body">
         <div class="blk-cat-label" style="color:${style.color}">${escapeHtml(style.label)}</div>
         <div class="blk-card-title">${escapeHtml(row.title || 'Untitled')}</div>
         <div class="blk-card-period">${escapeHtml(period)}</div>
-        <div class="blk-card-desc">${escapeHtml(desc)}</div>
         <div class="blk-card-tags">${tagsHtml}</div>
-      </div>
-      <div class="blk-card-footer">
-        ${footerHtml}
-        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);cursor:pointer"><i class="ti ti-edit" style="font-size:14px"></i> Edit</div>
+        <div class="blk-card-footer">
+          <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-3);cursor:pointer">
+            <i class="ti ti-edit" style="font-size:14px"></i> Edit
+          </div>
+        </div>
       </div>
     `;
     return el;
