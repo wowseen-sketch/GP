@@ -3277,43 +3277,40 @@
           <!-- 상단 광택 -->
           <rect x="0" y="48" width="280" height="32" fill="url(#fh-${uid})" clip-path="url(#fc-${uid})"/>
 
-          <!-- 내용 카드 -->
-          <rect x="14" y="82" width="252" height="136" rx="8" fill="white" opacity="0.93"/>
-
           <!-- 카테고리 -->
-          <text x="26" y="98" font-family="system-ui,sans-serif" font-size="8" font-weight="700"
-                letter-spacing="1.2" fill="${fc}">${escapeHtml(style.label)}</text>
+          <text x="20" y="82" font-family="system-ui,sans-serif" font-size="9" font-weight="600"
+                letter-spacing="1.2" fill="white" opacity="0.75">${escapeHtml(style.label).toUpperCase()}</text>
 
           <!-- 제목 -->
-          <foreignObject x="14" y="101" width="252" height="42">
+          <foreignObject x="10" y="88" width="260" height="52">
             <div xmlns="http://www.w3.org/1999/xhtml"
-              style="font-family:system-ui,sans-serif;font-size:11px;font-weight:700;color:#1a2233;line-height:1.35;padding:0 12px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
+              style="font-family:system-ui,sans-serif;font-size:13px;font-weight:800;color:white;line-height:1.3;padding:0 10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
               ${escapeHtml(row.title || 'Untitled')}
             </div>
           </foreignObject>
 
           <!-- 기간 -->
-          <text x="26" y="150" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">
+          <text x="20" y="148" font-family="system-ui,sans-serif" font-size="9" fill="white" opacity="0.7">
             ${escapeHtml(period)}
           </text>
 
-          <!-- 키워드 태그 (최대 3개) -->
-          <foreignObject x="14" y="154" width="252" height="44">
+          <!-- 키워드 태그 (흰색, 최대 3개) -->
+          <foreignObject x="10" y="154" width="260" height="60">
             <div xmlns="http://www.w3.org/1999/xhtml"
-              style="display:flex;flex-wrap:wrap;gap:4px;padding:2px 12px;">
-              ${(() => { const parts = tagsHtml ? tagsHtml.split('</span>').filter(s=>s.trim()) : []; return parts.slice(0,3).map(s=>s+'</span>').join(''); })()}
+              style="display:flex;flex-wrap:wrap;gap:5px;padding:0 10px;">
+              ${(() => {
+                const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,3);
+                return kws.map(k=>`<span style="font-family:system-ui,sans-serif;font-size:10px;font-weight:600;color:white;background:rgba(255,255,255,0.22);padding:3px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.35);white-space:nowrap;">${escapeHtml(k)}</span>`).join('');
+              })()}
             </div>
           </foreignObject>
 
-          <!-- 구분선 -->
-          <line x1="14" y1="204" x2="266" y2="204" stroke="#E5E7EB" stroke-width="1"/>
-
-          <!-- Edit -->
-          <text x="236" y="217" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">Edit ✎</text>
+          <!-- Edit 버튼 -->
+          <text x="234" y="222" font-family="system-ui,sans-serif" font-size="9" fill="white" opacity="0.6">Edit ✎</text>
 
           <!-- 하단 음영 -->
           <path d="M0,224 L280,224 L280,236 Q280,246 270,246 L10,246 Q0,246 0,236 Z"
-                fill="black" opacity="0.05"/>
+                fill="black" opacity="0.08"/>
         </svg>
       </div>
     `;
