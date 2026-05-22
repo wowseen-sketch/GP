@@ -1068,21 +1068,8 @@
       <div class="hero">
         <div class="hero-top">
           <div>
-            <!-- Profile Avatar above title -->
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
-              <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;box-shadow:0 6px 20px rgba(0,129,221,0.25);border:3px solid var(--white);flex-shrink:0;overflow:hidden;cursor:pointer;" title="Click to upload photo">
-                <img id="profile-img" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
-                <span id="profile-initials">JW</span>
-                <input type="file" accept="image/*" style="display:none;" id="profile-upload" onchange="loadProfileImg(this)">
-              </div>
-              <div>
-                <div style="font-size:15px;font-weight:700;color:var(--ink);">Ji-won</div>
-                <div style="font-size:12px;color:var(--ink-4);">PM Candidate</div>
-                <div style="font-size:11px;color:var(--accent-2);margin-top:3px;cursor:pointer;" onclick="document.getElementById('profile-upload').click()">+ Upload photo</div>
-              </div>
-            </div>
             <div class="hero-eyebrow">DASHBOARD</div>
-            <div class="hero-title">Welcome back, <em>Ji-won</em><br>Keep building your career</div>
+            <div class="hero-title" id="dashboard-hero-title">Welcome back, <em>Ji-won</em><br>Keep building your career</div>
             <div class="hero-sub">You have 12 experience blocks saved. Start matching analysis with 3 companies today.</div>
             <div class="hero-actions">
               <button class="btn-blue" onclick="navigate('add')"><i class="ti ti-plus" style="font-size:14px"></i> Add Experience</button>
@@ -1430,7 +1417,7 @@
         <!-- PDCA SECTION DIVIDER -->
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
           <div style="flex:1;height:1px;background:var(--border);"></div>
-          <div style="font-size:11px;font-weight:700;color:var(--ink-4);letter-spacing:0.08em;text-transform:uppercase;">PDCA — Experience Detail</div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink-4);letter-spacing:0.08em;text-transform:uppercase;">Experience Detail</div>
           <div style="flex:1;height:1px;background:var(--border);"></div>
         </div>
 
@@ -1438,10 +1425,9 @@
         <div style="margin-bottom:28px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);position:relative;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">P</div>
+              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">1</div>
               <div>
-                <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-2);">PLAN</div>
-                <div style="font-size:15px;font-weight:700;color:var(--ink);">What were you trying to achieve?</div>
+                                <div style="font-size:15px;font-weight:700;color:var(--ink);">What were you trying to achieve?</div>
               </div>
             </div>
             <button onclick="toggleTip('tip-plan', this)" style="width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border-strong);background:var(--white);cursor:pointer;font-size:13px;font-weight:700;color:var(--ink-4);display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="Show tips">?</button>
@@ -1463,10 +1449,9 @@
         <div style="margin-bottom:28px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">D</div>
+              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">2</div>
               <div>
-                <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-2);">DO</div>
-                <div style="font-size:15px;font-weight:700;color:var(--ink);">What did you actually do?</div>
+                                <div style="font-size:15px;font-weight:700;color:var(--ink);">What did you actually do?</div>
               </div>
             </div>
             <button onclick="toggleTip('tip-do', this)" style="width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border-strong);background:var(--white);cursor:pointer;font-size:13px;font-weight:700;color:var(--ink-4);display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="Show tips">?</button>
@@ -1487,10 +1472,9 @@
         <div style="margin-bottom:28px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">C</div>
+              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">3</div>
               <div>
-                <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-2);">CHECK</div>
-                <div style="font-size:15px;font-weight:700;color:var(--ink);">What were the outcomes?</div>
+                                <div style="font-size:15px;font-weight:700;color:var(--ink);">What were the outcomes?</div>
               </div>
             </div>
             <button onclick="toggleTip('tip-check', this)" style="width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border-strong);background:var(--white);cursor:pointer;font-size:13px;font-weight:700;color:var(--ink-4);display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="Show tips">?</button>
@@ -1505,10 +1489,9 @@
         <div style="margin-bottom:28px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">A</div>
+              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">4</div>
               <div>
-                <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-2);">ACT</div>
-                <div style="font-size:15px;font-weight:700;color:var(--ink);">How did this change you?</div>
+                                <div style="font-size:15px;font-weight:700;color:var(--ink);">How did this change you?</div>
               </div>
             </div>
             <button onclick="toggleTip('tip-act', this)" style="width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border-strong);background:var(--white);cursor:pointer;font-size:13px;font-weight:700;color:var(--ink-4);display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="Show tips">?</button>
@@ -2724,6 +2707,7 @@
     // Remove any existing tip popover
     const existing = document.getElementById('tip-popover');
     if (existing) {
+      if (existing._removeScroll) existing._removeScroll();
       existing.remove();
       // If clicking same button, just close
       if (existing.dataset.tipId === id) return;
@@ -2736,14 +2720,11 @@
       'tip-act': '💡 Interviewers love seeing self-awareness. What would you do differently? How did this shape how you work now?'
     };
 
-    const rect = btn.getBoundingClientRect();
     const popover = document.createElement('div');
     popover.id = 'tip-popover';
     popover.dataset.tipId = id;
     popover.style.cssText = `
       position:fixed;
-      top:${rect.top}px;
-      left:${rect.right + 16}px;
       width:260px;
       background:#fff;
       border:1.5px solid var(--accent-mid);
@@ -2757,6 +2738,32 @@
       animation:fadeIn 0.15s ease;
     `;
     popover.innerHTML = tips[id] || '';
+
+    function positionPopover() {
+      const r = btn.getBoundingClientRect();
+      // PDCA 카드(버튼의 부모 카드) 오른쪽 끝 기준으로 오른쪽 공백에 표시
+      const card = btn.closest('[style*="padding:24px"]') || btn.closest('[style*="margin-bottom:28px"]');
+      let leftPos;
+      if (card) {
+        const cardRect = card.getBoundingClientRect();
+        leftPos = cardRect.right + 20;
+      } else {
+        leftPos = r.right + 16;
+      }
+      // 화면 오른쪽 넘으면 카드 왼쪽으로
+      if (leftPos + 260 > window.innerWidth - 8) {
+        leftPos = r.left - 276;
+      }
+      popover.style.top = Math.max(8, r.top) + 'px';
+      popover.style.left = leftPos + 'px';
+    }
+    positionPopover();
+
+    // 스크롤 시 팝오버 위치 업데이트
+    const scrollEl = document.querySelector('.main-content') || window;
+    function onScroll() { positionPopover(); }
+    scrollEl.addEventListener('scroll', onScroll, { passive: true });
+    popover._removeScroll = () => scrollEl.removeEventListener('scroll', onScroll);
 
     // Arrow left side
     const arrow = document.createElement('div');
@@ -2777,6 +2784,7 @@
     setTimeout(() => {
       document.addEventListener('click', function closeTip(e) {
         if (!popover.contains(e.target) && e.target !== btn) {
+          if (popover._removeScroll) popover._removeScroll();
           popover.remove();
           document.removeEventListener('click', closeTip);
         }
@@ -3345,7 +3353,7 @@
     html += `<circle cx="${cx}" cy="${cy}" r="42" fill="url(#cg)" filter="url(#glow)"/>`;
     html += `<circle cx="${cx}" cy="${cy}" r="42" fill="none" stroke="white" stroke-width="2" opacity="0.25"/>`;
     html += `<text x="${cx}" y="${cy-8}" text-anchor="middle"
-      font-family="Pretendard,sans-serif" font-size="14" font-weight="800" fill="white">Ji-won</text>`;
+      font-family="Pretendard,sans-serif" font-size="14" font-weight="800" fill="white">${currentUser ? getDisplayName(currentUser) : 'Me'}</text>`;
     html += `<text x="${cx}" y="${cy+10}" text-anchor="middle"
       font-family="Pretendard,sans-serif" font-size="10.5" font-weight="500" fill="rgba(255,255,255,0.8)">12 experiences</text>`;
 
@@ -3374,6 +3382,11 @@
   }
 
   function navigate(target) {
+    // 비로그인 상태에서 보호된 페이지 접근 시 로그인 페이지로
+    const publicPages = ['login', 'signup'];
+    if (!currentUser && !publicPages.includes(target)) {
+      target = 'login';
+    }
     pages.forEach(p => {
       const el = document.getElementById('page-' + p);
       if (el) el.classList.remove('active');
@@ -3432,7 +3445,34 @@
 
   function normalizeUser(u) {
     if (!u) return null;
-    return { id: u.id, email: u.email || '', initials: getInitials(u.email) };
+    const createdAt = u.created_at ? new Date(u.created_at) : null;
+    const isNew = createdAt ? (Date.now() - createdAt.getTime() < 5 * 60 * 1000) : false;
+    // 구글 로그인 시 user_metadata에서 실제 이름 가져오기
+    const meta = u.user_metadata || {};
+    const displayName = meta.full_name || meta.name || meta.given_name || (u.email ? u.email.split('@')[0] : 'there');
+    return { id: u.id, email: u.email || '', initials: getInitials(u.email), isNew, displayName };
+  }
+
+  function getDisplayName(emailOrUser) {
+    // currentUser 객체를 받으면 displayName 우선 사용
+    if (emailOrUser && typeof emailOrUser === 'object') return emailOrUser.displayName || 'there';
+    if (!emailOrUser) return 'there';
+    return emailOrUser.split('@')[0] || 'there';
+  }
+
+  function updateDashboardGreeting() {
+    const el = document.getElementById('dashboard-hero-title');
+    if (!el) return;
+    if (currentUser) {
+      const name = getDisplayName(currentUser);
+      if (currentUser.isNew) {
+        el.innerHTML = `Welcome to Exppi, <em>${name}</em>!<br>Let's build your career story`;
+      } else {
+        el.innerHTML = `Welcome back, <em>${name}</em><br>Keep building your career`;
+      }
+    } else {
+      el.innerHTML = `Welcome back, <em>Ji-won</em><br>Keep building your career`;
+    }
   }
 
   function renderAuthUI() {
@@ -3441,24 +3481,43 @@
     const sbEmailEl  = document.getElementById('sb-profile-email');
     const menuEmail  = document.getElementById('user-menu-email');
 
+    const profileNameEl   = document.getElementById('profile-display-name');
+    const profileEmailEl  = document.getElementById('profile-display-email');
+    const profileInitials = document.getElementById('profile-initials');
+    const uploadPhotoEl   = document.querySelector('[onclick="document.getElementById(\'profile-upload\').click()"]');
+
     if (currentUser) {
-      if (initialsEl) initialsEl.textContent = currentUser.initials;
-      if (dotEl)      dotEl.style.display = 'block';
-      if (sbEmailEl)  sbEmailEl.textContent = currentUser.email;
-      if (menuEmail)  menuEmail.textContent = currentUser.email;
+      const displayName = getDisplayName(currentUser);
+      if (initialsEl)     initialsEl.textContent = currentUser.initials;
+      if (dotEl)          dotEl.style.display = 'block';
+      if (sbEmailEl)      sbEmailEl.textContent = currentUser.email;
+      if (menuEmail)      menuEmail.textContent = currentUser.email;
+      if (profileInitials) profileInitials.textContent = currentUser.initials;
+      if (profileNameEl)  profileNameEl.textContent = displayName;
+      if (profileEmailEl) { profileEmailEl.textContent = currentUser.email; profileEmailEl.style.display = 'block'; }
+      if (uploadPhotoEl)  uploadPhotoEl.style.display = 'none';
     } else {
-      if (initialsEl) initialsEl.textContent = '?';
-      if (dotEl)      dotEl.style.display = 'none';
-      if (sbEmailEl)  sbEmailEl.textContent = 'Not signed in';
-      if (menuEmail)  menuEmail.textContent = '—';
+      if (initialsEl)     initialsEl.textContent = '?';
+      if (dotEl)          dotEl.style.display = 'none';
+      if (sbEmailEl)      sbEmailEl.textContent = 'Not signed in';
+      if (menuEmail)      menuEmail.textContent = '—';
+      if (profileInitials) profileInitials.textContent = 'JW';
+      if (profileNameEl)  profileNameEl.textContent = 'Ji-won';
+      if (profileEmailEl) profileEmailEl.style.display = 'none';
+      if (uploadPhotoEl)  uploadPhotoEl.style.display = 'block';
       closeUserMenu();
     }
+    updateDashboardGreeting();
   }
 
   async function refreshAuthState() {
     const { data: { session } } = await supa.auth.getSession();
     currentUser = normalizeUser(session ? session.user : null);
     renderAuthUI();
+    // 비로그인 상태면 자동으로 로그인 페이지로 이동
+    if (!currentUser) {
+      navigate('login');
+    }
   }
 
   // Listen for auth changes from other tabs / token refresh / signOut / OAuth callback
