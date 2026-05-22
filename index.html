@@ -1633,7 +1633,7 @@
       </div>
 
       <!-- Category Sections (populated by loadUserBlocks; seed cards removed) -->
-      <div id="blocks-sections" style="padding:28px 44px 48px;display:flex;flex-direction:column;gap:32px;">
+      <div id="blocks-sections" style="padding:14px 44px 14px;display:flex;flex-direction:column;gap:32px;">
 
         <!-- PROJECT -->
         <div class="blk-section" data-category="project">
@@ -3278,42 +3278,43 @@
           <rect x="0" y="48" width="240" height="28" fill="url(#fh-${uid})" clip-path="url(#fc-${uid})"/>
 
           <!-- 카테고리 -->
-          <text x="16" y="72" font-family="system-ui,sans-serif" font-size="7.5" font-weight="700"
+          <text x="16" y="70" font-family="system-ui,sans-serif" font-size="7" font-weight="700"
                 letter-spacing="1.5" fill="white" opacity="0.7">${escapeHtml(style.label).toUpperCase()}</text>
 
-          <!-- 제목 (1줄만) -->
-          <text x="16" y="90" font-family="system-ui,sans-serif" font-size="12" font-weight="800"
-                fill="white"
-                style="overflow:hidden;">${escapeHtml((row.title||'Untitled').length > 22 ? (row.title||'').slice(0,22)+'…' : (row.title||'Untitled'))}</text>
+          <!-- 제목 (2줄, 잘림없이) -->
+          <foreignObject x="8" y="74" width="224" height="44">
+            <div xmlns="http://www.w3.org/1999/xhtml"
+              style="font-family:system-ui,sans-serif;font-size:12px;font-weight:800;color:white;line-height:1.35;padding:0 8px;word-break:break-word;">
+              ${escapeHtml(row.title || 'Untitled')}
+            </div>
+          </foreignObject>
 
           <!-- 기간 -->
-          <text x="16" y="108" font-family="system-ui,sans-serif" font-size="8.5" fill="white" opacity="0.6">
+          <text x="16" y="126" font-family="system-ui,sans-serif" font-size="8" fill="white" opacity="0.6">
             ${escapeHtml(period)}
           </text>
 
-          <!-- 키워드 흰 박스 (고정 높이) -->
-          <rect x="10" y="118" width="220" height="52" rx="10" fill="white" opacity="0.9"/>
-
-          <!-- 키워드 SVG text (잘림 방지 위해 text로 직접 렌더, 최대 2개) -->
+          <!-- 키워드 (흰색 작은 텍스트, 최대 3개 가로로) -->
           ${(() => {
-            const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,2);
-            return kws.map((k, i) => {
-              const label = k.length > 18 ? k.slice(0,18)+'…' : k;
-              const bw = Math.min(label.length * 6.5 + 20, 190);
-              const bx = 18;
-              const by = i === 0 ? 124 : 148;
-              return `
-                <rect x="${bx}" y="${by}" width="${bw}" height="18" rx="9" fill="rgba(0,0,0,0.07)"/>
-                <text x="${bx+10}" y="${by+12.5}" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="#1a2233">${escapeHtml(label)}</text>
+            const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,3);
+            let x = 16;
+            return kws.map((k) => {
+              const label = k.length > 14 ? k.slice(0,14)+'…' : k;
+              const tw = label.length * 5.8 + 16;
+              const el = `
+                <rect x="${x}" y="134" width="${tw}" height="16" rx="8" fill="rgba(255,255,255,0.22)"/>
+                <text x="${x+8}" y="${134+11}" font-family="system-ui,sans-serif" font-size="8" font-weight="600" fill="white">${escapeHtml(label)}</text>
               `;
+              x += tw + 6;
+              return x < 230 ? el : '';
             }).join('');
           })()}
 
           <!-- Edit -->
-          <text x="195" y="186" font-family="system-ui,sans-serif" font-size="8.5" fill="white" opacity="0.5">Edit ✎</text>
+          <text x="195" y="184" font-family="system-ui,sans-serif" font-size="8" fill="white" opacity="0.45">Edit ✎</text>
 
           <!-- 하단 음영 -->
-          <path d="M0,182 L240,182 L240,192 Q240,200 230,200 L10,200 Q0,200 0,192 Z"
+          <path d="M0,178 L240,178 L240,190 Q240,200 230,200 L10,200 Q0,200 0,190 Z"
                 fill="black" opacity="0.07"/>
         </svg>
       </div>
