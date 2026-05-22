@@ -3278,41 +3278,42 @@
           <rect x="0" y="48" width="240" height="28" fill="url(#fh-${uid})" clip-path="url(#fc-${uid})"/>
 
           <!-- 카테고리 -->
-          <text x="16" y="74" font-family="system-ui,sans-serif" font-size="7.5" font-weight="600"
-                letter-spacing="1.2" fill="white" opacity="0.75">${escapeHtml(style.label).toUpperCase()}</text>
+          <text x="16" y="72" font-family="system-ui,sans-serif" font-size="7.5" font-weight="700"
+                letter-spacing="1.5" fill="white" opacity="0.7">${escapeHtml(style.label).toUpperCase()}</text>
 
-          <!-- 제목 -->
-          <foreignObject x="8" y="78" width="224" height="38">
-            <div xmlns="http://www.w3.org/1999/xhtml"
-              style="font-family:system-ui,sans-serif;font-size:11.5px;font-weight:800;color:white;line-height:1.3;padding:0 8px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
-              ${escapeHtml(row.title || 'Untitled')}
-            </div>
-          </foreignObject>
+          <!-- 제목 (1줄만) -->
+          <text x="16" y="90" font-family="system-ui,sans-serif" font-size="12" font-weight="800"
+                fill="white"
+                style="overflow:hidden;">${escapeHtml((row.title||'Untitled').length > 22 ? (row.title||'').slice(0,22)+'…' : (row.title||'Untitled'))}</text>
 
           <!-- 기간 -->
-          <text x="16" y="122" font-family="system-ui,sans-serif" font-size="8" fill="white" opacity="0.65">
+          <text x="16" y="108" font-family="system-ui,sans-serif" font-size="8.5" fill="white" opacity="0.6">
             ${escapeHtml(period)}
           </text>
 
-          <!-- 키워드 흰 박스 -->
-          <rect x="8" y="128" width="224" height="46" rx="8" fill="white" opacity="0.88"/>
+          <!-- 키워드 흰 박스 (고정 높이) -->
+          <rect x="10" y="118" width="220" height="52" rx="10" fill="white" opacity="0.9"/>
 
-          <!-- 키워드 태그 (최대 3개, 박스 안) -->
-          <foreignObject x="8" y="130" width="224" height="42">
-            <div xmlns="http://www.w3.org/1999/xhtml"
-              style="display:flex;flex-wrap:wrap;gap:4px;padding:4px 8px;align-content:center;height:34px;overflow:hidden;">
-              ${(() => {
-                const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,3);
-                return kws.map(k=>`<span style="font-family:system-ui,sans-serif;font-size:9px;font-weight:600;color:#1a2233;background:rgba(0,0,0,0.06);padding:2px 8px;border-radius:99px;white-space:nowrap;">${escapeHtml(k)}</span>`).join('');
-              })()}
-            </div>
-          </foreignObject>
+          <!-- 키워드 SVG text (잘림 방지 위해 text로 직접 렌더, 최대 2개) -->
+          ${(() => {
+            const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,2);
+            return kws.map((k, i) => {
+              const label = k.length > 18 ? k.slice(0,18)+'…' : k;
+              const bw = Math.min(label.length * 6.5 + 20, 190);
+              const bx = 18;
+              const by = i === 0 ? 124 : 148;
+              return `
+                <rect x="${bx}" y="${by}" width="${bw}" height="18" rx="9" fill="rgba(0,0,0,0.07)"/>
+                <text x="${bx+10}" y="${by+12.5}" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="#1a2233">${escapeHtml(label)}</text>
+              `;
+            }).join('');
+          })()}
 
-          <!-- Edit 버튼 -->
-          <text x="196" y="190" font-family="system-ui,sans-serif" font-size="8.5" fill="white" opacity="0.55">Edit ✎</text>
+          <!-- Edit -->
+          <text x="195" y="186" font-family="system-ui,sans-serif" font-size="8.5" fill="white" opacity="0.5">Edit ✎</text>
 
           <!-- 하단 음영 -->
-          <path d="M0,182 L240,182 L240,192 Q240,200 231,200 L9,200 Q0,200 0,192 Z"
+          <path d="M0,182 L240,182 L240,192 Q240,200 230,200 L10,200 Q0,200 0,192 Z"
                 fill="black" opacity="0.07"/>
         </svg>
       </div>
