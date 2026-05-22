@@ -990,37 +990,56 @@
   /* ── 글래스모피즘 잠금 오버레이 ── */
   .lock-overlay-wrap { position: relative; }
   .lock-overlay {
-    position: absolute; inset: 0; z-index: 50;
-    backdrop-filter: blur(10px) saturate(0.55) brightness(0.93);
-    -webkit-backdrop-filter: blur(10px) saturate(0.55) brightness(0.93);
-    background: rgba(200,205,215,0.42);
-    background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"),
-      linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 100%);
-    border: 1px solid rgba(255,255,255,0.35);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+    position: absolute;
+    top: 88px; /* page-header 아래부터 */
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
+    -webkit-backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.11'/%3E%3C/svg%3E"),
+      linear-gradient(160deg,
+        rgba(240,242,246,0.72) 0%,
+        rgba(210,215,225,0.55) 40%,
+        rgba(225,228,235,0.65) 100%);
+    border-top: 1.5px solid rgba(255,255,255,0.7);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,0.55),
+      inset 0 -1px 0 rgba(255,255,255,0.2),
+      0 -4px 24px rgba(0,0,0,0.06);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 14px; cursor: pointer;
-    transition: all 0.25s;
+    gap: 16px; cursor: pointer;
+    transition: all 0.3s ease;
   }
-  .lock-overlay:hover { backdrop-filter: blur(8px) saturate(0.45) brightness(0.9); }
+  .lock-overlay:hover {
+    backdrop-filter: blur(10px) saturate(0.45) brightness(0.89);
+    -webkit-backdrop-filter: blur(10px) saturate(0.45) brightness(0.89);
+  }
   .lock-overlay-icon {
-    width: 56px; height: 56px; border-radius: 50%;
-    background: rgba(255,255,255,0.6);
-    border: 1.5px solid rgba(255,255,255,0.75);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    width: 60px; height: 60px; border-radius: 50%;
+    background: linear-gradient(145deg, rgba(255,255,255,0.85), rgba(230,234,240,0.7));
+    border: 1.5px solid rgba(255,255,255,0.85);
+    box-shadow:
+      0 8px 24px rgba(0,0,0,0.12),
+      0 2px 4px rgba(0,0,0,0.06),
+      inset 0 1px 0 rgba(255,255,255,0.9);
     display: flex; align-items: center; justify-content: center;
     font-size: 24px; color: var(--ink-3);
   }
   .lock-overlay-label {
     font-size: 13px; font-weight: 700; color: var(--ink-2);
-    background: rgba(255,255,255,0.6); padding: 6px 18px;
-    border-radius: 99px; border: 1px solid rgba(255,255,255,0.65);
+    background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(240,242,246,0.65));
+    padding: 7px 20px; border-radius: 99px;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+    letter-spacing: 0.01em;
   }
   .lock-overlay-sub {
-    font-size: 11px; color: var(--ink-4);
-    background: rgba(255,255,255,0.45); padding: 4px 12px; border-radius: 99px;
+    font-size: 11px; color: var(--ink-4); letter-spacing: 0.03em;
+    background: rgba(255,255,255,0.5); padding: 4px 14px; border-radius: 99px;
+    border: 1px solid rgba(255,255,255,0.55);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
   }
   .lock-overlay-wrap.unlocked .lock-overlay { display: none; }
 </style>
@@ -1712,16 +1731,15 @@
     <!-- ════ PAGE: MATCH ════ -->
     <!-- ════ PAGE: COMPANY / JOB INPUT ════ -->
     <div id="page-match" class="page lock-overlay-wrap">
-      <div class="lock-overlay" onclick="togglePageLock('page-match')">
-        <div class="lock-overlay-icon"><i class="ti ti-lock"></i></div>
-        <div class="lock-overlay-label">Coming Soon</div>
-        <div class="lock-overlay-sub">클릭하면 미리보기</div>
-      </div>
-
       <div class="page-header">
         <div class="page-eyebrow">COMPANY · JOB INPUT</div>
         <div class="page-title">Company / Job Input</div>
         <div class="page-sub">Enter the company and role, upload the JD — AI will analyze your fit score</div>
+      </div>
+      <div class="lock-overlay" onclick="togglePageLock('page-match')">
+        <div class="lock-overlay-icon"><i class="ti ti-lock"></i></div>
+        <div class="lock-overlay-label">Coming Soon</div>
+        <div class="lock-overlay-sub">Click to preview</div>
       </div>
 
       <!-- Two col: form left, saved list right -->
@@ -2003,17 +2021,16 @@
 
     <!-- ════ PAGE: MATCH ARCHIVING ════ -->
     <div id="page-matchstore" class="page lock-overlay-wrap">
-      <div class="lock-overlay" onclick="togglePageLock('page-matchstore')">
-        <div class="lock-overlay-icon"><i class="ti ti-lock"></i></div>
-        <div class="lock-overlay-label">Coming Soon</div>
-        <div class="lock-overlay-sub">클릭하면 미리보기</div>
-      </div>
-
       <!-- HEADER -->
       <div class="page-header">
         <div class="page-eyebrow">MATCH ARCHIVING</div>
         <div class="page-title">Match Archiving</div>
         <div class="page-sub">View job fit scores and keyword analysis results by company — with improvement guides</div>
+      </div>
+      <div class="lock-overlay" onclick="togglePageLock('page-matchstore')">
+        <div class="lock-overlay-icon"><i class="ti ti-lock"></i></div>
+        <div class="lock-overlay-label">Coming Soon</div>
+        <div class="lock-overlay-sub">Click to preview</div>
       </div>
 
       <!-- THREE-COL LAYOUT -->
@@ -3512,7 +3529,7 @@
     if (!el) return;
     if (currentUser) {
       const name = getDisplayName(currentUser);
-      el.innerHTML = `Welcome to Exppi, <em>${name}</em>`;
+      el.innerHTML = `Welcome to Exppi, <em>${name}</em>!`;
     } else {
       el.innerHTML = `Welcome to Exppi`;
     }
