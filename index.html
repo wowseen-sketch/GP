@@ -779,7 +779,7 @@
   .blk-section-count { font-size: 11px; font-weight: 600; color: var(--ink-4); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
   .blk-section-line { flex: 1; height: 1px; background: var(--border); }
 
-  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; margin-top: 4px; }
+  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; margin-top: 0; }
 
   /* 폴더 카드 */
   .blk-card {
@@ -3248,7 +3248,7 @@
     el.dataset.type = cat;
     el.innerHTML = `
       <div class="blk-folder-svg">
-        <svg viewBox="0 0 280 246" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 4 280 236" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="fb-${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="${fc}" stop-opacity="1"/>
