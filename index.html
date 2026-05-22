@@ -991,7 +991,7 @@
   .lock-overlay-wrap { position: relative; }
   .lock-overlay {
     position: absolute;
-    top: 88px; /* page-header 아래부터 */
+    top: var(--lock-top, 100px); /* page-header 아래부터 */
     left: 0; right: 0; bottom: 0;
     z-index: 50;
     backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
@@ -1002,6 +1002,8 @@
         rgba(240,242,246,0.72) 0%,
         rgba(210,215,225,0.55) 40%,
         rgba(225,228,235,0.65) 100%);
+    border-radius: 16px;
+    margin: 0 24px 24px;
     border-top: 1.5px solid rgba(255,255,255,0.7);
     box-shadow:
       inset 0 2px 0 rgba(255,255,255,0.55),
@@ -2295,10 +2297,6 @@
     <div id="page-login" class="page">
       <div class="auth-wrap">
         <div class="auth-card">
-          <div class="auth-brand">
-            <div class="auth-brand-mark">G</div>
-            <div class="auth-brand-name">GOalign</div>
-          </div>
           <div class="auth-title">Welcome back</div>
           <div class="auth-sub">Sign in to save your experience blocks and matching results.</div>
 
@@ -2342,10 +2340,6 @@
     <div id="page-signup" class="page">
       <div class="auth-wrap">
         <div class="auth-card">
-          <div class="auth-brand">
-            <div class="auth-brand-mark">G</div>
-            <div class="auth-brand-name">GOalign</div>
-          </div>
           <div class="auth-title">Create your account</div>
           <div class="auth-sub">Start saving your experience analysis and job matches.</div>
 
@@ -3477,6 +3471,10 @@
 
     // Refresh dynamic content when entering the Blocks page.
     if (target === 'blocks') loadUserBlocks();
+    // 잠금 페이지 진입 시 오버레이 top 재계산
+    if (target === 'match' || target === 'matchstore') {
+      setTimeout(() => initLockOverlays(), 30);
+    }
   }
 
   let sidebarCollapsed = false;
@@ -3705,8 +3703,33 @@
   function togglePageLock(pageId) {
     const page = document.getElementById(pageId);
     if (!page) return;
+    // page-header 높이만큼 오버레이 top 동적 설정
+    const header = page.querySelector('.page-header');
+    const overlay = page.querySelector('.lock-overlay');
+    if (header && overlay) {
+      const h = header.getBoundingClientRect().height;
+      overlay.style.top = h + 'px';
+    }
     page.classList.toggle('unlocked');
   }
+
+  // 페이지 진입 시 오버레이 top 미리 설정
+  function initLockOverlays() {
+    ['page-match', 'page-matchstore'].forEach(pageId => {
+      const page = document.getElementById(pageId);
+      if (!page) return;
+      const header = page.querySelector('.page-header');
+      const overlay = page.querySelector('.lock-overlay');
+      if (header && overlay) {
+        // header가 렌더된 뒤 높이를 측정
+        setTimeout(() => {
+          const h = header.offsetHeight;
+          overlay.style.top = h + 'px';
+        }, 50);
+      }
+    });
+  }
+  window.addEventListener('load', initLockOverlays);
 
   function onProfileClick() {
     if (!currentUser) navigate('login');
