@@ -3465,13 +3465,9 @@
     if (!el) return;
     if (currentUser) {
       const name = getDisplayName(currentUser);
-      if (currentUser.isNew) {
-        el.innerHTML = `Welcome to Exppi, <em>${name}</em>!<br>Let's build your career story`;
-      } else {
-        el.innerHTML = `Welcome back, <em>${name}</em><br>Keep building your career`;
-      }
+      el.innerHTML = `Welcome to Exppi, <em>${name}</em>`;
     } else {
-      el.innerHTML = `Welcome back, <em>Ji-won</em><br>Keep building your career`;
+      el.innerHTML = `Welcome to Exppi`;
     }
   }
 
