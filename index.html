@@ -779,7 +779,7 @@
   .blk-section-count { font-size: 11px; font-weight: 600; color: var(--ink-4); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
   .blk-section-line { flex: 1; height: 1px; background: var(--border); }
 
-  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; grid-auto-rows: 1fr; align-items: start; }
+  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
 
   /* 폴더 카드 */
   .blk-card {
@@ -794,8 +794,8 @@
   .blk-card-desc { display: none; }
 
   /* SVG 폴더 영역 */
-  .blk-folder-svg { width: 100%; aspect-ratio: 4/3; position: relative; }
-  .blk-folder-svg svg { width: 100%; height: 100%; }
+  .blk-folder-svg { width: 100%; position: relative; }
+  .blk-folder-svg svg { width: 100%; height: auto; display: block; }
 
   .blk-folder-info { display: none; }
   .blk-cat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
@@ -1632,7 +1632,7 @@
       </div>
 
       <!-- Category Sections (populated by loadUserBlocks; seed cards removed) -->
-      <div id="blocks-sections" style="padding:32px 44px;display:flex;flex-direction:column;gap:36px;">
+      <div id="blocks-sections" style="padding:24px 44px 40px;display:flex;flex-direction:column;gap:32px;">
 
         <!-- PROJECT -->
         <div class="blk-section" data-category="project">
@@ -3247,7 +3247,7 @@
     el.dataset.type = cat;
     el.innerHTML = `
       <div class="blk-folder-svg">
-        <svg viewBox="0 0 200 224" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 280 230" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="fb-${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="${fc}" stop-opacity="1"/>
@@ -3257,62 +3257,62 @@
               <stop offset="0%" stop-color="white" stop-opacity="0.22"/>
               <stop offset="100%" stop-color="white" stop-opacity="0"/>
             </linearGradient>
-            <filter id="fs-${uid}" x="-10%" y="-10%" width="120%" height="130%">
-              <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="${fc}" flood-opacity="0.3"/>
+            <filter id="fs-${uid}" x="-6%" y="-6%" width="112%" height="120%">
+              <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="${fc}" flood-opacity="0.28"/>
             </filter>
             <clipPath id="fc-${uid}">
-              <path d="M10,52 L190,52 Q200,52 200,62 L200,214 Q200,224 190,224 L10,224 Q0,224 0,214 L0,62 Q0,52 10,52 Z"/>
+              <path d="M10,48 L270,48 Q280,48 280,58 L280,220 Q280,230 270,230 L10,230 Q0,230 0,220 L0,58 Q0,48 10,48 Z"/>
             </clipPath>
           </defs>
 
           <!-- 탭 -->
-          <path d="M10,52 L10,38 Q10,28 20,28 L82,28 Q94,28 98,40 L102,52 Z"
-                fill="${fc}" opacity="0.78"/>
+          <path d="M10,48 L10,35 Q10,26 19,26 L100,26 Q110,26 114,36 L119,48 Z"
+                fill="${fc}" opacity="0.75"/>
 
           <!-- 본체 -->
-          <path d="M10,52 L190,52 Q200,52 200,62 L200,214 Q200,224 190,224 L10,224 Q0,224 0,214 L0,62 Q0,52 10,52 Z"
+          <path d="M10,48 L270,48 Q280,48 280,58 L280,220 Q280,230 270,230 L10,230 Q0,230 0,220 L0,58 Q0,48 10,48 Z"
                 fill="url(#fb-${uid})" filter="url(#fs-${uid})"/>
 
           <!-- 상단 광택 -->
-          <rect x="0" y="52" width="200" height="36" fill="url(#fh-${uid})" clip-path="url(#fc-${uid})"/>
+          <rect x="0" y="48" width="280" height="32" fill="url(#fh-${uid})" clip-path="url(#fc-${uid})"/>
 
-          <!-- 내용 카드 (흰 배경) -->
-          <rect x="14" y="88" width="172" height="126" rx="8" fill="white" opacity="0.92"/>
+          <!-- 내용 카드 -->
+          <rect x="14" y="82" width="252" height="136" rx="8" fill="white" opacity="0.93"/>
 
-          <!-- 카테고리 라벨 -->
-          <text x="26" y="104" font-family="system-ui,sans-serif" font-size="7.5" font-weight="700"
-                letter-spacing="1" fill="${fc}" opacity="0.9">${escapeHtml(style.label)}</text>
+          <!-- 카테고리 -->
+          <text x="26" y="98" font-family="system-ui,sans-serif" font-size="8" font-weight="700"
+                letter-spacing="1.2" fill="${fc}">${escapeHtml(style.label)}</text>
 
-          <!-- 제목 (최대 2줄) -->
-          <foreignObject x="14" y="108" width="172" height="40">
+          <!-- 제목 -->
+          <foreignObject x="14" y="101" width="252" height="42">
             <div xmlns="http://www.w3.org/1999/xhtml"
-              style="font-family:system-ui,sans-serif;font-size:10.5px;font-weight:700;color:#1a2233;line-height:1.35;padding:0 12px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
+              style="font-family:system-ui,sans-serif;font-size:11px;font-weight:700;color:#1a2233;line-height:1.35;padding:0 12px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
               ${escapeHtml(row.title || 'Untitled')}
             </div>
           </foreignObject>
 
           <!-- 기간 -->
-          <text x="26" y="154" font-family="system-ui,sans-serif" font-size="8" fill="#9CA3AF">
+          <text x="26" y="150" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">
             ${escapeHtml(period)}
           </text>
 
-          <!-- 키워드 태그 (최대 2개) -->
-          <foreignObject x="14" y="158" width="172" height="36">
+          <!-- 키워드 태그 (최대 3개) -->
+          <foreignObject x="14" y="154" width="252" height="44">
             <div xmlns="http://www.w3.org/1999/xhtml"
-              style="display:flex;flex-wrap:wrap;gap:3px;padding:0 12px;">
-              ${(tagsHtml ? tagsHtml.split('</span>').slice(0,2).join('</span>') + (tagsHtml.split('</span>').length > 2 ? '' : '') : '')}
+              style="display:flex;flex-wrap:wrap;gap:4px;padding:2px 12px;">
+              ${(() => { const parts = tagsHtml ? tagsHtml.split('</span>').filter(s=>s.trim()) : []; return parts.slice(0,3).map(s=>s+'</span>').join(''); })()}
             </div>
           </foreignObject>
 
           <!-- 구분선 -->
-          <line x1="14" y1="200" x2="186" y2="200" stroke="#E5E7EB" stroke-width="1"/>
+          <line x1="14" y1="204" x2="266" y2="204" stroke="#E5E7EB" stroke-width="1"/>
 
           <!-- Edit -->
-          <text x="158" y="212" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">Edit ✎</text>
+          <text x="236" y="217" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">Edit ✎</text>
 
           <!-- 하단 음영 -->
-          <path d="M0,202 L200,202 L200,214 Q200,224 190,224 L10,224 Q0,224 0,214 Z"
-                fill="black" opacity="0.06"/>
+          <path d="M0,208 L280,208 L280,220 Q280,230 270,230 L10,230 Q0,230 0,220 Z"
+                fill="black" opacity="0.05"/>
         </svg>
       </div>
     `;
