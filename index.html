@@ -986,6 +986,43 @@
   .user-menu-item i { font-size: 15px; color: var(--ink-3); }
   .user-menu-item.danger { color: var(--danger); }
   .user-menu-item.danger i { color: var(--danger); }
+
+  /* ── 글래스모피즘 잠금 오버레이 ── */
+  .lock-overlay-wrap { position: relative; }
+  .lock-overlay {
+    position: absolute; inset: 0; z-index: 50;
+    backdrop-filter: blur(10px) saturate(0.55) brightness(0.93);
+    -webkit-backdrop-filter: blur(10px) saturate(0.55) brightness(0.93);
+    background: rgba(200,205,215,0.42);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"),
+      linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 100%);
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 14px; cursor: pointer;
+    transition: all 0.25s;
+  }
+  .lock-overlay:hover { backdrop-filter: blur(8px) saturate(0.45) brightness(0.9); }
+  .lock-overlay-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    border: 1.5px solid rgba(255,255,255,0.75);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: var(--ink-3);
+  }
+  .lock-overlay-label {
+    font-size: 13px; font-weight: 700; color: var(--ink-2);
+    background: rgba(255,255,255,0.6); padding: 6px 18px;
+    border-radius: 99px; border: 1px solid rgba(255,255,255,0.65);
+  }
+  .lock-overlay-sub {
+    font-size: 11px; color: var(--ink-4);
+    background: rgba(255,255,255,0.45); padding: 4px 12px; border-radius: 99px;
+  }
+  .lock-overlay-wrap.unlocked .lock-overlay { display: none; }
 </style>
 </head>
 <body>
@@ -1235,8 +1272,8 @@
         </div>
       </div>
 
-      <!-- Experience Timeline — full width -->
-      <div style="padding:0 32px 32px;">
+      <!-- Experience Timeline removed -->
+      <div style="display:none;">
         <div class="card">
           <div class="card-head">
             <div class="card-title"><i class="ti ti-timeline"></i> Experience Timeline</div>
@@ -1674,7 +1711,12 @@
 
     <!-- ════ PAGE: MATCH ════ -->
     <!-- ════ PAGE: COMPANY / JOB INPUT ════ -->
-    <div id="page-match" class="page">
+    <div id="page-match" class="page lock-overlay-wrap">
+      <div class="lock-overlay" onclick="togglePageLock('page-match')">
+        <div class="lock-overlay-icon"><i class="ti ti-lock"></i></div>
+        <div class="lock-overlay-label">Coming Soon</div>
+        <div class="lock-overlay-sub">클릭하면 미리보기</div>
+      </div>
 
       <div class="page-header">
         <div class="page-eyebrow">COMPANY · JOB INPUT</div>
@@ -1960,7 +2002,12 @@
     </div>
 
     <!-- ════ PAGE: MATCH ARCHIVING ════ -->
-    <div id="page-matchstore" class="page">
+    <div id="page-matchstore" class="page lock-overlay-wrap">
+      <div class="lock-overlay" onclick="togglePageLock('page-matchstore')">
+        <div class="lock-overlay-icon"><i class="ti ti-lock"></i></div>
+        <div class="lock-overlay-label">Coming Soon</div>
+        <div class="lock-overlay-sub">클릭하면 미리보기</div>
+      </div>
 
       <!-- HEADER -->
       <div class="page-header">
@@ -3636,6 +3683,12 @@
     if (event) event.stopPropagation();
     if (!currentUser) { navigate('login'); return; }
     toggleUserMenu();
+  }
+
+  function togglePageLock(pageId) {
+    const page = document.getElementById(pageId);
+    if (!page) return;
+    page.classList.toggle('unlocked');
   }
 
   function onProfileClick() {
