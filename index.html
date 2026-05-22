@@ -779,7 +779,7 @@
   .blk-section-count { font-size: 11px; font-weight: 600; color: var(--ink-4); background: var(--surface-2); border-radius: 99px; padding: 1px 8px; }
   .blk-section-line { flex: 1; height: 1px; background: var(--border); }
 
-  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+  .blk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; margin-top: 4px; }
 
   /* 폴더 카드 */
   .blk-card {
@@ -1632,7 +1632,7 @@
       </div>
 
       <!-- Category Sections (populated by loadUserBlocks; seed cards removed) -->
-      <div id="blocks-sections" style="padding:24px 44px 40px;display:flex;flex-direction:column;gap:32px;">
+      <div id="blocks-sections" style="padding:8px 44px 48px;display:flex;flex-direction:column;gap:40px;">
 
         <!-- PROJECT -->
         <div class="blk-section" data-category="project">
@@ -3247,7 +3247,7 @@
     el.dataset.type = cat;
     el.innerHTML = `
       <div class="blk-folder-svg">
-        <svg viewBox="0 0 280 230" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 280 246" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="fb-${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="${fc}" stop-opacity="1"/>
@@ -3261,7 +3261,7 @@
               <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="${fc}" flood-opacity="0.28"/>
             </filter>
             <clipPath id="fc-${uid}">
-              <path d="M10,48 L270,48 Q280,48 280,58 L280,220 Q280,230 270,230 L10,230 Q0,230 0,220 L0,58 Q0,48 10,48 Z"/>
+              <path d="M10,48 L270,48 Q280,48 280,58 L280,236 Q280,246 270,246 L10,246 Q0,246 0,236 L0,58 Q0,48 10,48 Z"/>
             </clipPath>
           </defs>
 
@@ -3270,7 +3270,7 @@
                 fill="${fc}" opacity="0.75"/>
 
           <!-- 본체 -->
-          <path d="M10,48 L270,48 Q280,48 280,58 L280,220 Q280,230 270,230 L10,230 Q0,230 0,220 L0,58 Q0,48 10,48 Z"
+          <path d="M10,48 L270,48 Q280,48 280,58 L280,236 Q280,246 270,246 L10,246 Q0,246 0,236 L0,58 Q0,48 10,48 Z"
                 fill="url(#fb-${uid})" filter="url(#fs-${uid})"/>
 
           <!-- 상단 광택 -->
@@ -3311,7 +3311,7 @@
           <text x="236" y="217" font-family="system-ui,sans-serif" font-size="8.5" fill="#9CA3AF">Edit ✎</text>
 
           <!-- 하단 음영 -->
-          <path d="M0,208 L280,208 L280,220 Q280,230 270,230 L10,230 Q0,230 0,220 Z"
+          <path d="M0,224 L280,224 L280,236 Q280,246 270,246 L10,246 Q0,246 0,236 Z"
                 fill="black" opacity="0.05"/>
         </svg>
       </div>
