@@ -1038,12 +1038,11 @@
   .user-menu-item.danger i { color: var(--danger); }
 
   /* ── 글래스모피즘 잠금 오버레이 ── */
-  .lock-overlay-wrap { position: relative; }
+  .lock-overlay-wrap { position: static; }
   .lock-overlay {
-    position: absolute;
-    top: var(--lock-top, 100px); /* page-header 아래부터 */
-    left: 0; right: 0; bottom: 0;
-    z-index: 50;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 150;
     backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
     -webkit-backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
     background:
@@ -1052,17 +1051,14 @@
         rgba(240,242,246,0.72) 0%,
         rgba(210,215,225,0.55) 40%,
         rgba(225,228,235,0.65) 100%);
-    border-radius: 16px;
-    margin: 0 24px 24px;
-    border-top: 1.5px solid rgba(255,255,255,0.7);
-    box-shadow:
-      inset 0 2px 0 rgba(255,255,255,0.55),
-      inset 0 -1px 0 rgba(255,255,255,0.2),
-      0 -4px 24px rgba(0,0,0,0.06);
+    border-radius: 0;
+    margin: 0;
+    border-top: none;
+    box-shadow: none;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     gap: 16px; cursor: pointer;
-    transition: all 0.3s ease;
+    transition: none;
   }
   .lock-overlay:hover {
     backdrop-filter: blur(10px) saturate(0.45) brightness(0.89);
@@ -3928,31 +3924,11 @@
   function togglePageLock(pageId) {
     const page = document.getElementById(pageId);
     if (!page) return;
-    // page-header 높이만큼 오버레이 top 동적 설정
-    const header = page.querySelector('.page-header');
-    const overlay = page.querySelector('.lock-overlay');
-    if (header && overlay) {
-      const h = header.getBoundingClientRect().height;
-      overlay.style.top = h + 'px';
-    }
     page.classList.toggle('unlocked');
   }
 
-  // 페이지 진입 시 오버레이 top 미리 설정
   function initLockOverlays() {
-    ['page-match', 'page-matchstore'].forEach(pageId => {
-      const page = document.getElementById(pageId);
-      if (!page) return;
-      const header = page.querySelector('.page-header');
-      const overlay = page.querySelector('.lock-overlay');
-      if (header && overlay) {
-        // header가 렌더된 뒤 높이를 측정
-        setTimeout(() => {
-          const h = header.offsetHeight;
-          overlay.style.top = h + 'px';
-        }, 50);
-      }
-    });
+    // fixed position - no calculation needed
   }
   window.addEventListener('load', initLockOverlays);
 
