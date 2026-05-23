@@ -288,15 +288,14 @@
 
   /* ── ANALYSIS MODAL: breakdown toggle & tooltip ── */
   .am-breakdown-btn {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; gap: 6px;
     width: 100%; background: none; border: none; padding: 0;
     font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink-3); cursor: pointer;
+    color: var(--ink-4); cursor: pointer;
   }
   .am-breakdown-chevron {
-    font-size: 10px; color: var(--ink-4); transition: transform 0.2s;
+    font-size: 9px; color: var(--ink-4);
   }
-  .am-breakdown-chevron.open { transform: rotate(180deg); }
   .am-breakdown-body { margin-top: 14px; display: flex; flex-direction: column; gap: 16px; }
   .am-onet-callout {
     background: var(--surface-2); border-radius: 8px; padding: 12px 14px;
@@ -316,11 +315,11 @@
   }
   .am-tooltip-text {
     display: none; position: absolute; left: 50%; bottom: calc(100% + 6px);
-    transform: translateX(-50%); background: #1e293b; color: #f1f5f9;
+    transform: translateX(-50%); background: #fff; color: #374151;
     font-size: 11px; font-weight: 400; text-transform: none; letter-spacing: 0;
     line-height: 1.5; padding: 7px 10px; border-radius: 7px;
     width: 200px; white-space: normal; z-index: 999; pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    border: 1px solid #E5E7EB; box-shadow: 0 4px 12px rgba(0,0,0,0.10);
   }
   .am-tooltip-wrap:hover .am-tooltip-text { display: block; }
   .form-select {
@@ -342,6 +341,13 @@
     border-radius: 99px; border: 1px solid var(--accent-mid);
   }
   .kw-tag button { background: none; border: none; cursor: pointer; color: var(--accent-2); font-size: 14px; line-height: 1; padding: 0; margin-left: 2px; }
+  .kw-tag-grey {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 500; padding: 4px 10px;
+    background: var(--surface-2); color: var(--ink-3);
+    border-radius: 99px; border: 1px solid var(--border);
+    cursor: default;
+  }
 
   .char-count { font-size: 11px; color: var(--ink-4); text-align: right; margin-top: 3px; }
 
@@ -2776,8 +2782,8 @@
           <!-- Analysis Breakdown toggle -->
           <div>
             <button class="am-breakdown-btn" onclick="toggleAmBreakdown()">
+              <span class="am-breakdown-chevron" id="am-breakdown-chevron">▶</span>
               Analysis Breakdown
-              <span class="am-breakdown-chevron" id="am-breakdown-chevron">▼</span>
             </button>
 
             <div class="am-breakdown-body" id="am-breakdown-body" style="display:none;">
@@ -2937,7 +2943,7 @@
     const chevron = document.getElementById('am-breakdown-chevron');
     const isOpen = body.style.display !== 'none';
     body.style.display = isOpen ? 'none' : 'flex';
-    chevron.classList.toggle('open', !isOpen);
+    chevron.textContent = isOpen ? '▶' : '▼';
   }
 
   // ── TEXTAREA AUTO-RESIZE ──────────────────────
@@ -3270,11 +3276,11 @@
     el.style.color = isError ? 'var(--danger)' : 'var(--ink-4)';
   }
 
-  function renderAnalysisTags(elId, items) {
+  function renderAnalysisTags(elId, items, tagClass = 'kw-tag') {
     const el = document.getElementById(elId);
     if (!el) return;
     el.innerHTML = items.length
-      ? items.map(k => `<span class="kw-tag" style="cursor:default;">${escapeHtml(k)}</span>`).join('')
+      ? items.map(k => `<span class="${tagClass}" style="cursor:default;">${escapeHtml(k)}</span>`).join('')
       : `<span style="font-size:12px;color:var(--ink-4);">None identified</span>`;
   }
 
@@ -3322,9 +3328,9 @@
     if (resultEl)  { resultEl.style.display  = 'flex'; }
     if (reBtn)     { reBtn.disabled = false; reBtn.style.opacity = ''; }
 
-    renderAnalysisTags('am-work-activities',     _cachedAnalysis.work_activities     || []);
-    renderAnalysisTags('am-transferable-skills', _cachedAnalysis.transferable_skills || []);
-    renderAnalysisTags('am-software-skills',     _cachedAnalysis.software_skills     || []);
+    renderAnalysisTags('am-work-activities',     _cachedAnalysis.work_activities     || [], 'kw-tag-grey');
+    renderAnalysisTags('am-transferable-skills', _cachedAnalysis.transferable_skills || [], 'kw-tag-grey');
+    renderAnalysisTags('am-software-skills',     _cachedAnalysis.software_skills     || [], 'kw-tag-grey');
     renderAnalysisTags('am-competency-keywords', _cachedAnalysis.competency_keywords || []);
 
     if (_cachedAnalysis.competency_keywords?.length) {
