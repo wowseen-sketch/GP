@@ -2857,7 +2857,61 @@
   </div>
 </div>
 
+<!-- ── BLOCK DETAIL / EDIT MODAL ─────────────────────────────
+     View + inline-edit for a saved experience_blocks row.
+     Body (#bd-body) and footer (#bd-footer) are rendered by JS
+     (renderBlockDetail) depending on view vs. edit mode. -->
+<div id="block-detail-modal" style="display:none;position:fixed;inset:0;z-index:520;align-items:center;justify-content:center;">
+  <!-- backdrop -->
+  <div onclick="closeBlockDetail()" style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
+
+  <!-- modal card -->
+  <div style="position:relative;width:90vw;max-width:880px;height:88vh;max-height:820px;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.22);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.24s ease;">
+
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);padding:22px 28px;flex-shrink:0;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+        <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+          <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="ti ti-stack-2" style="font-size:20px;color:#fff;"></i>
+          </div>
+          <div style="min-width:0;">
+            <div id="bd-eyebrow" style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;">Experience Block</div>
+            <div id="bd-title" style="font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Title</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+          <div id="bd-subtitle" style="font-size:12px;color:rgba(255,255,255,0.65);white-space:nowrap;"></div>
+          <button onclick="closeBlockDetail()" title="Close" style="background:rgba(255,255,255,0.2);border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;margin-left:8px;flex-shrink:0;">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY (rendered by renderBlockDetail) -->
+    <div id="bd-body" style="flex:1;overflow-y:auto;padding:26px 30px;background:#fff;"></div>
+
+    <!-- FOOTER (buttons rendered by renderBlockDetail) -->
+    <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
+      <div id="bd-status" style="font-size:12px;color:var(--ink-4);"></div>
+      <div id="bd-footer" style="margin-left:auto;display:flex;align-items:center;gap:10px;"></div>
+    </div>
+
+  </div>
+</div>
+
 <style>
+  /* ── BLOCK DETAIL MODAL ── */
+  .bd-section-label { font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin:22px 0 12px; }
+  .bd-section-label:first-child { margin-top:0; }
+  .bd-field { margin-bottom:14px; }
+  .bd-field-label { font-size:11px;font-weight:600;color:var(--ink-4);margin-bottom:5px;display:block; }
+  .bd-field-value { font-size:13px;color:var(--ink-2);line-height:1.7;white-space:pre-wrap;word-break:break-word; }
+  .bd-field-value.empty { color:var(--ink-4);font-style:italic; }
+  .bd-grid-2 { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
+  .bd-tags { display:flex;flex-wrap:wrap;gap:6px; }
+
   @keyframes modalIn { from { opacity:0; transform:translateY(20px) scale(0.97); } to { opacity:1; transform:none; } }
   @keyframes fadeIn { from { opacity:0; transform:translateX(-6px); } to { opacity:1; transform:none; } }
 
@@ -3489,11 +3543,25 @@
         <div style="font-size:10px;font-weight:600;color:${hasOutcome ? 'var(--success)' : 'var(--warn)'};display:flex;align-items:center;gap:4px;">
           <i class="ti ti-circle-check" style="font-size:12px;"></i> ${hasOutcome ? 'OUTCOME OPTIMIZED' : 'NEEDS OUTCOME'}
         </div>
-        <button class="blk-card-edit-btn" onclick="event.stopPropagation()" style="background:none;border:none;color:#9CA3AF;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;opacity:0.6;">
+        <button class="blk-card-edit-btn" style="background:none;border:none;color:#9CA3AF;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;opacity:0.6;">
           <i class="ti ti-edit" style="font-size:11px;"></i> Edit
         </button>
       </div>
     `;
+
+    // Card body click → detail (view) modal. Ignore clicks on the checkbox and
+    // Edit button (they have their own handlers / open edit mode directly).
+    el.addEventListener('click', e => {
+      if (e.target.closest('.blk-card-check')) return;
+      if (e.target.closest('.blk-card-edit-btn')) return;
+      openBlockDetail(row, false);
+    });
+    const editBtn = el.querySelector('.blk-card-edit-btn');
+    if (editBtn) editBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openBlockDetail(row, true);
+    });
+
     return el;
   }
 
@@ -3576,6 +3644,264 @@
     clearTimeout(showSaveToast._t);
     showSaveToast._t = setTimeout(() => { t.style.display = 'none'; }, 2400);
   }
+
+  // ── BLOCK DETAIL / EDIT MODAL ──────────────────
+  // View + inline-edit for a single experience_blocks row. v1 edits text fields
+  // only — the AI arrays (work_activities, …) are shown read-only and untouched.
+  let _bdRow = null;       // row currently displayed
+  let _bdEditing = false;  // false = view, true = edit
+
+  // Fixed activity_type choices (mirror activityTypeToCategory keys).
+  const BD_ACTIVITY_TYPES = [
+    'Project', 'Work Experience', 'Internship',
+    'Leadership', 'Education / Certification', 'Extracurricular',
+  ];
+  // PDCA text fields — [db column, label]. Drives both render and collect.
+  const BD_PDCA_FIELDS = [
+    ['goal',                'Goal'],
+    ['strategy',            'Strategy'],
+    ['actions',             'Actions'],
+    ['failure_improvement', 'Failure & Improvement'],
+    ['outcome_measurable',  'Measurable Outcome'],
+    ['takeaway',            'Takeaway'],
+    ['applied',             'Applied Elsewhere'],
+  ];
+  // AI result arrays — [db column, label]. Read-only in v1.
+  const BD_AI_FIELDS = [
+    ['work_activities',     'Work Activities'],
+    ['software_skills',     'Software Skills'],
+    ['transferable_skills', 'Transferable Skills'],
+    ['competency_keywords', 'Competency Keywords'],
+  ];
+
+  const _bdFmtMonth = d => d ? d.slice(0, 7).replace('-', '.') : null;
+
+  // "YYYY.MM – YYYY.MM" (or "… – Present"); null when no dates at all.
+  function bdPeriodStr(row) {
+    const start = _bdFmtMonth(row.start_date);
+    const end   = row.is_current ? 'Present' : _bdFmtMonth(row.end_date);
+    if (!start && !end) return null;
+    return `${start || '?'} – ${end || '?'}`;
+  }
+
+  // "{type} · {period} · {role}" header subtitle.
+  function bdSubtitle(row) {
+    const parts = [];
+    if (row.activity_type) parts.push(row.activity_type);
+    const period = bdPeriodStr(row);
+    if (period)            parts.push(period);
+    if (row.role)          parts.push(row.role);
+    return parts.join(' · ');
+  }
+
+  function setBdStatus(msg, isError) {
+    const el = document.getElementById('bd-status');
+    if (!el) return;
+    el.textContent = msg || '';
+    el.style.color = isError ? 'var(--danger)' : 'var(--ink-4)';
+  }
+
+  function openBlockDetail(row, startInEdit) {
+    if (!row) return;
+    _bdRow = row;
+    _bdEditing = !!startInEdit;
+    setBdStatus('');
+    renderBlockDetail();
+    const m = document.getElementById('block-detail-modal');
+    if (m) m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeBlockDetail() {
+    const m = document.getElementById('block-detail-modal');
+    if (m) m.style.display = 'none';
+    document.body.style.overflow = '';
+    _bdRow = null;
+    _bdEditing = false;
+    setBdStatus('');
+  }
+
+  function enterBlockEdit()  { _bdEditing = true;  setBdStatus(''); renderBlockDetail(); }
+  function cancelBlockEdit() { _bdEditing = false; setBdStatus(''); renderBlockDetail(); }
+
+  // Read-only tag list (used in both view and edit modes for AI arrays).
+  function bdTagsHtml(arr) {
+    const items = Array.isArray(arr) ? arr.filter(Boolean) : [];
+    return items.length
+      ? `<div class="bd-tags">${items.map(t => `<span class="kw-tag" style="cursor:default;">${escapeHtml(t)}</span>`).join('')}</div>`
+      : `<div class="bd-field-value empty">None identified</div>`;
+  }
+
+  function bdViewHtml(row) {
+    const v = x => (x != null && String(x).trim()) ? escapeHtml(x) : null;
+    const basicRow = (label, val) =>
+      `<div class="bd-field"><span class="bd-field-label">${label}</span>
+        <div class="bd-field-value${val ? '' : ' empty'}">${val || '—'}</div></div>`;
+
+    const period = bdPeriodStr(row);
+
+    return `
+      <div class="bd-section-label">Overview</div>
+      <div class="bd-grid-2">
+        ${basicRow('Activity Type', v(row.activity_type))}
+        ${basicRow('Organization',  v(row.organization))}
+        ${basicRow('Period',        period ? escapeHtml(period) : null)}
+        ${basicRow('Role',          v(row.role))}
+      </div>
+
+      <div class="bd-section-label">PDCA Structured Experience</div>
+      ${BD_PDCA_FIELDS.map(([col, label]) => basicRow(label, v(row[col]))).join('')}
+
+      <div class="bd-section-label">AI Analysis Results</div>
+      ${BD_AI_FIELDS.map(([col, label]) =>
+        `<div class="bd-field"><span class="bd-field-label">${label}</span>${bdTagsHtml(row[col])}</div>`).join('')}
+    `;
+  }
+
+  function bdActivityOptions(current) {
+    const opts = BD_ACTIVITY_TYPES.slice();
+    if (current && !opts.includes(current)) opts.unshift(current); // keep legacy values
+    return opts.map(o => `<option value="${escapeHtml(o)}"${o === current ? ' selected' : ''}>${escapeHtml(o)}</option>`).join('');
+  }
+
+  function bdEditHtml(row) {
+    const month = d => d ? escapeHtml(d.slice(0, 7)) : '';
+    const txt = (id, val) => `<input id="${id}" class="form-input" type="text" value="${escapeHtml(val || '')}">`;
+    return `
+      <div class="bd-section-label">Overview</div>
+      <div class="bd-field">
+        <label class="bd-field-label" for="bd-title-input">Title</label>
+        ${txt('bd-title-input', row.title)}
+      </div>
+      <div class="bd-grid-2">
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-activity-type">Activity Type</label>
+          <select id="bd-activity-type" class="form-input form-select">${bdActivityOptions(row.activity_type)}</select>
+        </div>
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-org">Organization</label>
+          ${txt('bd-org', row.organization)}
+        </div>
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-start">Start</label>
+          <input id="bd-start" class="form-input" type="month" value="${month(row.start_date)}">
+        </div>
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-end">End</label>
+          <input id="bd-end" class="form-input" type="month" value="${row.is_current ? '' : month(row.end_date)}">
+        </div>
+      </div>
+      <div class="bd-field" style="display:flex;align-items:center;gap:8px;">
+        <input id="bd-current" type="checkbox" ${row.is_current ? 'checked' : ''} onchange="bdSyncCurrent()" style="width:15px;height:15px;cursor:pointer;accent-color:var(--accent-2);">
+        <label for="bd-current" style="font-size:12px;color:var(--ink-2);cursor:pointer;">Currently ongoing</label>
+      </div>
+      <div class="bd-field">
+        <label class="bd-field-label" for="bd-role">Role</label>
+        ${txt('bd-role', row.role)}
+      </div>
+
+      <div class="bd-section-label">PDCA Structured Experience</div>
+      ${BD_PDCA_FIELDS.map(([col, label]) => `
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-${col}">${label}</label>
+          <textarea id="bd-${col}" class="form-input form-textarea" rows="3" style="min-height:70px;">${escapeHtml(row[col] || '')}</textarea>
+        </div>`).join('')}
+
+      <div class="bd-section-label">AI Analysis Results <span style="text-transform:none;font-weight:500;color:var(--ink-4);">· read-only (re-analyze to update)</span></div>
+      ${BD_AI_FIELDS.map(([col, label]) =>
+        `<div class="bd-field"><span class="bd-field-label">${label}</span>${bdTagsHtml(row[col])}</div>`).join('')}
+    `;
+  }
+
+  // Disable the End input while "Currently ongoing" is checked.
+  function bdSyncCurrent() {
+    const cb = document.getElementById('bd-current');
+    const end = document.getElementById('bd-end');
+    if (!cb || !end) return;
+    end.disabled = cb.checked;
+    end.style.opacity = cb.checked ? '0.5' : '';
+  }
+
+  function renderBlockDetail() {
+    const row = _bdRow;
+    if (!row) return;
+    const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+    set('bd-title',    row.title || 'Untitled');
+    set('bd-eyebrow',  _bdEditing ? 'Editing Block' : 'Experience Block');
+    set('bd-subtitle', bdSubtitle(row));
+
+    const body = document.getElementById('bd-body');
+    if (body) body.innerHTML = _bdEditing ? bdEditHtml(row) : bdViewHtml(row);
+
+    const footer = document.getElementById('bd-footer');
+    if (footer) {
+      footer.innerHTML = _bdEditing
+        ? `<button onclick="cancelBlockEdit()" class="btn-secondary-lg">Cancel</button>
+           <button id="bd-save-btn" onclick="saveBlockEdit()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><i class="ti ti-device-floppy" style="font-size:15px;"></i> Save changes</button>`
+        : `<button onclick="closeBlockDetail()" class="btn-secondary-lg">Close</button>
+           <button onclick="enterBlockEdit()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-edit" style="font-size:14px;color:var(--accent);"></i> Edit</button>`;
+    }
+
+    if (_bdEditing) bdSyncCurrent();
+  }
+
+  // Persist edited text fields. AI arrays + user_id + created_at are left untouched.
+  async function saveBlockEdit() {
+    if (!currentUser || !_bdRow) { closeBlockDetail(); return; }
+
+    const val = id => (document.getElementById(id)?.value || '').trim();
+    const isCurrent = document.getElementById('bd-current')?.checked || false;
+    const m2d = m => m ? `${m}-01` : null;
+
+    // Validate.
+    const title = val('bd-title-input');
+    if (!title)                       { setBdStatus('Title is required', true); return; }
+    const activity_type = val('bd-activity-type');
+    if (!activity_type)               { setBdStatus('Activity type is required', true); return; }
+    const start = val('bd-start');
+    if (!start)                       { setBdStatus('Start date is required', true); return; }
+    if (!isCurrent && !val('bd-end')) { setBdStatus('End date is required (or mark as ongoing)', true); return; }
+
+    const patch = {
+      title,
+      activity_type,
+      organization: val('bd-org'),
+      start_date:   m2d(start),
+      end_date:     isCurrent ? null : m2d(val('bd-end')),
+      is_current:   isCurrent,
+      role:         val('bd-role'),
+    };
+    BD_PDCA_FIELDS.forEach(([col]) => { patch[col] = val('bd-' + col); });
+
+    const btn = document.getElementById('bd-save-btn');
+    setBdStatus('Saving…', false);
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+
+    const { error } = await supa
+      .from('experience_blocks')
+      .update(patch)
+      .eq('id', _bdRow.id)
+      .eq('user_id', currentUser.id);
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+
+    if (error) {
+      setBdStatus(`Save failed: ${error.message}`, true);
+      return;
+    }
+
+    closeBlockDetail();
+    showSaveToast('Experience block updated');
+    loadUserBlocks();
+  }
+
+  // ESC closes the detail modal (mirrors backdrop/X). Scoped to this modal only.
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' &&
+        document.getElementById('block-detail-modal')?.style.display === 'flex') {
+      closeBlockDetail();
+    }
+  });
 
   // ── MIND MAP ──────────────────────────────
   function renderMindmap() {
