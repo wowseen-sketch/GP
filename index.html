@@ -1123,42 +1123,38 @@
       <i class="ti ti-layout-sidebar-left-collapse" id="sb-toggle-icon"></i>
     </div>
     <div class="sb-content" id="sb-content">
-      <div class="sb-section">
-        <div class="sb-label">Main</div>
-        <div class="sb-item" id="sb-dashboard" onclick="navigate('dashboard')"><i class="ti ti-layout-dashboard"></i> <span class="sb-text">Dashboard</span></div>
-        <div class="sb-item" id="sb-add" onclick="navigate('add')"><i class="ti ti-plus"></i> <span class="sb-text">Add Experience <span class="sb-badge blue">new</span></span></div>
+
+      <!-- 핵심 액션 -->
+      <div class="sb-section" style="margin-top:12px;">
+        <div class="sb-item" id="sb-dashboard" onclick="navigate('dashboard')"><i class="ti ti-home"></i> <span class="sb-text">Dashboard</span></div>
+        <div class="sb-item" id="sb-add" onclick="navigate('add')"><i class="ti ti-circle-plus"></i> <span class="sb-text">Add Experience</span></div>
       </div>
+
       <div class="sb-divider"></div>
+
+      <!-- 경험 관리 -->
       <div class="sb-section">
         <div class="sb-label">Experience</div>
-        <div class="sb-item" id="sb-blocks" onclick="navigate('blocks')"><i class="ti ti-stack"></i> <span class="sb-text">Experience Archiving <span class="sb-badge">12</span></span></div>
-        <div class="sb-item" id="sb-match" onclick="navigate('match')"><i class="ti ti-building"></i> <span class="sb-text">Company / Job Match</span></div>
+        <div class="sb-item" id="sb-blocks" onclick="navigate('blocks')"><i class="ti ti-folders"></i> <span class="sb-text">Archiving <span class="sb-badge">12</span></span></div>
+        <div class="sb-item" id="sb-match" onclick="navigate('match')"><i class="ti ti-search"></i> <span class="sb-text">Job Match</span></div>
+        <div class="sb-item" id="sb-matchstore" onclick="navigate('matchstore')"><i class="ti ti-chart-bar"></i> <span class="sb-text">Results <span class="sb-badge blue">3</span></span></div>
       </div>
+
       <div class="sb-divider"></div>
-      <div class="sb-section">
-        <div class="sb-label">Results</div>
-        <div class="sb-item" id="sb-matchstore" onclick="navigate('matchstore')"><i class="ti ti-database"></i> <span class="sb-text">Match Archiving <span class="sb-badge blue">3</span></span></div>
-      </div>
-      <div class="sb-divider"></div>
+
+      <!-- 계정 -->
       <div class="sb-section">
         <div class="sb-label">Account</div>
         <div class="sb-item" id="sb-profile" onclick="onProfileClick()" style="cursor:pointer;">
-          <i class="ti ti-user"></i>
+          <i class="ti ti-user-circle"></i>
           <span class="sb-text">
             <span>Profile</span>
             <div id="sb-profile-email" style="font-size:10px;color:var(--ink-4);margin-top:2px;line-height:1.3;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;">Not signed in</div>
           </span>
         </div>
-        <div class="sb-item"><i class="ti ti-settings"></i> <span class="sb-text">Settings</span></div>
+        <div class="sb-item" onclick="openFeedbackModal()" style="cursor:pointer;"><i class="ti ti-message-report"></i> <span class="sb-text">Feedback</span></div>
       </div>
-      <div class="sb-divider"></div>
-      <div class="sb-section">
-        <div class="sb-label">Support</div>
-        <div class="sb-item" onclick="openFeedbackModal()" style="cursor:pointer;">
-          <i class="ti ti-message-report"></i>
-          <span class="sb-text">Send Feedback</span>
-        </div>
-      </div>
+
     </div>
   </aside>
 
