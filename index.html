@@ -3725,6 +3725,7 @@
       closeUserMenu();
     }
     updateDashboardGreeting();
+    checkShowOnboarding();
   }
 
   async function refreshAuthState() {
@@ -3898,12 +3899,12 @@
     if (_obStep < _obTotal) goObStep(_obStep + 1);
   }
 
-  // 첫 방문 시 자동 표시
-  window.addEventListener('load', () => {
+  // 첫 방문 시 자동 표시 (renderAuthUI 이후 호출됨)
+  function checkShowOnboarding() {
     if (!localStorage.getItem('exppi_onboarded') && currentUser) {
-      setTimeout(showOnboarding, 800);
+      setTimeout(showOnboarding, 600);
     }
-  });
+  }
 
   function togglePageLock(pageId) {
     const page = document.getElementById(pageId);
