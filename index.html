@@ -3152,11 +3152,39 @@
     document.querySelectorAll('.fb-type').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
   }
-  function submitFeedback() {
+  async function submitFeedback() {
     const text = document.getElementById('fb-text').value.trim();
     if (!text) { document.getElementById('fb-text').focus(); return; }
+
+    const typeEl  = document.querySelector('#fb-type-group .fb-type.active');
+    const pageSel = document.querySelector('#feedback-modal select');
+    const prioEl  = document.querySelector('input[name="fb-priority"]:checked');
+
+    const payload = {
+      type: typeEl ? typeEl.textContent.trim().toLowerCase() : 'bug',
+      related_page: (pageSel && pageSel.value) ? pageSel.value : null,
+      message: text,
+      priority: prioEl ? prioEl.value : 'medium',
+      user_id: currentUser?.id ?? null,
+      page_url: document.querySelector('.page.active')?.id ?? null,
+      user_agent: navigator.userAgent,
+    };
+
+    const { error } = await supa.from('user_feedback').insert([payload]);
+
+    if (error) {
+      showSaveToast(error.message || 'Failed to submit feedback.', true);
+      return;
+    }
+
     closeFeedbackModal();
+    // reset form to defaults
     document.getElementById('fb-text').value = '';
+    document.querySelectorAll('#fb-type-group .fb-type').forEach((b, i) => b.classList.toggle('active', i === 0));
+    if (pageSel) pageSel.value = '';
+    const medium = document.querySelector('input[name="fb-priority"][value="medium"]');
+    if (medium) medium.checked = true;
+
     const toast = document.getElementById('fb-toast');
     toast.style.display = 'flex';
     setTimeout(() => { toast.style.display = 'none'; }, 3200);
