@@ -285,6 +285,44 @@
   }
   .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(6,182,212,0.1); }
   .form-textarea { resize: vertical; min-height: 100px; font-family: var(--ff-head); font-size: 13px; line-height: 1.6; }
+
+  /* ── ANALYSIS MODAL: breakdown toggle & tooltip ── */
+  .am-breakdown-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; background: none; border: none; padding: 0;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-3); cursor: pointer;
+  }
+  .am-breakdown-chevron {
+    font-size: 10px; color: var(--ink-4); transition: transform 0.2s;
+  }
+  .am-breakdown-chevron.open { transform: rotate(180deg); }
+  .am-breakdown-body { margin-top: 14px; display: flex; flex-direction: column; gap: 16px; }
+  .am-onet-callout {
+    background: var(--surface-2); border-radius: 8px; padding: 12px 14px;
+    font-size: 12px; color: var(--ink-3); line-height: 1.65;
+  }
+  .am-cat-header {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px;
+  }
+  .am-tooltip-wrap { position: relative; display: inline-flex; }
+  .am-tooltip-q {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 1.5px solid var(--ink-4); color: var(--ink-4);
+    font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    cursor: default; flex-shrink: 0;
+  }
+  .am-tooltip-text {
+    display: none; position: absolute; left: 50%; bottom: calc(100% + 6px);
+    transform: translateX(-50%); background: #1e293b; color: #f1f5f9;
+    font-size: 11px; font-weight: 400; text-transform: none; letter-spacing: 0;
+    line-height: 1.5; padding: 7px 10px; border-radius: 7px;
+    width: 200px; white-space: normal; z-index: 999; pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  }
+  .am-tooltip-wrap:hover .am-tooltip-text { display: block; }
   .form-select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -2725,36 +2763,71 @@
         </div>
 
         <!-- Result state -->
-        <div id="am-analysis-result" style="display:flex;flex-direction:column;gap:24px;">
+        <div id="am-analysis-result" style="display:flex;flex-direction:column;gap:20px;">
 
-          <!-- Work Activities -->
-          <div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Work Activities</div>
-            <div id="am-work-activities" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-          </div>
-
-          <div style="height:1px;background:var(--border);"></div>
-
-          <!-- Transferable Skills -->
-          <div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Transferable Skills</div>
-            <div id="am-transferable-skills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-          </div>
-
-          <div style="height:1px;background:var(--border);"></div>
-
-          <!-- Software Skills -->
-          <div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Software Skills</div>
-            <div id="am-software-skills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-          </div>
-
-          <div style="height:1px;background:var(--border);"></div>
-
-          <!-- Competency Keywords -->
+          <!-- Competency Keywords (top) -->
           <div>
             <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Competency Keywords</div>
             <div id="am-competency-keywords" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          </div>
+
+          <div style="height:1px;background:var(--border);"></div>
+
+          <!-- Analysis Breakdown toggle -->
+          <div>
+            <button class="am-breakdown-btn" onclick="toggleAmBreakdown()">
+              Analysis Breakdown
+              <span class="am-breakdown-chevron" id="am-breakdown-chevron">▼</span>
+            </button>
+
+            <div class="am-breakdown-body" id="am-breakdown-body" style="display:none;">
+
+              <!-- O*NET callout -->
+              <div class="am-onet-callout">
+                We analyze your experience based on O*NET — the official occupational classification system provided by the U.S. Department of Labor.
+              </div>
+
+              <!-- Work Activities -->
+              <div>
+                <div class="am-cat-header">
+                  Work Activities
+                  <div class="am-tooltip-wrap">
+                    <div class="am-tooltip-q">?</div>
+                    <div class="am-tooltip-text">Activities performed across a number of occupations.</div>
+                  </div>
+                </div>
+                <div id="am-work-activities" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              </div>
+
+              <div style="height:1px;background:var(--border);"></div>
+
+              <!-- Transferable Skills -->
+              <div>
+                <div class="am-cat-header">
+                  Transferable Skills
+                  <div class="am-tooltip-wrap">
+                    <div class="am-tooltip-q">?</div>
+                    <div class="am-tooltip-text">Skills you can use across different jobs.</div>
+                  </div>
+                </div>
+                <div id="am-transferable-skills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              </div>
+
+              <div style="height:1px;background:var(--border);"></div>
+
+              <!-- Software Skills -->
+              <div>
+                <div class="am-cat-header">
+                  Software Skills
+                  <div class="am-tooltip-wrap">
+                    <div class="am-tooltip-q">?</div>
+                    <div class="am-tooltip-text">Skills using specific programs and applications for work tasks.</div>
+                  </div>
+                </div>
+                <div id="am-software-skills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              </div>
+
+            </div>
           </div>
 
         </div>
@@ -2858,6 +2931,15 @@
 </div>
 
 <script>
+  // ── ANALYSIS BREAKDOWN TOGGLE ────────────────
+  function toggleAmBreakdown() {
+    const body = document.getElementById('am-breakdown-body');
+    const chevron = document.getElementById('am-breakdown-chevron');
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'flex';
+    chevron.classList.toggle('open', !isOpen);
+  }
+
   // ── TEXTAREA AUTO-RESIZE ──────────────────────
   function autoResize(el) {
     el.style.height = 'auto';
