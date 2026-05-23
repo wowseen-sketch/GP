@@ -2768,11 +2768,6 @@
       <!-- RIGHT: Analysis Results (2/5) -->
       <div style="padding:28px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:24px;background:var(--surface);">
 
-        <!-- O*NET callout (always visible, independent of loading/result state) -->
-        <div class="am-onet-callout">
-          We analyze your experience based on O*NET — the official occupational classification system provided by the U.S. Department of Labor.
-        </div>
-
         <!-- Loading state -->
         <div id="am-analysis-loading" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;flex:1;padding:40px 0;">
           <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:#0081DD;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
@@ -3338,6 +3333,18 @@
     renderAnalysisTags('am-transferable-skills', _cachedAnalysis.transferable_skills || [], 'kw-tag-grey');
     renderAnalysisTags('am-software-skills',     _cachedAnalysis.software_skills     || [], 'kw-tag-grey');
     renderAnalysisTags('am-competency-keywords', _cachedAnalysis.competency_keywords || []);
+
+    // Inject O*NET callout dynamically after competency keywords (always visible, above toggle)
+    if (!document.getElementById('am-onet-callout')) {
+      const callout = document.createElement('div');
+      callout.id = 'am-onet-callout';
+      callout.className = 'am-onet-callout';
+      callout.textContent = 'We analyze your experience based on O*NET — the official occupational classification system provided by the U.S. Department of Labor.';
+      const kwSection = document.getElementById('am-competency-keywords');
+      if (kwSection && kwSection.parentNode) {
+        kwSection.parentNode.insertAdjacentElement('afterend', callout);
+      }
+    }
 
     if (_cachedAnalysis.competency_keywords?.length) {
       setAnalysisModalStatus('Ready to save this experience?', false);
