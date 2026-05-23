@@ -831,54 +831,64 @@
 
   /* ── 칸반 레이아웃 ── */
   .blk-kanban {
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
     padding: 16px 24px 40px;
-    gap: 0;
+    gap: 8px;
   }
   .blk-col {
     width: 100%;
-    padding: 0 0 8px;
-    display: flex; flex-direction: column;
-    position: relative;
-    margin-bottom: 4px;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 0 16px;
+    align-items: start;
   }
   .blk-col-bar { display: none; }
   .blk-col-header {
-    display: flex; flex-direction: row;
-    align-items: center; justify-content: space-between;
-    padding: 10px 14px;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    grid-column: 1;
     background: var(--surface);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: sticky;
+    top: 60px;
   }
   .blk-col-title {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--ink-2);
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
   }
   .blk-col-count {
     font-size: 10px; font-weight: 700; color: var(--ink-4);
-    background: var(--surface); border: 1px solid var(--border);
-    padding: 1px 8px; border-radius: 99px; letter-spacing: 0;
+    background: var(--white); border: 1px solid var(--border);
+    padding: 1px 8px; border-radius: 99px;
   }
   .blk-col-add-btn {
     width: 26px; height: 26px; border-radius: 8px;
     border: 1px solid var(--border); background: var(--white);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; color: var(--ink-3); font-size: 16px; line-height: 1;
-    transition: all 0.15s; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: all 0.15s;
   }
   .blk-col-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-
-  /* 칸반 카드 */
+  .blk-grid {
+    grid-column: 2;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px;
+    align-content: flex-start;
+    min-height: 60px;
+  }
   .blk-card {
     background: var(--white); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 16px 12px;
-    margin-bottom: 10px; cursor: pointer;
-    transition: box-shadow 0.15s, border-color 0.15s;
+    border-radius: 12px; padding: 14px 14px 10px;
+    cursor: pointer;
+    transition: box-shadow 0.2s, border-color 0.2s;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    display: flex; flex-direction: column; gap: 6px;
-    position: relative; width: 260px; flex-shrink: 0;
+    display: flex; flex-direction: column; gap: 5px;
+    position: relative; width: 240px; flex-shrink: 0;
   }
   .blk-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.10); border-color: var(--border-strong); }
   .blk-card-top { display: none; }
@@ -894,9 +904,6 @@
   }
   .blk-folder-svg { display: none; }
   .blk-folder-info { display: none; }
-  .blk-grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 0 8px; }
-
-  /* 추가 버튼 */
   .blk-add {
     border: 1.5px dashed var(--border-strong) !important;
     background: transparent !important; border-radius: 10px !important;
@@ -1722,10 +1729,7 @@
         <!-- PROJECT -->
         <div class="blk-col blk-section" data-category="project">
           <div class="blk-col-header" style="border-left: 3px solid #0081DD;">
-            <div class="blk-col-title">
-              <span style="color:#0081DD;">Project</span>
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+            <div class="blk-col-title" style="color:#0081DD;">Project <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
           <div class="blk-grid"></div>
@@ -1734,10 +1738,7 @@
         <!-- WORK EXPERIENCE -->
         <div class="blk-col blk-section" data-category="work">
           <div class="blk-col-header" style="border-left: 3px solid #38BDE0;">
-            <div class="blk-col-title">
-              <span style="color:#38BDE0;">Work Experience</span>
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+            <div class="blk-col-title" style="color:#38BDE0;">Work Experience <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
           <div class="blk-grid"></div>
@@ -1746,10 +1747,7 @@
         <!-- LEADERSHIP -->
         <div class="blk-col blk-section" data-category="leadership">
           <div class="blk-col-header" style="border-left: 3px solid #00A896;">
-            <div class="blk-col-title">
-              <span style="color:#00A896;">Leadership</span>
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+            <div class="blk-col-title" style="color:#00A896;">Leadership <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
           <div class="blk-grid"></div>
@@ -1758,10 +1756,7 @@
         <!-- EDUCATION -->
         <div class="blk-col blk-section" data-category="education">
           <div class="blk-col-header" style="border-left: 3px solid #006DAA;">
-            <div class="blk-col-title">
-              <span style="color:#006DAA;">Education</span>
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+            <div class="blk-col-title" style="color:#006DAA;">Education <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
           <div class="blk-grid"></div>
@@ -1770,10 +1765,7 @@
         <!-- EXTRACURRICULAR -->
         <div class="blk-col blk-section" data-category="extra">
           <div class="blk-col-header" style="border-left: 3px solid #77CCE0;">
-            <div class="blk-col-title">
-              <span style="color:#77CCE0;">Extracurricular</span>
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+            <div class="blk-col-title" style="color:#77CCE0;">Extracurricular <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
           <div class="blk-grid"></div>
