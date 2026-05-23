@@ -790,29 +790,33 @@
     border-right: 1px solid var(--border);
     padding: 20px 18px; display: flex;
     flex-direction: column;
+    position: relative;
+  }
+  .blk-col-bar {
+    height: 3px; border-radius: 99px;
+    margin-bottom: 16px; width: 32px;
   }
   .blk-col:last-child { border-right: none; }
   .blk-col-header {
     display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 14px; padding-bottom: 12px;
-    border-bottom: 2px solid var(--border);
+    margin-bottom: 16px; padding-bottom: 0;
   }
   .blk-col-title {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--ink-3);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-2);
     display: flex; align-items: center; gap: 8px;
   }
   .blk-col-count {
-    font-size: 11px; font-weight: 700; color: var(--ink-4);
+    font-size: 10px; font-weight: 700; color: var(--ink-4);
     background: var(--surface); border: 1px solid var(--border);
-    padding: 1px 7px; border-radius: 99px;
+    padding: 1px 8px; border-radius: 99px; letter-spacing: 0;
   }
   .blk-col-add-btn {
-    width: 24px; height: 24px; border-radius: 6px;
-    border: 1px solid var(--border); background: var(--surface);
+    width: 26px; height: 26px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--white);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; color: var(--ink-3); font-size: 16px; line-height: 1;
-    transition: all 0.15s;
+    transition: all 0.15s; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
   .blk-col-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 
@@ -1672,9 +1676,10 @@
 
         <!-- PROJECT -->
         <div class="blk-col blk-section" data-category="project">
+          <div class="blk-col-bar" style="background:#2563EB;"></div>
           <div class="blk-col-header">
             <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#2563EB;display:inline-block;"></span>
               Project
               <span class="blk-col-count blk-section-count">0</span>
             </div>
@@ -1689,9 +1694,10 @@
 
         <!-- WORK EXPERIENCE -->
         <div class="blk-col blk-section" data-category="work">
+          <div class="blk-col-bar" style="background:#D97706;"></div>
           <div class="blk-col-header">
             <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#C47A00;display:inline-block;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#D97706;display:inline-block;"></span>
               Work Experience
               <span class="blk-col-count blk-section-count">0</span>
             </div>
@@ -1706,9 +1712,10 @@
 
         <!-- LEADERSHIP -->
         <div class="blk-col blk-section" data-category="leadership">
+          <div class="blk-col-bar" style="background:#059669;"></div>
           <div class="blk-col-header">
             <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#059669;display:inline-block;"></span>
               Leadership
               <span class="blk-col-count blk-section-count">0</span>
             </div>
@@ -1723,9 +1730,10 @@
 
         <!-- EDUCATION -->
         <div class="blk-col blk-section" data-category="education">
+          <div class="blk-col-bar" style="background:#7C3AED;"></div>
           <div class="blk-col-header">
             <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#8B5CF6;display:inline-block;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#7C3AED;display:inline-block;"></span>
               Education
               <span class="blk-col-count blk-section-count">0</span>
             </div>
@@ -1740,9 +1748,10 @@
 
         <!-- EXTRACURRICULAR -->
         <div class="blk-col blk-section" data-category="extra">
+          <div class="blk-col-bar" style="background:#DB2777;"></div>
           <div class="blk-col-header">
             <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#EC4899;display:inline-block;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#DB2777;display:inline-block;"></span>
               Extracurricular
               <span class="blk-col-count blk-section-count">0</span>
             </div>
@@ -3304,11 +3313,11 @@
   // ── EXPERIENCE BLOCKS: load / render ───────────
   // Section visual identity per category (matches the static section dots/labels).
   const CATEGORY_STYLE = {
-    project:    { color: 'var(--accent)', label: 'Project' },
-    work:       { color: '#C47A00',       label: 'Work Experience' },
-    leadership: { color: 'var(--success)',label: 'Leadership' },
-    education:  { color: '#8B5CF6',       label: 'Education / Certification' },
-    extra:      { color: '#EC4899',       label: 'Extracurricular' },
+    project:    { color: '#2563EB', label: 'Project' },
+    work:       { color: '#D97706', label: 'Work Experience' },
+    leadership: { color: '#059669', label: 'Leadership' },
+    education:  { color: '#7C3AED', label: 'Education' },
+    extra:      { color: '#DB2777', label: 'Extracurricular' },
   };
 
   // Minimal HTML escaper for user-supplied text rendered via innerHTML.
