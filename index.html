@@ -3618,7 +3618,7 @@
     if (target === 'blocks') loadUserBlocks();
     // 잠금 페이지 진입 시 오버레이 top 재계산
     if (target === 'match' || target === 'matchstore') {
-      setTimeout(() => initLockOverlays(), 30);
+      setTimeout(() => initLockOverlays(), 50);
     }
   }
 
@@ -3928,9 +3928,19 @@
   }
 
   function initLockOverlays() {
-    // fixed position - no calculation needed
+    ['page-match', 'page-matchstore'].forEach(pageId => {
+      const page = document.getElementById(pageId);
+      if (!page) return;
+      const overlay = page.querySelector('.lock-overlay');
+      if (!overlay) return;
+      // 헤더 높이를 측정해서 오버레이 top 조정
+      const header = page.querySelector('.page-header');
+      const navH = 56;
+      const headerH = header ? header.offsetHeight : 120;
+      overlay.style.top = (navH + headerH) + 'px';
+    });
   }
-  window.addEventListener('load', initLockOverlays);
+  window.addEventListener('load', () => setTimeout(initLockOverlays, 100));
 
   function onProfileClick() {
     if (!currentUser) navigate('login');
