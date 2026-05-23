@@ -1139,7 +1139,7 @@
           <div>
             <div class="hero-eyebrow">DASHBOARD</div>
             <div class="hero-title" id="dashboard-hero-title">Welcome back, <em>Ji-won</em><br>Keep building your career</div>
-            <div class="hero-sub">You have 12 experience blocks saved. Start matching analysis with 3 companies today.</div>
+            <div class="hero-sub" id="hero-sub-text">Your career story, organized and ready.</div>
             <div class="hero-actions">
               <button class="btn-blue" onclick="navigate('add')"><i class="ti ti-plus" style="font-size:14px"></i> Add Experience</button>
               <button class="btn-outline-white" onclick="navigate('match')"><i class="ti ti-building" style="font-size:14px"></i> Company Analysis</button>
@@ -2392,6 +2392,93 @@
     </div>
 
 
+
+    <!-- ════ ONBOARDING MODAL ════ -->
+    <div id="onboarding-modal" style="
+      display:none; position:fixed; inset:0; z-index:1000;
+      background:rgba(10,20,40,0.55); backdrop-filter:blur(6px);
+      align-items:center; justify-content:center;
+    ">
+      <div style="
+        background:#fff; border-radius:24px; width:540px; max-width:92vw;
+        box-shadow:0 24px 64px rgba(0,0,0,0.18); overflow:hidden; position:relative;
+      ">
+        <!-- 진행바 -->
+        <div style="height:3px;background:var(--surface);">
+          <div id="ob-progress" style="height:3px;background:linear-gradient(90deg,#0081DD,#38BDE0);width:25%;transition:width 0.4s ease;"></div>
+        </div>
+
+        <!-- 슬라이드 영역 -->
+        <div style="padding:40px 44px 32px; min-height:280px;">
+
+          <!-- Step 1 -->
+          <div class="ob-step" id="ob-1">
+            <div style="font-size:36px;margin-bottom:16px;">📁</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Welcome to Exppi!</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
+              Exppi helps you organize your career experiences into blocks — and match them to jobs you actually want.
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="ob-step" id="ob-2" style="display:none;">
+            <div style="font-size:36px;margin-bottom:16px;">✍️</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Add your experiences</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
+              Log projects, work, leadership — anything you've done. Answer a few questions and AI extracts the keywords for you.
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="ob-step" id="ob-3" style="display:none;">
+            <div style="font-size:36px;margin-bottom:16px;">🎯</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Match to companies</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
+              Upload a job description and see how well your experience blocks fit — with a score and improvement guide.
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="ob-step" id="ob-4" style="display:none;">
+            <div style="font-size:36px;margin-bottom:16px;">🚀</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">You're all set!</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
+              Start by adding your first experience. It only takes 2 minutes.
+            </div>
+          </div>
+        </div>
+
+        <!-- 하단 버튼 -->
+        <div style="
+          padding:20px 44px 32px;
+          display:flex; align-items:center; justify-content:space-between;
+        ">
+          <div style="display:flex;gap:8px;" id="ob-dots">
+            <div class="ob-dot active" onclick="goObStep(1)"></div>
+            <div class="ob-dot" onclick="goObStep(2)"></div>
+            <div class="ob-dot" onclick="goObStep(3)"></div>
+            <div class="ob-dot" onclick="goObStep(4)"></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <button onclick="closeOnboarding()" style="
+              font-size:13px;color:var(--ink-4);background:none;border:none;cursor:pointer;padding:8px 4px;
+            ">Skip</button>
+            <button id="ob-next-btn" onclick="nextObStep()" style="
+              background:linear-gradient(135deg,#0081DD,#38BDE0);
+              color:#fff;border:none;border-radius:99px;padding:10px 28px;
+              font-size:14px;font-weight:700;cursor:pointer;
+            ">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .ob-dot {
+        width:7px;height:7px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:background 0.2s;
+      }
+      .ob-dot.active { background:var(--accent-2); }
+    </style>
   </main>
 </div>
 
@@ -3771,6 +3858,52 @@
     if (!currentUser) { navigate('login'); return; }
     toggleUserMenu();
   }
+
+
+  // ── 온보딩 ──
+  let _obStep = 1;
+  const _obTotal = 4;
+
+  function showOnboarding() {
+    const modal = document.getElementById('onboarding-modal');
+    if (modal) { modal.style.display = 'flex'; goObStep(1); }
+  }
+  function closeOnboarding() {
+    document.getElementById('onboarding-modal').style.display = 'none';
+    localStorage.setItem('exppi_onboarded', '1');
+  }
+  function goObStep(n) {
+    _obStep = n;
+    for (let i = 1; i <= _obTotal; i++) {
+      const el = document.getElementById('ob-' + i);
+      if (el) el.style.display = i === n ? 'block' : 'none';
+    }
+    // 진행바
+    document.getElementById('ob-progress').style.width = (n / _obTotal * 100) + '%';
+    // 점
+    document.querySelectorAll('.ob-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === n - 1);
+    });
+    // 마지막 버튼
+    const btn = document.getElementById('ob-next-btn');
+    if (n === _obTotal) {
+      btn.textContent = 'Get started!';
+      btn.onclick = () => { closeOnboarding(); navigate('add'); };
+    } else {
+      btn.textContent = 'Next →';
+      btn.onclick = nextObStep;
+    }
+  }
+  function nextObStep() {
+    if (_obStep < _obTotal) goObStep(_obStep + 1);
+  }
+
+  // 첫 방문 시 자동 표시
+  window.addEventListener('load', () => {
+    if (!localStorage.getItem('exppi_onboarded') && currentUser) {
+      setTimeout(showOnboarding, 800);
+    }
+  });
 
   function togglePageLock(pageId) {
     const page = document.getElementById(pageId);
