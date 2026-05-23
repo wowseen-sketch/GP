@@ -834,16 +834,15 @@
     display: flex;
     flex-direction: column;
     padding: 16px 24px 40px;
-    gap: 20px;
+    gap: 24px;
   }
   .blk-col {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
   .blk-col-bar { display: none; }
-  /* 헤더 박스 - 카드 위 구분선 역할 */
   .blk-col-header {
     display: flex;
     flex-direction: row;
@@ -853,6 +852,7 @@
     background: var(--surface);
     border-radius: 10px;
     width: 100%;
+    box-sizing: border-box;
   }
   .blk-col-title {
     font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
@@ -872,12 +872,10 @@
     transition: all 0.15s;
   }
   .blk-col-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-  /* 카드들 가로 나열 */
   .blk-grid {
-    display: flex !important;
-    flex-wrap: wrap !important;
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
-    align-content: flex-start;
     width: 100%;
   }
   .blk-card {
@@ -887,7 +885,7 @@
     transition: box-shadow 0.2s, border-color 0.2s;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     display: flex; flex-direction: column; gap: 5px;
-    position: relative; width: 240px; flex-shrink: 0;
+    position: relative; width: 260px; flex-shrink: 0;
   }
   .blk-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.10); border-color: var(--border-strong); }
   .blk-card-top { display: none; }
@@ -903,11 +901,7 @@
   }
   .blk-folder-svg { display: none; }
   .blk-folder-info { display: none; }
-  .blk-add {
-    border: 1.5px dashed var(--border-strong) !important;
-    background: transparent !important; border-radius: 10px !important;
-    padding: 12px !important; display: none !important;
-  }
+  .blk-add { display: none !important; }
   .blk-add:hover { border-color: var(--accent) !important; color: var(--accent) !important; background: var(--accent-light) !important; }
 
   .blk-filter {
