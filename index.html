@@ -1533,7 +1533,7 @@
         <div style="margin-bottom:28px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);position:relative;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">1</div>
+              <div style="width:28px;height:28px;border-radius:8px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--ink-3);">1</div>
               <div>
                                 <div style="font-size:15px;font-weight:700;color:var(--ink);">What were you trying to achieve?</div>
               </div>
@@ -1557,7 +1557,7 @@
         <div style="margin-bottom:28px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">2</div>
+              <div style="width:28px;height:28px;border-radius:8px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--ink-3);">2</div>
               <div>
                                 <div style="font-size:15px;font-weight:700;color:var(--ink);">What did you actually do?</div>
               </div>
@@ -1580,7 +1580,7 @@
         <div style="margin-bottom:28px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">3</div>
+              <div style="width:28px;height:28px;border-radius:8px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--ink-3);">3</div>
               <div>
                                 <div style="font-size:15px;font-weight:700;color:var(--ink);">What were the outcomes?</div>
               </div>
@@ -1597,7 +1597,7 @@
         <div style="margin-bottom:28px;padding:24px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;">4</div>
+              <div style="width:28px;height:28px;border-radius:8px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--ink-3);">4</div>
               <div>
                                 <div style="font-size:15px;font-weight:700;color:var(--ink);">How did this change you?</div>
               </div>
@@ -3390,8 +3390,8 @@
         <div style="font-size:10px;font-weight:600;color:${hasOutcome ? 'var(--success)' : 'var(--warn)'};display:flex;align-items:center;gap:4px;">
           <i class="ti ti-circle-check" style="font-size:12px;"></i> ${hasOutcome ? 'OUTCOME OPTIMIZED' : 'NEEDS OUTCOME'}
         </div>
-        <button class="blk-card-edit-btn" onclick="event.stopPropagation()">
-          <i class="ti ti-edit" style="font-size:12px;"></i> Edit
+        <button class="blk-card-edit-btn" onclick="event.stopPropagation()" style="background:none;border:none;color:#9CA3AF;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;opacity:0.6;">
+          <i class="ti ti-edit" style="font-size:11px;"></i> Edit
         </button>
       </div>
     `;
