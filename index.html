@@ -3356,8 +3356,9 @@
 
     const fc = style.color;
     const hasOutcome = !!(row.outcome_measurable && row.outcome_measurable.trim());
+    const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,3);
     const tagsHtmlNew = kws.map(k=>`<span style="font-size:10px;color:var(--ink-3);background:var(--surface);border:1px solid var(--border);padding:2px 8px;border-radius:99px;">#${escapeHtml(k)}</span>`).join('');
-    const descShort = (row.situation||row.task||'').slice(0,100);
+    const descShort = (row.situation||row.task||row.actions||'').slice(0,100);
 
     const el = document.createElement('div');
     el.className = 'blk-card dyn';
