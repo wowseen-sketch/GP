@@ -1207,6 +1207,7 @@
           </span>
         </div>
         <div class="sb-item" onclick="openFeedbackModal()" style="cursor:pointer;"><i class="ti ti-message-report"></i> <span class="sb-text">Feedback</span></div>
+        <div class="sb-item" id="sb-help" onclick="navigate('help')"><i class="ti ti-help-circle"></i> <span class="sb-text">Help Center</span></div>
       </div>
 
     </div>
@@ -2479,6 +2480,101 @@
       </div>
     </div>
 
+    <!-- ════ PAGE: HELP & FEEDBACK ════ -->
+    <div id="page-help" class="page">
+
+      <div class="page-header">
+        <div class="page-eyebrow">SUPPORT</div>
+        <div class="page-title">Help Center</div>
+        <div class="page-sub">FAQs and how to reach us.</div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="help-tabs">
+        <button class="help-tab active" id="help-tab-faq" onclick="showHelpTab('faq')">FAQ</button>
+        <button class="help-tab" id="help-tab-contact" onclick="showHelpTab('contact')">Contact</button>
+      </div>
+
+      <!-- ── Panel: FAQ ── -->
+      <div class="help-panel active" id="help-panel-faq">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>What is Exppi?</span><i class="ti ti-chevron-down"></i></button>
+          <div class="faq-a"><p>Exppi is a career intelligence platform that turns your experiences into job-aligned signals. We use a PDCA framework to structure your background and extract competency keywords from job, industry, and role perspectives.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>How does the matching work?</span><i class="ti ti-chevron-down"></i></button>
+          <div class="faq-a"><p>Add your experiences as blocks. Our AI extracts keywords from three perspectives. When you select a target company, we compare your blocks against keywords from their JDs, IR materials, and hiring patterns to give you a fit score and improvement guide.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>Is it free?</span><i class="ti ti-chevron-down"></i></button>
+          <div class="faq-a"><p>Yes. All features are free during the beta period.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>How is my data used?</span><i class="ti ti-chevron-down"></i></button>
+          <div class="faq-a"><p>Your data is only used to power your own matching results. We never sell or share it with third parties.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>Can I delete my account and data?</span><i class="ti ti-chevron-down"></i></button>
+          <div class="faq-a"><p>Yes. Reach out via the Contact tab and we'll permanently remove your account and all associated data within 7 days.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)"><span>How do I report a bug or suggest a feature?</span><i class="ti ti-chevron-down"></i></button>
+          <div class="faq-a"><p>Use the Contact tab on this page, or the Feedback button anywhere in the app. We read every submission.</p></div>
+        </div>
+      </div>
+
+      <!-- ── Panel: Contact ── -->
+      <div class="help-panel" id="help-panel-contact">
+        <div style="font-size:13px;color:var(--ink-3);margin-bottom:20px;max-width:560px;line-height:1.6;">Have an issue, suggestion, or just want to say hi? Send us a message.</div>
+
+        <div style="max-width:560px;display:flex;flex-direction:column;gap:16px;">
+          <!-- Type -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Type</div>
+            <div style="display:flex;gap:7px;" id="cf-type-group">
+              <button class="fb-type active" onclick="selectCfType(this)"><i class="ti ti-bug"></i> Bug</button>
+              <button class="fb-type" onclick="selectCfType(this)"><i class="ti ti-adjustments"></i> Improvement</button>
+              <button class="fb-type" onclick="selectCfType(this)"><i class="ti ti-bulb"></i> Suggestion</button>
+              <button class="fb-type" onclick="selectCfType(this)"><i class="ti ti-heart"></i> Compliment</button>
+            </div>
+          </div>
+          <!-- Related page -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Related Page</div>
+            <select id="cf-page" class="form-input form-select" style="font-size:13px;">
+              <option value="">Select a page</option>
+              <option>Dashboard</option>
+              <option>Add Experience</option>
+              <option>Experience Archiving</option>
+              <option>Company / Job Match</option>
+              <option>Match Archiving</option>
+              <option>General / Other</option>
+            </select>
+          </div>
+          <!-- Message -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Message <span style="color:var(--danger);">*</span></div>
+            <textarea id="cf-text" class="form-input form-textarea" placeholder="Describe the issue or your suggestion in detail..." style="min-height:110px;resize:vertical;"></textarea>
+          </div>
+          <!-- Priority -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Priority</div>
+            <div style="display:flex;gap:20px;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer;"><input type="radio" name="cf-priority" value="low" style="accent-color:var(--accent);"> Low</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer;"><input type="radio" name="cf-priority" value="medium" checked style="accent-color:var(--accent);"> Medium</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer;"><input type="radio" name="cf-priority" value="high" style="accent-color:var(--accent);"> High</label>
+            </div>
+          </div>
+          <div>
+            <button onclick="submitContactFeedback()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD,#38BDE0);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+              <i class="ti ti-send" style="font-size:14px;"></i> Submit Feedback
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
 
 
     <!-- ════ ONBOARDING MODAL ════ -->
@@ -2679,6 +2775,39 @@
   .fb-type i { font-size:13px; }
   .fb-type:hover { border-color:var(--accent); color:var(--accent-2); }
   .fb-type.active { background:var(--accent-light); color:var(--accent-2); border-color:var(--accent); }
+
+  /* Help Center page */
+  .help-tabs { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:24px; }
+  .help-tab {
+    font-family:var(--ff-head); font-size:14px; font-weight:600;
+    color:var(--ink-4); background:none; border:none; cursor:pointer;
+    padding:11px 18px; border-bottom:2px solid transparent; margin-bottom:-1px;
+    transition:all 0.12s;
+  }
+  .help-tab:hover { color:var(--ink-2); }
+  .help-tab.active { color:var(--accent-2); border-bottom-color:var(--accent); }
+  .help-panel { display:none; }
+  .help-panel.active { display:block; }
+
+  .faq-item { border:1px solid var(--border); border-radius:var(--rl); margin-bottom:10px; overflow:hidden; background:var(--white); }
+  .faq-q {
+    width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px;
+    font-family:var(--ff-head); font-size:14px; font-weight:600; color:var(--ink);
+    background:none; border:none; cursor:pointer; padding:16px 18px; text-align:left;
+  }
+  .faq-q i { font-size:16px; color:var(--ink-4); transition:transform 0.2s; flex-shrink:0; }
+  .faq-item.open .faq-q i { transform:rotate(180deg); }
+  .faq-a { max-height:0; overflow:hidden; transition:max-height 0.25s ease; }
+  .faq-item.open .faq-a { max-height:280px; }
+  .faq-a p { margin:0; padding:0 18px 16px; font-size:13px; line-height:1.6; color:var(--ink-2); }
+
+  .fb-badge { display:inline-flex; align-items:center; font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; letter-spacing:0.02em; }
+  .fb-empty { text-align:center; padding:48px 20px; color:var(--ink-4); }
+  .fb-empty p { margin:0 0 14px; font-size:14px; }
+  .fb-card { border:1px solid var(--border); border-radius:var(--rl); padding:16px 18px; margin-bottom:10px; background:var(--white); }
+  .fb-card-top { display:flex; align-items:center; gap:7px; margin-bottom:10px; }
+  .fb-card-msg { margin:0 0 10px; font-size:13px; line-height:1.55; color:var(--ink); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .fb-card-meta { font-size:12px; color:var(--ink-4); }
 </style>
 
 <!-- ═══════════ ANALYSIS RESULT MODAL ═══════════ -->
@@ -3017,7 +3146,7 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
   const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const pages = ['dashboard','add','blocks','match','matchstore','login','signup'];
+  const pages = ['dashboard','add','blocks','match','matchstore','login','signup','help'];
   const pageTitles = {
     dashboard:  'Dashboard',
     add:        'Add Experience',
@@ -3025,7 +3154,8 @@
     match:      'Matching Analysis',
     matchstore: 'Match Archiving',
     login:      'Sign In',
-    signup:     'Sign Up'
+    signup:     'Sign Up',
+    help:       'Help Center'
   };
 
   function selectMatchCo(el) {
@@ -3152,6 +3282,18 @@
     document.querySelectorAll('.fb-type').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
   }
+  // Shared DB insert for both the modal and the inline Contact form.
+  async function insertFeedback(payload) {
+    return await supa.from('user_feedback').insert([payload]);
+  }
+
+  // Shows the existing #fb-toast briefly.
+  function showFbToast() {
+    const toast = document.getElementById('fb-toast');
+    toast.style.display = 'flex';
+    setTimeout(() => { toast.style.display = 'none'; }, 3200);
+  }
+
   async function submitFeedback() {
     const text = document.getElementById('fb-text').value.trim();
     if (!text) { document.getElementById('fb-text').focus(); return; }
@@ -3170,7 +3312,7 @@
       user_agent: navigator.userAgent,
     };
 
-    const { error } = await supa.from('user_feedback').insert([payload]);
+    const { error } = await insertFeedback(payload);
 
     if (error) {
       showSaveToast(error.message || 'Failed to submit feedback.', true);
@@ -3185,9 +3327,62 @@
     const medium = document.querySelector('input[name="fb-priority"][value="medium"]');
     if (medium) medium.checked = true;
 
-    const toast = document.getElementById('fb-toast');
-    toast.style.display = 'flex';
-    setTimeout(() => { toast.style.display = 'none'; }, 3200);
+    showFbToast();
+  }
+
+  // ── HELP & FEEDBACK PAGE ──────────────────
+  function showHelpTab(name) {
+    ['faq', 'contact'].forEach(t => {
+      const tab   = document.getElementById('help-tab-' + t);
+      const panel = document.getElementById('help-panel-' + t);
+      if (tab)   tab.classList.toggle('active', t === name);
+      if (panel) panel.classList.toggle('active', t === name);
+    });
+  }
+
+  function toggleFaq(btn) {
+    btn.closest('.faq-item').classList.toggle('open');
+  }
+
+  // Inline Contact form type selector (scoped to its own group).
+  function selectCfType(el) {
+    document.querySelectorAll('#cf-type-group .fb-type').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  async function submitContactFeedback() {
+    const text = document.getElementById('cf-text').value.trim();
+    if (!text) { document.getElementById('cf-text').focus(); return; }
+
+    const typeEl  = document.querySelector('#cf-type-group .fb-type.active');
+    const pageSel = document.getElementById('cf-page');
+    const prioEl  = document.querySelector('input[name="cf-priority"]:checked');
+
+    const payload = {
+      type: typeEl ? typeEl.textContent.trim().toLowerCase() : 'bug',
+      related_page: (pageSel && pageSel.value) ? pageSel.value : null,
+      message: text,
+      priority: prioEl ? prioEl.value : 'medium',
+      user_id: currentUser?.id ?? null,
+      page_url: document.querySelector('.page.active')?.id ?? null,
+      user_agent: navigator.userAgent,
+    };
+
+    const { error } = await insertFeedback(payload);
+
+    if (error) {
+      showSaveToast(error.message || 'Failed to submit feedback.', true);
+      return;
+    }
+
+    // reset form to defaults
+    document.getElementById('cf-text').value = '';
+    document.querySelectorAll('#cf-type-group .fb-type').forEach((b, i) => b.classList.toggle('active', i === 0));
+    if (pageSel) pageSel.value = '';
+    const medium = document.querySelector('input[name="cf-priority"][value="medium"]');
+    if (medium) medium.checked = true;
+
+    showFbToast();
   }
 
   function openBlockRecommendModal() {
@@ -4043,7 +4238,7 @@
 
   function navigate(target) {
     // 비로그인 상태에서 보호된 페이지 접근 시 로그인 페이지로
-    const publicPages = ['login', 'signup'];
+    const publicPages = ['login', 'signup', 'help'];
     if (!currentUser && !publicPages.includes(target)) {
       target = 'login';
     }
@@ -4073,6 +4268,8 @@
 
     // Refresh dynamic content when entering the Blocks page.
     if (target === 'blocks') loadUserBlocks();
+    // Help 페이지 진입 시 기본 탭(FAQ)으로 리셋
+    if (target === 'help') showHelpTab('faq');
     // 잠금 페이지 진입 시 오버레이 top 재계산
     if (target === 'match' || target === 'matchstore') {
       setTimeout(() => initLockOverlays(), 50);
