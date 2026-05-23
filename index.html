@@ -1666,7 +1666,10 @@
           <div class="blk-filter" onclick="filterBlocks('education', this)">Education</div>
           <div class="blk-filter" onclick="filterBlocks('extra', this)">Extracurricular</div>
         </div>
-        <div style="margin-left:auto">
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+          <button id="blk-delete-btn" onclick="deleteSelectedBlocks()" style="display:none;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);background:var(--white);border:1px solid var(--border-strong);border-radius:var(--rl);padding:8px 16px;cursor:pointer;">
+            <i class="ti ti-trash" style="font-size:13px;"></i> Delete (<span id="blk-delete-count">0</span>)
+          </button>
           <button class="btn-blue" onclick="navigate('add')"><i class="ti ti-plus" style="font-size:13px"></i> Add Experience</button>
         </div>
       </div>
@@ -3375,7 +3378,9 @@
     el.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div class="blk-cat-label" style="color:${fc}">${escapeHtml(style.label)}</div>
-        <i class="ti ti-grip-vertical" style="color:var(--border-strong);font-size:14px;cursor:grab;"></i>
+        <input type="checkbox" class="blk-card-check" data-id="${row.id}"
+          onclick="event.stopPropagation();updateDeleteBtn()"
+          style="width:15px;height:15px;cursor:pointer;accent-color:var(--accent-2);">
       </div>
       <div class="blk-card-title">${escapeHtml(row.title || 'Untitled')}</div>
       <div class="blk-card-period">${escapeHtml(period)}</div>
@@ -3385,14 +3390,9 @@
         <div style="font-size:10px;font-weight:600;color:${hasOutcome ? 'var(--success)' : 'var(--warn)'};display:flex;align-items:center;gap:4px;">
           <i class="ti ti-circle-check" style="font-size:12px;"></i> ${hasOutcome ? 'OUTCOME OPTIMIZED' : 'NEEDS OUTCOME'}
         </div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <button class="blk-card-edit-btn" onclick="event.stopPropagation()">
-            <i class="ti ti-edit" style="font-size:12px;"></i> Edit
-          </button>
-          <button class="blk-card-edit-btn" style="color:var(--danger);" onclick="event.stopPropagation();deleteBlock('${row.id}', this)">
-            <i class="ti ti-trash" style="font-size:12px;"></i>
-          </button>
-        </div>
+        <button class="blk-card-edit-btn" onclick="event.stopPropagation()">
+          <i class="ti ti-edit" style="font-size:12px;"></i> Edit
+        </button>
       </div>
     `;
     return el;
@@ -3896,18 +3896,31 @@
     }
   }
 
-  async function deleteBlock(id, btn) {
-    if (!id || !currentUser) return;
-    if (!confirm('Delete this experience block?')) return;
-    const card = btn.closest('.blk-card');
-    if (card) card.style.opacity = '0.4';
+  function updateDeleteBtn() {
+    const checked = document.querySelectorAll('.blk-card-check:checked');
+    const btn = document.getElementById('blk-delete-btn');
+    const count = document.getElementById('blk-delete-count');
+    if (!btn) return;
+    if (checked.length > 0) {
+      btn.style.display = 'flex';
+      count.textContent = checked.length;
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+
+  async function deleteSelectedBlocks() {
+    const checked = [...document.querySelectorAll('.blk-card-check:checked')];
+    if (!checked.length || !currentUser) return;
+    if (!confirm(`Delete ${checked.length} experience block${checked.length > 1 ? 's' : ''}?`)) return;
+    const ids = checked.map(c => c.dataset.id).filter(Boolean);
     try {
-      const { error } = await supa.from('experience_blocks').delete().eq('id', id).eq('user_id', currentUser.id);
+      const { error } = await supa.from('experience_blocks').delete().in('id', ids).eq('user_id', currentUser.id);
       if (error) throw error;
-      if (card) card.remove();
+      checked.forEach(c => c.closest('.blk-card')?.remove());
+      updateDeleteBtn();
       loadUserBlocks();
     } catch(e) {
-      if (card) card.style.opacity = '1';
       alert('Failed to delete. Please try again.');
     }
   }
