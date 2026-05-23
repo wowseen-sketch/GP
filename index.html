@@ -3354,21 +3354,8 @@
       }
     }
 
-    // Description snippet: prefer actions, fall back to goal/outcome.
-    const desc = row.actions || row.goal || row.outcome_measurable || '';
-
-    // Tags: up to 3 keywords from the JSONB array.
-    const kws = Array.isArray(row.competency_keywords) ? row.competency_keywords.slice(0, 3) : [];
-    const tagsHtml = kws.map(k => `<span class="tag">${escapeHtml(k)}</span>`).join('');
-
-    // Footer status: outcome present vs missing.
-    const hasOutcome = !!(row.outcome_measurable && row.outcome_measurable.trim());
-    const footerHtml = hasOutcome
-      ? `<div style="display:flex;align-items:center;gap:6px"><i class="ti ti-circle-check" style="font-size:13px;color:var(--success)"></i><span style="font-size:11px;font-weight:500;color:var(--success);letter-spacing:0.03em">OUTCOME OPTIMIZED</span></div>`
-      : `<div style="display:flex;align-items:center;gap:6px"><i class="ti ti-clock" style="font-size:13px;color:var(--warn)"></i><span style="font-size:11px;font-weight:500;color:var(--warn);letter-spacing:0.03em">NEEDS OUTCOME</span></div>`;
-
     const fc = style.color;
-    const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,3);
+    const hasOutcome = !!(row.outcome_measurable && row.outcome_measurable.trim());
     const tagsHtmlNew = kws.map(k=>`<span style="font-size:10px;color:var(--ink-3);background:var(--surface);border:1px solid var(--border);padding:2px 8px;border-radius:99px;">#${escapeHtml(k)}</span>`).join('');
     const descShort = (row.situation||row.task||'').slice(0,100);
 
