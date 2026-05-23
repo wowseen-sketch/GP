@@ -834,31 +834,30 @@
     display: flex;
     flex-direction: column;
     padding: 16px 24px 40px;
-    gap: 8px;
+    gap: 20px;
   }
   .blk-col {
     width: 100%;
-    display: grid;
-    grid-template-columns: 150px 1fr;
-    gap: 0 16px;
-    align-items: start;
-  }
-  .blk-col-bar { display: none; }
-  .blk-col-header {
-    grid-column: 1;
-    background: var(--surface);
-    border-radius: 10px;
-    padding: 12px 14px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    position: sticky;
-    top: 60px;
+    gap: 10px;
+  }
+  .blk-col-bar { display: none; }
+  /* 헤더 박스 - 구분선 역할 */
+  .blk-col-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-radius: 10px;
+    border-left: 3px solid var(--border);
   }
   .blk-col-title {
     font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
     text-transform: uppercase;
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; gap: 8px;
   }
   .blk-col-count {
     font-size: 10px; font-weight: 700; color: var(--ink-4);
@@ -873,13 +872,12 @@
     transition: all 0.15s;
   }
   .blk-col-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  /* 카드들 가로 나열 */
   .blk-grid {
-    grid-column: 2;
     display: flex !important;
     flex-wrap: wrap !important;
     gap: 10px;
     align-content: flex-start;
-    min-height: 60px;
   }
   .blk-card {
     background: var(--white); border: 1px solid var(--border);
@@ -907,11 +905,7 @@
   .blk-add {
     border: 1.5px dashed var(--border-strong) !important;
     background: transparent !important; border-radius: 10px !important;
-    padding: 12px !important; display: flex !important;
-    align-items: center !important; justify-content: center !important;
-    gap: 6px; cursor: pointer; color: var(--ink-4);
-    font-size: 13px; width: 100%; box-shadow: none !important;
-    transition: all 0.15s; margin-top: 2px;
+    padding: 12px !important; display: none !important;
   }
   .blk-add:hover { border-color: var(--accent) !important; color: var(--accent) !important; background: var(--accent-light) !important; }
 
