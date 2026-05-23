@@ -3395,9 +3395,9 @@
       callout.className = 'am-onet-callout';
       callout.textContent = 'We analyze your experience based on O*NET — the official occupational classification system provided by the U.S. Department of Labor.';
       const kwSection = document.getElementById('am-competency-keywords');
-      if (kwSection) {
-        // .after() inserts callout as a sibling immediately after #am-competency-keywords
-        kwSection.after(callout);
+      if (kwSection && kwSection.parentNode) {
+        // insert after the wrapper div (kwSection.parentNode), as a sibling in #am-analysis-result
+        kwSection.parentNode.after(callout);
       }
     }
 
