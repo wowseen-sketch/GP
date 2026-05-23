@@ -781,30 +781,34 @@
 
   /* ── 칸반 레이아웃 ── */
   .blk-kanban {
-    display: flex; gap: 0; overflow-x: auto;
-    align-items: flex-start; padding: 0 0 40px;
+    display: flex; flex-direction: column; gap: 0;
+    padding: 0 0 40px;
     min-height: calc(100vh - 200px);
   }
   .blk-col {
-    flex: 0 0 300px; min-width: 260px;
-    border-right: 1px solid var(--border);
-    padding: 20px 18px; display: flex;
-    flex-direction: column;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+    border-right: none;
+    padding: 16px 24px; display: flex;
+    flex-direction: row; align-items: flex-start; gap: 16px;
     position: relative;
   }
+  .blk-col:last-child { border-bottom: none; }
   .blk-col-bar {
-    height: 3px; border-radius: 99px;
-    margin-bottom: 16px; width: 32px;
+    width: 3px; border-radius: 99px;
+    align-self: stretch; flex-shrink: 0;
+    min-height: 40px;
   }
-  .blk-col:last-child { border-right: none; }
   .blk-col-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 16px; padding-bottom: 0;
+    display: flex; flex-direction: column; gap: 8px;
+    width: 160px; flex-shrink: 0;
+    padding-top: 4px;
+    align-items: flex-start; justify-content: flex-start;
   }
   .blk-col-title {
     font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
     text-transform: uppercase; color: var(--ink-2);
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
   .blk-col-count {
     font-size: 10px; font-weight: 700; color: var(--ink-4);
@@ -844,7 +848,7 @@
   }
   .blk-folder-svg { display: none; }
   .blk-folder-info { display: none; }
-  .blk-grid { display: contents; }
+  .blk-grid { display: flex; flex-wrap: wrap; gap: 12px; flex: 1; align-content: flex-start; }
 
   /* 추가 버튼 */
   .blk-add {
