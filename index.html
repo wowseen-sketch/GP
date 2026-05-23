@@ -3334,15 +3334,16 @@
     renderAnalysisTags('am-software-skills',     _cachedAnalysis.software_skills     || [], 'kw-tag-grey');
     renderAnalysisTags('am-competency-keywords', _cachedAnalysis.competency_keywords || []);
 
-    // Inject O*NET callout dynamically after competency keywords (always visible, above toggle)
+    // Inject O*NET callout dynamically right after #am-competency-keywords tags
     if (!document.getElementById('am-onet-callout')) {
       const callout = document.createElement('div');
       callout.id = 'am-onet-callout';
       callout.className = 'am-onet-callout';
       callout.textContent = 'We analyze your experience based on O*NET — the official occupational classification system provided by the U.S. Department of Labor.';
       const kwSection = document.getElementById('am-competency-keywords');
-      if (kwSection && kwSection.parentNode) {
-        kwSection.parentNode.insertAdjacentElement('afterend', callout);
+      if (kwSection) {
+        // .after() inserts callout as a sibling immediately after #am-competency-keywords
+        kwSection.after(callout);
       }
     }
 
