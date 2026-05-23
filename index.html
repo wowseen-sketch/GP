@@ -831,58 +831,61 @@
 
   /* ── 칸반 레이아웃 ── */
   .blk-kanban {
-    display: flex; flex-direction: column; gap: 0;
-    padding: 0 0 40px;
-    min-height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
+    padding: 16px 24px 40px;
+    gap: 24px;
   }
   .blk-col {
     width: 100%;
-    border-bottom: 1px solid var(--border);
-    border-right: none;
-    padding: 16px 24px; display: flex;
-    flex-direction: row; align-items: flex-start; gap: 16px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
-  .blk-col:last-child { border-bottom: none; }
-  .blk-col-bar {
-    width: 3px; border-radius: 99px;
-    align-self: stretch; flex-shrink: 0;
-    min-height: 40px;
-  }
+  .blk-col-bar { display: none; }
   .blk-col-header {
-    display: flex; flex-direction: column; gap: 8px;
-    width: 160px; flex-shrink: 0;
-    padding-top: 4px;
-    align-items: flex-start; justify-content: flex-start;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .blk-col-title {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--ink-2);
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
   }
   .blk-col-count {
     font-size: 10px; font-weight: 700; color: var(--ink-4);
-    background: var(--surface); border: 1px solid var(--border);
-    padding: 1px 8px; border-radius: 99px; letter-spacing: 0;
+    background: var(--white); border: 1px solid var(--border);
+    padding: 1px 8px; border-radius: 99px;
   }
   .blk-col-add-btn {
     width: 26px; height: 26px; border-radius: 8px;
     border: 1px solid var(--border); background: var(--white);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; color: var(--ink-3); font-size: 16px; line-height: 1;
-    transition: all 0.15s; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: all 0.15s;
   }
   .blk-col-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-
-  /* 칸반 카드 */
+  .blk-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+  }
   .blk-card {
     background: var(--white); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 16px 12px;
-    margin-bottom: 10px; cursor: pointer;
-    transition: box-shadow 0.15s, border-color 0.15s;
+    border-radius: 12px; padding: 14px 14px 10px;
+    cursor: pointer;
+    transition: box-shadow 0.2s, border-color 0.2s;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    display: flex; flex-direction: column; gap: 6px;
-    position: relative;
+    display: flex; flex-direction: column; gap: 5px;
+    position: relative; width: 260px; flex-shrink: 0;
   }
   .blk-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.10); border-color: var(--border-strong); }
   .blk-card-top { display: none; }
@@ -898,18 +901,7 @@
   }
   .blk-folder-svg { display: none; }
   .blk-folder-info { display: none; }
-  .blk-grid { display: flex; flex-wrap: wrap; gap: 12px; flex: 1; align-content: flex-start; }
-
-  /* 추가 버튼 */
-  .blk-add {
-    border: 1.5px dashed var(--border-strong) !important;
-    background: transparent !important; border-radius: 10px !important;
-    padding: 12px !important; display: flex !important;
-    align-items: center !important; justify-content: center !important;
-    gap: 6px; cursor: pointer; color: var(--ink-4);
-    font-size: 13px; width: 100%; box-shadow: none !important;
-    transition: all 0.15s; margin-top: 2px;
-  }
+  .blk-add { display: none !important; }
   .blk-add:hover { border-color: var(--accent) !important; color: var(--accent) !important; background: var(--accent-light) !important; }
 
   .blk-filter {
@@ -1997,82 +1989,47 @@
 
         <!-- PROJECT -->
         <div class="blk-col blk-section" data-category="project">
-          <div class="blk-col-bar" style="background:#0081DD;"></div>
-          <div class="blk-col-header">
-            <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#0081DD;display:inline-block;"></span>
-              Project
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+          <div class="blk-col-header" style="border-left: 4px solid #0081DD; padding-left: 14px;">
+            <div class="blk-col-title" style="color:#0081DD;">Project <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid">
-
-          </div>
+          <div class="blk-grid"></div>
         </div>
 
         <!-- WORK EXPERIENCE -->
         <div class="blk-col blk-section" data-category="work">
-          <div class="blk-col-bar" style="background:#38BDE0;"></div>
-          <div class="blk-col-header">
-            <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#38BDE0;display:inline-block;"></span>
-              Work Experience
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+          <div class="blk-col-header" style="border-left: 4px solid #38BDE0; padding-left: 14px;">
+            <div class="blk-col-title" style="color:#38BDE0;">Work Experience <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid">
-
-          </div>
+          <div class="blk-grid"></div>
         </div>
 
         <!-- LEADERSHIP -->
         <div class="blk-col blk-section" data-category="leadership">
-          <div class="blk-col-bar" style="background:#00A896;"></div>
-          <div class="blk-col-header">
-            <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#00A896;display:inline-block;"></span>
-              Leadership
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+          <div class="blk-col-header" style="border-left: 4px solid #00A896; padding-left: 14px;">
+            <div class="blk-col-title" style="color:#00A896;">Leadership <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid">
-
-          </div>
+          <div class="blk-grid"></div>
         </div>
 
         <!-- EDUCATION -->
         <div class="blk-col blk-section" data-category="education">
-          <div class="blk-col-bar" style="background:#006DAA;"></div>
-          <div class="blk-col-header">
-            <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#006DAA;display:inline-block;"></span>
-              Education
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+          <div class="blk-col-header" style="border-left: 4px solid #006DAA; padding-left: 14px;">
+            <div class="blk-col-title" style="color:#006DAA;">Education <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid">
-
-          </div>
+          <div class="blk-grid"></div>
         </div>
 
         <!-- EXTRACURRICULAR -->
         <div class="blk-col blk-section" data-category="extra">
-          <div class="blk-col-bar" style="background:#77CCE0;"></div>
-          <div class="blk-col-header">
-            <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#77CCE0;display:inline-block;"></span>
-              Extracurricular
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
+          <div class="blk-col-header" style="border-left: 4px solid #77CCE0; padding-left: 14px;">
+            <div class="blk-col-title" style="color:#77CCE0;">Extracurricular <span class="blk-col-count blk-section-count">0</span></div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid">
-
-          </div>
+          <div class="blk-grid"></div>
         </div>
 
       </div>
@@ -4167,7 +4124,7 @@
     return el;
   }
 
-  // Distribute rows into the 5 category sections (in-place, before each "Add Block" tile).
+  // Distribute rows into category sections
   function renderBlocks(rows) {
     clearDynamicBlocks();
 
@@ -4180,9 +4137,9 @@
     Object.entries(buckets).forEach(([cat, list]) => {
       const section = document.querySelector(`.blk-section[data-category="${cat}"]`);
       if (!section) return;
-      const grid    = section.querySelector('.blk-grid');
-      const addCard = grid.querySelector('.blk-add');
-      list.forEach(row => grid.insertBefore(buildBlockCard(row, cat), addCard));
+      const grid = section.querySelector('.blk-grid');
+      if (!grid) return;
+      list.forEach(row => grid.appendChild(buildBlockCard(row, cat)));
       const countEl = section.querySelector('.blk-section-count');
       if (countEl) countEl.textContent = list.length;
     });
@@ -4518,14 +4475,14 @@
     svg.setAttribute('height', H);
 
     // center node position (slightly left of center)
-    const cx = W * 0.45, cy = H * 0.42;
+    const cx = W * 0.5, cy = H * 0.5;
 
     const branches = [
-      { label: 'GTM Strategy',    sub: ['B2B', 'Product Launch', 'OKR'],          angle: -170, color: '#0081DD', len: W*0.26 },
-      { label: 'Data & Analysis', sub: ['SQL', 'Tableau', 'Dashboard'],            angle:  -30, color: '#0099CC', len: W*0.25 },
-      { label: 'UX Research',     sub: ['User Interview', 'Prototyping', 'A/B Test'], angle:  30, color: '#38BDE0', len: W*0.26 },
-      { label: 'Leadership',      sub: ['Cross-functional', 'OKR', 'Agile'],       angle:  150, color: '#1AB8B0', len: W*0.23 },
-      { label: 'Marketing',       sub: ['SNS', 'Content', 'Campaign'],             angle: -120, color: '#77FFE4', len: W*0.22 },
+      { label: 'GTM Strategy',    sub: ['B2B', 'Product Launch', 'OKR'],          angle: -150, color: '#0081DD', len: W*0.19 },
+      { label: 'Data & Analysis', sub: ['SQL', 'Tableau', 'Dashboard'],            angle:  -35, color: '#0099CC', len: W*0.20 },
+      { label: 'UX Research',     sub: ['User Interview', 'Prototyping', 'A/B Test'], angle:  25, color: '#38BDE0', len: W*0.20 },
+      { label: 'Leadership',      sub: ['Cross-functional', 'OKR', 'Agile'],       angle:  140, color: '#1AB8B0', len: W*0.18 },
+      { label: 'Marketing',       sub: ['SNS', 'Content', 'Campaign'],             angle: -110, color: '#77FFE4', len: W*0.17 },
     ];
 
     let html = `<defs>
