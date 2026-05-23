@@ -1652,7 +1652,7 @@
       </div>
 
       <!-- Top Bar: Search + Category Filter + Add Button -->
-      <div style="padding:16px 44px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;position:sticky;top:52px;z-index:50;">
+      <div style="padding:12px 24px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;position:sticky;top:52px;z-index:50;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r);padding:0 12px;flex:1;max-width:320px">
           <i class="ti ti-search" style="color:var(--ink-3);font-size:14px"></i>
           <input type="text" placeholder="Search blocks, skills, or companies..." style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:8px 0;width:100%">
@@ -3382,12 +3382,17 @@
       ${descShort ? `<div class="blk-card-desc">${escapeHtml(descShort)}</div>` : ''}
       <div class="blk-card-tags">${tagsHtmlNew}</div>
       <div class="blk-card-footer">
-        <div style="font-size:10px;font-weight:600;color:var(--success);display:flex;align-items:center;gap:4px;">
-          <i class="ti ti-circle-check" style="font-size:12px;"></i> OUTCOME OPTIMIZED
+        <div style="font-size:10px;font-weight:600;color:${hasOutcome ? 'var(--success)' : 'var(--warn)'};display:flex;align-items:center;gap:4px;">
+          <i class="ti ti-circle-check" style="font-size:12px;"></i> ${hasOutcome ? 'OUTCOME OPTIMIZED' : 'NEEDS OUTCOME'}
         </div>
-        <button class="blk-card-edit-btn" onclick="event.stopPropagation()">
-          <i class="ti ti-edit" style="font-size:12px;"></i> Edit
-        </button>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="blk-card-edit-btn" onclick="event.stopPropagation()">
+            <i class="ti ti-edit" style="font-size:12px;"></i> Edit
+          </button>
+          <button class="blk-card-edit-btn" style="color:var(--danger);" onclick="event.stopPropagation();deleteBlock('${row.id}', this)">
+            <i class="ti ti-trash" style="font-size:12px;"></i>
+          </button>
+        </div>
       </div>
     `;
     return el;
@@ -3888,6 +3893,22 @@
   function checkShowOnboarding() {
     if (!localStorage.getItem('exppi_onboarded') && currentUser) {
       setTimeout(showOnboarding, 600);
+    }
+  }
+
+  async function deleteBlock(id, btn) {
+    if (!id || !currentUser) return;
+    if (!confirm('Delete this experience block?')) return;
+    const card = btn.closest('.blk-card');
+    if (card) card.style.opacity = '0.4';
+    try {
+      const { error } = await supa.from('experience_blocks').delete().eq('id', id).eq('user_id', currentUser.id);
+      if (error) throw error;
+      if (card) card.remove();
+      loadUserBlocks();
+    } catch(e) {
+      if (card) card.style.opacity = '1';
+      alert('Failed to delete. Please try again.');
     }
   }
 
