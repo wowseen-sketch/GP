@@ -1144,6 +1144,278 @@
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
   }
   .lock-overlay-wrap.unlocked .lock-overlay { display: none; }
+
+  /* ══════════════════════════════════════
+     LANDING PAGE
+  ══════════════════════════════════════ */
+  body.landing-mode .nav,
+  body.landing-mode .sidebar { display: none !important; }
+  body.landing-mode .layout { padding-top: 0; }
+  body.landing-mode .main { margin-left: 0; min-height: 100vh; }
+  #page-landing { overflow-x: hidden; background: var(--white); }
+
+  /* Hero — scoped to avoid dashboard conflict */
+  #page-landing .hero {
+    padding: 80px 48px 80px; background: var(--white);
+    position: relative; overflow: hidden; border-bottom: none;
+  }
+  #page-landing .hero-bg {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse 70% 60% at 70% 20%, rgba(56,189,224,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 20% 80%, rgba(0,129,221,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  #page-landing .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 520px; gap: 64px; align-items: center; }
+  #page-landing .hero-eyebrow { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--accent-2); text-transform: uppercase; background: var(--accent-light); border: 1px solid var(--accent-mid); padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; }
+  #page-landing .hero-title { font-size: 52px; font-weight: 800; color: var(--ink); line-height: 1.12; letter-spacing: -0.03em; margin-bottom: 20px; }
+  #page-landing .hero-title em { color: var(--accent-2); font-style: normal; }
+  #page-landing .hero-title .grad { background: linear-gradient(135deg, #0081DD, #38BDE0, #77FFE4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  #page-landing .hero-sub { font-size: 17px; color: var(--ink-3); line-height: 1.75; max-width: 480px; margin-bottom: 36px; }
+  #page-landing .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  #page-landing .hero-note { margin-top: 16px; font-size: 12px; color: var(--ink-4); }
+
+  /* Landing buttons */
+  .btn-primary { font-size: 14px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #0081DD 0%, #38BDE0 60%, #77FFE4 100%); border: none; padding: 12px 26px; border-radius: var(--r); cursor: pointer; transition: opacity 0.15s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(0,129,221,0.3); }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-outline { font-size: 14px; font-weight: 500; color: var(--ink-2); background: none; border: 1px solid var(--border-strong); padding: 12px 24px; border-radius: var(--r); cursor: pointer; transition: all 0.12s; display: flex; align-items: center; gap: 7px; }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Hero card */
+  .hero-card-wrap { position: relative; }
+  .hero-card-float { position: absolute; z-index: 10; background: var(--white); border: 1px solid var(--border); border-radius: var(--rl); padding: 10px 14px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 9px; }
+  .hero-card-float.top { top: -18px; right: 24px; }
+  .hero-card-float.bot { bottom: 24px; left: -20px; }
+  .hcf-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .hcf-icon.green { background: var(--success-light); color: var(--success); }
+  .hcf-icon.blue  { background: var(--accent-light); color: var(--accent-2); }
+  .hcf-text-main { font-size: 12px; font-weight: 600; color: var(--ink); }
+  .hcf-text-sub  { font-size: 11px; color: var(--ink-4); }
+  .hero-main-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); }
+  .hmc-body { padding: 14px 16px; }
+  .hmc-score-panel { background: var(--ink); border-radius: var(--rl); padding: 18px 20px; display: grid; grid-template-columns: 100px 1px 1fr; gap: 18px; align-items: center; margin-bottom: 14px; }
+  .hmc-score-big { font-size: 44px; font-weight: 700; color: var(--accent); line-height: 1; }
+  .hmc-score-big span { font-size: 16px; color: rgba(255,255,255,0.25); }
+  .hmc-score-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px; }
+  .hmc-score-grade { font-size: 11px; font-weight: 600; color: #22C55E; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+  .hmc-divider { background: rgba(255,255,255,0.08); align-self: stretch; }
+  .hmc-bars { display: flex; flex-direction: column; gap: 8px; }
+  .hmc-bar-row { display: flex; align-items: center; gap: 9px; }
+  .hmc-bar-lbl { font-size: 10px; color: rgba(255,255,255,0.4); width: 76px; }
+  .hmc-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; }
+  .hmc-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #0081DD, #38BDE0, #77FFE4); }
+  .hmc-bar-val { font-size: 10px; color: rgba(255,255,255,0.45); width: 22px; text-align: right; }
+  .hmc-sub-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; margin-bottom: 10px; }
+  .hmc-sub-card:last-child { margin-bottom: 0; }
+  .hmc-sub-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .hmc-sub-title { display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: #111827; }
+  .hmc-sub-title i { font-size: 12px; color: var(--accent-2); }
+  .hmc-match-counts { font-size: 11px; color: var(--ink-4); font-weight: 400; }
+  .hmc-job-header { padding: 14px 16px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .hmc-job-left { display: flex; align-items: center; gap: 10px; }
+  .hmc-job-avatar { width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0; background: linear-gradient(135deg, #4F46E5, #0081DD); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; letter-spacing: 0.03em; }
+  .hmc-job-company { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+  .hmc-job-role { font-size: 10px; color: var(--ink-3); margin-top: 2px; }
+  .hmc-job-chips { display: flex; gap: 5px; margin-top: 6px; }
+  .hmc-job-chip { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 99px; }
+  .hmc-job-chip.green { background: #EBF8FF; color: #0081DD; border: 1px solid #BAF0FF; }
+  .hmc-job-chip.blue  { background: #EBF8FF; color: #0081DD; border: 1px solid #BAF0FF; }
+  .hmc-btn-report { font-size: 11px; font-weight: 600; color: #fff; background: linear-gradient(135deg, #0081DD, #38BDE0); border: none; padding: 7px 11px; border-radius: var(--r); cursor: pointer; display: flex; align-items: center; gap: 5px; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,129,221,0.25); }
+  .hmc-btn-report i { font-size: 12px; }
+  .hmc-kw-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hmc-kw-col-label { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9CA3AF; margin-bottom: 12px; }
+  .hmc-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .hmc-chip { font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 999px; }
+  .hmc-chip.matched { background: var(--accent-light); color: var(--accent-2); border: 1px solid var(--accent-mid); }
+  .hmc-chip.partial  { background: #FEFCE8; color: #B45309; border: 1px solid #FDE68A; }
+  .hmc-chip.missing  { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+  .hmc-guide-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 8px; }
+  .hmc-suggestion { border-left: 2px solid var(--accent); padding-left: 10px; }
+  .hmc-suggestion-title { font-size: 11px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+  .hmc-suggestion-body { font-size: 10px; color: var(--ink-3); line-height: 1.55; }
+
+  /* Section base */
+  .section { padding: 80px 48px; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--accent-2); text-transform: uppercase; margin-bottom: 10px; }
+  .section-title { font-size: 36px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 14px; }
+  .section-sub { font-size: 16px; color: var(--ink-3); line-height: 1.7; max-width: 520px; margin-bottom: 48px; }
+
+  /* How It Works */
+  .hiw-step-nav { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .hiw-tab { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 20px 22px; background: #fff; border: 1.5px solid #E9EAEC; border-radius: 18px; cursor: pointer; font-family: var(--ff-head); text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: box-shadow 0.15s, border-color 0.15s, background 0.15s; position: relative; overflow: hidden; min-height: 90px; }
+  .hiw-tab:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); border-color: #D1D5DB; }
+  .hiw-tab.active { background: #F5FAFF; border-color: #0081DD; box-shadow: 0 0 0 3px rgba(0,129,221,0.08), 0 4px 14px rgba(0,129,221,0.10); }
+  .hiw-tab-text { display: flex; flex-direction: column; gap: 4px; }
+  .hiw-tab-step { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #C4C8D0; transition: color 0.15s; }
+  .hiw-tab.active .hiw-tab-step { color: #0081DD; }
+  .hiw-tab-label { font-size: 13.5px; font-weight: 700; color: #B0B6BF; line-height: 1.3; transition: color 0.15s; }
+  .hiw-tab.active .hiw-tab-label { color: #111827; }
+  .hiw-tab-num { font-size: 52px; font-weight: 800; color: #F0F1F3; line-height: 1; letter-spacing: -0.04em; transition: color 0.15s; flex-shrink: 0; margin-left: 8px; margin-right: -4px; margin-bottom: -4px; }
+  .hiw-tab.active .hiw-tab-num { color: #D9EEFF; }
+  .hiw-content-area { background: #F4F5F7; border: 1.5px solid #E2E4E8; border-radius: 16px; padding: 32px 40px 36px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.04); }
+  .hiw-panels-wrap { display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr; }
+  .hiw-panel { grid-area: 1 / 1; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; visibility: hidden; }
+  .hiw-panel.active { opacity: 1; pointer-events: all; visibility: visible; }
+  .hiw-grid { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 64px; align-items: start; }
+  .hiw-text-col { padding-top: 8px; min-width: 0; }
+  .hiw-step-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-2); background: var(--accent-light); border: 1px solid var(--accent-mid); padding: 3px 10px; border-radius: 99px; margin-bottom: 18px; }
+  .hiw-panel-title { font-size: 28px; font-weight: 800; color: var(--ink); letter-spacing: -0.025em; line-height: 1.25; margin-bottom: 16px; }
+  .hiw-panel-desc { font-size: 15px; color: var(--ink-3); line-height: 1.8; margin-bottom: 28px; }
+  .hiw-mockup-shell { background: var(--white); border: 1px solid #E5E7EB; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04); }
+  .hiw-mockup-topbar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; border-bottom: 1px solid #F0F0F0; background: #FAFAFA; }
+  .hiw-mock-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .hiw-mock-dot.r { background: #FF5F57; }
+  .hiw-mock-dot.y { background: #FFBD2E; }
+  .hiw-mock-dot.g { background: #28CA41; }
+  .hiw-mock-url { flex: 1; margin-left: 8px; height: 22px; border-radius: 5px; background: #EFEFEF; display: flex; align-items: center; padding: 0 10px; font-size: 10px; color: #9CA3AF; }
+
+  /* Step 01 mockup */
+  .exp-editor { display: grid; grid-template-columns: 55% 1px 45%; min-height: 340px; }
+  .exp-editor-left { padding: 16px; background: #F8FAFB; overflow: hidden; height: 420px; }
+  .exp-editor-divider { background: #E5E7EB; }
+  .exp-editor-right { padding: 16px; }
+  .pdca-scaler { width: calc(100% / 0.75); transform: scale(0.75); transform-origin: top left; }
+  .pdca-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+  .pdca-card:last-child { margin-bottom: 0; }
+  .pdca-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .pdca-step-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #0081DD; flex-shrink: 0; }
+  .pdca-q-text { font-size: 13px; font-weight: 600; color: #111827; flex: 1; }
+  .pdca-help-btn { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #D1D5DB; color: #9CA3AF; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: default; }
+  .pdca-subfield { margin-bottom: 10px; }
+  .pdca-subfield:last-child { margin-bottom: 0; }
+  .pdca-sf-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .pdca-sf-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #9CA3AF; }
+  .pdca-sf-opt { font-size: 9px; font-weight: 500; color: #9CA3AF; background: #F3F4F6; border: 1px solid #E5E7EB; padding: 1px 7px; border-radius: 99px; }
+  .pdca-input { width: 100%; background: #fff; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 14px; min-height: 52px; font-size: 11px; color: #9CA3AF; font-style: italic; font-family: var(--ff-head); }
+  .pdca-textarea { width: 100%; background: #fff; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 14px; font-size: 11px; color: #9CA3AF; font-style: italic; font-family: var(--ff-head); resize: none; min-height: 52px; }
+  .kw-bars { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; margin-bottom: 14px; }
+  .hiw-bar-row { display: flex; align-items: center; gap: 8px; }
+  .hiw-bar-lbl { font-size: 10px; color: #6B7280; width: 110px; flex-shrink: 0; }
+  .hiw-bar-track { flex: 1; height: 4px; background: #E5E7EB; border-radius: 99px; overflow: hidden; }
+  .hiw-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #0081DD, #38BDE0, #77FFE4); }
+  .hiw-bar-val { font-size: 10px; font-weight: 600; color: #374151; width: 22px; text-align: right; }
+  .hiw-kw-label { font-size: 9px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #9CA3AF; margin: 0 0 7px; }
+  .hiw-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .hiw-chip { font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 99px; }
+  .hiw-chip.blue  { background: #EBF8FF; color: #0081DD; border: 1px solid #BAF0FF; }
+  .hiw-chip.gray  { background: #F3F4F6; color: #4B5563; border: 1px solid #E5E7EB; }
+  .hiw-chip.green { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; }
+
+  /* Step 02 mockup */
+  .jd-upload-area { padding: 16px; overflow: hidden; height: 420px; }
+  .up-scaler { width: 100%; }
+  .up2-company { display: flex; align-items: center; gap: 10px; padding: 14px 16px 12px; margin: -16px -16px 14px; border-bottom: 1px solid #E5E7EB; }
+  .up2-avatar { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; background: linear-gradient(135deg, #4F46E5, #0081DD); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .up2-name { font-size: 13px; font-weight: 700; color: #111827; }
+  .up2-role { font-size: 11px; color: #6B7280; margin-top: 1px; }
+  .up2-section { margin-bottom: 16px; }
+  .up2-section:last-child { margin-bottom: 0; }
+  .up2-row-label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .up2-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9CA3AF; }
+  .up2-chip-req { font-size: 9px; font-weight: 500; color: #F87171; background: #FFF1F2; border: 1px solid #FECACA; padding: 2px 8px; border-radius: 99px; }
+  .up2-chip-opt { font-size: 9px; font-weight: 500; color: #9CA3AF; background: #F9FAFB; border: 1px solid #E5E7EB; padding: 2px 8px; border-radius: 99px; }
+  .up2-file-row { display: flex; align-items: center; gap: 8px; padding: 10px 16px; min-height: 44px; border: 1px solid #E5E7EB; border-radius: 8px; background: #fff; }
+  .up2-pdf-icon { width: 26px; height: 26px; border-radius: 6px; background: #F3F4F6; color: #9CA3AF; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .up2-fname { font-size: 12px; font-weight: 500; color: #111827; flex: 1; }
+  .up2-analyzed { font-size: 11px; font-weight: 500; color: #16A34A; background: #F0FDF4; border: 1px solid #BBF7D0; padding: 2px 8px; border-radius: 99px; display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+  .up2-dropzone { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 48px; border: 1.5px dashed #E5E7EB; border-radius: 8px; background: #FAFAFA; padding: 10px 16px; }
+  .up2-drop-icon { font-size: 12px; color: #9CA3AF; }
+  .up2-drop-text { font-size: 11px; color: #9CA3AF; }
+  .up2-req-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .up2-col-lbl { font-size: 9px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #CBD5E1; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
+  .up2-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .up2-chip-gray { font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 99px; background: #fff; color: #374151; border: 1px solid #E5E7EB; }
+  .up2-chip-gold { font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 99px; background: #FFFBEB; color: #B45309; border: 1px solid #F59E0B; }
+
+  /* Step 03 mockup */
+  .score-dashboard { height: 420px; overflow: hidden; }
+  .s3-company-header { padding: 14px 16px 12px; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; gap: 10px; }
+  .s3-avatar { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; background: linear-gradient(135deg, #4F46E5, #0081DD); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; }
+  .s3-company-name { font-size: 13px; font-weight: 700; color: #111827; }
+  .s3-company-role { font-size: 11px; color: #6B7280; margin-top: 1px; }
+  .s3-score-panel { background: #0d1628; border-radius: 10px; padding: 16px 18px; margin: 14px; }
+  .s3-kw-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 12px 14px; margin: 0 14px 14px; }
+  .s3-kw-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .s3-kw-title { font-size: 12px; font-weight: 700; color: #111827; }
+  .s3-kw-counts { font-size: 10px; color: #6B7280; }
+  .s3-kw-row { margin-bottom: 8px; }
+  .s3-kw-row:last-child { margin-bottom: 0; }
+  .s3-kw-lbl-matched { font-size: 9px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #059669; margin-bottom: 5px; }
+  .s3-kw-lbl-missing { font-size: 9px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #DC2626; margin-bottom: 5px; }
+  .s3-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .s3-match-chip { font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 99px; background: #F0FDF4; color: #059669; border: 1px solid #BBF7D0; }
+  .s3-miss-chip { font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 99px; background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+  .score-top-row { display: grid; grid-template-columns: auto 1px 1fr; gap: 20px; align-items: center; margin-bottom: 20px; }
+  .score-main-num { text-align: center; }
+  .score-big { font-size: 52px; font-weight: 800; color: #38BDE0; line-height: 1; letter-spacing: -0.04em; }
+  .score-big sup { font-size: 20px; color: rgba(255,255,255,0.25); font-weight: 500; vertical-align: super; margin-left: 1px; }
+  .score-label-main { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.09em; margin-top: 5px; text-align: center; }
+  .score-grade-badge { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #4ADE80; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 99px; }
+  .score-vert-divider { background: rgba(255,255,255,0.08); align-self: stretch; width: 1px; }
+  .score-sub-bars { display: flex; flex-direction: column; gap: 9px; }
+  .score-sub-row { display: flex; align-items: center; gap: 9px; }
+  .score-sub-lbl { font-size: 10px; color: rgba(255,255,255,0.4); width: 100px; flex-shrink: 0; }
+  .score-sub-track { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; }
+  .score-sub-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #0081DD, #38BDE0, #77FFE4); }
+  .score-sub-val { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.5); width: 22px; text-align: right; }
+
+  /* Who It's For */
+  .who-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+  .who-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 28px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.15s, transform 0.15s; }
+  .who-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .who-icon { display: block; margin-bottom: 20px; }
+  .who-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+  .who-desc { font-size: 13px; color: var(--ink-3); line-height: 1.75; }
+
+  /* Before / After */
+  .ba-grid { display: grid; grid-template-columns: 1fr 48px 1fr; gap: 0; align-items: stretch; }
+  .ba-col { border-radius: 16px; padding: 32px 36px; }
+  .ba-before { background: #fff; border: 1.5px solid #E5E7EB; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .ba-after  { background: #F0F9FF; border: 1.5px solid #BAE6FD; box-shadow: 0 2px 8px rgba(0,129,221,0.06); }
+  .ba-col-head { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+  .ba-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 10px; border-radius: 99px; }
+  .before-badge { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+  .after-badge  { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; }
+  .ba-col-title { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .ba-items { display: flex; flex-direction: column; gap: 14px; }
+  .ba-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--ink-2); line-height: 1.6; }
+  .ba-x { color: #DC2626; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .ba-o { color: #16A34A; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .ba-divider { display: flex; align-items: center; justify-content: center; }
+  .ba-arrow { color: var(--ink-3); font-size: 12px; }
+
+  /* CTA */
+  .cta-section { background: var(--ink); padding: 80px 48px; position: relative; overflow: hidden; }
+  .cta-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(56,189,224,0.12) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 20% 50%, rgba(0,129,221,0.10) 0%, transparent 60%); pointer-events: none; }
+  .cta-inner { max-width: 640px; margin: 0 auto; text-align: center; position: relative; }
+  .cta-title { font-size: 40px; font-weight: 800; color: #fff; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 16px; }
+  .cta-title .grad { background: linear-gradient(135deg, #38BDE0, #77FFE4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .cta-sub { font-size: 16px; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 36px; }
+  .cta-actions { display: flex; gap: 12px; justify-content: center; }
+  .btn-cta-primary { font-size: 14px; font-weight: 600; color: var(--ink); background: #fff; border: none; padding: 13px 28px; border-radius: var(--r); cursor: pointer; transition: opacity 0.15s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+  .btn-cta-primary:hover { opacity: 0.9; }
+
+  /* Footer */
+  .footer { background: var(--white); border-top: 1px solid var(--border); padding: 48px 48px 32px; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top { display: grid; grid-template-columns: 220px 1fr; gap: 40px; margin-bottom: 40px; align-items: start; }
+  .footer-logo { display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+  .footer-tagline { font-size: 13px; color: var(--ink-4); line-height: 1.6; }
+  .footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .footer-col-title { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; }
+  .footer-link { display: block; font-size: 13px; color: var(--ink-4); margin-bottom: 8px; cursor: pointer; text-decoration: none; transition: color 0.12s; }
+  .footer-link:hover { color: var(--ink); }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; }
+  .footer-copy { font-size: 12px; color: var(--ink-4); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .anim-1 { animation: fadeUp 0.6s ease both; }
+  .anim-2 { animation: fadeUp 0.6s 0.1s ease both; }
+  .anim-3 { animation: fadeUp 0.6s 0.2s ease both; }
+  .anim-4 { animation: fadeUp 0.6s 0.3s ease both; }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -2392,6 +2664,335 @@
       </div>
     </div>
 
+    <!-- ════ PAGE: LANDING ════ -->
+    <div id="page-landing" class="page">
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-inner">
+          <div>
+            <h1 class="hero-title anim-2">Stop guessing.<br><span class="grad">See your fit score.</span></h1>
+            <p class="hero-sub anim-3">Exppi extracts competency keywords from your experiences, then matches them against real JD and IR data — a precise fit score and clear improvement direction.<br>Not gut feeling. Actual data.</p>
+            <div class="hero-actions anim-4">
+              <button class="btn-primary" onclick="navigate('signup')">Sign Up →</button>
+              <button class="btn-outline" onclick="navigate('login')">Sign In</button>
+            </div>
+          </div>
+          <div class="hero-card-wrap anim-3">
+            <div class="hero-card-float top">
+              <div class="hcf-icon green"><i class="ti ti-trending-up"></i></div>
+              <div><div class="hcf-text-main">Fit Score Increased</div><div class="hcf-text-sub">+12 pts · After adding project</div></div>
+            </div>
+            <div class="hero-main-card">
+              <div class="hmc-job-header">
+                <div class="hmc-job-left">
+                  <div class="hmc-job-avatar">GG</div>
+                  <div>
+                    <div class="hmc-job-company">Google</div>
+                    <div class="hmc-job-role">Product Manager</div>
+                    <div class="hmc-job-chips">
+                      <span class="hmc-job-chip green">Analysis Complete</span>
+                      <span class="hmc-job-chip blue">JD Uploaded</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="hmc-btn-report"><i class="ti ti-chart-bar"></i> Full Report</button>
+              </div>
+              <div class="hmc-body">
+                <div class="hmc-score-panel">
+                  <div>
+                    <div class="hmc-score-big">87<span>%</span></div>
+                    <div class="hmc-score-label">Job Fit Score</div>
+                    <div class="hmc-score-grade"><i class="ti ti-trending-up" style="font-size:12px"></i> Top 12%</div>
+                  </div>
+                  <div class="hmc-divider"></div>
+                  <div class="hmc-bars">
+                    <div class="hmc-bar-row"><div class="hmc-bar-lbl">Keyword Match</div><div class="hmc-bar-track"><div class="hmc-bar-fill" style="width:92%"></div></div><div class="hmc-bar-val">92</div></div>
+                    <div class="hmc-bar-row"><div class="hmc-bar-lbl">Exp. Relevance</div><div class="hmc-bar-track"><div class="hmc-bar-fill" style="width:85%"></div></div><div class="hmc-bar-val">85</div></div>
+                    <div class="hmc-bar-row"><div class="hmc-bar-lbl">Skill Coverage</div><div class="hmc-bar-track"><div class="hmc-bar-fill" style="width:78%"></div></div><div class="hmc-bar-val">78</div></div>
+                    <div class="hmc-bar-row"><div class="hmc-bar-lbl">Exp. Quality</div><div class="hmc-bar-track"><div class="hmc-bar-fill" style="width:88%"></div></div><div class="hmc-bar-val">88</div></div>
+                  </div>
+                </div>
+                <div class="hmc-sub-card">
+                  <div class="hmc-sub-header">
+                    <div style="display:flex;align-items:center;gap:16px;">
+                      <div class="hmc-sub-title"><i class="ti ti-tag"></i> Keyword Match Analysis</div>
+                      <div class="hmc-match-counts"><span style="color:#0081DD">Matched 9</span> · <span style="color:#D97706">Partial 4</span> · <span style="color:#DC2626">Missing 3</span></div>
+                    </div>
+                  </div>
+                  <div class="hmc-kw-cols">
+                    <div>
+                      <div class="hmc-kw-col-label"><i class="ti ti-user"></i> My Keywords</div>
+                      <div class="hmc-chips">
+                        <span class="hmc-chip matched">Strategic Planning</span><span class="hmc-chip matched">GTM</span><span class="hmc-chip matched">Data Analysis</span><span class="hmc-chip matched">OKR</span><span class="hmc-chip matched">B2B</span><span class="hmc-chip partial">SQL</span><span class="hmc-chip partial">UX Research</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="hmc-kw-col-label"><i class="ti ti-building"></i> JD Required</div>
+                      <div class="hmc-chips">
+                        <span class="hmc-chip matched">Strategic Planning</span><span class="hmc-chip matched">GTM</span><span class="hmc-chip matched">B2B</span><span class="hmc-chip missing">Service Planning</span><span class="hmc-chip missing">Agile</span><span class="hmc-chip missing">A/B Testing</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="hmc-sub-card">
+                  <div class="hmc-sub-header"><div class="hmc-sub-title"><i class="ti ti-map"></i> Improvement Guide</div></div>
+                  <div class="hmc-guide-label">Experience Rewrite Direction</div>
+                  <div class="hmc-suggestion">
+                    <div class="hmc-suggestion-title">GTM Strategy Block</div>
+                    <div class="hmc-suggestion-body">Add A/B testing and KPI setting language. Replace 'planned and executed' with specific user funnel improvements and measurable conversion metrics.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-card-float bot">
+              <div class="hcf-icon blue"><i class="ti ti-building"></i></div>
+              <div><div class="hcf-text-main">Google · Matched</div><div class="hcf-text-sub">PM Role · Top 8%</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works -->
+      <section class="section">
+        <div class="section-inner">
+          <div class="section-eyebrow reveal">How It Works</div>
+          <h2 class="section-title reveal" style="margin-bottom:32px;">Three steps from experience to results.</h2>
+          <div class="hiw-step-nav">
+            <button class="hiw-tab active" onclick="switchTab(0)">
+              <div class="hiw-tab-text"><div class="hiw-tab-step">Step 01</div><div class="hiw-tab-label">Add your experiences</div></div>
+              <div class="hiw-tab-num">01</div>
+            </button>
+            <button class="hiw-tab" onclick="switchTab(1)">
+              <div class="hiw-tab-text"><div class="hiw-tab-step">Step 02</div><div class="hiw-tab-label">Upload JD &amp; IR</div></div>
+              <div class="hiw-tab-num">02</div>
+            </button>
+            <button class="hiw-tab" onclick="switchTab(2)">
+              <div class="hiw-tab-text"><div class="hiw-tab-step">Step 03</div><div class="hiw-tab-label">See your fit score</div></div>
+              <div class="hiw-tab-num">03</div>
+            </button>
+          </div>
+          <div class="hiw-content-area">
+            <div class="hiw-panels-wrap">
+              <!-- Panel 01 -->
+              <div class="hiw-panel active" id="hiw-0">
+                <div class="hiw-grid">
+                  <div class="hiw-text-col">
+                    <div class="hiw-step-label">Step 01</div>
+                    <h3 class="hiw-panel-title">Add your experiences. We extract the keywords.</h3>
+                    <p class="hiw-panel-desc">Answer structured questions about your projects, internships, and activities. Exppi organizes your experience using the PDCA framework, and extracts the exact competency keywords that matter — based on O*NET standards.</p>
+                  </div>
+                  <div>
+                    <div class="hiw-mockup-shell">
+                      <div class="exp-editor">
+                        <div class="exp-editor-left">
+                          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9CA3AF;margin-bottom:12px;">EXPERIENCE DETAIL</div>
+                          <div class="pdca-scaler">
+                            <div class="pdca-card">
+                              <div class="pdca-card-header"><span class="pdca-step-lbl">PLAN</span><span class="pdca-q-text">What were you trying to achieve?</span><div class="pdca-help-btn">?</div></div>
+                              <div class="pdca-subfield"><div class="pdca-sf-header"><span class="pdca-sf-label">GOAL</span></div><div class="pdca-input">e.g. "Increase new member sign-ups by 50 within one semester"</div></div>
+                              <div class="pdca-subfield"><div class="pdca-sf-header"><span class="pdca-sf-label">STRATEGY</span></div><div class="pdca-input">e.g. "Launched a peer referral program and redesigned the intro session"</div></div>
+                            </div>
+                            <div class="pdca-card">
+                              <div class="pdca-card-header"><span class="pdca-step-lbl">DO</span><span class="pdca-q-text">What did you actually do?</span><div class="pdca-help-btn">?</div></div>
+                              <div class="pdca-subfield"><div class="pdca-sf-header"><span class="pdca-sf-label">YOUR ACTIONS</span></div><div class="pdca-textarea">e.g. "Built 60 surveys, led weekly data reviews, managed vendor calls"</div></div>
+                              <div class="pdca-subfield"><div class="pdca-sf-header"><span class="pdca-sf-label">UNEXPECTED CHALLENGE &amp; HOW YOU HANDLED IT</span><span class="pdca-sf-opt">Optional</span></div><div class="pdca-input">e.g. "Two members quit mid-project; I split their tasks and kept the deadline"</div></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="exp-editor-divider"></div>
+                        <div class="exp-editor-right">
+                          <div class="hiw-kw-label">Extracted Competencies</div>
+                          <div class="kw-bars">
+                            <div class="hiw-bar-row"><div class="hiw-bar-lbl">Strategic Planning</div><div class="hiw-bar-track"><div class="hiw-bar-fill" style="width:92%"></div></div><div class="hiw-bar-val">92</div></div>
+                            <div class="hiw-bar-row"><div class="hiw-bar-lbl">GTM Execution</div><div class="hiw-bar-track"><div class="hiw-bar-fill" style="width:85%"></div></div><div class="hiw-bar-val">85</div></div>
+                            <div class="hiw-bar-row"><div class="hiw-bar-lbl">Cross-functional</div><div class="hiw-bar-track"><div class="hiw-bar-fill" style="width:78%"></div></div><div class="hiw-bar-val">78</div></div>
+                            <div class="hiw-bar-row"><div class="hiw-bar-lbl">B2B Strategy</div><div class="hiw-bar-track"><div class="hiw-bar-fill" style="width:71%"></div></div><div class="hiw-bar-val">71</div></div>
+                          </div>
+                          <div style="margin-top:24px;">
+                            <div class="hiw-kw-label">Extracted Keywords</div>
+                            <div class="hiw-chips">
+                              <span class="hiw-chip blue">Strategic Planning</span><span class="hiw-chip blue">GTM</span><span class="hiw-chip blue">B2B</span><span class="hiw-chip blue">Cross-functional</span><span class="hiw-chip blue">OKR</span><span class="hiw-chip blue">Marketing</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Panel 02 -->
+              <div class="hiw-panel" id="hiw-1">
+                <div class="hiw-grid">
+                  <div class="hiw-text-col">
+                    <div class="hiw-step-label">Step 02</div>
+                    <h3 class="hiw-panel-title">Upload the JD &amp; IR. We read what they actually want.</h3>
+                    <p class="hiw-panel-desc">Upload the job description and company IR report. Exppi surfaces hidden signals — growth priorities, culture, and team direction — straight from the source.</p>
+                  </div>
+                  <div>
+                    <div class="hiw-mockup-shell">
+                      <div class="jd-upload-area">
+                        <div class="up-scaler">
+                          <div class="up2-company"><div class="up2-avatar">GG</div><div><div class="up2-name">Google</div><div class="up2-role">Product Manager</div></div></div>
+                          <div class="up2-section">
+                            <div class="up2-row-label"><span class="up2-lbl">JD FILE UPLOAD</span><span class="up2-chip-req">Required</span></div>
+                            <div class="up2-file-row"><div class="up2-pdf-icon"><i class="ti ti-file-type-pdf"></i></div><span class="up2-fname">ProductManager_JD.pdf</span><span class="up2-analyzed"><i class="ti ti-check"></i> Analyzed</span></div>
+                          </div>
+                          <div class="up2-section">
+                            <div class="up2-row-label"><span class="up2-lbl">IR MATERIALS UPLOAD</span><span class="up2-chip-opt">Optional</span></div>
+                            <div class="up2-dropzone"><i class="ti ti-upload up2-drop-icon"></i><span class="up2-drop-text">Drop IR file here</span></div>
+                          </div>
+                          <div class="up2-section">
+                            <div class="up2-row-label" style="margin-bottom:14px;"><span class="up2-lbl">ROLE REQUIREMENTS EXTRACTED</span></div>
+                            <div class="up2-req-cols">
+                              <div><div class="up2-col-lbl"><i class="ti ti-briefcase"></i> CORE SKILLS</div><div class="up2-chips"><span class="up2-chip-gray">Agile</span><span class="up2-chip-gray">A/B Testing</span><span class="up2-chip-gray">KPI Design</span><span class="up2-chip-gray">Roadmapping</span></div></div>
+                              <div><div class="up2-col-lbl"><i class="ti ti-trending-up"></i> FROM IR</div><div class="up2-chips"><span class="up2-chip-gold">AI Strategy</span><span class="up2-chip-gold">Cloud Growth</span><span class="up2-chip-gold">B2B Scale</span></div></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Panel 03 -->
+              <div class="hiw-panel" id="hiw-2">
+                <div class="hiw-grid">
+                  <div class="hiw-text-col" style="min-width:0;">
+                    <div class="hiw-step-label">Step 03</div>
+                    <h3 class="hiw-panel-title">See your fit score. Know exactly what to improve.</h3>
+                    <p class="hiw-panel-desc">Get a precise match score across four dimensions — Keywords, Relevance, Skill Coverage, and Quality. See which keywords align and which are missing, and receive a concrete improvement guide.</p>
+                  </div>
+                  <div style="min-width:0;overflow:hidden;">
+                    <div class="hiw-mockup-shell">
+                      <div class="score-dashboard">
+                        <div class="s3-company-header"><div class="s3-avatar">GG</div><div style="display:flex;flex-direction:column;justify-content:center;"><div class="s3-company-name">Google</div><div class="s3-company-role">Product Manager</div></div></div>
+                        <div class="s3-score-panel">
+                          <div class="score-top-row">
+                            <div class="score-main-num">
+                              <div class="score-big">87<sup>%</sup></div>
+                              <div class="score-label-main">Job Fit Score</div>
+                              <div style="display:flex;justify-content:center;margin-top:7px;"><div class="score-grade-badge">↗ Top 12%</div></div>
+                            </div>
+                            <div class="score-vert-divider"></div>
+                            <div class="score-sub-bars">
+                              <div class="score-sub-row"><div class="score-sub-lbl">Keyword Match</div><div class="score-sub-track"><div class="score-sub-fill" style="width:92%"></div></div><div class="score-sub-val">92</div></div>
+                              <div class="score-sub-row"><div class="score-sub-lbl">Exp. Relevance</div><div class="score-sub-track"><div class="score-sub-fill" style="width:85%"></div></div><div class="score-sub-val">85</div></div>
+                              <div class="score-sub-row"><div class="score-sub-lbl">Skill Coverage</div><div class="score-sub-track"><div class="score-sub-fill" style="width:78%"></div></div><div class="score-sub-val">78</div></div>
+                              <div class="score-sub-row"><div class="score-sub-lbl">Exp. Quality</div><div class="score-sub-track"><div class="score-sub-fill" style="width:88%"></div></div><div class="score-sub-val">88</div></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="s3-kw-card">
+                          <div class="s3-kw-header"><span class="s3-kw-title">Keyword Match Analysis</span><span class="s3-kw-counts"><span style="color:#059669">Matched 5</span><span style="color:#9CA3AF"> · </span><span style="color:#DC2626">Missing 3</span></span></div>
+                          <div class="s3-kw-row"><div class="s3-kw-lbl-matched">MATCHED</div><div class="s3-chips"><span class="s3-match-chip">Strategic Planning</span><span class="s3-match-chip">GTM</span><span class="s3-match-chip">Data Analysis</span><span class="s3-match-chip">OKR</span><span class="s3-match-chip">B2B</span></div></div>
+                          <div class="s3-kw-row"><div class="s3-kw-lbl-missing">MISSING</div><div class="s3-chips"><span class="s3-miss-chip">Service Planning</span><span class="s3-miss-chip">Agile</span><span class="s3-miss-chip">A/B Testing</span></div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /hiw-panels-wrap -->
+          </div><!-- /hiw-content-area -->
+        </div>
+      </section>
+
+      <!-- Who It's For -->
+      <section class="section" style="background:var(--white);padding-top:64px;padding-bottom:64px;">
+        <div class="section-inner">
+          <div class="section-eyebrow reveal">Who It's For</div>
+          <h2 class="section-title reveal">Built for anyone job hunting.<br>Especially if you're one of these.</h2>
+          <div class="who-grid">
+            <div class="who-card reveal">
+              <div class="who-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38BDE0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3.33 1.67 8.67 1.67 12 0v-5"/></svg></div>
+              <div class="who-title">Repeatedly Rejected Applicants</div>
+              <div class="who-desc">You've applied everywhere. The rejections keep coming — and no one tells you why. It's time to stop guessing.</div>
+            </div>
+            <div class="who-card reveal">
+              <div class="who-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38BDE0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
+              <div class="who-title">Entry-Level Job Seekers</div>
+              <div class="who-desc">You have experiences, but you don't know how to make them sound like qualifications. Let's fix that.</div>
+            </div>
+            <div class="who-card reveal">
+              <div class="who-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38BDE0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13"/><path d="M17 8l-3-3"/><path d="M17 8l-3 3"/><path d="M20 16H7"/><path d="M7 16l3 3"/><path d="M7 16l3-3"/></svg></div>
+              <div class="who-title">Career Switchers</div>
+              <div class="who-desc">You're ready for something new — but not sure how much of your background actually transfers. Find out before you apply.</div>
+            </div>
+            <div class="who-card reveal">
+              <div class="who-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38BDE0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>
+              <div class="who-title">Multi-Role Applicants</div>
+              <div class="who-desc">Applying to multiple roles at once? See your real fit for each one — and stop sending the same resume everywhere.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Before / After -->
+      <section class="section" style="background:#F8FAFB;padding-top:72px;padding-bottom:80px;">
+        <div class="section-inner">
+          <div class="section-eyebrow reveal">What Changes</div>
+          <h2 class="section-title reveal">What's different with Exppi</h2>
+          <p class="section-sub reveal" style="margin-bottom:48px;">Stop guessing. Start applying with clarity.</p>
+          <div class="ba-grid">
+            <div class="ba-col ba-before">
+              <div class="ba-col-head"><div class="ba-badge before-badge">Before</div><div class="ba-col-title">Without Exppi</div></div>
+              <div class="ba-items">
+                <div class="ba-item"><span class="ba-x">✕</span> You apply and wait — no idea if your resume even got through.</div>
+                <div class="ba-item"><span class="ba-x">✕</span> You read the JD but can't tell if your experience actually fits.</div>
+                <div class="ba-item"><span class="ba-x">✕</span> Rejections keep coming with no feedback on what to change.</div>
+              </div>
+            </div>
+            <div class="ba-divider"><div class="ba-arrow">▶</div></div>
+            <div class="ba-col ba-after">
+              <div class="ba-col-head"><div class="ba-badge after-badge">After</div><div class="ba-col-title">With Exppi</div></div>
+              <div class="ba-items">
+                <div class="ba-item"><span class="ba-o">✓</span> See your exact fit score before you hit submit.</div>
+                <div class="ba-item"><span class="ba-o">✓</span> Exppi extracts the competency keywords your JD is actually looking for.</div>
+                <div class="ba-item"><span class="ba-o">✓</span> Get a clear improvement guide — know what's missing and how to fix it.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="cta-section">
+        <div class="cta-bg"></div>
+        <div class="cta-inner">
+          <h2 class="cta-title reveal">See the <span class="grad">real value</span><br>of your experience</h2>
+          <p class="cta-sub reveal">Start for free. No credit card required.</p>
+          <div class="cta-actions reveal">
+            <button class="btn-cta-primary" onclick="navigate('signup')"><i class="ti ti-arrow-right"></i> Sign Up</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="footer-inner">
+          <div class="footer-top">
+            <div class="footer-brand">
+              <div class="footer-logo"><div class="nav-logo-icon"><i class="ti ti-bolt"></i></div> Exppi</div>
+              <div class="footer-tagline">Career clarity, powered by data.</div>
+            </div>
+            <div class="footer-links">
+              <div>
+                <div class="footer-col-title">Contact</div>
+                <a class="footer-link" href="https://instagram.com/exppi.official" target="_blank" style="display:flex;align-items:center;gap:7px;"><i class="ti ti-brand-instagram" style="font-size:15px;color:var(--ink-3);"></i> @exppi.official</a>
+                <a class="footer-link" href="mailto:exppiple@gmail.com" style="display:flex;align-items:center;gap:7px;"><i class="ti ti-mail" style="font-size:15px;color:var(--ink-3);"></i> exppiple@gmail.com</a>
+              </div>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div class="footer-copy">© 2026 Exppi. All rights reserved.</div>
+          </div>
+        </div>
+      </footer>
+
+    </div><!-- /page-landing -->
+
     <!-- ════ PAGE: LOGIN ════ -->
     <div id="page-login" class="page">
       <div class="auth-wrap">
@@ -3017,8 +3618,9 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
   const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const pages = ['dashboard','add','blocks','match','matchstore','login','signup'];
+  const pages = ['landing','dashboard','add','blocks','match','matchstore','login','signup'];
   const pageTitles = {
+    landing:    'Home',
     dashboard:  'Dashboard',
     add:        'Add Experience',
     blocks:     'Experience Blocks',
@@ -4014,10 +4616,15 @@
   }
 
   function navigate(target) {
-    // 비로그인 상태에서 보호된 페이지 접근 시 로그인 페이지로
-    const publicPages = ['login', 'signup'];
+    const publicPages = ['login', 'signup', 'landing'];
     if (!currentUser && !publicPages.includes(target)) {
-      target = 'login';
+      target = 'landing';
+    }
+    // landing-mode: hide app nav/sidebar when on landing page
+    if (target === 'landing') {
+      document.body.classList.add('landing-mode');
+    } else {
+      document.body.classList.remove('landing-mode');
     }
     pages.forEach(p => {
       const el = document.getElementById('page-' + p);
@@ -4147,9 +4754,8 @@
     const { data: { session } } = await supa.auth.getSession();
     currentUser = normalizeUser(session ? session.user : null);
     renderAuthUI();
-    // 비로그인 상태면 자동으로 로그인 페이지로 이동
     if (!currentUser) {
-      navigate('login');
+      navigate('landing');
     }
   }
 
@@ -4160,7 +4766,7 @@
     // After Google OAuth redirect back, if we're still on the auth page, go to dashboard.
     if (event === 'SIGNED_IN') {
       const active = document.querySelector('.page.active');
-      if (active && (active.id === 'page-login' || active.id === 'page-signup')) {
+      if (active && (active.id === 'page-login' || active.id === 'page-signup' || active.id === 'page-landing')) {
         navigate('dashboard');
       }
     }
@@ -4461,6 +5067,26 @@
     e.stopPropagation();
     openAuthRequiredModal('save');
   }, true);  // capture phase so we run before any future onclick handlers
+
+  // ── LANDING PAGE ──────────────────────────────
+  function switchTab(idx) {
+    document.querySelectorAll('.hiw-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.hiw-panel').forEach((p, i) => {
+      if (i === idx) { p.classList.add('active'); }
+      else { p.classList.remove('active'); }
+    });
+  }
+
+  // Scroll reveal for landing page
+  const _revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        _revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => _revealObserver.observe(el));
 </script>
 </body>
 </html>
