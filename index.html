@@ -831,29 +831,29 @@
 
   /* ── 칸반 레이아웃 ── */
   .blk-kanban {
-    display: flex; flex-direction: column; gap: 0;
-    padding: 0 0 40px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    padding: 0;
     min-height: calc(100vh - 200px);
+    align-items: start;
   }
   .blk-col {
-    width: 100%;
-    border-bottom: 1px solid var(--border);
-    border-right: none;
-    padding: 16px 24px; display: flex;
-    flex-direction: row; align-items: flex-start; gap: 16px;
+    border-right: 1px solid var(--border);
+    padding: 20px 16px; display: flex;
+    flex-direction: column;
     position: relative;
   }
-  .blk-col:last-child { border-bottom: none; }
+  .blk-col:last-child { border-right: none; }
   .blk-col-bar {
-    width: 3px; border-radius: 99px;
-    align-self: stretch; flex-shrink: 0;
-    min-height: 40px;
+    height: 3px; border-radius: 99px;
+    width: 28px; margin-bottom: 14px;
+    flex-shrink: 0;
   }
   .blk-col-header {
-    display: flex; flex-direction: column; gap: 8px;
-    width: 160px; flex-shrink: 0;
-    padding-top: 4px;
-    align-items: flex-start; justify-content: flex-start;
+    display: flex; flex-direction: row;
+    align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
   }
   .blk-col-title {
     font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
@@ -898,7 +898,7 @@
   }
   .blk-folder-svg { display: none; }
   .blk-folder-info { display: none; }
-  .blk-grid { display: flex; flex-wrap: wrap; gap: 12px; flex: 1; align-content: flex-start; }
+  .blk-grid { display: flex; flex-direction: column; gap: 0; width: 100%; }
 
   /* 추가 버튼 */
   .blk-add {
@@ -1723,84 +1723,40 @@
       <!-- 칸반 보드 -->
       <div id="blocks-sections" class="blk-kanban">
 
-        <!-- PROJECT -->
-        <div class="blk-col blk-section" data-category="project">
-          <div class="blk-col-bar" style="background:#0081DD;"></div>
+        <!-- DRAFT -->
+        <div class="blk-col blk-section" id="col-draft">
+          <div class="blk-col-bar" style="background:#94A3B8;"></div>
           <div class="blk-col-header">
             <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#0081DD;display:inline-block;"></span>
-              Project
-              <span class="blk-col-count blk-section-count">0</span>
+              DRAFT <span class="blk-col-count" id="count-draft">0</span>
             </div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid">
-
-          </div>
+          <div class="blk-grid" id="grid-draft"></div>
         </div>
 
-        <!-- WORK EXPERIENCE -->
-        <div class="blk-col blk-section" data-category="work">
+        <!-- SUGGESTED -->
+        <div class="blk-col blk-section" id="col-suggested">
           <div class="blk-col-bar" style="background:#38BDE0;"></div>
           <div class="blk-col-header">
             <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#38BDE0;display:inline-block;"></span>
-              Work Experience
-              <span class="blk-col-count blk-section-count">0</span>
+              SUGGESTED <span class="blk-col-count" id="count-suggested">0</span>
             </div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid">
-
-          </div>
+          <div class="blk-grid" id="grid-suggested"></div>
         </div>
 
-        <!-- LEADERSHIP -->
-        <div class="blk-col blk-section" data-category="leadership">
-          <div class="blk-col-bar" style="background:#00A896;"></div>
+        <!-- FINAL -->
+        <div class="blk-col blk-section" id="col-final">
+          <div class="blk-col-bar" style="background:#0081DD;"></div>
           <div class="blk-col-header">
             <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#00A896;display:inline-block;"></span>
-              Leadership
-              <span class="blk-col-count blk-section-count">0</span>
+              FINAL <span class="blk-col-count" id="count-final">0</span>
             </div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid">
-
-          </div>
-        </div>
-
-        <!-- EDUCATION -->
-        <div class="blk-col blk-section" data-category="education">
-          <div class="blk-col-bar" style="background:#006DAA;"></div>
-          <div class="blk-col-header">
-            <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#006DAA;display:inline-block;"></span>
-              Education
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
-            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
-          </div>
-          <div class="blk-grid">
-
-          </div>
-        </div>
-
-        <!-- EXTRACURRICULAR -->
-        <div class="blk-col blk-section" data-category="extra">
-          <div class="blk-col-bar" style="background:#77CCE0;"></div>
-          <div class="blk-col-header">
-            <div class="blk-col-title">
-              <span style="width:7px;height:7px;border-radius:50%;background:#77CCE0;display:inline-block;"></span>
-              Extracurricular
-              <span class="blk-col-count blk-section-count">0</span>
-            </div>
-            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
-          </div>
-          <div class="blk-grid">
-
-          </div>
+          <div class="blk-grid" id="grid-final"></div>
         </div>
 
       </div>
@@ -3565,23 +3521,34 @@
     return el;
   }
 
-  // Distribute rows into the 5 category sections (in-place, before each "Add Block" tile).
+  // Distribute rows into DRAFT / SUGGESTED / FINAL columns
   function renderBlocks(rows) {
     clearDynamicBlocks();
 
-    const buckets = { project: [], work: [], leadership: [], education: [], extra: [] };
+    // outcome 있으면 FINAL, AI 키워드 있으면 SUGGESTED, 나머지 DRAFT
+    const buckets = { draft: [], suggested: [], final: [] };
     rows.forEach(r => {
-      const cat = activityTypeToCategory(r.activity_type);
-      if (buckets[cat]) buckets[cat].push(r);
+      if (r.outcome_measurable && r.outcome_measurable.trim()) {
+        buckets.final.push(r);
+      } else if ((r.competency_keywords||[]).length > 0 || (r.job_keywords||[]).length > 0) {
+        buckets.suggested.push(r);
+      } else {
+        buckets.draft.push(r);
+      }
     });
 
-    Object.entries(buckets).forEach(([cat, list]) => {
-      const section = document.querySelector(`.blk-section[data-category="${cat}"]`);
-      if (!section) return;
-      const grid    = section.querySelector('.blk-grid');
-      const addCard = grid.querySelector('.blk-add');
-      list.forEach(row => grid.insertBefore(buildBlockCard(row, cat), addCard));
-      const countEl = section.querySelector('.blk-section-count');
+    Object.entries(buckets).forEach(([col, list]) => {
+      const grid = document.getElementById(`grid-${col}`);
+      const countEl = document.getElementById(`count-${col}`);
+      if (!grid) return;
+      list.forEach(row => {
+        const cat = activityTypeToCategory(row.activity_type);
+        grid.appendChild(buildBlockCard(row, cat));
+      });
+      const countElOld = null; // dummy for compat
+      if (countEl) countEl.textContent = list.length;
+      // also update legacy .blk-section-count if any
+      const countElLegacy = grid.closest('.blk-section')?.querySelector('.blk-section-count');
       if (countEl) countEl.textContent = list.length;
     });
   }
