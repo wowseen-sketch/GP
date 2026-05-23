@@ -831,29 +831,25 @@
 
   /* ── 칸반 레이아웃 ── */
   .blk-kanban {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex; flex-direction: column;
+    padding: 16px 24px 40px;
     gap: 0;
-    padding: 0;
-    min-height: calc(100vh - 200px);
-    align-items: start;
   }
   .blk-col {
-    border-right: 1px solid var(--border);
-    padding: 20px 16px; display: flex;
-    flex-direction: column;
+    width: 100%;
+    padding: 0 0 8px;
+    display: flex; flex-direction: column;
     position: relative;
+    margin-bottom: 4px;
   }
-  .blk-col:last-child { border-right: none; }
-  .blk-col-bar {
-    height: 3px; border-radius: 99px;
-    width: 28px; margin-bottom: 14px;
-    flex-shrink: 0;
-  }
+  .blk-col-bar { display: none; }
   .blk-col-header {
     display: flex; flex-direction: row;
     align-items: center; justify-content: space-between;
-    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: var(--surface);
   }
   .blk-col-title {
     font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
@@ -898,7 +894,7 @@
   }
   .blk-folder-svg { display: none; }
   .blk-folder-info { display: none; }
-  .blk-grid { display: flex; flex-direction: column; gap: 0; width: 100%; }
+  .blk-grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 0 8px; }
 
   /* 추가 버튼 */
   .blk-add {
@@ -1723,40 +1719,64 @@
       <!-- 칸반 보드 -->
       <div id="blocks-sections" class="blk-kanban">
 
-        <!-- DRAFT -->
-        <div class="blk-col blk-section" id="col-draft">
-          <div class="blk-col-bar" style="background:#94A3B8;"></div>
-          <div class="blk-col-header">
+        <!-- PROJECT -->
+        <div class="blk-col blk-section" data-category="project">
+          <div class="blk-col-header" style="border-left: 3px solid #0081DD;">
             <div class="blk-col-title">
-              DRAFT <span class="blk-col-count" id="count-draft">0</span>
+              <span style="color:#0081DD;">Project</span>
+              <span class="blk-col-count blk-section-count">0</span>
             </div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid" id="grid-draft"></div>
+          <div class="blk-grid"></div>
         </div>
 
-        <!-- SUGGESTED -->
-        <div class="blk-col blk-section" id="col-suggested">
-          <div class="blk-col-bar" style="background:#38BDE0;"></div>
-          <div class="blk-col-header">
+        <!-- WORK EXPERIENCE -->
+        <div class="blk-col blk-section" data-category="work">
+          <div class="blk-col-header" style="border-left: 3px solid #38BDE0;">
             <div class="blk-col-title">
-              SUGGESTED <span class="blk-col-count" id="count-suggested">0</span>
+              <span style="color:#38BDE0;">Work Experience</span>
+              <span class="blk-col-count blk-section-count">0</span>
             </div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid" id="grid-suggested"></div>
+          <div class="blk-grid"></div>
         </div>
 
-        <!-- FINAL -->
-        <div class="blk-col blk-section" id="col-final">
-          <div class="blk-col-bar" style="background:#0081DD;"></div>
-          <div class="blk-col-header">
+        <!-- LEADERSHIP -->
+        <div class="blk-col blk-section" data-category="leadership">
+          <div class="blk-col-header" style="border-left: 3px solid #00A896;">
             <div class="blk-col-title">
-              FINAL <span class="blk-col-count" id="count-final">0</span>
+              <span style="color:#00A896;">Leadership</span>
+              <span class="blk-col-count blk-section-count">0</span>
             </div>
             <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
           </div>
-          <div class="blk-grid" id="grid-final"></div>
+          <div class="blk-grid"></div>
+        </div>
+
+        <!-- EDUCATION -->
+        <div class="blk-col blk-section" data-category="education">
+          <div class="blk-col-header" style="border-left: 3px solid #006DAA;">
+            <div class="blk-col-title">
+              <span style="color:#006DAA;">Education</span>
+              <span class="blk-col-count blk-section-count">0</span>
+            </div>
+            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
+          </div>
+          <div class="blk-grid"></div>
+        </div>
+
+        <!-- EXTRACURRICULAR -->
+        <div class="blk-col blk-section" data-category="extra">
+          <div class="blk-col-header" style="border-left: 3px solid #77CCE0;">
+            <div class="blk-col-title">
+              <span style="color:#77CCE0;">Extracurricular</span>
+              <span class="blk-col-count blk-section-count">0</span>
+            </div>
+            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
+          </div>
+          <div class="blk-grid"></div>
         </div>
 
       </div>
@@ -3521,34 +3541,23 @@
     return el;
   }
 
-  // Distribute rows into DRAFT / SUGGESTED / FINAL columns
+  // Distribute rows into category sections
   function renderBlocks(rows) {
     clearDynamicBlocks();
 
-    // outcome 있으면 FINAL, AI 키워드 있으면 SUGGESTED, 나머지 DRAFT
-    const buckets = { draft: [], suggested: [], final: [] };
+    const buckets = { project: [], work: [], leadership: [], education: [], extra: [] };
     rows.forEach(r => {
-      if (r.outcome_measurable && r.outcome_measurable.trim()) {
-        buckets.final.push(r);
-      } else if ((r.competency_keywords||[]).length > 0 || (r.job_keywords||[]).length > 0) {
-        buckets.suggested.push(r);
-      } else {
-        buckets.draft.push(r);
-      }
+      const cat = activityTypeToCategory(r.activity_type);
+      if (buckets[cat]) buckets[cat].push(r);
     });
 
-    Object.entries(buckets).forEach(([col, list]) => {
-      const grid = document.getElementById(`grid-${col}`);
-      const countEl = document.getElementById(`count-${col}`);
+    Object.entries(buckets).forEach(([cat, list]) => {
+      const section = document.querySelector(`.blk-section[data-category="${cat}"]`);
+      if (!section) return;
+      const grid = section.querySelector('.blk-grid');
       if (!grid) return;
-      list.forEach(row => {
-        const cat = activityTypeToCategory(row.activity_type);
-        grid.appendChild(buildBlockCard(row, cat));
-      });
-      const countElOld = null; // dummy for compat
-      if (countEl) countEl.textContent = list.length;
-      // also update legacy .blk-section-count if any
-      const countElLegacy = grid.closest('.blk-section')?.querySelector('.blk-section-count');
+      list.forEach(row => grid.appendChild(buildBlockCard(row, cat)));
+      const countEl = section.querySelector('.blk-section-count');
       if (countEl) countEl.textContent = list.length;
     });
   }
