@@ -1099,7 +1099,7 @@
   .lock-overlay-wrap { position: static; }
   .lock-overlay {
     position: fixed;
-    top: 56px; left: 220px; right: 0; bottom: 44px;
+    top: 56px; left: 220px; right: 0; bottom: 0;
     z-index: 150;
     backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
     -webkit-backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
@@ -1142,10 +1142,12 @@
     letter-spacing: 0.01em;
   }
   .lock-overlay-sub {
-    font-size: 11px; color: var(--ink-4); letter-spacing: 0.03em;
-    background: rgba(255,255,255,0.5); padding: 4px 14px; border-radius: 99px;
-    border: 1px solid rgba(255,255,255,0.55);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    background: linear-gradient(135deg, #0081DD, #38BDE0);
+    color: #FFFFFF;
+    font-size: 13px; font-weight: 600;
+    padding: 10px 28px; border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,129,221,0.35);
   }
   .lock-overlay-wrap.unlocked .lock-overlay { display: none; }
 
@@ -3659,7 +3661,7 @@
   .rec-check { position:absolute;top:14px;right:14px;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#0081DD,#38BDE0);display:flex;align-items:center;justify-content:center; }
   .rec-block:not(.selected) .rec-check { display:none; }
 </style>
-<div class="status-bar" id="status-bar">
+<div class="status-bar" id="status-bar" style="display:none;">
   <div class="status-bar-left">
     <div class="status-bar-dot"></div>
     <span class="status-bar-text" id="status-bar-text">ANALYZING CONTENT QUALITY</span>
@@ -4937,9 +4939,14 @@
     if (target === 'blocks') loadUserBlocks();
     // Help 페이지 진입 시 기본 탭(FAQ)으로 리셋
     if (target === 'help') showHelpTab('faq');
-    // 잠금 페이지 진입 시 오버레이 top 재계산
+    // 잠금 페이지 진입 시 오버레이 top 재계산 + 스크롤 제어
+    const main = document.querySelector('.main');
     if (target === 'match' || target === 'matchstore') {
       setTimeout(() => initLockOverlays(), 50);
+      const pg = document.getElementById('page-' + target);
+      if (main && pg && !pg.classList.contains('unlocked')) main.style.overflowY = 'hidden';
+    } else {
+      if (main) main.style.overflowY = '';
     }
   }
 
@@ -5245,6 +5252,9 @@
     const page = document.getElementById(pageId);
     if (!page) return;
     page.classList.toggle('unlocked');
+    const isUnlocked = page.classList.contains('unlocked');
+    const main = document.querySelector('.main');
+    if (main) main.style.overflowY = isUnlocked ? '' : 'hidden';
   }
 
   function initLockOverlays() {
