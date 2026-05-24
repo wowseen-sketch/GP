@@ -2021,7 +2021,7 @@
         <!-- INTERNSHIP -->
         <div class="blk-col blk-section" data-category="internship">
           <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#38BDE0;">Internship <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+            <div class="blk-col-title" style="color:#0081DD;">Internship <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
@@ -2030,7 +2030,7 @@
         <!-- EDUCATION & CERTIFICATION -->
         <div class="blk-col blk-section" data-category="education">
           <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#006DAA;">Education &amp; Certification <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+            <div class="blk-col-title" style="color:#0081DD;">Education &amp; Certification <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
@@ -2039,7 +2039,7 @@
         <!-- PROJECTS -->
         <div class="blk-col blk-section" data-category="projects">
           <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#00A896;">Projects <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+            <div class="blk-col-title" style="color:#0081DD;">Projects <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
@@ -2048,7 +2048,7 @@
         <!-- ORGANIZATIONS -->
         <div class="blk-col blk-section" data-category="organizations">
           <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#77CCE0;">Organizations <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+            <div class="blk-col-title" style="color:#0081DD;">Organizations <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
@@ -2057,7 +2057,7 @@
         <!-- COMPETITION -->
         <div class="blk-col blk-section" data-category="competition">
           <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#F59E0B;">Competition <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+            <div class="blk-col-title" style="color:#0081DD;">Competition <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
@@ -2066,7 +2066,7 @@
         <!-- VOLUNTEERING -->
         <div class="blk-col blk-section" data-category="volunteering">
           <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#10B981;">Volunteering <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+            <div class="blk-col-title" style="color:#0081DD;">Volunteering <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
@@ -2075,7 +2075,7 @@
         <!-- OTHER -->
         <div class="blk-col blk-section" data-category="other">
           <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#9CA3AF;">Other <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+            <div class="blk-col-title" style="color:#0081DD;">Other <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
@@ -4415,7 +4415,26 @@
       list.forEach(row => grid.appendChild(buildBlockCard(row, cat)));
       const countEl = section.querySelector('.blk-section-count');
       if (countEl) countEl.textContent = list.length;
+      section.style.display = list.length > 0 ? '' : 'none';
     });
+
+    // Recalculate separator visibility: show only between two visible sections
+    const container = document.getElementById('blocks-sections');
+    if (container) {
+      const children = [...container.children];
+      children.forEach((child, i) => {
+        if (child.classList.contains('blk-section-sep')) {
+          let prev = null, next = null;
+          for (let j = i - 1; j >= 0; j--) {
+            if (children[j].classList.contains('blk-section')) { prev = children[j]; break; }
+          }
+          for (let j = i + 1; j < children.length; j++) {
+            if (children[j].classList.contains('blk-section')) { next = children[j]; break; }
+          }
+          child.style.display = (prev && prev.style.display !== 'none' && next && next.style.display !== 'none') ? '' : 'none';
+        }
+      });
+    }
   }
 
   // Entry point: called whenever the Blocks page is entered (see navigate()).
