@@ -4671,7 +4671,7 @@
           <textarea id="bd-${col}" class="form-input form-textarea" rows="3" style="min-height:70px;">${escapeHtml(row[col] || '')}</textarea>
         </div>`).join('')}
 
-      <div class="bd-section-label">AI Analysis Results <span style="text-transform:none;font-weight:500;color:var(--ink-4);">· read-only (re-analyze to update)</span></div>
+      <div class="bd-section-label">AI Analysis Results</div>
       ${BD_AI_FIELDS.map(([col, label]) =>
         `<div class="bd-field"><span class="bd-field-label">${label}</span>${bdTagsHtml(row[col])}</div>`).join('')}
     `;
