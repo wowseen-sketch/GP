@@ -1096,10 +1096,10 @@
   .user-menu-item.danger i { color: var(--danger); }
 
   /* ── 글래스모피즘 잠금 오버레이 ── */
-  .lock-overlay-wrap { position: static; }
+  .lock-overlay-wrap { position: relative; overflow: hidden; }
   .lock-overlay {
-    position: fixed;
-    top: 56px; left: 220px; right: 0; bottom: 0;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
     z-index: 150;
     backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
     -webkit-backdrop-filter: blur(12px) saturate(0.5) brightness(0.91);
@@ -4940,13 +4940,14 @@
     // Help 페이지 진입 시 기본 탭(FAQ)으로 리셋
     if (target === 'help') showHelpTab('faq');
     // 잠금 페이지 진입 시 오버레이 top 재계산 + 스크롤 제어
-    const main = document.querySelector('.main');
     if (target === 'match' || target === 'matchstore') {
       setTimeout(() => initLockOverlays(), 50);
-      const pg = document.getElementById('page-' + target);
-      if (main && pg && !pg.classList.contains('unlocked')) main.style.overflowY = 'hidden';
     } else {
-      if (main) main.style.overflowY = '';
+      // 다른 페이지로 이동 시 잠금 페이지 height 초기화
+      ['page-match', 'page-matchstore'].forEach(id => {
+        const pg = document.getElementById(id);
+        if (pg && pg.classList.contains('unlocked')) { pg.style.height = ''; pg.style.overflow = ''; }
+      });
     }
   }
 
@@ -5253,8 +5254,13 @@
     if (!page) return;
     page.classList.toggle('unlocked');
     const isUnlocked = page.classList.contains('unlocked');
-    const main = document.querySelector('.main');
-    if (main) main.style.overflowY = isUnlocked ? '' : 'hidden';
+    if (isUnlocked) {
+      page.style.height = '';
+      page.style.overflow = '';
+    } else {
+      page.style.height = 'calc(100vh - 56px)';
+      page.style.overflow = 'hidden';
+    }
   }
 
   function initLockOverlays() {
@@ -5263,11 +5269,13 @@
       if (!page) return;
       const overlay = page.querySelector('.lock-overlay');
       if (!overlay) return;
-      // 헤더 높이를 측정해서 오버레이 top 조정
       const header = page.querySelector('.page-header');
-      const navH = 56;
       const headerH = header ? header.offsetHeight : 120;
-      overlay.style.top = (navH + headerH) + 'px';
+      overlay.style.top = headerH + 'px';
+      if (!page.classList.contains('unlocked')) {
+        page.style.height = 'calc(100vh - 56px)';
+        page.style.overflow = 'hidden';
+      }
     });
   }
   window.addEventListener('load', () => setTimeout(initLockOverlays, 100));
