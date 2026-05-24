@@ -904,13 +904,25 @@
   .blk-add { display: none !important; }
   .blk-add:hover { border-color: var(--accent) !important; color: var(--accent) !important; background: var(--accent-light) !important; }
 
-  .blk-filter {
-    font-size: 12px; font-weight: 500; padding: 6px 14px;
-    border: 1px solid var(--border-strong); border-radius: 99px;
-    background: var(--white); color: var(--ink-3); cursor: pointer; transition: all 0.12s;
+  .blk-dropdown-btn {
+    font-size: 12px; font-weight: 600; padding: 7px 14px;
+    border: 1px solid var(--border-strong); border-radius: 8px;
+    background: var(--white); color: var(--ink-2); cursor: pointer;
+    display: flex; align-items: center; gap: 6px; transition: all 0.12s;
   }
-  .blk-filter:hover { border-color: var(--accent); color: var(--accent-2); }
-  .blk-filter.active { background: var(--accent-light); color: var(--accent-2); border-color: var(--accent); font-weight: 600; }
+  .blk-dropdown-btn:hover { border-color: var(--accent); color: var(--accent-2); }
+  .blk-dropdown-menu {
+    position: absolute; top: calc(100% + 4px); left: 0; z-index: 200;
+    background: var(--white); border: 1px solid var(--border-strong);
+    border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    min-width: 210px; overflow: hidden;
+  }
+  .blk-dropdown-item {
+    padding: 9px 16px; font-size: 13px; color: var(--ink-2); cursor: pointer; transition: background 0.1s;
+  }
+  .blk-dropdown-item:hover { background: var(--accent-light); color: var(--accent-2); }
+  .blk-dropdown-item.selected { color: var(--accent-2); font-weight: 600; background: var(--accent-light); }
+  .blk-section-sep { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
 
   /* ── AUTH PAGES (login / signup) ── */
   .auth-wrap {
@@ -1969,14 +1981,22 @@
           <i class="ti ti-search" style="color:var(--ink-3);font-size:14px"></i>
           <input type="text" placeholder="Search blocks, skills, or companies..." style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:8px 0;width:100%">
         </div>
-        <div style="display:flex;align-items:center;gap:6px;margin-left:4px">
-          <span style="font-size:11px;color:var(--ink-3);font-weight:500;margin-right:2px">Activity Type</span>
-          <div class="blk-filter active" onclick="filterBlocks('all', this)">All</div>
-          <div class="blk-filter" onclick="filterBlocks('project', this)">Project</div>
-          <div class="blk-filter" onclick="filterBlocks('work', this)">Work Experience</div>
-          <div class="blk-filter" onclick="filterBlocks('leadership', this)">Leadership</div>
-          <div class="blk-filter" onclick="filterBlocks('education', this)">Education</div>
-          <div class="blk-filter" onclick="filterBlocks('extra', this)">Extracurricular</div>
+        <div style="position:relative;" id="blk-type-dropdown-wrap">
+          <button class="blk-dropdown-btn" id="blk-type-btn" onclick="toggleBlkDropdown()">
+            <span id="blk-type-label">Activity Type</span>
+            <i class="ti ti-chevron-down" style="font-size:12px;"></i>
+          </button>
+          <div class="blk-dropdown-menu" id="blk-type-menu" style="display:none;">
+            <div class="blk-dropdown-item selected" onclick="filterBlocksByDropdown('all',this)">All</div>
+            <div class="blk-dropdown-item" onclick="filterBlocksByDropdown('work',this)">Work Experience</div>
+            <div class="blk-dropdown-item" onclick="filterBlocksByDropdown('internship',this)">Internship</div>
+            <div class="blk-dropdown-item" onclick="filterBlocksByDropdown('education',this)">Education &amp; Certification</div>
+            <div class="blk-dropdown-item" onclick="filterBlocksByDropdown('projects',this)">Projects</div>
+            <div class="blk-dropdown-item" onclick="filterBlocksByDropdown('organizations',this)">Organizations</div>
+            <div class="blk-dropdown-item" onclick="filterBlocksByDropdown('competition',this)">Competition</div>
+            <div class="blk-dropdown-item" onclick="filterBlocksByDropdown('volunteering',this)">Volunteering</div>
+            <div class="blk-dropdown-item" onclick="filterBlocksByDropdown('other',this)">Other</div>
+          </div>
         </div>
         <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
           <button id="blk-delete-btn" onclick="deleteSelectedBlocks()" style="display:none;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);background:var(--white);border:1px solid var(--border-strong);border-radius:var(--rl);padding:8px 16px;cursor:pointer;">
@@ -1989,47 +2009,73 @@
       <!-- 칸반 보드 -->
       <div id="blocks-sections" class="blk-kanban">
 
-        <!-- PROJECT -->
-        <div class="blk-col blk-section" data-category="project">
-          <div class="blk-col-header" style="border-left: 4px solid #0081DD; padding-left: 14px;">
-            <div class="blk-col-title" style="color:#0081DD;">Project <span class="blk-col-count blk-section-count">0</span></div>
-            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
-          </div>
-          <div class="blk-grid"></div>
-        </div>
-
         <!-- WORK EXPERIENCE -->
         <div class="blk-col blk-section" data-category="work">
-          <div class="blk-col-header" style="border-left: 4px solid #38BDE0; padding-left: 14px;">
-            <div class="blk-col-title" style="color:#38BDE0;">Work Experience <span class="blk-col-count blk-section-count">0</span></div>
-            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
+          <div class="blk-col-header">
+            <div class="blk-col-title" style="color:#0081DD;">Work Experience <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
+        <hr class="blk-section-sep">
 
-        <!-- LEADERSHIP -->
-        <div class="blk-col blk-section" data-category="leadership">
-          <div class="blk-col-header" style="border-left: 4px solid #00A896; padding-left: 14px;">
-            <div class="blk-col-title" style="color:#00A896;">Leadership <span class="blk-col-count blk-section-count">0</span></div>
-            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
+        <!-- INTERNSHIP -->
+        <div class="blk-col blk-section" data-category="internship">
+          <div class="blk-col-header">
+            <div class="blk-col-title" style="color:#38BDE0;">Internship <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
+        <hr class="blk-section-sep">
 
-        <!-- EDUCATION -->
+        <!-- EDUCATION & CERTIFICATION -->
         <div class="blk-col blk-section" data-category="education">
-          <div class="blk-col-header" style="border-left: 4px solid #006DAA; padding-left: 14px;">
-            <div class="blk-col-title" style="color:#006DAA;">Education <span class="blk-col-count blk-section-count">0</span></div>
-            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
+          <div class="blk-col-header">
+            <div class="blk-col-title" style="color:#006DAA;">Education &amp; Certification <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
+        <hr class="blk-section-sep">
 
-        <!-- EXTRACURRICULAR -->
-        <div class="blk-col blk-section" data-category="extra">
-          <div class="blk-col-header" style="border-left: 4px solid #77CCE0; padding-left: 14px;">
-            <div class="blk-col-title" style="color:#77CCE0;">Extracurricular <span class="blk-col-count blk-section-count">0</span></div>
-            <div class="blk-col-add-btn" onclick="navigate('add')">+</div>
+        <!-- PROJECTS -->
+        <div class="blk-col blk-section" data-category="projects">
+          <div class="blk-col-header">
+            <div class="blk-col-title" style="color:#00A896;">Projects <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+          </div>
+          <div class="blk-grid"></div>
+        </div>
+        <hr class="blk-section-sep">
+
+        <!-- ORGANIZATIONS -->
+        <div class="blk-col blk-section" data-category="organizations">
+          <div class="blk-col-header">
+            <div class="blk-col-title" style="color:#77CCE0;">Organizations <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+          </div>
+          <div class="blk-grid"></div>
+        </div>
+        <hr class="blk-section-sep">
+
+        <!-- COMPETITION -->
+        <div class="blk-col blk-section" data-category="competition">
+          <div class="blk-col-header">
+            <div class="blk-col-title" style="color:#F59E0B;">Competition <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+          </div>
+          <div class="blk-grid"></div>
+        </div>
+        <hr class="blk-section-sep">
+
+        <!-- VOLUNTEERING -->
+        <div class="blk-col blk-section" data-category="volunteering">
+          <div class="blk-col-header">
+            <div class="blk-col-title" style="color:#10B981;">Volunteering <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+          </div>
+          <div class="blk-grid"></div>
+        </div>
+        <hr class="blk-section-sep">
+
+        <!-- OTHER -->
+        <div class="blk-col blk-section" data-category="other">
+          <div class="blk-col-header">
+            <div class="blk-col-title" style="color:#9CA3AF;">Other <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
           </div>
           <div class="blk-grid"></div>
         </div>
@@ -4011,14 +4057,20 @@
   // Map DB activity_type values to page-blocks section keys.
   function activityTypeToCategory(type) {
     const map = {
-      'Project': 'project',
-      'Work Experience': 'work',
-      'Internship': 'work',
-      'Leadership': 'leadership',
+      'Work Experience':           'work',
+      'Internship':                'internship',
+      'Education & Certification': 'education',
       'Education / Certification': 'education',
-      'Extracurricular': 'extra',
+      'Projects':                  'projects',
+      'Project':                   'projects',
+      'Organizations':             'organizations',
+      'Leadership':                'organizations',
+      'Competition':               'competition',
+      'Volunteering':              'volunteering',
+      'Extracurricular':           'volunteering',
+      'Other':                     'other',
     };
-    return map[type] || 'project';
+    return map[type] || 'other';
   }
 
   // Read all 14 page-add form fields into a plain object.
@@ -4252,11 +4304,14 @@
   // ── EXPERIENCE BLOCKS: load / render ───────────
   // Section visual identity per category (matches the static section dots/labels).
   const CATEGORY_STYLE = {
-    project:    { color: '#0081DD', label: 'Project' },
-    work:       { color: '#38BDE0', label: 'Work Experience' },
-    leadership: { color: '#00A896', label: 'Leadership' },
-    education:  { color: '#006DAA', label: 'Education' },
-    extra:      { color: '#77CCE0', label: 'Extracurricular' },
+    work:          { color: '#0081DD', label: 'Work Experience' },
+    internship:    { color: '#38BDE0', label: 'Internship' },
+    education:     { color: '#006DAA', label: 'Education & Certification' },
+    projects:      { color: '#00A896', label: 'Projects' },
+    organizations: { color: '#77CCE0', label: 'Organizations' },
+    competition:   { color: '#F59E0B', label: 'Competition' },
+    volunteering:  { color: '#10B981', label: 'Volunteering' },
+    other:         { color: '#9CA3AF', label: 'Other' },
   };
 
   // Minimal HTML escaper for user-supplied text rendered via innerHTML.
@@ -4303,10 +4358,8 @@
     }
 
     const fc = style.color;
-    const hasOutcome = !!(row.outcome_measurable && row.outcome_measurable.trim());
     const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,3);
     const tagsHtmlNew = kws.map(k=>`<span style="font-size:10px;color:var(--ink-3);background:var(--surface);border:1px solid var(--border);padding:2px 8px;border-radius:99px;">#${escapeHtml(k)}</span>`).join('');
-    const descShort = (row.situation||row.task||row.actions||'').slice(0,100);
 
     const el = document.createElement('div');
     el.className = 'blk-card dyn';
@@ -4320,12 +4373,8 @@
       </div>
       <div class="blk-card-title">${escapeHtml(row.title || 'Untitled')}</div>
       <div class="blk-card-period">${escapeHtml(period)}</div>
-      ${descShort ? `<div class="blk-card-desc">${escapeHtml(descShort)}</div>` : ''}
       <div class="blk-card-tags">${tagsHtmlNew}</div>
       <div class="blk-card-footer">
-        <div style="font-size:10px;font-weight:600;color:${hasOutcome ? 'var(--success)' : 'var(--warn)'};display:flex;align-items:center;gap:4px;">
-          <i class="ti ti-circle-check" style="font-size:12px;"></i> ${hasOutcome ? 'OUTCOME OPTIMIZED' : 'NEEDS OUTCOME'}
-        </div>
         <button class="blk-card-edit-btn" style="background:none;border:none;color:#9CA3AF;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;opacity:0.6;">
           <i class="ti ti-edit" style="font-size:11px;"></i> Edit
         </button>
@@ -4352,7 +4401,7 @@
   function renderBlocks(rows) {
     clearDynamicBlocks();
 
-    const buckets = { project: [], work: [], leadership: [], education: [], extra: [] };
+    const buckets = { work: [], internship: [], education: [], projects: [], organizations: [], competition: [], volunteering: [], other: [] };
     rows.forEach(r => {
       const cat = activityTypeToCategory(r.activity_type);
       if (buckets[cat]) buckets[cat].push(r);
@@ -4786,15 +4835,35 @@
   window.addEventListener('load', () => { setTimeout(renderMindmap, 60); });
   window.addEventListener('resize', renderMindmap);
 
-  // ── FILTER BLOCKS ─────────────────────────
-  function filterBlocks(category, el) {
-    document.querySelectorAll('.blk-filter').forEach(f => f.classList.remove('active'));
-    el.classList.add('active');
-    const sections = document.querySelectorAll('.blk-section');
-    sections.forEach(sec => {
+  // ── FILTER BLOCKS (dropdown) ─────────────────────────
+  function toggleBlkDropdown() {
+    const menu = document.getElementById('blk-type-menu');
+    if (!menu) return;
+    menu.style.display = menu.style.display === 'none' ? '' : 'none';
+  }
+
+  function filterBlocksByDropdown(category, el) {
+    const menu = document.getElementById('blk-type-menu');
+    const label = document.getElementById('blk-type-label');
+    if (menu) menu.style.display = 'none';
+    document.querySelectorAll('.blk-dropdown-item').forEach(i => i.classList.remove('selected'));
+    if (el) el.classList.add('selected');
+    if (label) label.textContent = category === 'all' ? 'Activity Type' : (el ? el.textContent : 'Activity Type');
+    document.querySelectorAll('.blk-section').forEach(sec => {
       sec.style.display = (category === 'all' || sec.dataset.category === category) ? '' : 'none';
     });
+    document.querySelectorAll('.blk-section-sep').forEach(sep => {
+      sep.style.display = category === 'all' ? '' : 'none';
+    });
   }
+
+  document.addEventListener('click', e => {
+    const wrap = document.getElementById('blk-type-dropdown-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      const menu = document.getElementById('blk-type-menu');
+      if (menu) menu.style.display = 'none';
+    }
+  });
 
   function navigate(target) {
     // 비로그인 상태에서 보호된 페이지 접근 시 랜딩 페이지로
