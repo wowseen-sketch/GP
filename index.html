@@ -1983,7 +1983,7 @@
       <div style="padding:12px 24px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;position:sticky;top:52px;z-index:50;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r);padding:0 12px;flex:1;max-width:320px">
           <i class="ti ti-search" style="color:var(--ink-3);font-size:14px"></i>
-          <input type="text" placeholder="Search blocks, skills, or companies..." style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:8px 0;width:100%">
+          <input id="blk-search-input" type="text" placeholder="Search blocks, skills, or companies..." oninput="filterBlocksBySearch(this.value)" style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:8px 0;width:100%">
         </div>
         <div style="position:relative;" id="blk-type-dropdown-wrap">
           <button class="blk-dropdown-btn" id="blk-type-btn" onclick="toggleBlkDropdown()">
@@ -4884,6 +4884,23 @@
     const menu = document.getElementById('blk-type-menu');
     if (!menu) return;
     menu.style.display = menu.style.display === 'none' ? '' : 'none';
+  }
+
+  function filterBlocksBySearch(query) {
+    const q = query.trim().toLowerCase();
+    document.querySelectorAll('.blk-card.dyn').forEach(card => {
+      const title = (card.querySelector('.blk-card-title')?.textContent || '').toLowerCase();
+      const tags  = [...card.querySelectorAll('.blk-card-tags span')].map(s => s.textContent.toLowerCase()).join(' ');
+      const cat   = (card.dataset.type || '').toLowerCase();
+      const match = !q || title.includes(q) || tags.includes(q) || cat.includes(q);
+      card.style.display = match ? '' : 'none';
+    });
+    document.querySelectorAll('.blk-section').forEach(sec => {
+      const hasVisible = [...sec.querySelectorAll('.blk-card.dyn')].some(c => c.style.display !== 'none');
+      const count = parseInt(sec.querySelector('.blk-section-count')?.textContent || '0', 10);
+      sec.style.display = (hasVisible && count > 0) ? '' : 'none';
+    });
+    updateSectionSeparators();
   }
 
   function filterBlocksByDropdown(category, el) {
