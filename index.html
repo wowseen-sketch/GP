@@ -4883,7 +4883,9 @@
     if (el) el.classList.add('selected');
     if (label) label.textContent = category === 'all' ? 'Activity Type' : (el ? el.textContent : 'Activity Type');
     document.querySelectorAll('.blk-section').forEach(sec => {
-      sec.style.display = (category === 'all' || sec.dataset.category === category) ? '' : 'none';
+      const count = parseInt(sec.querySelector('.blk-section-count')?.textContent || '0', 10);
+      const catMatch = category === 'all' || sec.dataset.category === category;
+      sec.style.display = (catMatch && count > 0) ? '' : 'none';
     });
     updateSectionSeparators();
   }
