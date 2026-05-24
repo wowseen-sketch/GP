@@ -113,7 +113,7 @@
   /* ── SIDEBAR ── */
   .sidebar {
     width: 220px; flex-shrink: 0; background: var(--white);
-    border-right: 1px solid var(--border); padding: 0 0 8px;
+    border-right: 1px solid var(--border); padding: 16px 0 8px;
     position: fixed; top: 56px; left: 0; bottom: 0;
     overflow-y: auto; z-index: 100;
   }
@@ -810,7 +810,7 @@
   .sidebar.collapsed + .main { margin-left: 56px; }
   .sidebar.collapsed ~ .status-bar { left: 56px; }
   .sb-toggle-btn {
-    position: absolute; top: 0; left: 0; right: 0; height: 24px;
+    position: absolute; top: 16px; left: 0; right: 0; height: 24px;
     display: flex; align-items: center; justify-content: flex-end;
     padding: 0 14px; cursor: pointer; color: var(--ink-4);
     font-size: 17px; transition: color 0.15s; z-index: 1;
