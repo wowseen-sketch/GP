@@ -4357,7 +4357,7 @@
       }
     }
 
-    const fc = style.color;
+    const fc = '#0081DD';
     const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,3);
     const tagsHtmlNew = kws.map(k=>`<span style="font-size:10px;color:var(--ink-3);background:var(--surface);border:1px solid var(--border);padding:2px 8px;border-radius:99px;">#${escapeHtml(k)}</span>`).join('');
 
@@ -4418,22 +4418,36 @@
       section.style.display = list.length > 0 ? '' : 'none';
     });
 
-    // Recalculate separator visibility: show only between two visible sections
+    updateSectionSeparators();
+  }
+
+  // Show a separator before each visible section that follows another visible section,
+  // regardless of how many hidden sections are between them.
+  function updateSectionSeparators() {
     const container = document.getElementById('blocks-sections');
-    if (container) {
-      const children = [...container.children];
-      children.forEach((child, i) => {
-        if (child.classList.contains('blk-section-sep')) {
-          let prev = null, next = null;
-          for (let j = i - 1; j >= 0; j--) {
-            if (children[j].classList.contains('blk-section')) { prev = children[j]; break; }
-          }
-          for (let j = i + 1; j < children.length; j++) {
-            if (children[j].classList.contains('blk-section')) { next = children[j]; break; }
-          }
-          child.style.display = (prev && prev.style.display !== 'none' && next && next.style.display !== 'none') ? '' : 'none';
+    if (!container) return;
+    const children = [...container.children];
+
+    // Hide all separators first
+    children.forEach(child => {
+      if (child.classList.contains('blk-section-sep')) child.style.display = 'none';
+    });
+
+    // Collect indices of visible sections
+    const visibleIdxs = children.reduce((acc, child, i) => {
+      if (child.classList.contains('blk-section') && child.style.display !== 'none') acc.push(i);
+      return acc;
+    }, []);
+
+    // For each consecutive pair of visible sections, show the separator closest before the second section
+    for (let k = 0; k < visibleIdxs.length - 1; k++) {
+      const toIdx = visibleIdxs[k + 1];
+      for (let j = toIdx - 1; j > visibleIdxs[k]; j--) {
+        if (children[j].classList.contains('blk-section-sep')) {
+          children[j].style.display = '';
+          break;
         }
-      });
+      }
     }
   }
 
@@ -4871,9 +4885,7 @@
     document.querySelectorAll('.blk-section').forEach(sec => {
       sec.style.display = (category === 'all' || sec.dataset.category === category) ? '' : 'none';
     });
-    document.querySelectorAll('.blk-section-sep').forEach(sep => {
-      sep.style.display = category === 'all' ? '' : 'none';
-    });
+    updateSectionSeparators();
   }
 
   document.addEventListener('click', e => {
