@@ -4215,6 +4215,13 @@ What I learned: Consistency matters more than quality of individual posts`;
     renderAnalysisTags('am-software-skills',     _cachedAnalysis.software_skills     || [], 'kw-tag-grey');
     renderAnalysisTags('am-competency-keywords', _cachedAnalysis.competency_keywords || []);
 
+    const star = (_cachedAnalysis.star_structured) || {};
+    const setStarText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+    setStarText('am-situation', star.situation || '(no situation provided)');
+    setStarText('am-task',      star.task      || '(no task provided)');
+    setStarText('am-action',    star.action    || '(no action provided)');
+    setStarText('am-result',    star.result    || '(no result provided)');
+
     // Inject O*NET callout dynamically right after #am-competency-keywords tags
     if (!document.getElementById('am-onet-callout')) {
       const callout = document.createElement('div');

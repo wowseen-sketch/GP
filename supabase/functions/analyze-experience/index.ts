@@ -56,6 +56,12 @@ Before analyzing, do the following:
   R (Result): outcomes and impact
 Use this STAR-structured version as the basis for all analysis steps below.
 
+After restructuring into STAR format, return the structured content in the star_structured field:
+- situation: the cleaned, structured Situation paragraph
+- task: the cleaned, structured Task paragraph
+- action: the cleaned, structured Action paragraph
+- result: the cleaned, structured Result paragraph
+
 STEP 1. Select all relevant Work Activities from the list below. Only select items clearly supported by the experience. Do not infer.
 
 Work Activities (41 total):
@@ -102,7 +108,13 @@ Return ONLY this JSON. No explanation. No markdown.
   "work_activities": ["item1", "item2"],
   "software_skills": ["item1", "item2"],
   "transferable_skills": ["item1", "item2"],
-  "competency_keywords": ["keyword1", "keyword2", "keyword3"]
+  "competency_keywords": ["keyword1", "keyword2", "keyword3"],
+  "star_structured": {
+    "situation": "...",
+    "task": "...",
+    "action": "...",
+    "result": "..."
+  }
 }`;
 
   const userMessage = `Analyze the experience described above and return the JSON.`;
@@ -115,7 +127,7 @@ Return ONLY this JSON. No explanation. No markdown.
     },
     body: JSON.stringify({
       model: "llama-3.3-70b-versatile",
-      max_tokens: 512,
+      max_tokens: 1024,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user",   content: userMessage },
@@ -140,6 +152,7 @@ Return ONLY this JSON. No explanation. No markdown.
     software_skills: string[];
     transferable_skills: string[];
     competency_keywords: string[];
+    star_structured: { situation: string; task: string; action: string; result: string; };
   };
   try {
     result = JSON.parse(rawText);
