@@ -408,6 +408,7 @@
     background: var(--accent-light); border-color: var(--accent); color: var(--accent-2);
   }
   .exp-chip:hover:not(.active) { background: var(--surface); }
+  #exp-freetext:empty::before { content: "Tap a chip to add it to the text box below, or just start scribbling. No order, no polish needed."; color: var(--ink-4); pointer-events: none; }
 
   .form-actions {
     display: flex; gap: 8px; margin-top: 28px;
@@ -1907,7 +1908,7 @@
 
           <div style="font-size:12px;color:var(--ink-3);margin-bottom:10px;">Tap a chip to add it to the text box below, or just start scribbling. No order, no polish needed.</div>
 
-          <textarea id="exp-freetext" class="form-input form-textarea" style="min-height:140px;background:var(--surface);" placeholder="Start here..." oninput="updateExpCharCount()"></textarea>
+          <div id="exp-freetext" contenteditable="true" style="min-height:160px;padding:12px;font-size:13px;border:1px solid var(--border);border-radius:var(--rl);background:var(--surface);color:var(--ink);font-family:var(--ff-head);line-height:1.7;outline:none;cursor:text;" oninput="updateExpCharCount()"></div>
 
           <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
             <span id="exp-char-count" style="font-size:12px;color:var(--ink-4);">0 characters</span>
@@ -3957,35 +3958,39 @@
   }
 
   function toggleChip(btn) {
-    const ta = document.getElementById('exp-freetext');
+    const div = document.getElementById('exp-freetext');
     const prompt = btn.dataset.prompt;
-    const SEP = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -';
+    const chipId = prompt.replace(/[^a-zA-Z0-9]/g, '_');
     const isActive = btn.classList.contains('active');
     if (isActive) {
       btn.classList.remove('active');
-      const lines = ta.value.split('\n');
-      const idx = lines.findIndex(l => l === prompt.trimEnd() || l.startsWith(prompt));
-      if (idx !== -1) {
-        if (idx >= 2 && lines[idx - 1] === SEP && lines[idx - 2] === '') {
-          lines.splice(idx - 2, 3);
-        } else if (idx >= 1 && lines[idx - 1] === SEP) {
-          lines.splice(idx - 1, 2);
-        } else {
-          lines.splice(idx, 1);
-        }
+      const p = div.querySelector(`p[data-chip="${chipId}"]`);
+      if (p) {
+        const prev = p.previousElementSibling;
+        if (prev && prev.tagName === 'HR') prev.remove();
+        p.remove();
       }
-      ta.value = lines.join('\n').replace(/^\n+/, '').replace(/\n+$/, '');
     } else {
       btn.classList.add('active');
-      ta.value = ta.value ? ta.value + '\n\n' + SEP + '\n' + prompt : prompt;
+      const hasContent = div.innerHTML.trim() !== '';
+      if (hasContent) {
+        const hr = document.createElement('hr');
+        hr.style.cssText = 'border:none;border-top:1px solid var(--border);margin:8px 0;';
+        div.appendChild(hr);
+      }
+      const p = document.createElement('p');
+      p.dataset.chip = chipId;
+      p.style.cssText = 'margin:4px 0;';
+      p.textContent = prompt;
+      div.appendChild(p);
     }
     updateExpCharCount();
   }
 
   function updateExpCharCount() {
-    const ta = document.getElementById('exp-freetext');
+    const div = document.getElementById('exp-freetext');
     const el = document.getElementById('exp-char-count');
-    if (ta && el) el.textContent = ta.value.length + ' characters';
+    if (div && el) el.textContent = div.innerText.length + ' characters';
   }
 
   function handleExpCurrentChange(cb) {
