@@ -27,13 +27,7 @@ serve(async (req: Request) => {
   }
 
   let body: {
-    goal?: string;
-    strategy?: string;
-    actions?: string;
-    failure_improvement?: string;
-    outcome_measurable?: string;
-    takeaway?: string;
-    applied?: string;
+    freetext?: string;
   };
   try {
     body = await req.json();
@@ -44,28 +38,23 @@ serve(async (req: Request) => {
     });
   }
 
-  const {
-    goal = "",
-    strategy = "",
-    actions = "",
-    failure_improvement = "",
-    outcome_measurable = "",
-    takeaway = "",
-    applied = "",
-  } = body;
+  const { freetext = "" } = body;
 
   const systemPrompt = `You are an AI career analysis engine.
 
 Analyze the user's experience input and return a structured JSON result by following the 4 steps below.
 
-USER EXPERIENCE INPUT:
-[GOAL]: ${goal}
-[STRATEGY]: ${strategy}
-[YOUR ACTIONS]: ${actions}
-[UNEXPECTED CHALLENGE & HOW YOU HANDLED IT]: ${failure_improvement}
-[MEASURABLE OUTCOME]: ${outcome_measurable}
-[KEY TAKEAWAY]: ${takeaway}
-[APPLIED ELSEWHERE]: ${applied}
+USER EXPERIENCE INPUT (raw, unstructured):
+${freetext}
+
+Before analyzing, do the following:
+- Fix all typos, grammar errors, and informal phrasing
+- Restructure the cleaned content into STAR format:
+  S (Situation): context and background
+  T (Task): the goal or responsibility
+  A (Action): what was actually done
+  R (Result): outcomes and impact
+Use this STAR-structured version as the basis for all analysis steps below.
 
 STEP 1. Select all relevant Work Activities from the list below. Only select items clearly supported by the experience. Do not infer.
 

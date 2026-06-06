@@ -3997,11 +3997,6 @@
       { id: 'exp-title',         label: 'Title' },
       { id: 'exp-activity-type', label: 'Activity Type' },
       { id: 'exp-start',         label: 'Start Date' },
-      { id: 'exp-goal',          label: 'Goal' },
-      { id: 'exp-strategy',      label: 'Strategy' },
-      { id: 'exp-actions',       label: 'Your Actions' },
-      { id: 'exp-outcome',       label: 'Measurable Outcome' },
-      { id: 'exp-takeaway',      label: 'Key Takeaway' },
     ];
     if (!isCurrent) requiredFields.splice(3, 0, { id: 'exp-end', label: 'End Date' });
 
@@ -4029,6 +4024,24 @@
       });
       const firstEl = document.getElementById(missing[0].id);
       if (firstEl) firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const freetextEl = document.getElementById('exp-freetext');
+    const freetextVal = (freetextEl?.innerText || '').trim();
+    const prevFtErr = freetextEl?.parentNode.querySelector('.req-error-msg');
+    if (prevFtErr) prevFtErr.remove();
+    if (freetextEl) freetextEl.style.borderColor = '';
+    if (!freetextVal) {
+      if (freetextEl) {
+        freetextEl.style.borderColor = '#EF4444';
+        const msg = document.createElement('div');
+        msg.className = 'req-error-msg';
+        msg.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        msg.innerHTML = '<i class="ti ti-alert-circle"></i> This field is required';
+        freetextEl.parentNode.appendChild(msg);
+        freetextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
 
@@ -4065,27 +4078,20 @@
     return map[type] || 'other';
   }
 
-  // Read all 14 page-add form fields into a plain object.
+  // Read page-add form fields into a plain object.
   function collectAddFormData() {
     const val = id => (document.getElementById(id)?.value || '').trim();
     const isCurrent = document.getElementById('exp-current')?.checked || false;
     // <input type="month"> returns "YYYY-MM"; pad to a valid DATE.
     const monthToDate = m => m ? `${m}-01` : null;
     return {
-      title:               val('exp-title'),
-      activity_type:       val('exp-activity-type'),
-      organization:        val('exp-org'),
-      start_date:          monthToDate(val('exp-start')),
-      end_date:            isCurrent ? null : monthToDate(val('exp-end')),
-      is_current:          isCurrent,
-      role:                val('exp-role'),
-      goal:                val('exp-goal'),
-      strategy:            val('exp-strategy'),
-      actions:             val('exp-actions'),
-      failure_improvement: val('exp-challenge'),
-      outcome_measurable:  val('exp-outcome'),
-      takeaway:            val('exp-takeaway'),
-      applied:             val('exp-applied'),
+      title:         val('exp-title'),
+      activity_type: val('exp-activity-type'),
+      organization:  val('exp-org'),
+      start_date:    monthToDate(val('exp-start')),
+      end_date:      isCurrent ? null : monthToDate(val('exp-end')),
+      is_current:    isCurrent,
+      freetext:      (document.getElementById('exp-freetext')?.innerText || '').trim(),
     };
   }
 
@@ -4184,13 +4190,7 @@
 
     const empty = { work_activities: [], software_skills: [], transferable_skills: [], competency_keywords: [] };
     const requestBody = {
-      goal:                data.goal,
-      strategy:            data.strategy,
-      actions:             data.actions,
-      failure_improvement: data.failure_improvement,
-      outcome_measurable:  data.outcome_measurable,
-      takeaway:            data.takeaway,
-      applied:             data.applied,
+      freetext: data.freetext,
     };
     console.log('[runAnalysis] invoking analyze-experience with body:', requestBody);
     try {
