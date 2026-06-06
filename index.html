@@ -3366,55 +3366,47 @@
     <!-- BODY: 5-part grid, PDCA = 3/5, Analysis = 2/5 -->
     <div style="display:grid;grid-template-columns:3fr 2fr;flex:1;overflow:hidden;">
 
-      <!-- LEFT: PDCA Structured Experience -->
+      <!-- LEFT: STAR Structured Experience -->
       <div style="padding:28px 32px;border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:#fff;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);">PDCA Structured Experience</div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);">STAR Structured Experience</div>
           <span style="font-size:11px;color:var(--ink-4);background:var(--surface-2);padding:3px 10px;border-radius:99px;font-weight:500;">AI Organized</span>
         </div>
 
-        <!-- P -->
+        <!-- S -->
         <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
           <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
-            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">P</div>
-            <span style="font-size:12px;font-weight:700;color:var(--ink);">Plan — Problem & Goal</span>
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">S</div>
+            <span style="font-size:12px;font-weight:700;color:var(--ink);">Situation</span>
           </div>
-          <div id="am-plan" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;">
-            Identified the need for a structured <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">go-to-market strategy</mark> for a new <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">B2B SaaS product</mark> entering a competitive market. Goal was to achieve 30% market penetration within 6 months.
-          </div>
+          <div id="am-situation" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;"></div>
         </div>
 
-        <!-- D -->
+        <!-- T -->
         <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
           <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
-            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">D</div>
-            <span style="font-size:12px;font-weight:700;color:var(--ink);">Do — Action Taken</span>
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">T</div>
+            <span style="font-size:12px;font-weight:700;color:var(--ink);">Task</span>
           </div>
-          <div id="am-do" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;">
-            Led <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">cross-functional collaboration</mark> across marketing, sales, and product teams. Executed <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">strategic planning</mark> sessions and developed positioning documents and <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">GTM playbook</mark>.
-          </div>
-        </div>
-
-        <!-- C -->
-        <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
-          <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
-            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">C</div>
-            <span style="font-size:12px;font-weight:700;color:var(--ink);">Check — Results & Metrics</span>
-          </div>
-          <div id="am-check" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;">
-            Achieved <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">MAU 15% increase</mark> and <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">conversion rate improved 23%</mark> within the campaign period. Pipeline exceeded target by 130%.
-          </div>
+          <div id="am-task" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;"></div>
         </div>
 
         <!-- A -->
         <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
           <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">A</div>
-            <span style="font-size:12px;font-weight:700;color:var(--ink);">Act — Improvement & Learnings</span>
+            <span style="font-size:12px;font-weight:700;color:var(--ink);">Action</span>
           </div>
-          <div id="am-act" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;">
-            Initial launch faced <mark style="background:#0081DD18;color:#0081DD;border-radius:3px;padding:1px 5px;font-weight:600;">performance lag</mark>; addressed by optimizing state management and lazy loading assets. Applied learnings to subsequent product launches.
+          <div id="am-action" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;"></div>
+        </div>
+
+        <!-- R -->
+        <div style="border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;">
+          <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">R</div>
+            <span style="font-size:12px;font-weight:700;color:var(--ink);">Result</span>
           </div>
+          <div id="am-result" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;"></div>
         </div>
       </div>
 
@@ -4135,25 +4127,11 @@
     }
     setText('am-subtitle', subParts.join(' · '));
 
-    // PDCA bodies — plain text only (no AI highlighting yet).
-    const join = (parts, sep) => parts.filter(Boolean).join(sep);
-
-    setText('am-plan', join([
-      data.goal     && `Goal: ${data.goal}`,
-      data.strategy && `Strategy: ${data.strategy}`,
-    ], '\n') || '(no plan provided)');
-
-    setText('am-do', join([
-      data.actions,
-      data.failure_improvement && `Challenge & response: ${data.failure_improvement}`,
-    ], '\n\n') || '(no actions described)');
-
-    setText('am-check', data.outcome_measurable || '(no outcome provided)');
-
-    setText('am-act', join([
-      data.takeaway,
-      data.applied && `Applied elsewhere: ${data.applied}`,
-    ], '\n\n') || '(no learnings provided)');
+    // STAR bodies — populated from API response fields.
+    setText('am-situation', data.situation || '(no situation provided)');
+    setText('am-task',      data.task      || '(no task provided)');
+    setText('am-action',    data.action    || '(no action provided)');
+    setText('am-result',    data.result    || '(no result provided)');
   }
 
   // Inline status line in the analysis modal footer (default / saving / error).
