@@ -1863,7 +1863,7 @@
 
           <!-- Group 1: Your Mission -->
           <div style="margin-bottom:16px;">
-            <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><i class="ti ti-flag"></i> Your Mission</div>
+            <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Your Mission</div>
             <div style="display:flex;flex-wrap:wrap;gap:6px;">
               <button class="exp-chip" data-prompt="My role: " onclick="toggleChip(this)"><i class="ti ti-user"></i> Your role?</button>
               <button class="exp-chip" data-prompt="Team setup: " onclick="toggleChip(this)"><i class="ti ti-users"></i> Team or solo?</button>
@@ -1873,10 +1873,10 @@
 
           <!-- Group 2: What You Did -->
           <div style="margin-bottom:16px;">
-            <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><i class="ti ti-tool"></i> What You Did</div>
+            <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">What You Did</div>
             <div style="display:flex;flex-wrap:wrap;gap:6px;">
               <button class="exp-chip" data-prompt="How I executed: " onclick="toggleChip(this)"><i class="ti ti-player-play"></i> How you executed?</button>
-              <button class="exp-chip" data-prompt="How I collaborated: " onclick="toggleChip(this)"><i class="ti ti-arrow-merge"></i> How you collaborated?</button>
+              <button class="exp-chip" data-prompt="How I collaborated: " onclick="toggleChip(this)"><i class="ti ti-link"></i> How you collaborated?</button>
               <button class="exp-chip" data-prompt="How I communicated: " onclick="toggleChip(this)"><i class="ti ti-message"></i> How you communicated?</button>
               <button class="exp-chip" data-prompt="How I problem-solved: " onclick="toggleChip(this)"><i class="ti ti-bulb"></i> How you problem-solved?</button>
               <button class="exp-chip" data-prompt="How I strategized: " onclick="toggleChip(this)"><i class="ti ti-map"></i> How you strategized?</button>
@@ -1885,17 +1885,17 @@
 
           <!-- Group 3: The Impact -->
           <div style="margin-bottom:16px;">
-            <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><i class="ti ti-trophy"></i> The Impact</div>
+            <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">The Impact</div>
             <div style="display:flex;flex-wrap:wrap;gap:6px;">
               <button class="exp-chip" data-prompt="The result: " onclick="toggleChip(this)"><i class="ti ti-chart-bar"></i> The result?</button>
-              <button class="exp-chip" data-prompt="Measurable impact: " onclick="toggleChip(this)"><i class="ti ti-hash"></i> Any measurable impact?</button>
+              <button class="exp-chip" data-prompt="Measurable impact: " onclick="toggleChip(this)"><i class="ti ti-trending-up"></i> Any measurable impact?</button>
               <button class="exp-chip" data-prompt="Awards or shoutouts: " onclick="toggleChip(this)"><i class="ti ti-star"></i> Any awards or shoutouts?</button>
             </div>
           </div>
 
           <!-- Group 4: Challenges -->
           <div style="margin-bottom:16px;">
-            <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px;"><i class="ti ti-alert-triangle"></i> Challenges</div>
+            <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Challenges</div>
             <div style="display:flex;flex-wrap:wrap;gap:6px;">
               <button class="exp-chip" data-prompt="The hard part: " onclick="toggleChip(this)"><i class="ti ti-bolt"></i> The hard part?</button>
               <button class="exp-chip" data-prompt="How I fixed it: " onclick="toggleChip(this)"><i class="ti ti-tool"></i> How you fixed it?</button>
@@ -3958,16 +3958,20 @@
   function toggleChip(btn) {
     const ta = document.getElementById('exp-freetext');
     const prompt = btn.dataset.prompt;
+    const SEP = '────────────────────────────────────────────────────────────────';
     const isActive = btn.classList.contains('active');
     if (isActive) {
       btn.classList.remove('active');
       const lines = ta.value.split('\n');
       const idx = lines.findIndex(l => l === prompt.trimEnd() || l.startsWith(prompt));
-      if (idx !== -1) lines.splice(idx, 1);
-      ta.value = lines.join('\n').replace(/^\n+/, '');
+      if (idx !== -1) {
+        if (idx > 0 && lines[idx - 1] === SEP) lines.splice(idx - 1, 2);
+        else lines.splice(idx, 1);
+      }
+      ta.value = lines.join('\n').replace(/^\n+/, '').replace(/\n+$/, '');
     } else {
       btn.classList.add('active');
-      ta.value = ta.value ? ta.value + '\n' + prompt : prompt;
+      ta.value = ta.value ? ta.value + '\n' + SEP + '\n' + prompt : prompt;
     }
     updateExpCharCount();
   }
