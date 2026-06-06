@@ -56,11 +56,11 @@ Before analyzing, do the following:
   R (Result): outcomes and impact
 Use this STAR-structured version as the basis for all analysis steps below.
 
-After restructuring into STAR format, return the structured content in the star_structured field:
-- situation: the cleaned, structured Situation paragraph
-- task: the cleaned, structured Task paragraph
-- action: the cleaned, structured Action paragraph
-- result: the cleaned, structured Result paragraph
+First, populate star_structured by restructuring the input into STAR format:
+- situation: background context, team setup, role, where and when
+- task: the goal, objective, or problem to solve
+- action: specific actions taken, methods, tools used, collaboration
+- result: outcomes, measurable impact, recognition, lessons learned
 
 STEP 1. Select all relevant Work Activities from the list below. Only select items clearly supported by the experience. Do not infer.
 
@@ -105,16 +105,16 @@ STEP 4. Based on the selected Work Activities, Software Skills, Transferable Ski
 
 Return ONLY this JSON. No explanation. No markdown.
 {
-  "work_activities": ["item1", "item2"],
-  "software_skills": ["item1", "item2"],
-  "transferable_skills": ["item1", "item2"],
-  "competency_keywords": ["keyword1", "keyword2", "keyword3"],
   "star_structured": {
     "situation": "...",
     "task": "...",
     "action": "...",
     "result": "..."
-  }
+  },
+  "work_activities": ["item1", "item2"],
+  "software_skills": ["item1", "item2"],
+  "transferable_skills": ["item1", "item2"],
+  "competency_keywords": ["keyword1", "keyword2", "keyword3"]
 }`;
 
   const userMessage = `Analyze the experience described above and return the JSON.`;
