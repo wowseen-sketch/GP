@@ -1910,9 +1910,12 @@
 
           <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
             <span id="exp-char-count" style="font-size:12px;color:var(--ink-4);">0 characters</span>
-            <button onclick="openAnalysisModal()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);border:none;padding:12px 28px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-              <i class="ti ti-sparkles" style="font-size:16px;"></i> Analyze Experience
-            </button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button onclick="fillFreetextExample()" style="font-size:12px;color:var(--ink-3);border:1px solid var(--border);border-radius:var(--rl);padding:6px 12px;background:#fff;cursor:pointer;font-family:var(--ff-head);">Fill with example</button>
+              <button onclick="openAnalysisModal()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);border:none;padding:12px 28px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                <i class="ti ti-sparkles" style="font-size:16px;"></i> Analyze Experience
+              </button>
+            </div>
           </div>
 
         </div>
@@ -3965,6 +3968,24 @@
     div.appendChild(p);
     btn.dataset.used = 'true';
     btn.style.cssText = btn.style.cssText + 'background:var(--surface-2);border-color:var(--border);color:var(--ink-4);';
+    updateExpCharCount();
+  }
+
+  function fillFreetextExample() {
+    const div = document.getElementById('exp-freetext');
+    if (!div) return;
+    div.innerText = `My role: Marketing team member
+Team setup: Team of 4 — 2 designers, 1 copywriter, 1 coordinator
+Goal or problem: Instagram engagement was dropping, needed to grow follower count and interaction rate
+How I executed: Ran weekly content calendar, scheduled and posted 3x per week
+How I collaborated: Worked with designers on visual direction, aligned with copywriter on tone
+How I strategized: Analyzed competitor accounts and identified reels as the highest-engagement format
+Tools I used: Canva, Notion, Later for scheduling
+The result: Follower count grew from 800 to 2,400 over 3 months
+Measurable impact: Average engagement rate increased from 1.2% to 4.8%
+The hard part: Team had different opinions on content tone, hard to align
+How I fixed it: Set up a shared style guide and weekly alignment meeting
+What I learned: Consistency matters more than quality of individual posts`;
     updateExpCharCount();
   }
 
