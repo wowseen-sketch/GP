@@ -4170,6 +4170,7 @@
     const requestBody = {
       freetext: data.freetext,
     };
+    console.log('freetext:', document.getElementById('exp-freetext').innerText);
     console.log('[runAnalysis] invoking analyze-experience with body:', requestBody);
     try {
       const { data: aiData, error: fnError } = await supa.functions.invoke('analyze-experience', {
