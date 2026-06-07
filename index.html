@@ -4155,10 +4155,20 @@ What I learned: Consistency matters more than quality of individual posts`;
     setText('am-subtitle', subParts.join(' · '));
 
     // STAR bodies — populated from API response fields.
-    setText('am-situation', data.situation || '(no situation provided)');
-    setText('am-task',      data.task      || '(no task provided)');
-    setText('am-action',    data.action    || '(no action provided)');
-    setText('am-result',    data.result    || '(no result provided)');
+    const setStarEl = (id, txt) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = '';
+      const inner = document.createElement('div');
+      inner.style.cssText = 'padding:12px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;';
+      inner.textContent = txt;
+      el.appendChild(inner);
+      el.scrollTop = 0;
+    };
+    setStarEl('am-situation', data.situation || '(no situation provided)');
+    setStarEl('am-task',      data.task      || '(no task provided)');
+    setStarEl('am-action',    data.action    || '(no action provided)');
+    setStarEl('am-result',    data.result    || '(no result provided)');
   }
 
   // Inline status line in the analysis modal footer (default / saving / error).
