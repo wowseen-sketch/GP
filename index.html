@@ -937,6 +937,11 @@
   .blk-dropdown-item:hover { background: var(--accent-light); color: var(--accent-2); }
   .blk-dropdown-item.selected { color: var(--accent-2); font-weight: 600; background: var(--accent-light); }
   .blk-section-sep { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+  .blk-folder { border: 1px solid var(--border); border-radius: var(--rl); background: var(--white); margin-bottom: 8px; overflow: hidden; }
+  .blk-folder-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; }
+  .blk-folder-body { border-top: 1px solid var(--border); background: var(--surface); padding: 12px 16px 14px; }
+  .blk-folder-entry { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .blk-folder-entry:last-of-type { border-bottom: none; }
 
   /* ── AUTH PAGES (login / signup) ── */
   .auth-wrap {
@@ -1962,78 +1967,26 @@
         </div>
       </div>
 
-      <!-- 칸반 보드 -->
-      <div id="blocks-sections" class="blk-kanban">
+      <div id="blocks-sections" style="padding:16px 24px 40px;">
 
-        <!-- WORK EXPERIENCE -->
-        <div class="blk-col blk-section" data-category="work">
-          <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#0081DD;">Work Experience <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+        <!-- ONGOING -->
+        <div id="blk-ongoing-section" style="display:none;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#0081DD;">Ongoing</span>
+            <span id="blk-ongoing-count" style="font-size:11px;font-weight:600;color:var(--ink-4);background:var(--surface-2);border-radius:99px;padding:1px 8px;">0</span>
           </div>
-          <div class="blk-grid"></div>
+          <div id="blk-ongoing-list"></div>
         </div>
-        <hr class="blk-section-sep">
 
-        <!-- INTERNSHIP -->
-        <div class="blk-col blk-section" data-category="internship">
-          <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#0081DD;">Internship <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
-          </div>
-          <div class="blk-grid"></div>
-        </div>
-        <hr class="blk-section-sep">
+        <hr id="blk-sections-divider" style="border:none;border-top:1px solid var(--border);margin:20px 0;display:none;">
 
-        <!-- EDUCATION & CERTIFICATION -->
-        <div class="blk-col blk-section" data-category="education">
-          <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#0081DD;">Education &amp; Certification <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
+        <!-- COMPLETED -->
+        <div id="blk-completed-section" style="display:none;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);">Completed</span>
+            <span id="blk-completed-count" style="font-size:11px;font-weight:600;color:var(--ink-4);background:var(--surface-2);border-radius:99px;padding:1px 8px;">0</span>
           </div>
-          <div class="blk-grid"></div>
-        </div>
-        <hr class="blk-section-sep">
-
-        <!-- PROJECTS -->
-        <div class="blk-col blk-section" data-category="projects">
-          <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#0081DD;">Projects <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
-          </div>
-          <div class="blk-grid"></div>
-        </div>
-        <hr class="blk-section-sep">
-
-        <!-- ORGANIZATIONS -->
-        <div class="blk-col blk-section" data-category="organizations">
-          <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#0081DD;">Organizations <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
-          </div>
-          <div class="blk-grid"></div>
-        </div>
-        <hr class="blk-section-sep">
-
-        <!-- COMPETITION -->
-        <div class="blk-col blk-section" data-category="competition">
-          <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#0081DD;">Competition <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
-          </div>
-          <div class="blk-grid"></div>
-        </div>
-        <hr class="blk-section-sep">
-
-        <!-- VOLUNTEERING -->
-        <div class="blk-col blk-section" data-category="volunteering">
-          <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#0081DD;">Volunteering <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
-          </div>
-          <div class="blk-grid"></div>
-        </div>
-        <hr class="blk-section-sep">
-
-        <!-- OTHER -->
-        <div class="blk-col blk-section" data-category="other">
-          <div class="blk-col-header">
-            <div class="blk-col-title" style="color:#0081DD;">Other <span class="blk-col-count blk-section-count">0</span> <span onclick="navigate('add')" style="cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:400;margin-left:2px;" title="Add">+</span></div>
-          </div>
-          <div class="blk-grid"></div>
+          <div id="blk-completed-grid" class="blk-grid"></div>
         </div>
 
       </div>
@@ -4365,8 +4318,11 @@ What I learned: Consistency matters more than quality of individual posts`;
   // Remove previously rendered (Supabase-sourced) cards so re-renders don't stack.
   function clearDynamicBlocks() {
     document.querySelectorAll('.blk-card.dyn').forEach(el => el.remove());
-    // Reset all section counts to zero; renderBlocks() will repopulate.
-    document.querySelectorAll('.blk-section-count').forEach(el => el.textContent = '0');
+    document.querySelectorAll('.blk-folder.dyn').forEach(el => el.remove());
+    const oc = document.getElementById('blk-ongoing-count');
+    const cc = document.getElementById('blk-completed-count');
+    if (oc) oc.textContent = '0';
+    if (cc) cc.textContent = '0';
   }
 
   // Build a single .blk-card DOM node from a Supabase row.
@@ -4415,14 +4371,18 @@ What I learned: Consistency matters more than quality of individual posts`;
         <button class="blk-card-edit-btn" style="background:none;border:none;color:#9CA3AF;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;opacity:0.6;">
           <i class="ti ti-edit" style="font-size:11px;"></i> Edit
         </button>
+        <button class="blk-card-analyze-btn" style="background:none;border:none;color:#0081DD;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">
+          <i class="ti ti-sparkles" style="font-size:11px;"></i> Analyze
+        </button>
       </div>
     `;
 
     // Card body click → detail (view) modal. Ignore clicks on the checkbox and
-    // Edit button (they have their own handlers / open edit mode directly).
+    // Edit/Analyze buttons (they have their own handlers).
     el.addEventListener('click', e => {
       if (e.target.closest('.blk-card-check')) return;
       if (e.target.closest('.blk-card-edit-btn')) return;
+      if (e.target.closest('.blk-card-analyze-btn')) return;
       openBlockDetail(row, false);
     });
     const editBtn = el.querySelector('.blk-card-edit-btn');
@@ -4430,32 +4390,82 @@ What I learned: Consistency matters more than quality of individual posts`;
       e.stopPropagation();
       openBlockDetail(row, true);
     });
+    const analyzeBtn = el.querySelector('.blk-card-analyze-btn');
+    if (analyzeBtn) analyzeBtn.addEventListener('click', e => { e.stopPropagation(); });
 
     return el;
   }
 
-  // Distribute rows into category sections
+  // Build a single .blk-folder DOM node for an ongoing (is_current) row.
+  function buildFolderCard(row) {
+    const cat = activityTypeToCategory(row.activity_type);
+    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : null;
+    const meta = `${fmt(row.start_date) || '?'} – Present`;
+    const entries = (row.description || '').split('\n').filter(l => l.trim());
+
+    const el = document.createElement('div');
+    el.className = 'blk-folder dyn';
+    el.dataset.type = cat;
+    el.dataset.expanded = 'false';
+    el.innerHTML = `
+      <div class="blk-folder-header">
+        <div style="width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
+        <i class="ti ti-folder blk-folder-icon" style="font-size:16px;color:var(--ink-3);"></i>
+        <div style="flex:1;min-width:0;">
+          <div class="blk-folder-title" style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.3;">${escapeHtml(row.title || 'Untitled')}</div>
+          <div style="font-size:11px;color:var(--ink-4);margin-top:1px;">${escapeHtml(meta)}</div>
+        </div>
+        <span style="font-size:10px;font-weight:600;color:#166534;background:#dcfce7;padding:2px 10px;border-radius:99px;flex-shrink:0;">Ongoing</span>
+        <i class="ti ti-chevron-right blk-folder-chevron" style="font-size:14px;color:var(--ink-4);margin-left:4px;flex-shrink:0;"></i>
+      </div>
+      <div class="blk-folder-body" style="display:none;">
+        ${entries.length
+          ? entries.map(e => `<div class="blk-folder-entry"><span style="font-size:11px;color:var(--ink-4);white-space:nowrap;padding-top:1px;">—</span><span>${escapeHtml(e)}</span></div>`).join('')
+          : '<div style="font-size:12px;color:var(--ink-4);padding:4px 0;">No updates yet.</div>'
+        }
+        <button onclick="event.stopPropagation();" style="margin-top:10px;font-size:12px;font-weight:600;color:#0081DD;background:none;border:1px solid #0081DD;border-radius:var(--rl);padding:6px 14px;cursor:pointer;">+ Add today's update</button>
+      </div>
+    `;
+
+    el.querySelector('.blk-folder-header').addEventListener('click', () => {
+      const expanded = el.dataset.expanded === 'true';
+      el.dataset.expanded = expanded ? 'false' : 'true';
+      el.querySelector('.blk-folder-body').style.display    = expanded ? 'none' : 'block';
+      el.querySelector('.blk-folder-icon').className        = `ti ${expanded ? 'ti-folder' : 'ti-folder-open'} blk-folder-icon`;
+      el.querySelector('.blk-folder-chevron').className     = `ti ${expanded ? 'ti-chevron-right' : 'ti-chevron-down'} blk-folder-chevron`;
+      el.querySelector('.blk-folder-icon').style.cssText    = 'font-size:16px;color:var(--ink-3);';
+      el.querySelector('.blk-folder-chevron').style.cssText = 'font-size:14px;color:var(--ink-4);margin-left:4px;flex-shrink:0;';
+    });
+
+    return el;
+  }
+
+  // Distribute rows into ongoing folders and completed grid.
   function renderBlocks(rows) {
     clearDynamicBlocks();
 
-    const buckets = { work: [], internship: [], education: [], projects: [], organizations: [], competition: [], volunteering: [], other: [] };
-    rows.forEach(r => {
-      const cat = activityTypeToCategory(r.activity_type);
-      if (buckets[cat]) buckets[cat].push(r);
-    });
+    const ongoing   = rows.filter(r => r.is_current === true);
+    const completed = rows.filter(r => r.is_current !== true);
 
-    Object.entries(buckets).forEach(([cat, list]) => {
-      const section = document.querySelector(`.blk-section[data-category="${cat}"]`);
-      if (!section) return;
-      const grid = section.querySelector('.blk-grid');
-      if (!grid) return;
-      list.forEach(row => grid.appendChild(buildBlockCard(row, cat)));
-      const countEl = section.querySelector('.blk-section-count');
-      if (countEl) countEl.textContent = list.length;
-      section.style.display = list.length > 0 ? '' : 'none';
-    });
+    const ongoingList      = document.getElementById('blk-ongoing-list');
+    const completedGrid    = document.getElementById('blk-completed-grid');
+    const ongoingSection   = document.getElementById('blk-ongoing-section');
+    const completedSection = document.getElementById('blk-completed-section');
+    const divider          = document.getElementById('blk-sections-divider');
+    const ongoingCountEl   = document.getElementById('blk-ongoing-count');
+    const completedCountEl = document.getElementById('blk-completed-count');
 
-    updateSectionSeparators();
+    if (ongoingList)   ongoing.forEach(row => ongoingList.appendChild(buildFolderCard(row)));
+    if (completedGrid) completed.forEach(row => completedGrid.appendChild(buildBlockCard(row, activityTypeToCategory(row.activity_type))));
+
+    if (ongoingCountEl)   ongoingCountEl.textContent   = ongoing.length;
+    if (completedCountEl) completedCountEl.textContent = completed.length;
+
+    const showOngoing   = ongoing.length   > 0;
+    const showCompleted = completed.length > 0;
+    if (ongoingSection)   ongoingSection.style.display   = showOngoing   ? '' : 'none';
+    if (completedSection) completedSection.style.display = showCompleted ? '' : 'none';
+    if (divider) divider.style.display = (showOngoing && showCompleted) ? '' : 'none';
   }
 
   // Show a separator before each visible section that follows another visible section,
@@ -4921,12 +4931,12 @@ What I learned: Consistency matters more than quality of individual posts`;
       const match = !q || title.includes(q) || tags.includes(q) || cat.includes(q);
       card.style.display = match ? '' : 'none';
     });
-    document.querySelectorAll('.blk-section').forEach(sec => {
-      const hasVisible = [...sec.querySelectorAll('.blk-card.dyn')].some(c => c.style.display !== 'none');
-      const count = parseInt(sec.querySelector('.blk-section-count')?.textContent || '0', 10);
-      sec.style.display = (hasVisible && count > 0) ? '' : 'none';
+    document.querySelectorAll('.blk-folder.dyn').forEach(folder => {
+      const title = (folder.querySelector('.blk-folder-title')?.textContent || '').toLowerCase();
+      const cat   = (folder.dataset.type || '').toLowerCase();
+      const match = !q || title.includes(q) || cat.includes(q);
+      folder.style.display = match ? '' : 'none';
     });
-    updateSectionSeparators();
   }
 
   function filterBlocksByDropdown(category, el) {
@@ -4936,12 +4946,14 @@ What I learned: Consistency matters more than quality of individual posts`;
     document.querySelectorAll('.blk-dropdown-item').forEach(i => i.classList.remove('selected'));
     if (el) el.classList.add('selected');
     if (label) label.textContent = category === 'all' ? 'Activity Type' : (el ? el.textContent : 'Activity Type');
-    document.querySelectorAll('.blk-section').forEach(sec => {
-      const count = parseInt(sec.querySelector('.blk-section-count')?.textContent || '0', 10);
-      const catMatch = category === 'all' || sec.dataset.category === category;
-      sec.style.display = (catMatch && count > 0) ? '' : 'none';
+    document.querySelectorAll('.blk-card.dyn').forEach(card => {
+      const match = category === 'all' || card.dataset.type === category;
+      card.style.display = match ? '' : 'none';
     });
-    updateSectionSeparators();
+    document.querySelectorAll('.blk-folder.dyn').forEach(folder => {
+      const match = category === 'all' || folder.dataset.type === category;
+      folder.style.display = match ? '' : 'none';
+    });
   }
 
   document.addEventListener('click', e => {
