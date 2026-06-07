@@ -4303,8 +4303,14 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
 
     const payload = {
-      user_id: currentUser.id,
-      ...data,
+      user_id:             currentUser.id,
+      title:               data.title,
+      activity_type:       data.activity_type,
+      organization:        data.organization,
+      start_date:          data.start_date,
+      end_date:            data.end_date,
+      is_current:          data.is_current,
+      star_structured:     aiResult.star_structured     || null,
       work_activities:     aiResult.work_activities     || [],
       software_skills:     aiResult.software_skills     || [],
       transferable_skills: aiResult.transferable_skills || [],
