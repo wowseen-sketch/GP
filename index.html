@@ -4304,21 +4304,22 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     const star = aiResult.star_structured || {};
     const payload = {
-      user_id:             currentUser.id,
-      title:               data.title,
-      activity_type:       data.activity_type,
-      org:                 data.organization,
-      start_date:          data.start_date,
-      end_date:            data.end_date,
-      is_current:          data.is_current,
-      pdca_plan:           [star.situation, star.task].filter(Boolean).join('\n\n'),
-      pdca_do:             star.action    || '',
-      pdca_check:          star.result    || '',
-      pdca_act:            '',
-      work_activities:     aiResult.work_activities     || [],
-      software_skills:     aiResult.software_skills     || [],
-      transferable_skills: aiResult.transferable_skills || [],
-      competency_keywords: aiResult.competency_keywords || [],
+      user_id:              currentUser.id,
+      title:                data.title,
+      activity_type:        data.activity_type,
+      organization:         data.organization,
+      start_date:           data.start_date,
+      end_date:             data.end_date,
+      is_current:           data.is_current,
+      role:                 data.role,
+      description:          [star.situation, star.task].filter(Boolean).join('\n\n'),
+      goal:                 star.task      || '',
+      actions:              star.action    || '',
+      outcome_measurable:   star.result    || '',
+      work_activities:      aiResult.work_activities     || [],
+      software_skills:      aiResult.software_skills     || [],
+      transferable_skills:  aiResult.transferable_skills || [],
+      competency_keywords:  aiResult.competency_keywords || [],
     };
 
     const { error } = await supa.from('experience_blocks').insert(payload);
