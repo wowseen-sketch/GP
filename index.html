@@ -3366,8 +3366,14 @@
       </div>
     </div>
 
-    <!-- BODY: 5-part grid, PDCA = 3/5, Analysis = 2/5 -->
-    <div style="display:grid;grid-template-columns:3fr 2fr;flex:1;overflow:hidden;">
+    <!-- BODY loading overlay (full-width, shown while API runs) -->
+    <div id="am-body-loading" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#fff;">
+      <div style="width:28px;height:28px;border:3px solid var(--border);border-top-color:#0081DD;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+      <div style="font-size:13px;color:var(--ink-4);">Analyzing...</div>
+    </div>
+
+    <!-- BODY: grid, hidden until analysis completes -->
+    <div id="am-body-grid" style="display:none;grid-template-columns:3fr 2fr;flex:1;overflow:hidden;">
 
       <!-- LEFT: STAR Structured Experience -->
       <div style="padding:28px 32px;border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:#fff;">
@@ -3382,7 +3388,7 @@
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">S</div>
             <span style="font-size:12px;font-weight:700;color:var(--ink);">Situation</span>
           </div>
-          <div id="am-situation" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;height:100px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+          <div id="am-situation" style="padding:12px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;height:100px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
         </div>
 
         <!-- T -->
@@ -3391,7 +3397,7 @@
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">T</div>
             <span style="font-size:12px;font-weight:700;color:var(--ink);">Task</span>
           </div>
-          <div id="am-task" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;height:100px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+          <div id="am-task" style="padding:12px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;height:100px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
         </div>
 
         <!-- A -->
@@ -3400,7 +3406,7 @@
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">A</div>
             <span style="font-size:12px;font-weight:700;color:var(--ink);">Action</span>
           </div>
-          <div id="am-action" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;height:100px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+          <div id="am-action" style="padding:12px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;height:100px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
         </div>
 
         <!-- R -->
@@ -3409,7 +3415,7 @@
             <div style="width:22px;height:22px;border-radius:6px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">R</div>
             <span style="font-size:12px;font-weight:700;color:var(--ink);">Result</span>
           </div>
-          <div id="am-result" style="padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;height:100px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+          <div id="am-result" style="padding:12px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;height:100px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
         </div>
       </div>
 
@@ -4178,12 +4184,12 @@ What I learned: Consistency matters more than quality of individual posts`;
   // and cache the result for saveExperienceBlock to reuse.
   async function runAnalysis() {
     const data = collectAddFormData();
-    const loadingEl = document.getElementById('am-analysis-loading');
-    const resultEl  = document.getElementById('am-analysis-result');
+    const loadingEl = document.getElementById('am-body-loading');
+    const gridEl    = document.getElementById('am-body-grid');
     const reBtn     = document.querySelector('[onclick="runAnalysis()"]');
 
     if (loadingEl) { loadingEl.style.display = 'flex'; }
-    if (resultEl)  { resultEl.style.display  = 'none'; }
+    if (gridEl)    { gridEl.style.display    = 'none'; }
     if (reBtn)     { reBtn.disabled = true; reBtn.style.opacity = '0.5'; }
     setAnalysisModalStatus('Analyzing…', false);
 
@@ -4207,7 +4213,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
 
     if (loadingEl) { loadingEl.style.display = 'none'; }
-    if (resultEl)  { resultEl.style.display  = 'flex'; }
+    if (gridEl)    { gridEl.style.display    = 'grid'; }
     if (reBtn)     { reBtn.disabled = false; reBtn.style.opacity = ''; }
 
     renderAnalysisTags('am-work-activities',     _cachedAnalysis.work_activities     || [], 'kw-tag-grey');
@@ -4216,7 +4222,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     renderAnalysisTags('am-competency-keywords', _cachedAnalysis.competency_keywords || []);
 
     const star = (_cachedAnalysis.star_structured) || {};
-    const setStarText = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+    const setStarText = (id, txt) => { const el = document.getElementById(id); if (el) { el.textContent = txt; el.scrollTop = 0; } };
     setStarText('am-situation', star.situation || '(no situation provided)');
     setStarText('am-task',      star.task      || '(no task provided)');
     setStarText('am-action',    star.action    || '(no action provided)');
