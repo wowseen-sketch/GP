@@ -4302,15 +4302,19 @@ What I learned: Consistency matters more than quality of individual posts`;
     setAnalysisModalStatus('Saving…', false);
     if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
 
+    const star = aiResult.star_structured || {};
     const payload = {
       user_id:             currentUser.id,
       title:               data.title,
       activity_type:       data.activity_type,
-      organization:        data.organization,
+      org:                 data.organization,
       start_date:          data.start_date,
       end_date:            data.end_date,
       is_current:          data.is_current,
-      star_structured:     aiResult.star_structured     || null,
+      pdca_plan:           [star.situation, star.task].filter(Boolean).join('\n\n'),
+      pdca_do:             star.action    || '',
+      pdca_check:          star.result    || '',
+      pdca_act:            '',
       work_activities:     aiResult.work_activities     || [],
       software_skills:     aiResult.software_skills     || [],
       transferable_skills: aiResult.transferable_skills || [],
