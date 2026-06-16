@@ -974,16 +974,15 @@
 
   /* ── FOLDER MODAL ── */
   .folder-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.32); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-  .folder-modal { width: 400px; max-height: 520px; border-radius: 16px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden; }
-  .folder-modal-header { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; }
-  .folder-modal-body { flex: 1; overflow-y: auto; padding: 16px 20px; min-height: 80px; }
-  .folder-modal-footer { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-top: 0.5px solid var(--border); flex-shrink: 0; gap: 8px; }
-  .folder-scribble-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-  .folder-scribble-item:last-child { border-bottom: none; }
-  .folder-scribble-actions { display: flex; gap: 4px; margin-left: auto; flex-shrink: 0; }
-  .folder-scribble-icon-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink-3); font-size: 12px; transition: all 0.12s; }
-  .folder-scribble-icon-btn:hover { border-color: var(--border-strong); color: var(--ink); }
-  .folder-scribble-icon-btn.delete:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+  .folder-modal { width: 480px; max-height: 600px; border-radius: 20px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden; }
+  .folder-modal-header { display: flex; align-items: center; gap: 10px; padding: 20px 24px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; }
+  .folder-modal-body { flex: 1; overflow-y: auto; padding: 20px 24px; min-height: 80px; display: flex; flex-direction: column; gap: 10px; }
+  .folder-modal-footer { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-top: 0.5px solid var(--border); flex-shrink: 0; gap: 8px; }
+  .folder-scribble-item { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px; }
+  .folder-scribble-actions { display: flex; gap: 2px; margin-left: auto; flex-shrink: 0; }
+  .folder-scribble-icon-btn { background: transparent; border: none; color: #888; padding: 4px 6px; border-radius: 6px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: color 0.12s; }
+  .folder-scribble-icon-btn:hover { color: #1a1a1a; }
+  .folder-scribble-icon-btn.delete:hover { color: #e24b4a; }
 
   /* ── AUTH PAGES (login / signup) ── */
   .auth-wrap {
@@ -4509,12 +4508,12 @@ What I learned: Consistency matters more than quality of individual posts`;
       return `<div class="folder-scribble-item">
         ${DOC_SVG_SM}
         <div style="flex:1;min-width:0;">
-          <div style="font-size:12px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(s.title || 'Untitled scribble')}</div>
-          ${dateStr ? `<div style="font-size:10px;color:var(--ink-4);margin-top:1px;">${escapeHtml(dateStr)}</div>` : ''}
+          <div style="font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(s.title || 'Untitled scribble')}</div>
+          ${dateStr ? `<div style="font-size:11px;color:var(--ink-4);margin-top:2px;">${escapeHtml(dateStr)}</div>` : ''}
         </div>
         <div class="folder-scribble-actions">
-          <button class="folder-scribble-icon-btn" title="Edit" onclick="editFolderScribble('${s.id}')"><i class="ti ti-pencil"></i></button>
-          <button class="folder-scribble-icon-btn delete" title="Delete" onclick="deleteFolderScribble('${s.id}')"><i class="ti ti-trash"></i></button>
+          <button class="folder-scribble-icon-btn" title="Edit" onclick="editFolderScribble('${s.id}')"><i class="ti ti-pencil" style="font-size:14px;"></i></button>
+          <button class="folder-scribble-icon-btn delete" title="Delete" onclick="deleteFolderScribble('${s.id}')"><i class="ti ti-trash" style="font-size:14px;"></i></button>
         </div>
       </div>`;
     }).join('');
@@ -4544,8 +4543,8 @@ What I learned: Consistency matters more than quality of individual posts`;
           ${buildFolderModalBodyHtml(scribbles)}
         </div>
         <div class="folder-modal-footer">
-          <button onclick="markFolderComplete('${folderRow.id}')" style="font-size:12px;font-weight:600;color:#059669;background:none;border:0.5px solid #059669;border-radius:999px;padding:7px 16px;cursor:pointer;transition:all 0.12s;">Mark as complete</button>
-          <button onclick="keepScribbling('${folderRow.id}')" style="font-size:12px;font-weight:600;color:#fff;background:#3b82f6;border:none;border-radius:999px;padding:7px 16px;cursor:pointer;display:flex;align-items:center;gap:6px;">✏ Keep scribbling</button>
+          <button onclick="markFolderComplete('${folderRow.id}')" style="font-size:13px;font-weight:500;color:#1a1a1a;background:transparent;border:1px solid #cccccc;border-radius:999px;padding:10px 20px;cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Mark as complete</button>
+          <button onclick="keepScribbling('${folderRow.id}')" style="font-size:13px;font-weight:500;color:#fff;background:#1a1a1a;border:none;border-radius:999px;padding:10px 20px;cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='#333333'" onmouseout="this.style.background='#1a1a1a'">Keep scribbling</button>
         </div>
       </div>
     `;
