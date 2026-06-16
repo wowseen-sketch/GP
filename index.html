@@ -899,9 +899,9 @@
   }
   .blk-col-add-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
   .blk-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
     width: 100%;
   }
   .blk-card {
@@ -911,7 +911,7 @@
     transition: box-shadow 0.2s, border-color 0.2s;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     display: flex; flex-direction: column; gap: 5px;
-    position: relative; width: 260px; flex-shrink: 0;
+    position: relative;
   }
   .blk-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.10); border-color: var(--border-strong); }
   .blk-card-top { display: none; }
@@ -956,7 +956,7 @@
   .blk-folder-entry:last-of-type { border-bottom: none; }
 
   /* ── ONGOING FOLDER CARD GRID ── */
-  .blk-ongoing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .blk-ongoing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
   .blk-folder-card {
     border: 1px solid #3b82f6; border-radius: 12px; padding: 14px;
     background: #fff; cursor: pointer;
@@ -1969,9 +1969,10 @@
             <span id="exp-char-count" style="font-size:12px;color:var(--ink-4);">0 characters</span>
             <div style="display:flex;align-items:center;gap:8px;">
               <button onclick="fillFreetextExample()" style="font-size:12px;color:var(--ink-3);border:1px solid var(--border);border-radius:var(--rl);padding:6px 12px;background:#fff;cursor:pointer;font-family:var(--ff-head);">Fill with example</button>
-              <button onclick="openAnalysisModal()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);border:none;padding:12px 28px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+              <button id="btn-analyze" onclick="openAnalysisModal()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%);border:none;padding:12px 28px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
                 <i class="ti ti-sparkles" style="font-size:16px;"></i> Analyze Experience
               </button>
+              <button id="btn-add-to-folder" onclick="addToFolder()" style="display:none;font-size:14px;font-weight:700;color:#fff;background:#1a1a1a;border:none;padding:12px 28px;border-radius:999px;cursor:pointer;transition:background 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.background='#333333'" onmouseout="this.style.background='#1a1a1a'">Add to folder</button>
             </div>
           </div>
 
@@ -2030,7 +2031,7 @@
           <div id="blk-ongoing-list" class="blk-ongoing-grid"></div>
         </div>
 
-        <hr id="blk-sections-divider" style="border:none;border-top:0.5px solid var(--border);margin:4px 0 20px;display:none;">
+        <hr id="blk-sections-divider" style="border:none;border-top:0.5px solid var(--border);margin:24px 0;display:none;">
 
         <!-- COMPLETED -->
         <div id="blk-completed-section" style="display:none;">
@@ -4619,6 +4620,94 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
   }
 
+  function updateAddModeUI() {
+    const analyzeBtn = document.getElementById('btn-analyze');
+    const folderBtn  = document.getElementById('btn-add-to-folder');
+    if (!analyzeBtn || !folderBtn) return;
+    if (_addMode === 'scribble') {
+      analyzeBtn.style.display = 'none';
+      folderBtn.style.display  = 'inline-flex';
+    } else {
+      analyzeBtn.style.display = 'flex';
+      folderBtn.style.display  = 'none';
+    }
+  }
+
+  async function addToFolder() {
+    if (!currentUser) return;
+
+    // Validate required fields
+    const title    = (document.getElementById('exp-title')?.value || '').trim();
+    const freetext = (document.getElementById('exp-freetext')?.innerText || '').trim();
+    let hasError = false;
+
+    document.querySelectorAll('#page-add .req-error-msg').forEach(e => e.remove());
+
+    const markError = (id, msg) => {
+      hasError = true;
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.borderColor = '#EF4444';
+      const div = document.createElement('div');
+      div.className = 'req-error-msg';
+      div.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+      div.innerHTML = `<i class="ti ti-alert-circle"></i> ${msg}`;
+      el.parentNode.appendChild(div);
+    };
+
+    if (!title) markError('exp-title', 'Title is required');
+    if (!freetext) {
+      hasError = true;
+      const ft = document.getElementById('exp-freetext');
+      if (ft) {
+        ft.style.borderColor = '#EF4444';
+        const div = document.createElement('div');
+        div.className = 'req-error-msg';
+        div.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        div.innerHTML = '<i class="ti ti-alert-circle"></i> Please write something first';
+        ft.parentNode.appendChild(div);
+      }
+    }
+    if (hasError) return;
+
+    const btn = document.getElementById('btn-add-to-folder');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+    const val = id => (document.getElementById(id)?.value || '').trim();
+    const isCurrent = document.getElementById('exp-current')?.checked || false;
+    const monthToDate = m => m ? `${m}-01` : null;
+
+    const payload = {
+      user_id:       currentUser.id,
+      title,
+      activity_type: val('exp-activity-type'),
+      organization:  val('exp-org'),
+      start_date:    monthToDate(val('exp-start')),
+      end_date:      isCurrent ? null : monthToDate(val('exp-end')),
+      is_current:    true,
+      description:   freetext,
+    };
+    if (_pendingParentId) payload.parent_id = _pendingParentId;
+
+    let { error } = await supa.from('experience_blocks').insert(payload);
+
+    // Gracefully handle missing parent_id column — retry without it
+    if (error && payload.parent_id && /parent_id/.test(error.message || '')) {
+      delete payload.parent_id;
+      const retry = await supa.from('experience_blocks').insert(payload);
+      error = retry.error;
+    }
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Add to folder'; }
+
+    if (error) { showSaveToast('Save failed: ' + error.message, true); return; }
+
+    _pendingParentId = null;
+    _addMode = 'new';
+    showSaveToast('Added to folder!', false);
+    navigate('blocks');
+  }
+
   // Distribute rows into ongoing folders and completed grid.
   function renderBlocks(rows) {
     clearDynamicBlocks();
@@ -4755,6 +4844,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   let _allBlockRows     = [];   // all experience_blocks rows (for modal scribble lookup)
   let _pendingParentId  = null; // set when "Keep scribbling" → carry parent_id into next save
   let _activeFolderRow  = null; // folder row currently shown in modal
+  let _addMode          = 'new'; // 'new' | 'scribble'
   let _bdRow = null;       // row currently displayed
   let _bdEditing = false;  // false = view, true = edit
 
@@ -5197,6 +5287,8 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     // Refresh dynamic content when entering the Blocks page.
     if (target === 'blocks') loadUserBlocks();
+    // page-add 진입 시 mode 결정 (_pendingParentId 있으면 scribble, 없으면 new)
+    if (target === 'add') { _addMode = _pendingParentId ? 'scribble' : 'new'; updateAddModeUI(); }
     // Help 페이지 진입 시 기본 탭(FAQ)으로 리셋
     if (target === 'help') showHelpTab('faq');
     // 잠금 페이지 진입 시 오버레이 top 재계산 + 스크롤 제어
