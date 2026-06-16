@@ -1972,6 +1972,7 @@
                 <i class="ti ti-sparkles" style="font-size:16px;"></i> Analyze Experience
               </button>
               <button id="btn-add-to-folder" onclick="addToFolder()" style="display:none;font-size:14px;font-weight:700;color:#fff;background:#1a1a1a;border:none;padding:12px 28px;border-radius:999px;cursor:pointer;transition:background 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.background='#333333'" onmouseout="this.style.background='#1a1a1a'">Add to folder</button>
+              <button id="btn-save-scribble" onclick="saveScribbleEdit()" style="display:none;font-size:14px;font-weight:700;color:#fff;background:#1a1a1a;border:none;padding:12px 28px;border-radius:999px;cursor:pointer;transition:background 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.background='#333333'" onmouseout="this.style.background='#1a1a1a'">Save changes</button>
             </div>
           </div>
 
@@ -4552,8 +4553,15 @@ What I learned: Consistency matters more than quality of individual posts`;
   function editFolderScribble(scribbleId) {
     const row = _allBlockRows.find(r => r.id === scribbleId);
     if (!row) return;
+    window.editingScribbleId = scribbleId;
     closeFolderModal();
-    openBlockDetail(row, true);
+    resetAddForm(row);
+    const ft = document.getElementById('exp-freetext');
+    if (ft) {
+      ft.innerText = row.description || '';
+      if (typeof updateExpCharCount === 'function') updateExpCharCount();
+    }
+    navigate('add');
   }
 
   async function deleteFolderScribble(scribbleId) {
@@ -4613,13 +4621,20 @@ What I learned: Consistency matters more than quality of individual posts`;
   function updateAddModeUI() {
     const analyzeBtn = document.getElementById('btn-analyze');
     const folderBtn  = document.getElementById('btn-add-to-folder');
+    const saveBtn    = document.getElementById('btn-save-scribble');
     if (!analyzeBtn || !folderBtn) return;
-    if (_addMode === 'scribble') {
+    if (_addMode === 'edit-scribble') {
+      analyzeBtn.style.display = 'none';
+      folderBtn.style.display  = 'none';
+      if (saveBtn) saveBtn.style.display = 'inline-flex';
+    } else if (_addMode === 'scribble') {
       analyzeBtn.style.display = 'none';
       folderBtn.style.display  = 'inline-flex';
+      if (saveBtn) saveBtn.style.display = 'none';
     } else {
       analyzeBtn.style.display = 'flex';
       folderBtn.style.display  = 'none';
+      if (saveBtn) saveBtn.style.display = 'none';
     }
   }
 
@@ -4700,6 +4715,49 @@ What I learned: Consistency matters more than quality of individual posts`;
     window.currentParentId = null;
     _addMode = 'new';
     showSaveToast('Added to folder!', false);
+    navigate('blocks');
+  }
+
+  async function saveScribbleEdit() {
+    if (!currentUser || !window.editingScribbleId) return;
+
+    const title    = (document.getElementById('exp-title')?.value || '').trim();
+    const freetext = (document.getElementById('exp-freetext')?.innerText || '').trim();
+    let hasError = false;
+
+    if (!title)    { showFieldError('exp-title',    'Title is required');   hasError = true; }
+    if (!freetext) { showFieldError('exp-freetext', 'Content is required'); hasError = true; }
+    if (hasError) return;
+
+    const val = id => document.getElementById(id)?.value || null;
+    const isCurrent   = document.getElementById('exp-current')?.checked || false;
+    const monthToDate = m => m ? `${m}-01` : null;
+
+    const btn = document.getElementById('btn-save-scribble');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+    const payload = {
+      title,
+      activity_type: val('exp-activity-type'),
+      organization:  val('exp-org'),
+      start_date:    monthToDate(val('exp-start')),
+      end_date:      isCurrent ? null : monthToDate(val('exp-end')),
+      is_current:    isCurrent,
+      description:   freetext,
+    };
+
+    const { error } = await supa.from('experience_blocks')
+      .update(payload)
+      .eq('id', window.editingScribbleId)
+      .eq('user_id', currentUser.id);
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Save changes'; }
+
+    if (error) { showSaveToast('Save failed: ' + error.message, true); return; }
+
+    window.editingScribbleId = null;
+    _addMode = 'new';
+    showSaveToast('Scribble updated!', false);
     navigate('blocks');
   }
 
@@ -4837,9 +4895,10 @@ What I learned: Consistency matters more than quality of individual posts`;
   // View + inline-edit for a single experience_blocks row. v1 edits text fields
   // only — the AI arrays (work_activities, …) are shown read-only and untouched.
   let _allBlockRows     = [];   // all experience_blocks rows (for modal scribble lookup)
-  window.currentParentId = null; // set when "Keep scribbling" → carry parent_id into next save
+  window.currentParentId   = null; // set when "Keep scribbling" → carry parent_id into next save
+  window.editingScribbleId = null; // set when editing an existing scribble via pencil button
   let _activeFolderRow  = null; // folder row currently shown in modal
-  let _addMode          = 'new'; // 'new' | 'scribble'
+  let _addMode          = 'new'; // 'new' | 'scribble' | 'edit-scribble'
   let _bdRow = null;       // row currently displayed
   let _bdEditing = false;  // false = view, true = edit
 
@@ -5282,8 +5341,14 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     // Refresh dynamic content when entering the Blocks page.
     if (target === 'blocks') loadUserBlocks();
-    // page-add 진입 시 mode 결정 (currentParentId 있으면 scribble, 없으면 new)
-    if (target === 'add') { _addMode = window.currentParentId ? 'scribble' : 'new'; updateAddModeUI(); }
+    // page-add 진입 시 mode 결정 (edit-scribble > scribble > new 우선순위)
+    if (target === 'add') {
+      _addMode = window.editingScribbleId ? 'edit-scribble' : (window.currentParentId ? 'scribble' : 'new');
+      updateAddModeUI();
+    } else {
+      // add 페이지를 벗어나면 편집 상태 초기화
+      window.editingScribbleId = null;
+    }
     // Help 페이지 진입 시 기본 탭(FAQ)으로 리셋
     if (target === 'help') showHelpTab('faq');
     // 잠금 페이지 진입 시 오버레이 top 재계산 + 스크롤 제어
