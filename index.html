@@ -411,15 +411,15 @@
   #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; }
   #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 56px); overflow: hidden; }
   .add-columns { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
-  .add-left { flex: 0 0 33%; max-width: 33%; overflow-y: auto; border-right: 1px solid var(--border); padding: 20px 24px; background: var(--surface); }
+  .add-left { flex: 0 0 38%; overflow-y: auto; border-right: 0.5px solid var(--border); padding: 24px; background: var(--white); }
   .add-right { flex: 1; display: flex; flex-direction: column; padding: 24px; overflow: hidden; }
-  .add-right #exp-freetext { flex: 1; min-height: 400px; }
+  .add-right #exp-freetext { flex: 1; }
   @media (max-width: 768px) {
     #page-add.active { height: auto; overflow: visible; }
     .add-columns { flex-direction: column; overflow: visible; }
-    .add-left { flex: none; width: 100%; max-width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+    .add-left { flex: none; width: 100%; border-right: none; border-bottom: 0.5px solid var(--border); }
     .add-right { overflow: visible; }
-    .add-right #exp-freetext { flex: none; }
+    .add-right #exp-freetext { flex: none; min-height: 240px; }
   }
 
   .form-actions {
@@ -1865,56 +1865,54 @@
 
       <div class="add-columns">
 
-        <!-- Left Panel: Basic Info + Chips -->
+        <!-- Left Panel: Basic Info + Chips (flat, no card boxes) -->
         <div class="add-left">
 
-          <!-- Basic Info Card -->
-          <div style="background:#fff;border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:16px;">
-            <div class="form-section-title" style="margin-top:0;"><i class="ti ti-info-circle"></i> Basic info</div>
-            <div class="form-grid">
-              <div class="form-group form-full">
-                <label class="form-label">Activity Title *</label>
-                <input id="exp-title" class="form-input" type="text" required placeholder="e.g. New Product Launch Campaign Planning &amp; Execution">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Activity Type</label>
-                <select id="exp-activity-type" class="form-input form-select">
-                  <option value="">Select</option>
-                  <option>Project</option>
-                  <option>Work Experience</option>
-                  <option>Leadership</option>
-                  <option>Education</option>
-                  <option>Certification</option>
-                  <option>Extracurricular</option>
-                  <option>Internship</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Organization / Company</label>
-                <input id="exp-org" class="form-input" type="text" placeholder="e.g. Google, Stanford Club, etc.">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Start Date</label>
-                <input id="exp-start" class="form-input" type="month" value="2024-01">
-              </div>
-              <div class="form-group">
-                <label class="form-label" style="justify-content:space-between;">
-                  End Date
-                  <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--ink-3);text-transform:none;letter-spacing:0;cursor:pointer;">
-                    <input id="exp-current" type="checkbox" style="accent-color:var(--accent)" onchange="handleExpCurrentChange(this)"> Currently ongoing
-                  </label>
+          <!-- Basic info -->
+          <div class="form-section-title" style="margin-top:0;"><i class="ti ti-info-circle"></i> Basic info</div>
+          <div class="form-grid">
+            <div class="form-group form-full">
+              <label class="form-label">Activity Title *</label>
+              <input id="exp-title" class="form-input" type="text" required placeholder="e.g. New Product Launch Campaign Planning &amp; Execution">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Activity Type</label>
+              <select id="exp-activity-type" class="form-input form-select">
+                <option value="">Select</option>
+                <option>Project</option>
+                <option>Work Experience</option>
+                <option>Leadership</option>
+                <option>Education</option>
+                <option>Certification</option>
+                <option>Extracurricular</option>
+                <option>Internship</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Organization / Company</label>
+              <input id="exp-org" class="form-input" type="text" placeholder="e.g. Google, Stanford Club, etc.">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Start Date</label>
+              <input id="exp-start" class="form-input" type="month" value="2024-01">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="justify-content:space-between;">
+                End Date
+                <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--ink-3);text-transform:none;letter-spacing:0;cursor:pointer;">
+                  <input id="exp-current" type="checkbox" style="accent-color:var(--accent)" onchange="handleExpCurrentChange(this)"> Currently ongoing
                 </label>
-                <input id="exp-end" class="form-input" type="month" value="2024-06">
-              </div>
+              </label>
+              <input id="exp-end" class="form-input" type="month" value="2024-06">
             </div>
           </div>
 
-          <!-- Chip Groups -->
-          <div style="background:#fff;border:1px solid var(--border);border-radius:var(--rl);padding:20px;">
+          <!-- Chip Groups (separated by border-top) -->
+          <div style="border-top:1px solid var(--border);margin-top:20px;padding-top:20px;">
 
             <!-- Group 1: Your Mission -->
-            <div style="margin-bottom:24px;">
-              <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Your Mission</div>
+            <div style="margin-bottom:20px;">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Your Mission</div>
               <div style="display:flex;flex-wrap:wrap;gap:6px;">
                 <button class="exp-chip" data-prompt="My role: " onclick="toggleChip(this)"><i class="ti ti-user"></i> Your role?</button>
                 <button class="exp-chip" data-prompt="Team setup: " onclick="toggleChip(this)"><i class="ti ti-users"></i> Team or solo?</button>
@@ -1923,8 +1921,8 @@
             </div>
 
             <!-- Group 2: What You Did -->
-            <div style="margin-bottom:24px;">
-              <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">What You Did</div>
+            <div style="margin-bottom:20px;">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">What You Did</div>
               <div style="display:flex;flex-wrap:wrap;gap:6px;">
                 <button class="exp-chip" data-prompt="How I executed: " onclick="toggleChip(this)"><i class="ti ti-player-play"></i> How you executed?</button>
                 <button class="exp-chip" data-prompt="How I collaborated: " onclick="toggleChip(this)"><i class="ti ti-link"></i> How you collaborated?</button>
@@ -1936,8 +1934,8 @@
             </div>
 
             <!-- Group 3: The Impact -->
-            <div style="margin-bottom:24px;">
-              <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">The Impact</div>
+            <div style="margin-bottom:20px;">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">The Impact</div>
               <div style="display:flex;flex-wrap:wrap;gap:6px;">
                 <button class="exp-chip" data-prompt="The result: " onclick="toggleChip(this)"><i class="ti ti-chart-bar"></i> The result?</button>
                 <button class="exp-chip" data-prompt="Measurable impact: " onclick="toggleChip(this)"><i class="ti ti-trending-up"></i> Any measurable impact?</button>
@@ -1947,7 +1945,7 @@
 
             <!-- Group 4: Challenges -->
             <div>
-              <div style="font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Challenges</div>
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Challenges</div>
               <div style="display:flex;flex-wrap:wrap;gap:6px;">
                 <button class="exp-chip" data-prompt="The hard part: " onclick="toggleChip(this)"><i class="ti ti-bolt"></i> The hard part?</button>
                 <button class="exp-chip" data-prompt="How I fixed it: " onclick="toggleChip(this)"><i class="ti ti-tool"></i> How you fixed it?</button>
