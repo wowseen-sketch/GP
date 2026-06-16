@@ -4326,17 +4326,10 @@ What I learned: Consistency matters more than quality of individual posts`;
       transferable_skills:  aiResult.transferable_skills || [],
       competency_keywords:  aiResult.competency_keywords || [],
     };
-    if (_pendingParentId) payload.parent_id = _pendingParentId;
-    _pendingParentId = null;
+    if (window.currentParentId) payload.parent_id = window.currentParentId;
+    window.currentParentId = null;
 
-    let { error } = await supa.from('experience_blocks').insert(payload);
-
-    // Gracefully handle missing parent_id column: retry without it
-    if (error && payload.parent_id && /parent_id/.test(error.message || '')) {
-      delete payload.parent_id;
-      const retry = await supa.from('experience_blocks').insert(payload);
-      error = retry.error;
-    }
+    const { error } = await supa.from('experience_blocks').insert(payload);
 
     if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
 
@@ -4586,7 +4579,7 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function keepScribbling(folderId) {
     const folderRow = _activeFolderRow;   // capture before closeFolderModal clears it
-    _pendingParentId = folderId;
+    window.currentParentId = folderId;
     closeFolderModal();
     resetAddForm(folderRow);              // prefill from folder + clear stale state
     navigate('add');
@@ -4684,22 +4677,27 @@ What I learned: Consistency matters more than quality of individual posts`;
       is_current:    true,
       description:   freetext,
     };
-    if (_pendingParentId) payload.parent_id = _pendingParentId;
-
-    let { error } = await supa.from('experience_blocks').insert(payload);
-
-    // Gracefully handle missing parent_id column — retry without it
-    if (error && payload.parent_id && /parent_id/.test(error.message || '')) {
-      delete payload.parent_id;
-      const retry = await supa.from('experience_blocks').insert(payload);
-      error = retry.error;
+    if (!window.currentParentId) {
+      showSaveToast('No folder selected — go back and open a folder first.', true);
+      if (btn) { btn.disabled = false; btn.textContent = 'Add to folder'; }
+      return;
     }
+    payload.parent_id = window.currentParentId;
+
+    const { error } = await supa.from('experience_blocks').insert(payload);
 
     if (btn) { btn.disabled = false; btn.textContent = 'Add to folder'; }
 
-    if (error) { showSaveToast('Save failed: ' + error.message, true); return; }
+    if (error) {
+      if (/parent_id/.test(error.message || '')) {
+        showSaveToast('DB migration needed — run: ALTER TABLE experience_blocks ADD COLUMN parent_id UUID REFERENCES experience_blocks(id);', true);
+      } else {
+        showSaveToast('Save failed: ' + error.message, true);
+      }
+      return;
+    }
 
-    _pendingParentId = null;
+    window.currentParentId = null;
     _addMode = 'new';
     showSaveToast('Added to folder!', false);
     navigate('blocks');
@@ -4839,7 +4837,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   // View + inline-edit for a single experience_blocks row. v1 edits text fields
   // only — the AI arrays (work_activities, …) are shown read-only and untouched.
   let _allBlockRows     = [];   // all experience_blocks rows (for modal scribble lookup)
-  let _pendingParentId  = null; // set when "Keep scribbling" → carry parent_id into next save
+  window.currentParentId = null; // set when "Keep scribbling" → carry parent_id into next save
   let _activeFolderRow  = null; // folder row currently shown in modal
   let _addMode          = 'new'; // 'new' | 'scribble'
   let _bdRow = null;       // row currently displayed
@@ -5284,8 +5282,8 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     // Refresh dynamic content when entering the Blocks page.
     if (target === 'blocks') loadUserBlocks();
-    // page-add 진입 시 mode 결정 (_pendingParentId 있으면 scribble, 없으면 new)
-    if (target === 'add') { _addMode = _pendingParentId ? 'scribble' : 'new'; updateAddModeUI(); }
+    // page-add 진입 시 mode 결정 (currentParentId 있으면 scribble, 없으면 new)
+    if (target === 'add') { _addMode = window.currentParentId ? 'scribble' : 'new'; updateAddModeUI(); }
     // Help 페이지 진입 시 기본 탭(FAQ)으로 리셋
     if (target === 'help') showHelpTab('faq');
     // 잠금 페이지 진입 시 오버레이 top 재계산 + 스크롤 제어
