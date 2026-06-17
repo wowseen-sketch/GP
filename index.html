@@ -1915,6 +1915,14 @@
               </div>
               <div id="ongoing-folder-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;border:0.5px solid #ddd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.08);background:#fff;z-index:200;overflow:hidden;"></div>
             </div>
+            <div class="form-group form-full" id="new-folder-input-wrap" style="display:none;">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#999;margin-bottom:6px;">New folder name</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input id="new-folder-name-input" type="text" placeholder="e.g. Google Internship 2025" oninput="onNewFolderInputChange(this)" style="flex:1;border:0.5px solid #ddd;border-radius:8px;padding:10px 14px;font-size:12px;font-family:var(--ff-head);outline:none;color:#111;" onfocus="this.style.borderColor='#1a1a1a'" onblur="this.style.borderColor='#ddd'">
+                <button onclick="hideNewFolderInput()" title="Back" style="flex-shrink:0;border:0.5px solid #ddd;border-radius:8px;padding:0 12px;height:38px;font-size:12px;color:#888;background:none;cursor:pointer;display:flex;align-items:center;">↩</button>
+                <button id="new-folder-create-btn" onclick="confirmNewFolder()" disabled style="flex-shrink:0;border:none;border-radius:8px;padding:0 14px;height:38px;font-size:12px;font-weight:600;color:#fff;background:#ccc;cursor:not-allowed;">Create</button>
+              </div>
+            </div>
           </div>
 
           <!-- Chip Groups (separated by border-top) -->
@@ -4032,8 +4040,11 @@ What I learned: Consistency matters more than quality of individual posts`;
       end.disabled      = false;
       end.style.opacity = '1';
       if (wrap) { wrap.style.display = 'none'; closeFolderDropdown(); }
+      const inputWrap = document.getElementById('new-folder-input-wrap');
+      if (inputWrap && inputWrap.style.display !== 'none') hideNewFolderInput();
       _syncAnalyzeBtn(false);
       window._selectedFolderId = null;
+      window.newFolderName     = null;
     }
   }
 
@@ -4101,12 +4112,58 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
 
   function selectOngoingFolder(id, name) {
+    closeFolderDropdown();
+    if (id === '__new__') {
+      showNewFolderInput();
+      return;
+    }
     window._selectedFolderId = id;
     const label   = document.getElementById('ongoing-folder-label');
     const trigger = document.getElementById('ongoing-folder-trigger');
-    if (label)   { label.textContent = name; label.style.color = id === '__new__' ? '#888' : '#111'; }
-    if (trigger) trigger.style.color = id === '__new__' ? '#888' : '#111';
-    closeFolderDropdown();
+    if (label)   { label.textContent = name; label.style.color = '#111'; }
+    if (trigger) trigger.style.color = '#111';
+  }
+
+  function showNewFolderInput() {
+    const selectWrap = document.getElementById('ongoing-folder-select-wrap');
+    const inputWrap  = document.getElementById('new-folder-input-wrap');
+    const input      = document.getElementById('new-folder-name-input');
+    if (selectWrap) selectWrap.style.display = 'none';
+    if (inputWrap)  inputWrap.style.display  = 'block';
+    if (input)      { input.value = ''; setTimeout(() => input.focus(), 50); }
+  }
+
+  function hideNewFolderInput() {
+    const selectWrap = document.getElementById('ongoing-folder-select-wrap');
+    const inputWrap  = document.getElementById('new-folder-input-wrap');
+    const input      = document.getElementById('new-folder-name-input');
+    if (inputWrap)  inputWrap.style.display  = 'none';
+    if (selectWrap) selectWrap.style.display = 'block';
+    if (input)      input.value = '';
+    const btn = document.getElementById('new-folder-create-btn');
+    if (btn) { btn.disabled = true; btn.style.background = '#ccc'; btn.style.cursor = 'not-allowed'; }
+  }
+
+  function onNewFolderInputChange(input) {
+    const btn = document.getElementById('new-folder-create-btn');
+    if (!btn) return;
+    const hasValue = input.value.trim().length > 0;
+    btn.disabled         = !hasValue;
+    btn.style.background = hasValue ? '#1a1a1a' : '#ccc';
+    btn.style.cursor     = hasValue ? 'pointer'  : 'not-allowed';
+  }
+
+  function confirmNewFolder() {
+    const input = document.getElementById('new-folder-name-input');
+    const name  = (input?.value || '').trim();
+    if (!name) return;
+    window.newFolderName     = name;
+    window._selectedFolderId = '__new__';
+    const label   = document.getElementById('ongoing-folder-label');
+    const trigger = document.getElementById('ongoing-folder-trigger');
+    if (label)   { label.textContent = name; label.style.color = '#111'; }
+    if (trigger) trigger.style.color = '#111';
+    hideNewFolderInput();
   }
 
   async function saveAsOngoing() {
@@ -4177,11 +4234,8 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     try {
       if (window._selectedFolderId === '__new__') {
-        const folderName = prompt('Folder name:', val('exp-title') || 'New folder');
-        if (!folderName) {
-          if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
-          return;
-        }
+        const folderName = window.newFolderName || val('exp-title') || 'New folder';
+        window.newFolderName = null;
         const { data: folderData, error: folderErr } = await supa
           .from('experience_blocks')
           .insert({ user_id: currentUser.id, title: folderName, is_current: true, parent_id: null })
@@ -5142,6 +5196,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   window.currentParentId   = null; // set when "Keep scribbling" → carry parent_id into next save
   window.editingScribbleId = null; // set when editing an existing scribble via pencil button
   window._selectedFolderId = null; // set when user picks a folder in the ongoing select
+  window.newFolderName     = null; // set when user creates a new folder via inline input
   let _activeFolderRow  = null; // folder row currently shown in modal
   let _addMode          = 'new'; // 'new' | 'scribble' | 'edit-scribble'
   let _bdRow = null;       // row currently displayed
