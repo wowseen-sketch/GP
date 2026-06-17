@@ -1901,13 +1901,19 @@
               <input id="exp-start" class="form-input" type="month" value="2024-01">
             </div>
             <div class="form-group">
-              <label class="form-label" style="justify-content:space-between;">
-                End Date
-                <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--ink-3);text-transform:none;letter-spacing:0;cursor:pointer;">
-                  <input id="exp-current" type="checkbox" style="accent-color:var(--accent)" onchange="handleExpCurrentChange(this)"> Currently ongoing
-                </label>
-              </label>
+              <label class="form-label">End Date</label>
               <input id="exp-end" class="form-input" type="month" value="2024-06">
+              <div style="display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:6px;">
+                <input id="exp-current" type="checkbox" style="width:13px;height:13px;accent-color:#1a1a1a;cursor:pointer;" onchange="handleExpCurrentChange(this)">
+                <label for="exp-current" style="font-size:11px;color:#888;cursor:pointer;user-select:none;">Currently ongoing</label>
+              </div>
+              <div id="ongoing-folder-select-wrap" style="display:none;margin-top:8px;position:relative;">
+                <div id="ongoing-folder-trigger" onclick="toggleFolderDropdown()" style="display:flex;align-items:center;justify-content:space-between;border:0.5px solid #ddd;border-radius:8px;padding:8px 10px;font-size:12px;color:#999;cursor:pointer;background:#fff;user-select:none;">
+                  <span id="ongoing-folder-label">Select a folder…</span>
+                  <span id="ongoing-folder-chevron" style="font-size:11px;color:#bbb;transition:transform 0.2s;display:inline-block;">▾</span>
+                </div>
+                <div id="ongoing-folder-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;border:0.5px solid #ddd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.08);background:#fff;z-index:200;overflow:hidden;"></div>
+              </div>
             </div>
           </div>
 
@@ -4013,15 +4019,206 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
 
   function handleExpCurrentChange(cb) {
-    const end = document.getElementById('exp-end');
+    const end  = document.getElementById('exp-end');
+    const wrap = document.getElementById('ongoing-folder-select-wrap');
     if (!end) return;
-    if (cb.checked) { end.disabled = true; end.value = ''; }
-    else { end.disabled = false; end.value = '2024-06'; }
+    if (cb.checked) {
+      end.disabled      = true;
+      end.style.opacity = '0.4';
+      if (wrap) wrap.style.display = 'block';
+      _syncAnalyzeBtn(true);
+      loadOngoingFolders();
+    } else {
+      end.disabled      = false;
+      end.style.opacity = '1';
+      if (wrap) { wrap.style.display = 'none'; closeFolderDropdown(); }
+      _syncAnalyzeBtn(false);
+      window._selectedFolderId = null;
+    }
+  }
+
+  function _syncAnalyzeBtn(isOngoing) {
+    if (_addMode !== 'new') return;
+    const btn = document.getElementById('btn-analyze');
+    if (!btn) return;
+    if (isOngoing) {
+      btn.innerHTML        = 'Save as ongoing';
+      btn.style.background = '#1a1a1a';
+      btn.style.borderRadius = '999px';
+      btn.style.opacity    = '1';
+      btn.onmouseover = () => { btn.style.background = '#333'; };
+      btn.onmouseout  = () => { btn.style.background = '#1a1a1a'; };
+    } else {
+      btn.innerHTML        = '<i class="ti ti-sparkles" style="font-size:16px;"></i> Analyze Experience';
+      btn.style.background = 'linear-gradient(135deg,#0081DD 0%,#38BDE0 60%,#77FFE4 100%)';
+      btn.style.borderRadius = 'var(--rl)';
+      btn.style.opacity    = '1';
+      btn.onmouseover = () => { btn.style.opacity = '0.88'; };
+      btn.onmouseout  = () => { btn.style.opacity = '1'; };
+    }
+  }
+
+  async function loadOngoingFolders() {
+    if (!currentUser) return;
+    const dropdown = document.getElementById('ongoing-folder-dropdown');
+    if (!dropdown) return;
+    dropdown.innerHTML = '<div style="padding:10px 12px;font-size:12px;color:#aaa;">Loading…</div>';
+
+    const { data, error } = await supa
+      .from('experience_blocks')
+      .select('id, title')
+      .eq('user_id', currentUser.id)
+      .eq('is_current', true)
+      .is('parent_id', null)
+      .order('created_at', { ascending: false });
+
+    const folders = (!error && data) ? data : [];
+    let html = '';
+    folders.forEach(f => {
+      html += `<div data-id="${f.id}" data-name="${escapeHtml(f.title || 'Untitled')}" onclick="selectOngoingFolder(this.dataset.id, this.dataset.name)" style="padding:9px 12px;font-size:12px;color:#111;cursor:pointer;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background=''">${escapeHtml(f.title || 'Untitled')}</div>`;
+    });
+    html += `<div onclick="selectOngoingFolder('__new__', '+ Create new folder')" style="padding:9px 12px;font-size:12px;color:#888;font-style:italic;cursor:pointer;border-top:0.5px solid #f0f0f0;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background=''">+ Create new folder</div>`;
+    dropdown.innerHTML = html;
+  }
+
+  function toggleFolderDropdown() {
+    const dropdown = document.getElementById('ongoing-folder-dropdown');
+    const chevron  = document.getElementById('ongoing-folder-chevron');
+    if (!dropdown) return;
+    const isOpen = dropdown.style.display === 'block';
+    if (isOpen) { closeFolderDropdown(); }
+    else {
+      dropdown.style.display = 'block';
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    }
+  }
+
+  function closeFolderDropdown() {
+    const dropdown = document.getElementById('ongoing-folder-dropdown');
+    const chevron  = document.getElementById('ongoing-folder-chevron');
+    if (dropdown) dropdown.style.display = 'none';
+    if (chevron)  chevron.style.transform = '';
+  }
+
+  function selectOngoingFolder(id, name) {
+    window._selectedFolderId = id;
+    const label   = document.getElementById('ongoing-folder-label');
+    const trigger = document.getElementById('ongoing-folder-trigger');
+    if (label)   { label.textContent = name; label.style.color = id === '__new__' ? '#888' : '#111'; }
+    if (trigger) trigger.style.color = id === '__new__' ? '#888' : '#111';
+    closeFolderDropdown();
+  }
+
+  async function saveAsOngoing() {
+    if (!currentUser) return;
+    const val = id => (document.getElementById(id)?.value || '').trim();
+
+    // Validate required fields
+    const requiredFields = [
+      { id: 'exp-title',         label: 'Title' },
+      { id: 'exp-activity-type', label: 'Activity Type' },
+      { id: 'exp-start',         label: 'Start Date' },
+    ];
+    requiredFields.forEach(f => {
+      const el = document.getElementById(f.id);
+      if (!el) return;
+      el.style.borderColor = '';
+      const prev = el.parentNode.querySelector('.req-error-msg');
+      if (prev) prev.remove();
+    });
+    const missing = requiredFields.filter(f => !val(f.id));
+    if (missing.length > 0) {
+      missing.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (!el) return;
+        el.style.borderColor = '#EF4444';
+        const msg = document.createElement('div');
+        msg.className = 'req-error-msg';
+        msg.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        msg.innerHTML = '<i class="ti ti-alert-circle"></i> This field is required';
+        el.parentNode.appendChild(msg);
+      });
+      return;
+    }
+    const freetextEl  = document.getElementById('exp-freetext');
+    const freetextVal = (freetextEl?.innerText || '').trim();
+    if (!freetextVal) {
+      if (freetextEl) {
+        const prev = freetextEl.parentNode.querySelector('.req-error-msg');
+        if (prev) prev.remove();
+        freetextEl.style.borderColor = '#EF4444';
+        const msg = document.createElement('div');
+        msg.className = 'req-error-msg';
+        msg.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        msg.innerHTML = '<i class="ti ti-alert-circle"></i> This field is required';
+        freetextEl.parentNode.appendChild(msg);
+      }
+      return;
+    }
+    if (!window._selectedFolderId) {
+      showSaveToast('Please select a folder', true);
+      return;
+    }
+
+    const btn = document.getElementById('btn-analyze');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+    const monthToDate = m => m ? `${m}-01` : null;
+    const basePayload = {
+      user_id:       currentUser.id,
+      title:         val('exp-title'),
+      activity_type: val('exp-activity-type'),
+      organization:  val('exp-org') || null,
+      start_date:    monthToDate(val('exp-start')),
+      end_date:      null,
+      is_current:    true,
+      description:   freetextVal,
+    };
+
+    try {
+      if (window._selectedFolderId === '__new__') {
+        const folderName = prompt('Folder name:', val('exp-title') || 'New folder');
+        if (!folderName) {
+          if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+          return;
+        }
+        const { data: folderData, error: folderErr } = await supa
+          .from('experience_blocks')
+          .insert({ user_id: currentUser.id, title: folderName, is_current: true, parent_id: null })
+          .select('id').single();
+        if (folderErr || !folderData) {
+          showSaveToast('Folder creation failed: ' + (folderErr?.message || ''), true);
+          if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+          return;
+        }
+        const { error: scribErr } = await supa.from('experience_blocks').insert({ ...basePayload, parent_id: folderData.id });
+        if (scribErr) {
+          showSaveToast('Scribble save failed: ' + scribErr.message, true);
+          if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+          return;
+        }
+      } else {
+        const { error } = await supa.from('experience_blocks').insert({ ...basePayload, parent_id: window._selectedFolderId });
+        if (error) {
+          showSaveToast('Save failed: ' + error.message, true);
+          if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+          return;
+        }
+      }
+      window._selectedFolderId = null;
+      showSaveToast('Saved to ongoing!', false);
+      navigate('blocks');
+    } catch (e) {
+      showSaveToast('Unexpected error: ' + e.message, true);
+      if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+    }
   }
 
   function openAnalysisModal() {
-    const val = id => (document.getElementById(id)?.value || '').trim();
     const isCurrent = document.getElementById('exp-current')?.checked || false;
+    if (isCurrent) { saveAsOngoing(); return; }
+
+    const val = id => (document.getElementById(id)?.value || '').trim();
 
     const requiredFields = [
       { id: 'exp-title',         label: 'Title' },
@@ -4680,6 +4877,8 @@ What I learned: Consistency matters more than quality of individual posts`;
       analyzeBtn.style.display = 'flex';
       folderBtn.style.display  = 'none';
       if (saveBtn) saveBtn.style.display = 'none';
+      const cb = document.getElementById('exp-current');
+      _syncAnalyzeBtn(cb?.checked || false);
     }
   }
 
@@ -4942,6 +5141,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   let _allBlockRows     = [];   // all experience_blocks rows (for modal scribble lookup)
   window.currentParentId   = null; // set when "Keep scribbling" → carry parent_id into next save
   window.editingScribbleId = null; // set when editing an existing scribble via pencil button
+  window._selectedFolderId = null; // set when user picks a folder in the ongoing select
   let _activeFolderRow  = null; // folder row currently shown in modal
   let _addMode          = 'new'; // 'new' | 'scribble' | 'edit-scribble'
   let _bdRow = null;       // row currently displayed
@@ -5346,6 +5546,9 @@ What I learned: Consistency matters more than quality of individual posts`;
       const menu = document.getElementById('blk-type-menu');
       if (menu) menu.style.display = 'none';
     }
+    // Close ongoing folder dropdown on outside click
+    const folderWrap = document.getElementById('ongoing-folder-select-wrap');
+    if (folderWrap && !folderWrap.contains(e.target)) closeFolderDropdown();
   });
 
   function navigate(target) {
@@ -5389,6 +5592,12 @@ What I learned: Consistency matters more than quality of individual posts`;
     // page-add 진입 시 mode 결정 (edit-scribble > scribble > new 우선순위)
     if (target === 'add') {
       _addMode = window.editingScribbleId ? 'edit-scribble' : (window.currentParentId ? 'scribble' : 'new');
+      // 새 입력 모드 진입 시 ongoing 선택 상태 초기화
+      if (_addMode === 'new') {
+        window._selectedFolderId = null;
+        const cb = document.getElementById('exp-current');
+        if (cb && cb.checked) { cb.checked = false; handleExpCurrentChange(cb); }
+      }
       updateAddModeUI();
     } else {
       // add 페이지를 벗어나면 편집 상태 초기화
