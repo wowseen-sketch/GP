@@ -1907,13 +1907,13 @@
                 <input id="exp-current" type="checkbox" style="width:13px;height:13px;accent-color:#1a1a1a;cursor:pointer;" onchange="handleExpCurrentChange(this)">
                 <label for="exp-current" style="font-size:11px;color:#888;cursor:pointer;user-select:none;">Currently ongoing</label>
               </div>
-              <div id="ongoing-folder-select-wrap" style="display:none;margin-top:8px;position:relative;">
-                <div id="ongoing-folder-trigger" onclick="toggleFolderDropdown()" style="display:flex;align-items:center;justify-content:space-between;border:0.5px solid #ddd;border-radius:8px;padding:8px 10px;font-size:12px;color:#999;cursor:pointer;background:#fff;user-select:none;">
-                  <span id="ongoing-folder-label">Select a folder…</span>
-                  <span id="ongoing-folder-chevron" style="font-size:11px;color:#bbb;transition:transform 0.2s;display:inline-block;">▾</span>
-                </div>
-                <div id="ongoing-folder-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;border:0.5px solid #ddd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.08);background:#fff;z-index:200;overflow:hidden;"></div>
+            </div>
+            <div class="form-group form-full" id="ongoing-folder-select-wrap" style="display:none;position:relative;">
+              <div id="ongoing-folder-trigger" onclick="toggleFolderDropdown()" style="display:flex;align-items:center;justify-content:space-between;width:100%;box-sizing:border-box;border:1px solid var(--border-strong);border-radius:var(--r);padding:10px 13px;font-size:13px;font-family:var(--ff-head);color:#999;cursor:pointer;background:var(--white);user-select:none;">
+                <span id="ongoing-folder-label">Select a folder…</span>
+                <span id="ongoing-folder-chevron" style="font-size:11px;color:#bbb;transition:transform 0.2s;display:inline-block;">▾</span>
               </div>
+              <div id="ongoing-folder-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;border:0.5px solid #ddd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.08);background:#fff;z-index:200;overflow:hidden;"></div>
             </div>
           </div>
 
