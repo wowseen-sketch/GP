@@ -4238,7 +4238,7 @@ What I learned: Consistency matters more than quality of individual posts`;
         window.newFolderName = null;
         const { data: folderData, error: folderErr } = await supa
           .from('experience_blocks')
-          .insert({ user_id: currentUser.id, title: folderName, is_current: true, parent_id: null })
+          .insert({ user_id: currentUser.id, title: folderName, is_current: true, parent_id: null, start_date: basePayload.start_date })
           .select('id').single();
         if (folderErr || !folderData) {
           showSaveToast('Folder creation failed: ' + (folderErr?.message || ''), true);
@@ -4647,7 +4647,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     const fmt = d => d ? d.slice(0, 7).replace('-', '.') : null;
     const start = fmt(row.start_date);
     const end   = row.is_current ? 'Present' : fmt(row.end_date);
-    let period  = `${start || '?'} – ${end || '?'}`;
+    let period  = `${start || '—'} – ${end || '—'}`;
     if (row.start_date && (row.end_date || row.is_current)) {
       const s = new Date(row.start_date);
       const e = row.is_current ? new Date() : new Date(row.end_date);
@@ -4698,7 +4698,7 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   // Build a single ongoing folder card (.blk-folder-card). Click opens modal.
   function buildFolderCard(row, scribbleCount) {
-    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '?';
+    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '—';
     const dateStr = `${fmt(row.start_date)} – Present`;
     const actType = (row.activity_type || '').toUpperCase();
     const count   = scribbleCount || 0;
@@ -4811,7 +4811,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   function openFolderModal(folderRow) {
     _activeFolderRow = folderRow;
     const scribbles = _allBlockRows.filter(r => r.parent_id === folderRow.id);
-    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '?';
+    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '—';
     const dateStr = `${fmt(folderRow.start_date)} – Present`;
 
     const overlay = document.createElement('div');
