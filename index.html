@@ -2385,235 +2385,79 @@
         <div class="lock-overlay-sub">Click to preview</div>
       </div>
 
-      <!-- THREE-COL LAYOUT -->
-      <div style="display:grid;grid-template-columns:260px 1fr 300px;height:calc(100vh - 56px - 36px - 117px);overflow:hidden;">
-
-        <!-- LEFT: Company List -->
-        <div style="border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--white);overflow:hidden;">
-
-          <!-- Search -->
-          <div style="padding:14px 16px;border-bottom:1px solid var(--border);">
-            <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r);padding:0 11px;">
-              <i class="ti ti-search" style="font-size:14px;color:var(--ink-4);"></i>
-              <input type="text" placeholder="Search companies..." style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:8px 0;width:100%;">
-            </div>
+      <!-- JD KEYWORD EXTRACTION (real input — step 2) -->
+      <div style="padding:20px 32px 0;">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><i class="ti ti-file-text"></i> JD Keyword Extraction</div>
           </div>
-
-          <!-- Company list -->
-          <div style="flex:1;overflow-y:auto;">
-
-            <!-- Active item -->
-            <div onclick="selectMatchCo(this)" style="display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;background:var(--accent-light);border-left:3px solid var(--accent);border-bottom:1px solid var(--border);">
-              <div style="width:38px;height:38px;border-radius:9px;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">GG</div>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:700;color:var(--ink);">Google</div>
-                <div style="font-size:11px;color:var(--ink-4);margin-top:1px;">Product Manager</div>
+          <div class="card-body">
+            <div class="form-grid" style="margin-bottom:16px;">
+              <div class="form-group">
+                <label class="form-label">Company Name</label>
+                <input class="form-input" type="text" id="jd-company-input" placeholder="e.g. Acme Corp">
               </div>
-              <div style="text-align:right;">
-                <div style="font-size:15px;font-weight:800;color:var(--success);">87%</div>
-                <div style="font-size:10px;color:var(--ink-4);">Top 12%</div>
+              <div class="form-group">
+                <label class="form-label">Job Title</label>
+                <input class="form-input" type="text" id="jd-role-input" placeholder="e.g. Product Manager">
               </div>
             </div>
-
-            <div onclick="selectMatchCo(this)" style="display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;border-left:3px solid transparent;border-bottom:1px solid var(--border);transition:background 0.12s;" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
-              <div style="width:38px;height:38px;border-radius:9px;background:#555555;color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">AP</div>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:700;color:var(--ink);">Apple</div>
-                <div style="font-size:11px;color:var(--ink-4);margin-top:1px;">iOS Engineer · App Division</div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:15px;font-weight:800;color:var(--success);">73%</div>
-                <div style="font-size:10px;color:var(--ink-4);">Top 24%</div>
-              </div>
+            <div class="form-group">
+              <label class="form-label">Job Description *</label>
+              <textarea class="form-input" id="jd-text-input" rows="10" placeholder="Paste the full job description here..." style="resize:vertical;min-height:160px;line-height:1.6;"></textarea>
             </div>
-
-            <div onclick="selectMatchCo(this)" style="display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;border-left:3px solid transparent;border-bottom:1px solid var(--border);transition:background 0.12s;" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
-              <div style="width:38px;height:38px;border-radius:9px;background:#CC0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">TS</div>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:700;color:var(--ink);">Tesla</div>
-                <div style="font-size:11px;color:var(--ink-4);margin-top:1px;">Growth Lead</div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:15px;font-weight:800;color:var(--warn);">68%</div>
-                <div style="font-size:10px;color:var(--ink-4);">Top 31%</div>
-              </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:14px;">
+              <button class="btn-primary" id="jd-extract-btn" onclick="extractJdKeywords()" style="display:flex;align-items:center;gap:6px;">
+                <i class="ti ti-sparkles" style="font-size:14px;"></i> Extract Keywords
+              </button>
+              <span id="jd-extract-status" style="font-size:12px;color:var(--ink-4);"></span>
             </div>
+            <!-- extracted keywords preview + save -->
+            <div id="jd-extract-result" style="display:none;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Extracted Company Keywords</div>
+              <div id="jd-extract-pills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+                <button class="btn-primary" id="jd-save-btn" onclick="saveCompanyKeywords()" style="display:flex;align-items:center;gap:6px;">
+                  <i class="ti ti-bookmark" style="font-size:14px;"></i> Save to My Companies
+                </button>
+                <button class="btn-primary" id="jd-match-btn" onclick="analyzeFit()" style="display:flex;align-items:center;gap:6px;">
+                  <i class="ti ti-chart-bar" style="font-size:14px;"></i> Analyze Fit
+                </button>
+                <span id="jd-save-status" style="font-size:12px;color:var(--ink-4);"></span>
+                <span id="jd-match-status" style="font-size:12px;color:var(--ink-4);"></span>
+              </div>
 
-            <!-- Add new -->
-            <div onclick="navigate('match')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;color:var(--accent-2);font-size:13px;font-weight:600;border-bottom:1px solid var(--border);transition:background 0.12s;" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
-              <i class="ti ti-plus" style="font-size:16px;"></i> Add Company
-            </div>
-          </div>
-        </div>
-
-        <!-- CENTER: Analysis Result -->
-        <div style="overflow-y:auto;display:flex;flex-direction:column;gap:0;">
-
-          <!-- Company hero -->
-          <div style="padding:24px 32px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
-            <div style="display:flex;align-items:center;gap:14px;">
-              <div style="width:52px;height:52px;border-radius:12px;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;">GG</div>
-              <div>
-                <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">Google</div>
-                <div style="font-size:13px;color:var(--ink-4);margin-top:2px;">Product Manager · Search Division · 3+ Years</div>
-                <div style="display:flex;gap:8px;margin-top:8px;">
-                  <span style="font-size:11px;font-weight:600;color:var(--success);background:var(--success-light);padding:3px 10px;border-radius:99px;">Analysis Complete</span>
-                  <span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 10px;border-radius:99px;">JD Uploaded</span>
+              <!-- match result: score + matched / partial / missing -->
+              <div id="jd-match-result" style="display:none;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+                <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px;">
+                  <span style="font-size:36px;font-weight:800;color:var(--ink);line-height:1;" id="jd-match-score">0</span>
+                  <span style="font-size:14px;color:var(--ink-4);">/ 100 Job Fit Score</span>
+                  <span style="margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:600;align-self:center;">
+                    <span style="color:var(--success);">● Matched <span id="jd-cnt-matched">0</span></span>
+                    <span style="color:var(--warn);">● Partial <span id="jd-cnt-partial">0</span></span>
+                    <span style="color:var(--danger);">● Missing <span id="jd-cnt-missing">0</span></span>
+                  </span>
                 </div>
-              </div>
-            </div>
-            <button onclick="navigate('matchstore')" class="btn-primary" style="display:flex;align-items:center;gap:6px;white-space:nowrap;"><i class="ti ti-chart-bar" style="font-size:14px;"></i> Full Report</button>
-          </div>
-
-          <!-- Score panel -->
-          <div style="margin:20px 32px 0;">
-            <div style="background:var(--ink);border-radius:var(--rl);padding:20px 24px;display:grid;grid-template-columns:130px 1px 1fr;gap:20px;align-items:center;">
-              <div>
-                <div style="font-size:10px;letter-spacing:0.08em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:8px;">JOB FIT SCORE</div>
-                <div style="font-size:52px;font-weight:800;background:linear-gradient(135deg,#38BDE0,#77FFE4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">87<span style="font-size:20px;-webkit-text-fill-color:rgba(255,255,255,0.25);background:none;">%</span></div>
-                <div style="font-size:11px;color:#22C55E;margin-top:5px;display:flex;align-items:center;gap:4px;"><i class="ti ti-trending-up"></i> Top 12%</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.08);align-self:stretch;"></div>
-              <div style="display:flex;flex-direction:column;gap:10px;">
-                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;color:rgba(255,255,255,0.4);width:110px;">Job Fit</span><div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;"><div style="width:92%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div><span style="font-size:11px;color:rgba(255,255,255,0.5);width:24px;text-align:right;">92</span></div>
-                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;color:rgba(255,255,255,0.4);width:110px;">Keyword Match</span><div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;"><div style="width:85%;height:100%;background:linear-gradient(90deg,#0081DD,#38BDE0);border-radius:99px;"></div></div><span style="font-size:11px;color:rgba(255,255,255,0.5);width:24px;text-align:right;">85</span></div>
-                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;color:rgba(255,255,255,0.4);width:110px;">Diversity</span><div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;"><div style="width:78%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div><span style="font-size:11px;color:rgba(255,255,255,0.5);width:24px;text-align:right;">78</span></div>
-                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;color:rgba(255,255,255,0.4);width:110px;">Duration</span><div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;"><div style="width:88%;height:100%;background:linear-gradient(90deg,#38BDE0,#77FFE4);border-radius:99px;"></div></div><span style="font-size:11px;color:rgba(255,255,255,0.5);width:24px;text-align:right;">88</span></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Keyword Match Analysis -->
-          <div style="margin:20px 32px 0;">
-            <div class="card">
-              <div class="card-head">
-                <div class="card-title"><i class="ti ti-tag"></i> Keyword Match Analysis</div>
-                <div style="display:flex;gap:12px;font-size:11px;">
-                  <span style="color:var(--success);font-weight:600;">● Matched 9</span>
-                  <span style="color:var(--warn);font-weight:600;">● Partial 4</span>
-                  <span style="color:var(--danger);font-weight:600;">● Missing 3</span>
-                </div>
-              </div>
-              <div class="card-body">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
                   <div>
-                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:5px;"><i class="ti ti-user" style="font-size:13px;color:var(--accent-2);"></i> My Keywords</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                      <span class="kw-pill matched">Strategic Planning</span>
-                      <span class="kw-pill matched">GTM</span>
-                      <span class="kw-pill matched">Data Analysis</span>
-                      <span class="kw-pill matched">OKR</span>
-                      <span class="kw-pill matched">B2B</span>
-                      <span class="kw-pill partial">SQL</span>
-                      <span class="kw-pill partial">UX Research</span>
-                      <span class="kw-pill partial">Leadership</span>
-                    </div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--success);margin-bottom:8px;">Matched</div>
+                    <div id="jd-group-matched" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
                   </div>
                   <div>
-                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:5px;"><i class="ti ti-building" style="font-size:13px;color:var(--accent-2);"></i> JD Required</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                      <span class="kw-pill matched">Strategic Planning</span>
-                      <span class="kw-pill matched">GTM</span>
-                      <span class="kw-pill matched">Service Planning</span>
-                      <span class="kw-pill matched">B2B</span>
-                      <span class="kw-pill missing">Agile</span>
-                      <span class="kw-pill missing">A/B Testing</span>
-                      <span class="kw-pill missing">KPI Design</span>
-                    </div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--warn);margin-bottom:8px;">Partial</div>
+                    <div id="jd-group-partial" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+                  </div>
+                  <div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--danger);margin-bottom:8px;">Missing</div>
+                    <div id="jd-group-missing" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Improvement Guide -->
-          <div style="margin:20px 32px 28px;">
-            <div class="card">
-              <div class="card-head">
-                <div class="card-title"><i class="ti ti-map"></i> Improvement Guide</div>
-                <div style="font-size:11px;color:var(--ink-4);">AI-generated suggestions based on JD gaps</div>
-              </div>
-              <div class="card-body" style="display:flex;flex-direction:column;gap:14px;">
-
-                <!-- Rewrite direction -->
-                <div>
-                  <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-edit" style="font-size:14px;color:var(--accent-2);"></i> Experience Rewrite Direction</div>
-                  <div style="display:flex;flex-direction:column;gap:8px;">
-                    <div style="padding:12px 14px;background:var(--surface);border-radius:var(--r);border-left:3px solid var(--accent);">
-                      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;">GTM Strategy Block</div>
-                      <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Add A/B testing and KPI setting language. Replace "planned and executed" with specific user funnel improvements and measurable conversion metrics.</div>
-                    </div>
-                    <div style="padding:12px 14px;background:var(--surface);border-radius:var(--r);border-left:3px solid var(--accent);">
-                      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;">Data Analysis Block</div>
-                      <div style="font-size:12px;color:var(--ink-3);line-height:1.65;">Emphasize service planning decisions driven by data. Mention DAU, retention rate, or funnel drop-off metrics to match Google's analytical service planner profile.</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div style="height:1px;background:var(--border);"></div>
-
-                <!-- Keyword gap -->
-                <div>
-                  <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-key" style="font-size:14px;color:var(--warn);"></i> Keywords to Acquire</div>
-                  <div style="display:flex;flex-direction:column;gap:8px;">
-                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--warn-light);border-radius:var(--r);border:1px solid rgba(217,119,6,0.18);">
-                      <span class="kw-pill missing" style="flex-shrink:0;">Agile</span>
-                      <div style="font-size:12px;color:var(--ink-2);line-height:1.6;">Referenced 4x in JD. Add a sprint-based project experience block — even a side project counts.</div>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--warn-light);border-radius:var(--r);border:1px solid rgba(217,119,6,0.18);">
-                      <span class="kw-pill missing" style="flex-shrink:0;">A/B Testing</span>
-                      <div style="font-size:12px;color:var(--ink-2);line-height:1.6;">Referenced 3x. Mention any experiment or hypothesis-driven test from your GTM or UX research work.</div>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--warn-light);border-radius:var(--r);border:1px solid rgba(217,119,6,0.18);">
-                      <span class="kw-pill missing" style="flex-shrink:0;">KPI Design</span>
-                      <div style="font-size:12px;color:var(--ink-2);line-height:1.6;">Referenced 2x. Add to OKR Design block — your OKR work naturally overlaps with KPI setting.</div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- RIGHT: Analysis Panel -->
-        <div style="border-left:1px solid var(--border);background:var(--surface);overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:18px;">
-
-          <!-- Competency gauge -->
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">Competency Distribution</div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div class="gauge-item"><div class="gauge-header"><span class="gauge-lbl">Strategy / Planning</span><span class="gauge-val">92%</span></div><div class="gauge-track"><div class="gauge-fill blue" style="width:92%"></div></div></div>
-              <div class="gauge-item"><div class="gauge-header"><span class="gauge-lbl">Data / Analysis</span><span class="gauge-val">78%</span></div><div class="gauge-track"><div class="gauge-fill teal" style="width:78%"></div></div></div>
-              <div class="gauge-item"><div class="gauge-header"><span class="gauge-lbl">Leadership / Org</span><span class="gauge-val">65%</span></div><div class="gauge-track"><div class="gauge-fill green" style="width:65%"></div></div></div>
-              <div class="gauge-item"><div class="gauge-header"><span class="gauge-lbl">Marketing / Content</span><span class="gauge-val">58%</span></div><div class="gauge-track"><div class="gauge-fill amber" style="width:58%"></div></div></div>
-            </div>
-          </div>
-
-          <div style="height:1px;background:var(--border-strong);"></div>
-
-          <!-- AI Insights -->
-          <div>
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">AI Insights</div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-              <div style="padding:11px 13px;background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);">
-                <div style="font-size:10px;font-weight:700;color:var(--success);margin-bottom:4px;display:flex;align-items:center;gap:4px;"><i class="ti ti-circle-check" style="font-size:13px;"></i> Strength</div>
-                <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">GTM + B2B signals are a strong fit. Cross-functional leadership differentiates you for PM roles.</div>
-              </div>
-              <div style="padding:11px 13px;background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);">
-                <div style="font-size:10px;font-weight:700;color:var(--warn);margin-bottom:4px;display:flex;align-items:center;gap:4px;"><i class="ti ti-alert-circle" style="font-size:13px;"></i> Needs Work</div>
-                <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">Agile and A/B testing are missing. Adding these blocks could boost score by +12%.</div>
-              </div>
-              <div style="padding:11px 13px;background:var(--white);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-sm);">
-                <div style="font-size:10px;font-weight:700;color:var(--accent-2);margin-bottom:4px;display:flex;align-items:center;gap:4px;"><i class="ti ti-bulb" style="font-size:13px;"></i> Next Action</div>
-                <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">Add DAU metrics to Data Analysis block — Google score could reach 93%+.</div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
+
     </div>
 
     <!-- ════ PAGE: LANDING ════ -->
@@ -4337,6 +4181,230 @@ What I learned: Consistency matters more than quality of individual posts`;
     const m = document.getElementById('analysis-modal');
     m.style.display = 'none';
     document.body.style.overflow = '';
+  }
+
+  // ── JD KEYWORD EXTRACTION (step 2) ─────────────
+  // Holds the most recent extraction so saveCompanyKeywords() can persist it.
+  let _cachedJd = null;
+
+  // Calls the extract-jd-keywords edge function and previews the result on screen.
+  async function extractJdKeywords() {
+    const company = (document.getElementById('jd-company-input')?.value || '').trim();
+    const role    = (document.getElementById('jd-role-input')?.value || '').trim();
+    const jd_text = (document.getElementById('jd-text-input')?.value || '').trim();
+
+    const statusEl = document.getElementById('jd-extract-status');
+    const btn      = document.getElementById('jd-extract-btn');
+    const resultEl = document.getElementById('jd-extract-result');
+    const pillsEl  = document.getElementById('jd-extract-pills');
+
+    if (!jd_text) {
+      if (statusEl) { statusEl.textContent = 'Paste a job description first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Extracting…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    try {
+      const { data, error } = await supa.functions.invoke('extract-jd-keywords', {
+        body: { company, role, jd_text },
+      });
+      if (error) throw error;
+      const keywords = (data && data.company_keywords) || [];
+      // Stash the full extraction for the save step.
+      _cachedJd = { company, role, jd_text, keywords };
+      if (pillsEl) {
+        pillsEl.innerHTML = keywords.length
+          ? keywords.map(k => `<span style="font-size:12px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:4px 11px;border-radius:99px;">${escapeHtml(k)}</span>`).join('')
+          : '<span style="font-size:12px;color:var(--ink-4);">No keywords extracted</span>';
+      }
+      if (resultEl) resultEl.style.display = 'block';
+      // Reset the save status — this is a fresh extraction, not yet saved.
+      const saveStatusEl = document.getElementById('jd-save-status');
+      if (saveStatusEl) { saveStatusEl.textContent = ''; }
+      if (statusEl) { statusEl.textContent = `${keywords.length} keywords extracted`; statusEl.style.color = 'var(--success)'; }
+    } catch (err) {
+      console.error('[extractJdKeywords] failed:', err);
+      if (statusEl) { statusEl.textContent = 'Extraction failed — check console'; statusEl.style.color = 'var(--danger)'; }
+    }
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+  }
+
+  // ── SAVE EXTRACTED JD KEYWORDS (step 2-③) ──────
+  // Persists the current extraction to company_keywords.
+  // Upserts on (user_id, company_name, role_title) so re-saving the same
+  // company + role overwrites instead of piling up duplicate rows.
+  async function saveCompanyKeywords() {
+    const statusEl = document.getElementById('jd-save-status');
+    const btn      = document.getElementById('jd-save-btn');
+
+    // 1. Auth gate — same pattern as saveExperienceBlock.
+    if (!currentUser) {
+      openAuthRequiredModal('save');
+      return;
+    }
+
+    // 2. Need a fresh extraction to save.
+    if (!_cachedJd) {
+      if (statusEl) { statusEl.textContent = 'Extract keywords first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    const company_name = (_cachedJd.company || '').trim();
+    const role_title   = (_cachedJd.role   || '').trim();
+    const jd_text      = _cachedJd.jd_text || '';
+    const keywords     = _cachedJd.keywords || [];
+
+    // 3. Validate required fields.
+    if (!company_name)    { if (statusEl) { statusEl.textContent = 'Company name is required'; statusEl.style.color = 'var(--danger)'; } return; }
+    if (!role_title)      { if (statusEl) { statusEl.textContent = 'Job title is required';    statusEl.style.color = 'var(--danger)'; } return; }
+    if (!keywords.length) { if (statusEl) { statusEl.textContent = 'No keywords to save';      statusEl.style.color = 'var(--danger)'; } return; }
+
+    // 4. Upsert. keywords is a jsonb column (same as competency_keywords),
+    //    so supabase-js serializes the JS array to JSON automatically.
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Saving…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    const payload = {
+      user_id: currentUser.id,
+      company_name,
+      role_title,
+      jd_text,
+      keywords,
+    };
+
+    const { error } = await supa
+      .from('company_keywords')
+      .upsert(payload, { onConflict: 'user_id,company_name,role_title' });
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+
+    if (error) {
+      console.error('[saveCompanyKeywords] failed:', error);
+      if (statusEl) { statusEl.textContent = `Save failed: ${error.message}`; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    if (statusEl) { statusEl.textContent = 'Saved ✓'; statusEl.style.color = 'var(--success)'; }
+    if (typeof showSaveToast === 'function') showSaveToast('Company keywords saved');
+  }
+
+  // ── FIT ANALYSIS (step 3) ──────────────────────
+  // Read EVERY experience block for the signed-in user and return the union of
+  // their competency_keywords (deduped, case-insensitive). Reads fresh from the
+  // DB — not just what's rendered on screen. Blocks with null/empty
+  // competency_keywords (e.g. old pre-AI blocks) are skipped.
+  async function gatherMyKeywords() {
+    if (!currentUser) return [];
+    const { data, error } = await supa
+      .from('experience_blocks')
+      .select('competency_keywords')
+      .eq('user_id', currentUser.id);
+    if (error) { console.error('[gatherMyKeywords] failed:', error); throw error; }
+
+    const seen = new Set();
+    const out = [];
+    for (const row of (data || [])) {
+      const kws = row.competency_keywords;   // jsonb -> JS array, or null
+      if (!Array.isArray(kws)) continue;      // null / not an array → skip
+      for (const k of kws) {
+        const s = String(k).trim();
+        if (!s) continue;
+        const key = s.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(s);
+      }
+    }
+    return out;
+  }
+
+  // Partial matches count as half. Tweak this one constant to re-weight.
+  const PARTIAL_WEIGHT = 0.5;
+
+  // Run the fit analysis: my keywords vs the extracted company keywords.
+  // Company side = _cachedJd.keywords, so this works whether or not the
+  // extraction was saved. The score is computed here in JS, not by the LLM.
+  async function analyzeFit() {
+    const statusEl = document.getElementById('jd-match-status');
+    const btn      = document.getElementById('jd-match-btn');
+    const resultEl = document.getElementById('jd-match-result');
+
+    // 1. Auth gate — my keywords come from the user's experience blocks.
+    if (!currentUser) { openAuthRequiredModal('save'); return; }
+
+    // 2. Need extracted company keywords.
+    if (!_cachedJd || !(_cachedJd.keywords || []).length) {
+      if (statusEl) { statusEl.textContent = 'Extract keywords first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+    const companyKeywords = _cachedJd.keywords;
+
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Analyzing…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    try {
+      // 3. Gather my keywords from the DB.
+      const myKeywords = await gatherMyKeywords();
+
+      // 4. No experience keywords yet → nothing to match against. Stop early
+      //    with a clear message instead of calling the LLM (which would just
+      //    score everything 0 and look broken).
+      if (!myKeywords.length) {
+        if (statusEl) { statusEl.textContent = 'No keywords in your experience yet — add experience blocks first'; statusEl.style.color = 'var(--danger)'; }
+        if (resultEl) resultEl.style.display = 'none';
+        if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+        return;
+      }
+
+      // 5. Classify via the edge function.
+      const { data, error } = await supa.functions.invoke('match-keywords', {
+        body: { company_keywords: companyKeywords, my_keywords: myKeywords },
+      });
+      if (error) throw error;
+      const results = (data && data.results) || [];
+
+      // 6. Score in JS: (matched*1 + partial*0.5) / total company keywords * 100.
+      const counts = { matched: 0, partial: 0, missing: 0 };
+      for (const r of results) { if (counts[r.status] !== undefined) counts[r.status]++; }
+      const total = results.length || 1;
+      const score = Math.round((counts.matched * 1 + counts.partial * PARTIAL_WEIGHT) / total * 100);
+
+      // 7. Render.
+      renderFitResult(score, counts, results);
+      if (statusEl) { statusEl.textContent = ''; }
+    } catch (err) {
+      console.error('[analyzeFit] failed:', err);
+      if (statusEl) { statusEl.textContent = 'Analysis failed — check console'; statusEl.style.color = 'var(--danger)'; }
+    }
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+  }
+
+  // Paint the score, counts, and the three keyword groups.
+  function renderFitResult(score, counts, results) {
+    const resultEl = document.getElementById('jd-match-result');
+    document.getElementById('jd-match-score').textContent  = score;
+    document.getElementById('jd-cnt-matched').textContent  = counts.matched;
+    document.getElementById('jd-cnt-partial').textContent  = counts.partial;
+    document.getElementById('jd-cnt-missing').textContent  = counts.missing;
+
+    const groups = { matched: [], partial: [], missing: [] };
+    for (const r of results) { (groups[r.status] || groups.missing).push(r.keyword); }
+
+    const fill = (id, list, cls) => {
+      const el = document.getElementById(id);
+      el.innerHTML = list.length
+        ? list.map(k => `<span class="kw-pill ${cls}">${escapeHtml(k)}</span>`).join('')
+        : '<span style="font-size:11px;color:var(--ink-4);">None</span>';
+    };
+    fill('jd-group-matched', groups.matched, 'matched');
+    fill('jd-group-partial', groups.partial, 'partial');
+    fill('jd-group-missing', groups.missing, 'missing');
+
+    if (resultEl) resultEl.style.display = 'block';
   }
 
   // ── EXPERIENCE BLOCKS: helpers ─────────────────
