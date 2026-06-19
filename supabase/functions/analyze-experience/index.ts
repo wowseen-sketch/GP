@@ -1,20 +1,20 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
-  if (req.method !== "POST") {
+  if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -22,50 +22,45 @@ serve(async (req: Request) => {
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "API key not configured" }), {
       status: 500,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
   let body: {
-    goal?: string;
-    strategy?: string;
-    actions?: string;
-    failure_improvement?: string;
-    outcome_measurable?: string;
-    takeaway?: string;
-    applied?: string;
+    freetext?: string;
   };
   try {
     body = await req.json();
   } catch {
     return new Response(JSON.stringify({ error: "Invalid JSON" }), {
       status: 400,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
-  const {
-    goal = "",
-    strategy = "",
-    actions = "",
-    failure_improvement = "",
-    outcome_measurable = "",
-    takeaway = "",
-    applied = "",
-  } = body;
+  const { freetext = "" } = body;
 
   const systemPrompt = `You are an AI career analysis engine.
 
 Analyze the user's experience input and return a structured JSON result by following the 4 steps below.
 
-USER EXPERIENCE INPUT:
-[GOAL]: ${goal}
-[STRATEGY]: ${strategy}
-[YOUR ACTIONS]: ${actions}
-[UNEXPECTED CHALLENGE & HOW YOU HANDLED IT]: ${failure_improvement}
-[MEASURABLE OUTCOME]: ${outcome_measurable}
-[KEY TAKEAWAY]: ${takeaway}
-[APPLIED ELSEWHERE]: ${applied}
+USER EXPERIENCE INPUT (raw, unstructured):
+${freetext}
+
+Before analyzing, do the following:
+- Fix all typos, grammar errors, and informal phrasing
+- Restructure the cleaned content into STAR format:
+  S (Situation): context and background
+  T (Task): the goal or responsibility
+  A (Action): what was actually done
+  R (Result): outcomes and impact
+Use this STAR-structured version as the basis for all analysis steps below.
+
+First, populate star_structured by restructuring the input into STAR format:
+- situation: background context, team setup, role, where and when
+- task: the goal, objective, or problem to solve
+- action: specific actions taken, methods, tools used, collaboration
+- result: outcomes, measurable impact, recognition, lessons learned
 
 STEP 1. Select all relevant Work Activities from the list below. Only select items clearly supported by the experience. Do not infer.
 
@@ -110,6 +105,12 @@ STEP 4. Based on the selected Work Activities, Software Skills, Transferable Ski
 
 Return ONLY this JSON. No explanation. No markdown.
 {
+  "star_structured": {
+    "situation": "...",
+    "task": "...",
+    "action": "...",
+    "result": "..."
+  },
   "work_activities": ["item1", "item2"],
   "software_skills": ["item1", "item2"],
   "transferable_skills": ["item1", "item2"],
@@ -126,7 +127,7 @@ Return ONLY this JSON. No explanation. No markdown.
     },
     body: JSON.stringify({
       model: "llama-3.3-70b-versatile",
-      max_tokens: 512,
+      max_tokens: 1024,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user",   content: userMessage },
@@ -139,7 +140,7 @@ Return ONLY this JSON. No explanation. No markdown.
     console.error("Groq API error:", errText);
     return new Response(JSON.stringify({ error: "Upstream API error" }), {
       status: 502,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
@@ -151,6 +152,7 @@ Return ONLY this JSON. No explanation. No markdown.
     software_skills: string[];
     transferable_skills: string[];
     competency_keywords: string[];
+    star_structured: { situation: string; task: string; action: string; result: string; };
   };
   try {
     result = JSON.parse(rawText);
@@ -161,13 +163,13 @@ Return ONLY this JSON. No explanation. No markdown.
     } else {
       return new Response(JSON.stringify({ error: "Failed to parse AI response" }), {
         status: 500,
-        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
   }
 
   return new Response(JSON.stringify(result), {
     status: 200,
-    headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 });
