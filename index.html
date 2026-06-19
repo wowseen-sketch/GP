@@ -2119,7 +2119,38 @@
                 <button class="btn-primary" id="jd-save-btn" onclick="saveCompanyKeywords()" style="display:flex;align-items:center;gap:6px;">
                   <i class="ti ti-bookmark" style="font-size:14px;"></i> Save to My Companies
                 </button>
+                <button class="btn-primary" id="jd-match-btn" onclick="analyzeFit()" style="display:flex;align-items:center;gap:6px;">
+                  <i class="ti ti-chart-bar" style="font-size:14px;"></i> Analyze Fit
+                </button>
                 <span id="jd-save-status" style="font-size:12px;color:var(--ink-4);"></span>
+                <span id="jd-match-status" style="font-size:12px;color:var(--ink-4);"></span>
+              </div>
+
+              <!-- match result: score + matched / partial / missing -->
+              <div id="jd-match-result" style="display:none;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+                <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px;">
+                  <span style="font-size:36px;font-weight:800;color:var(--ink);line-height:1;" id="jd-match-score">0</span>
+                  <span style="font-size:14px;color:var(--ink-4);">/ 100 Job Fit Score</span>
+                  <span style="margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:600;align-self:center;">
+                    <span style="color:var(--success);">● Matched <span id="jd-cnt-matched">0</span></span>
+                    <span style="color:var(--warn);">● Partial <span id="jd-cnt-partial">0</span></span>
+                    <span style="color:var(--danger);">● Missing <span id="jd-cnt-missing">0</span></span>
+                  </span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                  <div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--success);margin-bottom:8px;">Matched</div>
+                    <div id="jd-group-matched" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+                  </div>
+                  <div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--warn);margin-bottom:8px;">Partial</div>
+                    <div id="jd-group-partial" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+                  </div>
+                  <div>
+                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--danger);margin-bottom:8px;">Missing</div>
+                    <div id="jd-group-missing" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -3283,6 +3314,122 @@
 
     if (statusEl) { statusEl.textContent = 'Saved ✓'; statusEl.style.color = 'var(--success)'; }
     if (typeof showSaveToast === 'function') showSaveToast('Company keywords saved');
+  }
+
+  // ── FIT ANALYSIS (step 3) ──────────────────────
+  // Read EVERY experience block for the signed-in user and return the union of
+  // their competency_keywords (deduped, case-insensitive). Reads fresh from the
+  // DB — not just what's rendered on screen. Blocks with null/empty
+  // competency_keywords (e.g. old pre-AI blocks) are skipped.
+  async function gatherMyKeywords() {
+    if (!currentUser) return [];
+    const { data, error } = await supa
+      .from('experience_blocks')
+      .select('competency_keywords')
+      .eq('user_id', currentUser.id);
+    if (error) { console.error('[gatherMyKeywords] failed:', error); throw error; }
+
+    const seen = new Set();
+    const out = [];
+    for (const row of (data || [])) {
+      const kws = row.competency_keywords;   // jsonb -> JS array, or null
+      if (!Array.isArray(kws)) continue;      // null / not an array → skip
+      for (const k of kws) {
+        const s = String(k).trim();
+        if (!s) continue;
+        const key = s.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(s);
+      }
+    }
+    return out;
+  }
+
+  // Partial matches count as half. Tweak this one constant to re-weight.
+  const PARTIAL_WEIGHT = 0.5;
+
+  // Run the fit analysis: my keywords vs the extracted company keywords.
+  // Company side = _cachedJd.keywords, so this works whether or not the
+  // extraction was saved. The score is computed here in JS, not by the LLM.
+  async function analyzeFit() {
+    const statusEl = document.getElementById('jd-match-status');
+    const btn      = document.getElementById('jd-match-btn');
+    const resultEl = document.getElementById('jd-match-result');
+
+    // 1. Auth gate — my keywords come from the user's experience blocks.
+    if (!currentUser) { openAuthRequiredModal('save'); return; }
+
+    // 2. Need extracted company keywords.
+    if (!_cachedJd || !(_cachedJd.keywords || []).length) {
+      if (statusEl) { statusEl.textContent = 'Extract keywords first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+    const companyKeywords = _cachedJd.keywords;
+
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Analyzing…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    try {
+      // 3. Gather my keywords from the DB.
+      const myKeywords = await gatherMyKeywords();
+
+      // 4. No experience keywords yet → nothing to match against. Stop early
+      //    with a clear message instead of calling the LLM (which would just
+      //    score everything 0 and look broken).
+      if (!myKeywords.length) {
+        if (statusEl) { statusEl.textContent = 'No keywords in your experience yet — add experience blocks first'; statusEl.style.color = 'var(--danger)'; }
+        if (resultEl) resultEl.style.display = 'none';
+        if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+        return;
+      }
+
+      // 5. Classify via the edge function.
+      const { data, error } = await supa.functions.invoke('match-keywords', {
+        body: { company_keywords: companyKeywords, my_keywords: myKeywords },
+      });
+      if (error) throw error;
+      const results = (data && data.results) || [];
+
+      // 6. Score in JS: (matched*1 + partial*0.5) / total company keywords * 100.
+      const counts = { matched: 0, partial: 0, missing: 0 };
+      for (const r of results) { if (counts[r.status] !== undefined) counts[r.status]++; }
+      const total = results.length || 1;
+      const score = Math.round((counts.matched * 1 + counts.partial * PARTIAL_WEIGHT) / total * 100);
+
+      // 7. Render.
+      renderFitResult(score, counts, results);
+      if (statusEl) { statusEl.textContent = ''; }
+    } catch (err) {
+      console.error('[analyzeFit] failed:', err);
+      if (statusEl) { statusEl.textContent = 'Analysis failed — check console'; statusEl.style.color = 'var(--danger)'; }
+    }
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+  }
+
+  // Paint the score, counts, and the three keyword groups.
+  function renderFitResult(score, counts, results) {
+    const resultEl = document.getElementById('jd-match-result');
+    document.getElementById('jd-match-score').textContent  = score;
+    document.getElementById('jd-cnt-matched').textContent  = counts.matched;
+    document.getElementById('jd-cnt-partial').textContent  = counts.partial;
+    document.getElementById('jd-cnt-missing').textContent  = counts.missing;
+
+    const groups = { matched: [], partial: [], missing: [] };
+    for (const r of results) { (groups[r.status] || groups.missing).push(r.keyword); }
+
+    const fill = (id, list, cls) => {
+      const el = document.getElementById(id);
+      el.innerHTML = list.length
+        ? list.map(k => `<span class="kw-pill ${cls}">${escapeHtml(k)}</span>`).join('')
+        : '<span style="font-size:11px;color:var(--ink-4);">None</span>';
+    };
+    fill('jd-group-matched', groups.matched, 'matched');
+    fill('jd-group-partial', groups.partial, 'partial');
+    fill('jd-group-missing', groups.missing, 'missing');
+
+    if (resultEl) resultEl.style.display = 'block';
   }
 
   // ── EXPERIENCE BLOCKS: helpers ─────────────────
