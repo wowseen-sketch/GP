@@ -2084,6 +2084,42 @@
         <div class="lock-overlay-sub">Click to preview</div>
       </div>
 
+      <!-- JD KEYWORD EXTRACTION (real input — step 2) -->
+      <div style="padding:20px 32px 0;">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><i class="ti ti-file-text"></i> JD Keyword Extraction</div>
+          </div>
+          <div class="card-body">
+            <div class="form-grid" style="margin-bottom:16px;">
+              <div class="form-group">
+                <label class="form-label">Company Name</label>
+                <input class="form-input" type="text" id="jd-company-input" placeholder="e.g. Acme Corp">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Job Title</label>
+                <input class="form-input" type="text" id="jd-role-input" placeholder="e.g. Product Manager">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Job Description *</label>
+              <textarea class="form-input" id="jd-text-input" rows="10" placeholder="Paste the full job description here..." style="resize:vertical;min-height:160px;line-height:1.6;"></textarea>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:14px;">
+              <button class="btn-primary" id="jd-extract-btn" onclick="extractJdKeywords()" style="display:flex;align-items:center;gap:6px;">
+                <i class="ti ti-sparkles" style="font-size:14px;"></i> Extract Keywords
+              </button>
+              <span id="jd-extract-status" style="font-size:12px;color:var(--ink-4);"></span>
+            </div>
+            <!-- extracted keywords preview (not saved yet — save is step 3) -->
+            <div id="jd-extract-result" style="display:none;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Extracted Company Keywords</div>
+              <div id="jd-extract-pills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- THREE-COL LAYOUT -->
       <div style="display:grid;grid-template-columns:260px 1fr 300px;height:calc(100vh - 56px - 36px - 117px);overflow:hidden;">
 
@@ -3133,6 +3169,48 @@
     const m = document.getElementById('analysis-modal');
     m.style.display = 'none';
     document.body.style.overflow = '';
+  }
+
+  // ── JD KEYWORD EXTRACTION (step 2) ─────────────
+  // Calls the extract-jd-keywords edge function and previews the result on screen.
+  // Does NOT persist to company_keywords yet — that's wired in step 3.
+  async function extractJdKeywords() {
+    const company = (document.getElementById('jd-company-input')?.value || '').trim();
+    const role    = (document.getElementById('jd-role-input')?.value || '').trim();
+    const jd_text = (document.getElementById('jd-text-input')?.value || '').trim();
+
+    const statusEl = document.getElementById('jd-extract-status');
+    const btn      = document.getElementById('jd-extract-btn');
+    const resultEl = document.getElementById('jd-extract-result');
+    const pillsEl  = document.getElementById('jd-extract-pills');
+
+    if (!jd_text) {
+      if (statusEl) { statusEl.textContent = 'Paste a job description first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Extracting…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    try {
+      const { data, error } = await supa.functions.invoke('extract-jd-keywords', {
+        body: { company, role, jd_text },
+      });
+      if (error) throw error;
+      const keywords = (data && data.company_keywords) || [];
+      if (pillsEl) {
+        pillsEl.innerHTML = keywords.length
+          ? keywords.map(k => `<span style="font-size:12px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:4px 11px;border-radius:99px;">${escapeHtml(k)}</span>`).join('')
+          : '<span style="font-size:12px;color:var(--ink-4);">No keywords extracted</span>';
+      }
+      if (resultEl) resultEl.style.display = 'block';
+      if (statusEl) { statusEl.textContent = `${keywords.length} keywords extracted`; statusEl.style.color = 'var(--success)'; }
+    } catch (err) {
+      console.error('[extractJdKeywords] failed:', err);
+      if (statusEl) { statusEl.textContent = 'Extraction failed — check console'; statusEl.style.color = 'var(--danger)'; }
+    }
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
   }
 
   // ── EXPERIENCE BLOCKS: helpers ─────────────────
