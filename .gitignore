@@ -1,0 +1,9 @@
+# Local test artifacts
+jd.txt
+*.bak
+
+# bkit auto-generated docs
+docs/
+
+# Supabase CLI local temp files
+supabase/.temp/
