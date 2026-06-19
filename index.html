@@ -2111,10 +2111,16 @@
               </button>
               <span id="jd-extract-status" style="font-size:12px;color:var(--ink-4);"></span>
             </div>
-            <!-- extracted keywords preview (not saved yet — save is step 3) -->
+            <!-- extracted keywords preview + save -->
             <div id="jd-extract-result" style="display:none;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
               <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Extracted Company Keywords</div>
               <div id="jd-extract-pills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+                <button class="btn-primary" id="jd-save-btn" onclick="saveCompanyKeywords()" style="display:flex;align-items:center;gap:6px;">
+                  <i class="ti ti-bookmark" style="font-size:14px;"></i> Save to My Companies
+                </button>
+                <span id="jd-save-status" style="font-size:12px;color:var(--ink-4);"></span>
+              </div>
             </div>
           </div>
         </div>
@@ -3172,8 +3178,10 @@
   }
 
   // ── JD KEYWORD EXTRACTION (step 2) ─────────────
+  // Holds the most recent extraction so saveCompanyKeywords() can persist it.
+  let _cachedJd = null;
+
   // Calls the extract-jd-keywords edge function and previews the result on screen.
-  // Does NOT persist to company_keywords yet — that's wired in step 3.
   async function extractJdKeywords() {
     const company = (document.getElementById('jd-company-input')?.value || '').trim();
     const role    = (document.getElementById('jd-role-input')?.value || '').trim();
@@ -3198,12 +3206,17 @@
       });
       if (error) throw error;
       const keywords = (data && data.company_keywords) || [];
+      // Stash the full extraction for the save step.
+      _cachedJd = { company, role, jd_text, keywords };
       if (pillsEl) {
         pillsEl.innerHTML = keywords.length
           ? keywords.map(k => `<span style="font-size:12px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:4px 11px;border-radius:99px;">${escapeHtml(k)}</span>`).join('')
           : '<span style="font-size:12px;color:var(--ink-4);">No keywords extracted</span>';
       }
       if (resultEl) resultEl.style.display = 'block';
+      // Reset the save status — this is a fresh extraction, not yet saved.
+      const saveStatusEl = document.getElementById('jd-save-status');
+      if (saveStatusEl) { saveStatusEl.textContent = ''; }
       if (statusEl) { statusEl.textContent = `${keywords.length} keywords extracted`; statusEl.style.color = 'var(--success)'; }
     } catch (err) {
       console.error('[extractJdKeywords] failed:', err);
@@ -3211,6 +3224,65 @@
     }
 
     if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+  }
+
+  // ── SAVE EXTRACTED JD KEYWORDS (step 2-③) ──────
+  // Persists the current extraction to company_keywords.
+  // Upserts on (user_id, company_name, role_title) so re-saving the same
+  // company + role overwrites instead of piling up duplicate rows.
+  async function saveCompanyKeywords() {
+    const statusEl = document.getElementById('jd-save-status');
+    const btn      = document.getElementById('jd-save-btn');
+
+    // 1. Auth gate — same pattern as saveExperienceBlock.
+    if (!currentUser) {
+      openAuthRequiredModal('save');
+      return;
+    }
+
+    // 2. Need a fresh extraction to save.
+    if (!_cachedJd) {
+      if (statusEl) { statusEl.textContent = 'Extract keywords first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    const company_name = (_cachedJd.company || '').trim();
+    const role_title   = (_cachedJd.role   || '').trim();
+    const jd_text      = _cachedJd.jd_text || '';
+    const keywords     = _cachedJd.keywords || [];
+
+    // 3. Validate required fields.
+    if (!company_name)    { if (statusEl) { statusEl.textContent = 'Company name is required'; statusEl.style.color = 'var(--danger)'; } return; }
+    if (!role_title)      { if (statusEl) { statusEl.textContent = 'Job title is required';    statusEl.style.color = 'var(--danger)'; } return; }
+    if (!keywords.length) { if (statusEl) { statusEl.textContent = 'No keywords to save';      statusEl.style.color = 'var(--danger)'; } return; }
+
+    // 4. Upsert. keywords is a jsonb column (same as competency_keywords),
+    //    so supabase-js serializes the JS array to JSON automatically.
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Saving…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    const payload = {
+      user_id: currentUser.id,
+      company_name,
+      role_title,
+      jd_text,
+      keywords,
+    };
+
+    const { error } = await supa
+      .from('company_keywords')
+      .upsert(payload, { onConflict: 'user_id,company_name,role_title' });
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+
+    if (error) {
+      console.error('[saveCompanyKeywords] failed:', error);
+      if (statusEl) { statusEl.textContent = `Save failed: ${error.message}`; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    if (statusEl) { statusEl.textContent = 'Saved ✓'; statusEl.style.color = 'var(--success)'; }
+    if (typeof showSaveToast === 'function') showSaveToast('Company keywords saved');
   }
 
   // ── EXPERIENCE BLOCKS: helpers ─────────────────
