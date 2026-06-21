@@ -128,13 +128,13 @@
   .sb-label {
     font-size: 10.5px; font-weight: 500; letter-spacing: 0.07em;
     color: var(--ink-4); text-transform: uppercase;
-    padding: 18px 20px 7px;
+    padding: 22px 20px 8px;
     border-top: 1px solid var(--border);
-    margin-top: 4px;
+    margin-top: 6px;
   }
   .sb-item {
     display: flex; align-items: center; gap: 10px;
-    padding: 9px 12px; margin: 1px 10px;
+    padding: 10px 14px; margin: 2px 10px;
     font-size: 13.5px; font-weight: 400;
     color: var(--ink-3); border-left: none;
     cursor: pointer; transition: all 0.12s;
@@ -161,13 +161,13 @@
   .sb-divider { display: none; }
 
   /* ── MAIN ── */
-  .main { margin-left: 220px; flex: 1; min-height: calc(100vh - 56px); display: flex; flex-direction: column; }
+  .main { margin-left: 230px; flex: 1; min-height: calc(100vh - 56px); display: flex; flex-direction: column; }
 
   /* ════════════════════════════════════════
      PAGE 1 · DASHBOARD
   ════════════════════════════════════════ */
   .hero {
-    background: var(--white); padding: 56px 56px 48px;
+    background: var(--white); padding: 60px 64px 52px;
     border-bottom: 1px solid var(--border);
   }
   .hero-eyebrow {
@@ -213,7 +213,7 @@
   .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; color: var(--ink-4); text-transform: uppercase; }
   .stat-delta { display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; font-size: 11px; color: var(--success); font-weight: 500; }
 
-  .home-body { padding: 32px 48px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .home-body { padding: 40px 56px 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 
   .card {
     background: var(--white); border: 1px solid var(--border);
@@ -264,7 +264,7 @@
   ════════════════════════════════════════ */
   .page-header {
     background: var(--surface);
-    padding: 28px 24px 18px;
+    padding: 40px 48px 28px;
   }
   .page-eyebrow {
     font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
@@ -334,8 +334,8 @@
     grid-template-columns: 320px 1fr;
     flex: 1;
     overflow: hidden;
-    gap: 16px;
-    padding: 16px 24px 24px;
+    gap: 20px;
+    padding: 24px 48px 40px;
   }
   .add-left {
     overflow-y: auto;
@@ -344,7 +344,7 @@
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
   }
-  .add-left-inner { padding: 22px 20px; }
+  .add-left-inner { padding: 28px 24px; }
   .add-right {
     display: flex; flex-direction: column;
     background: var(--white);
@@ -356,7 +356,7 @@
   }
   .add-right-head {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 22px;
+    padding: 20px 28px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
   }
@@ -378,7 +378,7 @@
   }
   .add-right-foot {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 22px 16px;
+    padding: 16px 28px 20px;
     border-top: 1px solid var(--border);
     flex-shrink: 0; background: var(--white);
   }
@@ -593,7 +593,7 @@
   /* ════════════════════════════════════════
      PAGE 3 · MATCHING
   ════════════════════════════════════════ */
-  .match-page-header { background: var(--white); padding: 28px 40px 0; border-bottom: 1px solid var(--border); }
+  .match-page-header { background: var(--white); padding: 40px 56px 0; border-bottom: 1px solid var(--border); }
   .page-steps { display: flex; align-items: center; margin-top: 20px; gap: 2px; }
   .step {
     display: flex; align-items: center; gap: 8px; padding: 10px 18px;
@@ -1004,7 +1004,7 @@
   .blk-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
+    gap: 20px;
     width: 100%;
   }
   .blk-card {
@@ -1061,7 +1061,7 @@
 
   /* bottom white info area */
   .blk-card-body {
-    padding: 14px 16px 14px;
+    padding: 18px 20px 16px;
     background: rgba(255,255,255,0.18);
     display: flex; flex-direction: column; gap: 3px;
   }
@@ -1080,7 +1080,7 @@
   .blk-card-tags { display: none; }
   .blk-card-footer {
     display: flex; align-items: center; justify-content: flex-end;
-    padding: 0 16px 12px;
+    padding: 0 20px 16px;
     background: rgba(255,255,255,0.18);
   }
   .blk-folder-svg { display: none; }
@@ -2167,7 +2167,7 @@
       </div>
 
       <!-- Top Bar: Search + Category Filter + Add Button -->
-      <div style="padding:14px 24px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;position:sticky;top:52px;z-index:50;flex-wrap:wrap;">
+      <div style="padding:14px 48px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;position:sticky;top:52px;z-index:50;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:0 14px;flex:1;max-width:340px">
           <i class="ti ti-search" style="color:var(--ink-4);font-size:14px"></i>
           <input id="blk-search-input" type="text" placeholder="Search blocks, skills, or companies..." oninput="filterBlocksBySearch(this.value)" style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:9px 0;width:100%">
@@ -2197,11 +2197,11 @@
         </div>
       </div>
 
-      <div id="blocks-sections" style="padding:24px 24px 48px;">
+      <div id="blocks-sections" style="padding:36px 48px 64px;">
 
         <!-- ONGOING -->
         <div id="blk-ongoing-section" style="display:none;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
             <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);">Ongoing</span>
             <span id="blk-ongoing-count" style="font-size:11px;font-weight:500;color:var(--ink-4);background:var(--surface-2);border-radius:99px;padding:1px 8px;">0</span>
           </div>
