@@ -264,18 +264,18 @@
   ════════════════════════════════════════ */
   .page-header {
     background: var(--surface);
-    padding: 24px 24px 16px;
+    padding: 28px 24px 18px;
   }
   .page-eyebrow {
-    font-size: 11px; font-weight: 500; letter-spacing: 0.07em;
-    text-transform: uppercase; color: var(--accent); margin-bottom: 5px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
   }
   .page-title {
-    font-size: 20px; font-weight: 600; color: var(--ink);
-    letter-spacing: -0.3px; margin-bottom: 3px; font-family: var(--ff-head);
+    font-size: 26px; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.5px; margin-bottom: 6px; font-family: var(--ff-head);
   }
   .page-sub {
-    font-size: 13px; color: var(--ink-3); line-height: 1.5; font-family: var(--ff-head);
+    font-size: 14px; color: var(--ink-3); line-height: 1.5; font-family: var(--ff-head);
   }
   .page-tabs { display: flex; margin-top: 20px; gap: 2px; }
   .page-tab {
@@ -307,11 +307,11 @@
   .form-textarea { resize: vertical; min-height: 100px; font-family: var(--ff-head); font-size: 13px; line-height: 1.6; }
 
   .form-section-title {
-    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
-    color: var(--ink-4); text-transform: uppercase;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+    color: var(--ink-3); text-transform: uppercase;
     padding-bottom: 10px; border-bottom: 1px solid var(--border);
     margin-bottom: 14px; margin-top: 20px;
-    display: flex; align-items: center; gap: 7px;
+    display: flex; align-items: center; gap: 6px; font-family: var(--ff-head);
   }
   .form-section-title i { font-size: 14px; color: var(--ink-4); }
 
@@ -367,7 +367,7 @@
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .add-right-icon i { font-size: 15px; color: var(--accent); }
-  .add-right-title { font-size: 13.5px; font-weight: 600; color: var(--ink); font-family: var(--ff-head); }
+  .add-right-title { font-size: 15px; font-weight: 600; color: var(--ink); font-family: var(--ff-head); }
   .add-right-sub { font-size: 11.5px; color: var(--ink-4); margin-top: 1px; font-family: var(--ff-head); }
   .add-right #exp-freetext {
     flex: 1; overflow-y: auto;
@@ -2080,13 +2080,7 @@
         <div class="add-right">
 
           <div class="add-right-head">
-            <div class="add-right-head-left">
-              <div class="add-right-icon"><i class="ti ti-notes"></i></div>
-              <div>
-                <div class="add-right-title">Scribble your experience</div>
-                <div class="add-right-sub">Write freely — we'll structure it for you</div>
-              </div>
-            </div>
+            <span class="add-right-title">Scribble your experience</span>
             <span id="exp-char-count" style="font-size:12px;color:var(--ink-4);">0 characters</span>
           </div>
 
