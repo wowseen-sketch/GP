@@ -39,9 +39,9 @@ You are given two lists of professional competency keywords:
 For EACH company keyword, decide how well the candidate's keywords cover it BY MEANING, not by exact wording. Synonyms, paraphrases, and clearly implied equivalents count.
 
 Classify each company keyword as:
-- "matched": a my-keyword clearly covers the same competency.
-- "partial": a my-keyword is related or partially overlaps, but is weaker, narrower, or only adjacent.
-- "missing": no my-keyword reasonably covers it.
+- "matched": the candidate keyword covers 90%+ of the same competency. Near-identical meaning or direct synonym.
+- "partial": the candidate keyword overlaps 40-89%. Related domain but narrower scope or missing key aspect.
+- "missing": overlap is under 40% or no candidate keyword is relevant.
 
 COMPANY_KEYWORDS:
 ${companyList}
@@ -72,6 +72,7 @@ Rules:
     body: JSON.stringify({
       model: "llama-3.3-70b-versatile",
       max_tokens: 1024,
+      temperature: 0,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user",   content: userMessage },

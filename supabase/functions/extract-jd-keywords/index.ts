@@ -80,6 +80,7 @@ Return ONLY this JSON. No explanation. No markdown.
     body: JSON.stringify({
       model: "llama-3.3-70b-versatile",
       max_tokens: 512,
+      temperature: 0,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user",   content: userMessage },
