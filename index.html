@@ -263,20 +263,19 @@
      PAGE 2 · ADD EXPERIENCE
   ════════════════════════════════════════ */
   .page-header {
-    background: var(--white);
-    padding: 32px 48px 28px;
-    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 28px 32px 20px;
   }
   .page-eyebrow {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 6px;
   }
   .page-title {
-    font-size: 22px; font-weight: 700; color: var(--ink);
-    letter-spacing: -0.02em; margin-bottom: 6px;
+    font-size: 22px; font-weight: 600; color: var(--ink);
+    letter-spacing: -0.3px; margin-bottom: 4px;
   }
   .page-sub {
-    font-size: 14px; color: var(--ink-3); line-height: 1.6;
+    font-size: 13px; color: var(--ink-3); line-height: 1.6;
   }
   .page-tabs { display: flex; margin-top: 20px; gap: 2px; }
   .page-tab {
@@ -284,27 +283,104 @@
     color: var(--ink-3); cursor: pointer;
     border-bottom: 2px solid transparent; transition: all 0.15s;
   }
-  .page-tab.active { color: var(--accent-2); border-bottom-color: var(--accent); }
+  .page-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
   .page-tab:hover { color: var(--ink); }
 
   .form-body { padding: 32px 40px; max-width: 900px; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-full { grid-column: 1 / -1; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
   .form-label {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
-    color: var(--ink-2); text-transform: uppercase;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.02em;
+    color: var(--ink-3);
     display: flex; align-items: center; justify-content: space-between;
   }
   .form-label-count { font-size: 11px; font-weight: 400; color: var(--ink-4); text-transform: none; letter-spacing: 0; }
   .form-input {
     font-family: var(--ff-head); font-size: 13px; color: var(--ink);
-    background: var(--white); border: 1px solid var(--border-strong);
-    border-radius: var(--r); padding: 10px 13px; outline: none;
-    transition: border 0.12s; width: 100%;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 9px 12px; outline: none;
+    transition: border 0.12s, background 0.12s; width: 100%;
   }
-  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .form-input:focus { border-color: var(--accent); background: var(--white); box-shadow: 0 0 0 3px var(--accent-glow); }
   .form-textarea { resize: vertical; min-height: 100px; font-family: var(--ff-head); font-size: 13px; line-height: 1.6; }
+
+  .form-section-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--ink-4); text-transform: uppercase;
+    padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    margin-bottom: 14px; margin-top: 20px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .form-section-title i { font-size: 14px; color: var(--ink-4); }
+
+  .exp-chip {
+    background: var(--white); border: 1px solid var(--border); color: var(--ink-3);
+    border-radius: 7px; font-size: 12px; padding: 5px 11px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--ff-head); font-weight: 400; transition: all 0.12s;
+  }
+  .exp-chip i { font-size: 13px; }
+  .exp-chip.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+  .exp-chip:hover:not(.active) { border-color: var(--border-strong); color: var(--ink); background: var(--surface); }
+
+  #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; font-family: var(--ff-head); }
+
+  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 56px); overflow: hidden; background: var(--surface); }
+
+  .add-columns {
+    display: flex; flex-direction: row; flex: 1;
+    overflow: hidden; gap: 16px; padding: 0 24px 24px;
+  }
+  .add-left {
+    flex: 0 0 300px; max-width: 300px; overflow-y: auto;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .add-left-inner { padding: 20px; }
+  .add-right {
+    flex: 1; display: flex; flex-direction: column;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .add-right-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .add-right-head-left { display: flex; align-items: center; gap: 10px; }
+  .add-right-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .add-right-icon i { font-size: 15px; color: var(--accent); }
+  .add-right-title { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+  .add-right-sub { font-size: 11.5px; color: var(--ink-4); margin-top: 1px; }
+  .add-right #exp-freetext {
+    flex: 1; overflow-y: auto;
+    background-image: repeating-linear-gradient(
+      to bottom, transparent, transparent 29px, #f0f1f3 29px, #f0f1f3 30px
+    );
+    background-position: 0 18px;
+  }
+  .add-right-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; border-top: 1px solid var(--border);
+    flex-shrink: 0; background: var(--white);
+  }
+  @media (max-width: 768px) {
+    #page-add.active { height: auto; overflow: visible; }
+    .add-columns { flex-direction: column; overflow: visible; padding: 0 16px 24px; }
+    .add-left { flex: none; width: 100%; max-width: 100%; }
+    .add-right { overflow: visible; }
+    .add-right #exp-freetext { flex: none; min-height: 240px; }
+  }
 
   /* ── ANALYSIS MODAL: breakdown toggle & tooltip ── */
   .am-breakdown-btn {
@@ -1889,129 +1965,136 @@
 
       <div class="add-columns">
 
-        <!-- Left Panel: Basic Info + Chips (flat, no card boxes) -->
+        <!-- Left Panel -->
         <div class="add-left">
+          <div class="add-left-inner">
 
-          <!-- Basic info -->
-          <div class="form-section-title" style="margin-top:0;"><i class="ti ti-info-circle"></i> Basic info</div>
-          <div class="form-grid">
-            <div class="form-group form-full">
-              <label class="form-label">Activity Title *</label>
-              <input id="exp-title" class="form-input" type="text" required placeholder="e.g. New Product Launch Campaign Planning &amp; Execution">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Activity Type</label>
-              <select id="exp-activity-type" class="form-input form-select">
-                <option value="">Select</option>
-                <option>Project</option>
-                <option>Work Experience</option>
-                <option>Leadership</option>
-                <option>Education</option>
-                <option>Certification</option>
-                <option>Extracurricular</option>
-                <option>Internship</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Organization / Company</label>
-              <input id="exp-org" class="form-input" type="text" placeholder="e.g. Google, Stanford Club, etc.">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Start Date</label>
-              <input id="exp-start" class="form-input" type="month" value="2024-01">
-            </div>
-            <div class="form-group">
-              <label class="form-label">End Date</label>
-              <input id="exp-end" class="form-input" type="month" value="2024-06">
-              <div style="display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:6px;">
-                <input id="exp-current" type="checkbox" style="width:13px;height:13px;accent-color:#1a1a1a;cursor:pointer;" onchange="handleExpCurrentChange(this)">
-                <label for="exp-current" style="font-size:11px;color:#888;cursor:pointer;user-select:none;">Currently ongoing</label>
+            <!-- Basic info -->
+            <div class="form-section-title" style="margin-top:0;"><i class="ti ti-info-circle"></i> Basic info</div>
+            <div class="form-grid">
+              <div class="form-group form-full">
+                <label class="form-label">Activity title <span style="color:var(--accent);">*</span></label>
+                <input id="exp-title" class="form-input" type="text" required placeholder="e.g. New Product Launch Campaign">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Activity type</label>
+                <select id="exp-activity-type" class="form-input form-select">
+                  <option value="">Select</option>
+                  <option>Project</option>
+                  <option>Work Experience</option>
+                  <option>Leadership</option>
+                  <option>Education</option>
+                  <option>Certification</option>
+                  <option>Extracurricular</option>
+                  <option>Internship</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Organization</label>
+                <input id="exp-org" class="form-input" type="text" placeholder="e.g. Google, Stanford">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Start date</label>
+                <input id="exp-start" class="form-input" type="month" value="2024-01">
+              </div>
+              <div class="form-group">
+                <label class="form-label">End date</label>
+                <input id="exp-end" class="form-input" type="month" value="2024-06">
+                <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+                  <input id="exp-current" type="checkbox" style="width:13px;height:13px;accent-color:var(--accent);cursor:pointer;" onchange="handleExpCurrentChange(this)">
+                  <label for="exp-current" style="font-size:12px;color:var(--ink-3);cursor:pointer;user-select:none;">Currently ongoing</label>
+                </div>
+              </div>
+              <div class="form-group form-full" id="ongoing-folder-select-wrap" style="display:none;position:relative;">
+                <div id="ongoing-folder-trigger" onclick="toggleFolderDropdown()" style="display:flex;align-items:center;justify-content:space-between;width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;font-size:13px;font-family:var(--ff-head);color:#999;cursor:pointer;background:var(--surface);user-select:none;">
+                  <span id="ongoing-folder-label">Select a folder…</span>
+                  <span id="ongoing-folder-chevron" style="font-size:11px;color:#bbb;transition:transform 0.2s;display:inline-block;">▾</span>
+                </div>
+                <div id="ongoing-folder-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.08);background:#fff;z-index:200;overflow:hidden;"></div>
+              </div>
+              <div class="form-group form-full" id="new-folder-input-wrap" style="display:none;">
+                <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-4);margin-bottom:6px;">New folder name</div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input id="new-folder-name-input" type="text" placeholder="e.g. Google Internship 2025" oninput="onNewFolderInputChange(this)" class="form-input">
+                  <button onclick="hideNewFolderInput()" title="Back" style="flex-shrink:0;border:1px solid var(--border);border-radius:8px;padding:0 12px;height:36px;font-size:12px;color:var(--ink-3);background:none;cursor:pointer;display:flex;align-items:center;">↩</button>
+                  <button id="new-folder-create-btn" onclick="confirmNewFolder()" disabled style="flex-shrink:0;border:none;border-radius:8px;padding:0 14px;height:36px;font-size:12px;font-weight:600;color:#fff;background:#ccc;cursor:not-allowed;">Create</button>
+                </div>
               </div>
             </div>
-            <div class="form-group form-full" id="ongoing-folder-select-wrap" style="display:none;position:relative;">
-              <div id="ongoing-folder-trigger" onclick="toggleFolderDropdown()" style="display:flex;align-items:center;justify-content:space-between;width:100%;box-sizing:border-box;border:1px solid var(--border-strong);border-radius:var(--r);padding:10px 14px;font-size:13px;font-family:var(--ff-head);color:#999;cursor:pointer;background:var(--white);user-select:none;">
-                <span id="ongoing-folder-label">Select a folder…</span>
-                <span id="ongoing-folder-chevron" style="font-size:11px;color:#bbb;transition:transform 0.2s;display:inline-block;">▾</span>
+
+            <!-- Chip Groups -->
+            <div style="border-top:1px solid var(--border);margin-top:18px;padding-top:18px;display:flex;flex-direction:column;gap:16px;">
+
+              <div>
+                <div style="font-size:10px;font-weight:600;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Your Mission</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                  <button class="exp-chip" data-prompt="My role: " onclick="toggleChip(this)"><i class="ti ti-user"></i> Your role?</button>
+                  <button class="exp-chip" data-prompt="Team setup: " onclick="toggleChip(this)"><i class="ti ti-users"></i> Team or solo?</button>
+                  <button class="exp-chip" data-prompt="Goal or problem: " onclick="toggleChip(this)"><i class="ti ti-target"></i> The goal or problem?</button>
+                </div>
               </div>
-              <div id="ongoing-folder-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;border:0.5px solid #ddd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.08);background:#fff;z-index:200;overflow:hidden;"></div>
-            </div>
-            <div class="form-group form-full" id="new-folder-input-wrap" style="display:none;">
-              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#999;margin-bottom:6px;">New folder name</div>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <input id="new-folder-name-input" type="text" placeholder="e.g. Google Internship 2025" oninput="onNewFolderInputChange(this)" style="flex:1;border:0.5px solid #ddd;border-radius:8px;padding:10px 14px;font-size:12px;font-family:var(--ff-head);outline:none;color:#111;" onfocus="this.style.borderColor='#1a1a1a'" onblur="this.style.borderColor='#ddd'">
-                <button onclick="hideNewFolderInput()" title="Back" style="flex-shrink:0;border:0.5px solid #ddd;border-radius:8px;padding:0 12px;height:38px;font-size:12px;color:#888;background:none;cursor:pointer;display:flex;align-items:center;">↩</button>
-                <button id="new-folder-create-btn" onclick="confirmNewFolder()" disabled style="flex-shrink:0;border:none;border-radius:8px;padding:0 14px;height:38px;font-size:12px;font-weight:600;color:#fff;background:#ccc;cursor:not-allowed;">Create</button>
+
+              <div>
+                <div style="font-size:10px;font-weight:600;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">What You Did</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                  <button class="exp-chip" data-prompt="How I executed: " onclick="toggleChip(this)"><i class="ti ti-player-play"></i> How you executed?</button>
+                  <button class="exp-chip" data-prompt="How I collaborated: " onclick="toggleChip(this)"><i class="ti ti-link"></i> How you collaborated?</button>
+                  <button class="exp-chip" data-prompt="How I communicated: " onclick="toggleChip(this)"><i class="ti ti-message"></i> How you communicated?</button>
+                  <button class="exp-chip" data-prompt="How I problem-solved: " onclick="toggleChip(this)"><i class="ti ti-bulb"></i> Problem-solved?</button>
+                  <button class="exp-chip" data-prompt="How I strategized: " onclick="toggleChip(this)"><i class="ti ti-map"></i> Strategized?</button>
+                  <button class="exp-chip" data-prompt="Tools I used: " onclick="toggleChip(this)"><i class="ti ti-tool"></i> Tools used?</button>
+                </div>
               </div>
+
+              <div>
+                <div style="font-size:10px;font-weight:600;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">The Impact</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                  <button class="exp-chip" data-prompt="The result: " onclick="toggleChip(this)"><i class="ti ti-chart-bar"></i> The result?</button>
+                  <button class="exp-chip" data-prompt="Measurable impact: " onclick="toggleChip(this)"><i class="ti ti-trending-up"></i> Measurable impact?</button>
+                  <button class="exp-chip" data-prompt="Awards or shoutouts: " onclick="toggleChip(this)"><i class="ti ti-star"></i> Awards or shoutouts?</button>
+                </div>
+              </div>
+
+              <div>
+                <div style="font-size:10px;font-weight:600;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Challenges</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                  <button class="exp-chip" data-prompt="The hard part: " onclick="toggleChip(this)"><i class="ti ti-bolt"></i> The hard part?</button>
+                  <button class="exp-chip" data-prompt="How I fixed it: " onclick="toggleChip(this)"><i class="ti ti-tool"></i> How you fixed it?</button>
+                  <button class="exp-chip" data-prompt="What I learned: " onclick="toggleChip(this)"><i class="ti ti-school"></i> What you learned?</button>
+                  <button class="exp-chip" data-prompt="How I applied it later: " onclick="toggleChip(this)"><i class="ti ti-refresh"></i> Applied it later?</button>
+                </div>
+              </div>
+
             </div>
           </div>
-
-          <!-- Chip Groups (separated by border-top) -->
-          <div style="border-top:1px solid var(--border);margin-top:20px;padding-top:20px;">
-
-            <!-- Group 1: Your Mission -->
-            <div style="margin-bottom:20px;">
-              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Your Mission</div>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                <button class="exp-chip" data-prompt="My role: " onclick="toggleChip(this)"><i class="ti ti-user"></i> Your role?</button>
-                <button class="exp-chip" data-prompt="Team setup: " onclick="toggleChip(this)"><i class="ti ti-users"></i> Team or solo?</button>
-                <button class="exp-chip" data-prompt="Goal or problem: " onclick="toggleChip(this)"><i class="ti ti-target"></i> The goal or problem?</button>
-              </div>
-            </div>
-
-            <!-- Group 2: What You Did -->
-            <div style="margin-bottom:20px;">
-              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">What You Did</div>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                <button class="exp-chip" data-prompt="How I executed: " onclick="toggleChip(this)"><i class="ti ti-player-play"></i> How you executed?</button>
-                <button class="exp-chip" data-prompt="How I collaborated: " onclick="toggleChip(this)"><i class="ti ti-link"></i> How you collaborated?</button>
-                <button class="exp-chip" data-prompt="How I communicated: " onclick="toggleChip(this)"><i class="ti ti-message"></i> How you communicated?</button>
-                <button class="exp-chip" data-prompt="How I problem-solved: " onclick="toggleChip(this)"><i class="ti ti-bulb"></i> How you problem-solved?</button>
-                <button class="exp-chip" data-prompt="How I strategized: " onclick="toggleChip(this)"><i class="ti ti-map"></i> How you strategized?</button>
-                <button class="exp-chip" data-prompt="Tools I used: " onclick="toggleChip(this)"><i class="ti ti-tool"></i> Tools you used?</button>
-              </div>
-            </div>
-
-            <!-- Group 3: The Impact -->
-            <div style="margin-bottom:20px;">
-              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">The Impact</div>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                <button class="exp-chip" data-prompt="The result: " onclick="toggleChip(this)"><i class="ti ti-chart-bar"></i> The result?</button>
-                <button class="exp-chip" data-prompt="Measurable impact: " onclick="toggleChip(this)"><i class="ti ti-trending-up"></i> Any measurable impact?</button>
-                <button class="exp-chip" data-prompt="Awards or shoutouts: " onclick="toggleChip(this)"><i class="ti ti-star"></i> Any awards or shoutouts?</button>
-              </div>
-            </div>
-
-            <!-- Group 4: Challenges -->
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Challenges</div>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                <button class="exp-chip" data-prompt="The hard part: " onclick="toggleChip(this)"><i class="ti ti-bolt"></i> The hard part?</button>
-                <button class="exp-chip" data-prompt="How I fixed it: " onclick="toggleChip(this)"><i class="ti ti-tool"></i> How you fixed it?</button>
-                <button class="exp-chip" data-prompt="What I learned: " onclick="toggleChip(this)"><i class="ti ti-school"></i> What you learned?</button>
-                <button class="exp-chip" data-prompt="How I applied it later: " onclick="toggleChip(this)"><i class="ti ti-refresh"></i> Applied it later?</button>
-              </div>
-            </div>
-
-          </div>
-
         </div>
 
         <!-- Right Panel: Scribble -->
         <div class="add-right">
 
-          <div style="font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-0.01em;margin-bottom:12px;">Scribble your experience</div>
-
-          <div id="exp-freetext" contenteditable="true" style="padding:18px 20px;font-size:18px;border:1px solid var(--border);border-radius:var(--rl);background:#fff;color:var(--ink);font-family:'Caveat',cursive;line-height:30px;outline:none;cursor:text;min-height:360px;background-image:repeating-linear-gradient(to bottom,transparent,transparent 29px,#f2f3f5 29px,#f2f3f5 30px);background-position:0 18px;caret-color:var(--accent);" oninput="updateExpCharCount()"></div>
-
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+          <div class="add-right-head">
+            <div class="add-right-head-left">
+              <div class="add-right-icon"><i class="ti ti-notes"></i></div>
+              <div>
+                <div class="add-right-title">Scribble your experience</div>
+                <div class="add-right-sub">Write freely — we'll structure it for you</div>
+              </div>
+            </div>
             <span id="exp-char-count" style="font-size:12px;color:var(--ink-4);">0 characters</span>
+          </div>
+
+          <div id="exp-freetext" contenteditable="true"
+            style="flex:1;padding:18px 22px;font-size:18px;border:none;background:#fff;color:var(--ink);font-family:'Caveat',cursive;line-height:30px;outline:none;cursor:text;overflow-y:auto;background-image:repeating-linear-gradient(to bottom,transparent,transparent 29px,#f0f1f3 29px,#f0f1f3 30px);background-position:0 18px;caret-color:var(--accent);"
+            oninput="updateExpCharCount()"></div>
+
+          <div class="add-right-foot">
+            <button onclick="fillFreetextExample()" style="font-size:12.5px;color:var(--ink-3);border:1px solid var(--border);border-radius:var(--r);padding:7px 14px;background:var(--surface);cursor:pointer;font-family:var(--ff-head);transition:all 0.12s;" onmouseover="this.style.borderColor=getComputedStyle(document.documentElement).getPropertyValue('--border-strong')" onmouseout="this.style.borderColor=getComputedStyle(document.documentElement).getPropertyValue('--border')">Fill with example</button>
             <div style="display:flex;align-items:center;gap:8px;">
-              <button onclick="fillFreetextExample()" style="font-size:12px;color:var(--ink-3);border:1px solid var(--border);border-radius:var(--rl);padding:6px 12px;background:#fff;cursor:pointer;font-family:var(--ff-head);">Fill with example</button>
-              <button id="btn-analyze" onclick="openAnalysisModal()" style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;background:var(--accent);border:none;padding:10px 22px;border-radius:var(--rl);cursor:pointer;transition:background 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-                <i class="ti ti-sparkles" style="font-size:16px;"></i> Analyze Experience
+              <button id="btn-analyze" onclick="openAnalysisModal()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;transition:background 0.15s;font-family:var(--ff-head);" onmouseover="this.style.background='var(--accent-dark)'" onmouseout="this.style.background='var(--accent)'">
+                <i class="ti ti-sparkles" style="font-size:14px;"></i> Analyze Experience
               </button>
-              <button id="btn-add-to-folder" onclick="addToFolder()" style="display:none;font-size:14px;font-weight:700;color:#fff;background:#1a1a1a;border:none;padding:12px 28px;border-radius:999px;cursor:pointer;transition:background 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.background='#333333'" onmouseout="this.style.background='#1a1a1a'">Add to folder</button>
-              <button id="btn-save-scribble" onclick="saveScribbleEdit()" style="display:none;font-size:14px;font-weight:700;color:#fff;background:#1a1a1a;border:none;padding:12px 28px;border-radius:999px;cursor:pointer;transition:background 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.background='#333333'" onmouseout="this.style.background='#1a1a1a'">Save changes</button>
+              <button id="btn-add-to-folder" onclick="addToFolder()" style="display:none;font-size:13px;font-weight:500;color:#fff;background:var(--ink);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Add to folder</button>
+              <button id="btn-save-scribble" onclick="saveScribbleEdit()" style="display:none;font-size:13px;font-weight:500;color:#fff;background:var(--ink);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Save changes</button>
             </div>
           </div>
 
