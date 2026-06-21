@@ -2156,33 +2156,33 @@
             <div class="form-section-title" style="margin-top:0;"><i class="ti ti-file-description"></i> Job Description <span style="margin-left:6px;font-size:11px;background:var(--danger-light);color:var(--danger);padding:2px 9px;border-radius:99px;font-weight:600;">Required</span></div>
 
             <!-- Tab switcher -->
-            <div style="display:flex;gap:0;border:1px solid var(--border-strong);border-radius:var(--r);overflow:hidden;margin-bottom:12px;width:fit-content;">
-              <button id="jd-tab-file" onclick="switchJdTab('file')" style="font-size:12px;font-weight:600;padding:7px 16px;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all 0.15s;">File upload</button>
-              <button id="jd-tab-paste" onclick="switchJdTab('paste')" style="font-size:12px;font-weight:600;padding:7px 16px;border:none;cursor:pointer;background:var(--white);color:var(--ink-4);transition:all 0.15s;">Paste text</button>
+            <div style="display:flex;width:100%;margin-bottom:16px;">
+              <button id="jd-tab-file" onclick="switchJdTab('file')" style="flex:1;padding:10px 0;background:transparent;border:none;border-bottom:2px solid #0081DD;cursor:pointer;font-size:13px;font-weight:700;color:#0081DD;text-align:center;transition:all 0.15s;">File upload</button>
+              <button id="jd-tab-paste" onclick="switchJdTab('paste')" style="flex:1;padding:10px 0;background:transparent;border:none;border-bottom:2px solid #E2E8F0;cursor:pointer;font-size:13px;font-weight:600;color:#94A3B8;text-align:center;transition:all 0.15s;">Paste text</button>
             </div>
 
             <!-- File upload panel (default) -->
             <div id="jd-panel-file">
-              <div id="jd-dropzone" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border-strong)'" ondrop="handleDrop(event,'jd')" style="border:2px dashed var(--border-strong);border-radius:var(--rl);padding:32px;text-align:center;cursor:pointer;background:var(--surface);transition:border-color 0.15s;" onclick="document.getElementById('jd-file').click()">
-                <i class="ti ti-upload" style="font-size:28px;color:var(--ink-4);margin-bottom:10px;display:block;"></i>
-                <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Drop your JD file here or click to upload</div>
-                <div style="font-size:12px;color:var(--ink-4);">PDF, DOCX, TXT · Max 10MB</div>
+              <div id="jd-dropzone" ondragover="event.preventDefault();this.style.borderColor='#0081DD'" ondragleave="this.style.borderColor='#CBD5E1'" ondrop="handleDrop(event,'jd')" onmouseover="this.style.borderColor='#0081DD'" onmouseout="this.style.borderColor='#CBD5E1'" style="border:1.5px dashed #CBD5E1;border-radius:var(--rl);min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;cursor:pointer;background:#fff;transition:border-color 0.15s;" onclick="document.getElementById('jd-file').click()">
+                <i class="ti ti-upload" style="font-size:28px;color:#0081DD;margin-bottom:4px;"></i>
+                <div style="font-size:14px;font-weight:600;color:#1E293B;">Drop your JD file here or click to upload</div>
+                <div style="font-size:12px;color:#94A3B8;">PDF, DOCX, TXT · Max 10MB</div>
                 <input type="file" id="jd-file" accept=".pdf,.docx,.txt" style="display:none;" onchange="handleFileSelect(this,'jd')">
               </div>
               <!-- uploaded state (hidden by default) -->
-              <div id="jd-uploaded" style="display:none;margin-top:10px;padding:13px 16px;background:var(--success-light);border:1px solid rgba(5,150,105,0.2);border-radius:var(--r);align-items:center;gap:12px;">
-                <i class="ti ti-file-check" style="font-size:20px;color:var(--success);flex-shrink:0;"></i>
+              <div id="jd-uploaded" style="display:none;padding:16px 18px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:var(--rl);align-items:center;gap:12px;min-height:64px;">
+                <i class="ti ti-file-check" style="font-size:22px;color:#16A34A;flex-shrink:0;"></i>
                 <div style="flex:1;">
-                  <div style="font-size:13px;font-weight:600;color:var(--ink);" id="jd-filename">file.pdf</div>
-                  <div style="font-size:11px;color:var(--ink-4);">Uploaded</div>
+                  <div style="font-size:13px;font-weight:700;color:#1E293B;" id="jd-filename">file.pdf</div>
+                  <div style="font-size:11px;color:#94A3B8;">Uploaded</div>
                 </div>
-                <button onclick="removeFile('jd')" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:16px;"><i class="ti ti-x"></i></button>
+                <button onclick="removeFile('jd')" style="background:none;border:none;cursor:pointer;color:#94A3B8;font-size:18px;line-height:1;"><i class="ti ti-x"></i></button>
               </div>
             </div>
 
             <!-- Paste text panel (hidden by default) -->
             <div id="jd-panel-paste" style="display:none;">
-              <textarea id="jd-paste-textarea" oninput="_jdRawText=this.value" placeholder="Paste the full job description text here..." style="width:100%;min-height:180px;resize:vertical;padding:14px 16px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--border-strong);border-radius:var(--rl);outline:none;box-sizing:border-box;line-height:1.6;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-strong)'"></textarea>
+              <textarea id="jd-paste-textarea" oninput="_jdRawText=this.value" placeholder="Paste the full job description here..." style="width:100%;min-height:160px;resize:vertical;padding:14px 16px;font-size:13px;font-family:inherit;color:#1E293B;background:#fff;border:1.5px solid #CBD5E1;border-radius:var(--rl);outline:none;box-sizing:border-box;line-height:1.6;" onfocus="this.style.borderColor='#0081DD'" onblur="this.style.borderColor='#CBD5E1'"></textarea>
             </div>
           </div>
 
@@ -3952,12 +3952,16 @@
   }
   function switchJdTab(tab) {
     const isFile = tab === 'file';
-    document.getElementById('jd-tab-file').style.background  = isFile  ? 'var(--accent)' : 'var(--white)';
-    document.getElementById('jd-tab-file').style.color       = isFile  ? '#fff' : 'var(--ink-4)';
-    document.getElementById('jd-tab-paste').style.background = !isFile ? 'var(--accent)' : 'var(--white)';
-    document.getElementById('jd-tab-paste').style.color      = !isFile ? '#fff' : 'var(--ink-4)';
-    document.getElementById('jd-panel-file').style.display   = isFile  ? '' : 'none';
-    document.getElementById('jd-panel-paste').style.display  = !isFile ? '' : 'none';
+    const ft = document.getElementById('jd-tab-file');
+    const pt = document.getElementById('jd-tab-paste');
+    ft.style.color        = isFile  ? '#0081DD' : '#94A3B8';
+    ft.style.fontWeight   = isFile  ? '700' : '600';
+    ft.style.borderBottom = isFile  ? '2px solid #0081DD' : '2px solid #E2E8F0';
+    pt.style.color        = !isFile ? '#0081DD' : '#94A3B8';
+    pt.style.fontWeight   = !isFile ? '700' : '600';
+    pt.style.borderBottom = !isFile ? '2px solid #0081DD' : '2px solid #E2E8F0';
+    document.getElementById('jd-panel-file').style.display  = isFile  ? '' : 'none';
+    document.getElementById('jd-panel-paste').style.display = !isFile ? '' : 'none';
   }
   function startMatchAnalysis() {
     const company = (document.getElementById('company-input')?.value || '').trim();
