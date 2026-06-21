@@ -3895,7 +3895,15 @@
   function filterSuggest(val) {
     const box = document.getElementById('company-suggest');
     if (!box) return;
-    box.style.display = val.length > 0 ? 'block' : 'none';
+    const q = val.trim().toLowerCase();
+    if (!q) { box.style.display = 'none'; return; }
+    const companies = ['google','apple','tesla','meta','amazon','microsoft','openai'];
+    const hasMatch = companies.some(c => c.startsWith(q));
+    box.style.display = hasMatch ? 'block' : 'none';
+    box.querySelectorAll('.suggest-item').forEach(item => {
+      const name = item.querySelector('[style*="font-weight:600"]')?.textContent?.toLowerCase() || '';
+      item.style.display = name.startsWith(q) ? '' : 'none';
+    });
   }
   function selectCompany(name) {
     const input = document.getElementById('company-input');
