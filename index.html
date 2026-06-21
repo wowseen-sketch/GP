@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -3805,10 +3807,43 @@
   function handleFileSelect(input, type) {
     if (!input.files.length) return;
     const file = input.files[0];
-    document.getElementById(type+'-dropzone').style.display = 'none';
-    const up = document.getElementById(type+'-uploaded');
-    up.style.display = 'flex';
-    document.getElementById(type+'-filename').textContent = file.name;
+    const ext = file.name.split('.').pop().toLowerCase();
+
+    function _showUploaded(text) {
+      if (type === 'jd') _jdRawText = text;
+      document.getElementById(type+'-dropzone').style.display = 'none';
+      const up = document.getElementById(type+'-uploaded');
+      up.style.display = 'flex';
+      document.getElementById(type+'-filename').textContent = file.name;
+      console.log('[handleFileSelect] first 200 chars:', text.slice(0, 200));
+    }
+
+    if (ext === 'txt') {
+      const reader = new FileReader();
+      reader.onload = e => _showUploaded(e.target.result);
+      reader.readAsText(file);
+    } else if (ext === 'pdf') {
+      const reader = new FileReader();
+      reader.onload = async e => {
+        const typedArray = new Uint8Array(e.target.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+        let text = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          text += content.items.map(s => s.str).join(' ') + '\n';
+        }
+        _showUploaded(text);
+      };
+      reader.readAsArrayBuffer(file);
+    } else if (ext === 'docx') {
+      const reader = new FileReader();
+      reader.onload = async e => {
+        const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
+        _showUploaded(result.value);
+      };
+      reader.readAsArrayBuffer(file);
+    }
   }
   function handleDrop(e, type) {
     e.preventDefault();
@@ -4186,6 +4221,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   // ── JD KEYWORD EXTRACTION (step 2) ─────────────
   // Holds the most recent extraction so saveCompanyKeywords() can persist it.
   let _cachedJd = null;
+  let _jdRawText = '';
 
   // Calls the extract-jd-keywords edge function and previews the result on screen.
   async function extractJdKeywords() {
