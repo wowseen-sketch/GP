@@ -16,39 +16,39 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --ink:           #111318;
-    --ink-2:         #374151;
+    --ink:           #1A1D2E;
+    --ink-2:         #2D3250;
     --ink-3:         #6B7280;
-    --ink-4:         #9CA3AF;
-    --surface:       #F7F8FA;
-    --surface-2:     #F3F4F6;
-    --surface-3:     #E5E7EB;
+    --ink-4:         #A0A8B8;
+    --surface:       #F0F4FF;
+    --surface-2:     #E8EEFF;
+    --surface-3:     #D8E2FF;
     --white:         #FFFFFF;
-    --accent:        #5BC4F5;
-    --accent-2:      #5BC4F5;
-    --accent-dark:   #3ab4ef;
-    --accent-light:  rgba(91,196,245,0.1);
-    --accent-mid:    rgba(91,196,245,0.2);
-    --accent-vivid:  #5BC4F5;
-    --accent-glow:   rgba(91,196,245,0.18);
-    --success:       #059669;
-    --success-light: #F0FDF4;
-    --warn:          #D97706;
-    --warn-light:    #FEFCE8;
-    --danger:        #DC2626;
-    --danger-light:  #FFF1F2;
-    --border:        #ECEEF1;
-    --border-strong: #D8DADF;
+    --accent:        #4F8EF7;
+    --accent-2:      #4F8EF7;
+    --accent-dark:   #3575e0;
+    --accent-light:  rgba(79,142,247,0.1);
+    --accent-mid:    rgba(79,142,247,0.2);
+    --accent-vivid:  #4F8EF7;
+    --accent-glow:   rgba(79,142,247,0.18);
+    --success:       #10B981;
+    --success-light: #ECFDF5;
+    --warn:          #F59E0B;
+    --warn-light:    #FFFBEB;
+    --danger:        #EF4444;
+    --danger-light:  #FEF2F2;
+    --border:        #E4E9F7;
+    --border-strong: #C8D3EE;
     --ff-head: 'Pretendard', sans-serif;
     --ff-mono: 'Pretendard', sans-serif;
-    --r:  8px;
-    --rl: 12px;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-    --shadow:    0 4px 16px rgba(0,0,0,0.07);
-    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+    --r:  10px;
+    --rl: 14px;
+    --shadow-sm: 0 2px 8px rgba(79,142,247,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow:    0 4px 20px rgba(79,142,247,0.10);
+    --shadow-lg: 0 8px 32px rgba(79,142,247,0.14);
   }
 
-  html, body { width: 100%; min-height: 100vh; background: var(--surface); font-family: var(--ff-head); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  html, body { width: 100%; min-height: 100vh; background: #F0F4FF; font-family: var(--ff-head); color: var(--ink); -webkit-font-smoothing: antialiased; }
 
   /* ── PAGE SYSTEM ── */
   .page { display: none; }
@@ -61,6 +61,7 @@
     height: 56px; padding: 0 28px;
     background: var(--white);
     border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 12px rgba(79,142,247,0.08);
   }
   .nav-logo {
     display: flex; align-items: center; gap: 9px;
@@ -70,7 +71,7 @@
   }
   .nav-logo-icon {
     width: 28px; height: 28px; border-radius: 7px;
-    background: var(--ink);
+    background: var(--accent);
     display: flex; align-items: center; justify-content: center;
     color: #fff; font-size: 14px;
   }
@@ -121,6 +122,7 @@
   .sidebar {
     width: 230px; flex-shrink: 0; background: var(--white);
     border-right: 1px solid var(--border); padding: 10px 0;
+    box-shadow: 2px 0 12px rgba(79,142,247,0.06);
     position: fixed; top: 56px; left: 0; bottom: 0;
     overflow-y: auto; z-index: 100;
   }
@@ -141,13 +143,13 @@
     border-radius: 8px; white-space: nowrap;
   }
   .sb-item i { font-size: 16px; opacity: 0.55; flex-shrink: 0; }
-  .sb-item:hover { background: var(--surface); color: var(--ink); }
+  .sb-item:hover { background: var(--surface); color: var(--ink-2); }
   .sb-item:hover i { opacity: 1; }
   .sb-item.active {
-    background: var(--ink); color: #fff;
-    font-weight: 500; border-radius: 8px;
+    background: var(--accent-light); color: var(--accent);
+    font-weight: 600; border-radius: 10px;
   }
-  .sb-item.active i { opacity: 1; }
+  .sb-item.active i { opacity: 1; color: var(--accent); }
   .sb-badge {
     margin-left: auto; font-size: 11px; font-weight: 500;
     min-width: 22px; height: 22px;
@@ -156,7 +158,7 @@
     background: #f0f0f0; color: var(--ink-3);
     flex-shrink: 0;
   }
-  .sb-item.active .sb-badge { background: rgba(255,255,255,0.2); color: #fff; }
+  .sb-item.active .sb-badge { background: var(--accent); color: #fff; }
   .sb-badge.blue { background: #f0f0f0; color: var(--ink-3); }
   .sb-divider { display: none; }
 
@@ -167,7 +169,7 @@
      PAGE 1 · DASHBOARD
   ════════════════════════════════════════ */
   .hero {
-    background: var(--white); padding: 60px 64px 52px;
+    background: var(--white); padding: 52px 64px 44px;
     border-bottom: 1px solid var(--border);
   }
   .hero-eyebrow {
@@ -186,8 +188,8 @@
   .btn-blue {
     font-size: 13px; font-weight: 500; color: #fff;
     background: var(--accent);
-    border: none; padding: 8px 18px;
-    border-radius: var(--r); cursor: pointer; transition: background 0.15s;
+    border: none; padding: 9px 20px;
+    border-radius: 10px; cursor: pointer; transition: background 0.15s;
     display: inline-flex; align-items: center; gap: 6px;
   }
   .btn-blue:hover { background: var(--accent-dark); }
@@ -217,8 +219,8 @@
 
   .card {
     background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--rl); overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(79,142,247,0.08);
   }
   .card-head {
     display: flex; align-items: center; justify-content: space-between;
@@ -240,9 +242,9 @@
   .exp-meta { font-size: 11px; color: var(--ink-4); margin-bottom: 7px; }
   .exp-tags { display: flex; gap: 5px; flex-wrap: wrap; }
   .tag {
-    font-size: 11px; font-weight: 500; padding: 3px 9px;
-    border-radius: 99px; border: 1px solid var(--border-strong);
-    color: var(--ink-2); background: var(--surface-2);
+    font-size: 11px; font-weight: 500; padding: 3px 10px;
+    border-radius: 99px; border: 1px solid var(--border);
+    color: var(--ink-3); background: var(--surface);
   }
   .tag.blue { border-color: var(--accent-mid); color: var(--accent-2); background: var(--accent-light); }
 
@@ -263,7 +265,7 @@
      PAGE 2 · ADD EXPERIENCE
   ════════════════════════════════════════ */
   .page-header {
-    background: var(--surface);
+    background: #F0F4FF;
     padding: 40px 48px 28px;
   }
   .page-eyebrow {
@@ -299,8 +301,8 @@
   .form-label-count { font-size: 11px; font-weight: 400; color: var(--ink-4); text-transform: none; letter-spacing: 0; }
   .form-input {
     font-family: var(--ff-head); font-size: 13.5px; color: var(--ink);
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--r); padding: 8px 12px; outline: none;
+    background: #F8FAFF; border: 1px solid var(--border);
+    border-radius: 10px; padding: 9px 13px; outline: none;
     transition: border 0.12s, background 0.12s, box-shadow 0.12s; width: 100%;
   }
   .form-input:focus { border-color: var(--accent); background: var(--white); box-shadow: 0 0 0 3px var(--accent-glow); }
@@ -317,13 +319,13 @@
 
   .exp-chip {
     background: var(--white); border: 1px solid var(--border); color: var(--ink-3);
-    border-radius: 7px; font-size: 12px; padding: 5px 11px;
+    border-radius: 20px; font-size: 12px; padding: 5px 11px;
     cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
     font-family: var(--ff-head); font-weight: 400; transition: all 0.12s;
   }
   .exp-chip i { font-size: 13px; }
   .exp-chip.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
-  .exp-chip:hover:not(.active) { border-color: var(--border-strong); color: var(--ink); background: var(--surface); }
+  .exp-chip:hover:not(.active) { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 
   #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; font-family: var(--ff-head); }
 
@@ -341,16 +343,16 @@
     overflow-y: auto;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: var(--shadow-sm);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(79,142,247,0.08);
   }
   .add-left-inner { padding: 28px 24px; }
   .add-right {
     display: flex; flex-direction: column;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: var(--shadow-sm);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(79,142,247,0.08);
     overflow: hidden;
     min-width: 0;
   }
@@ -1010,15 +1012,15 @@
   .blk-card {
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 16px;
     cursor: pointer;
     transition: box-shadow 0.18s, border-color 0.18s, transform 0.15s;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 2px 12px rgba(79,142,247,0.08);
     display: flex; flex-direction: column;
     overflow: hidden;
     position: relative;
   }
-  .blk-card:hover { box-shadow: var(--shadow); border-color: var(--border-strong); transform: translateY(-2px); }
+  .blk-card:hover { box-shadow: 0 8px 28px rgba(79,142,247,0.16); border-color: var(--accent-mid); transform: translateY(-2px); }
   .blk-card-top { display: none; }
   .blk-card-preview { display: none; }
   .blk-card-body { padding: 18px 20px 14px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
@@ -5019,14 +5021,14 @@ What I learned: Consistency matters more than quality of individual posts`;
   // ── EXPERIENCE BLOCKS: load / render ───────────
   // Section visual identity per category (matches the static section dots/labels).
   const CATEGORY_STYLE = {
-    work:          { color: '#5BC4F5', bg: 'linear-gradient(160deg, #5BC4F5 0%, #3aa8e0 100%)', label: 'Work Experience' },
-    internship:    { color: '#5BC4F5', bg: 'linear-gradient(160deg, #7BCFFA 0%, #4ab8ef 100%)', label: 'Internship' },
-    education:     { color: '#7C8FEF', bg: 'linear-gradient(160deg, #8B9FF5 0%, #6B7FE0 100%)', label: 'Education & Certification' },
-    projects:      { color: '#34D399', bg: 'linear-gradient(160deg, #4ADBA5 0%, #2EC48A 100%)', label: 'Projects' },
-    organizations: { color: '#A78BFA', bg: 'linear-gradient(160deg, #B59EFC 0%, #9270F0 100%)', label: 'Organizations' },
-    competition:   { color: '#FBBF24', bg: 'linear-gradient(160deg, #FCD34D 0%, #F5A623 100%)', label: 'Competition' },
-    volunteering:  { color: '#F87171', bg: 'linear-gradient(160deg, #FC9B9B 0%, #EF5555 100%)', label: 'Volunteering' },
-    other:         { color: '#9CA3AF', bg: 'linear-gradient(160deg, #C4CAD4 0%, #9DA6B2 100%)', label: 'Other' },
+    work:          { color: '#4F8EF7', label: 'Work Experience' },
+    internship:    { color: '#4F8EF7', label: 'Internship' },
+    education:     { color: '#8B5CF6', label: 'Education & Certification' },
+    projects:      { color: '#10B981', label: 'Projects' },
+    organizations: { color: '#F59E0B', label: 'Organizations' },
+    competition:   { color: '#EF4444', label: 'Competition' },
+    volunteering:  { color: '#EC4899', label: 'Volunteering' },
+    other:         { color: '#6B7280', label: 'Other' },
   };
 
   // Minimal HTML escaper for user-supplied text rendered via innerHTML.
