@@ -38,10 +38,30 @@ You are given two lists of professional competency keywords:
 
 For EACH company keyword, decide how well the candidate's keywords cover it BY MEANING, not by exact wording. Synonyms, paraphrases, and clearly implied equivalents count.
 
-Classify each company keyword as:
-- "matched": the candidate keyword covers 90%+ of the same competency. Near-identical meaning or direct synonym.
-- "partial": the candidate keyword overlaps 40-89%. Related domain but narrower scope or missing key aspect.
-- "missing": overlap is under 40% or no candidate keyword is relevant.
+A competency keyword has three components:
+- Domain: the field or area (e.g. data, stakeholder management, product strategy)
+- Action: what is being done (e.g. analysis, communication, decision making)
+- Scope: the target or range (e.g. business-wide, cross-functional, external partners)
+
+Follow these steps in order for EACH company keyword:
+
+STEP 1: Does the candidate have a keyword in the same Domain?
+- If NO → classify as "missing". Stop.
+- If YES → go to STEP 2.
+
+STEP 2: Is the Action the same or in an inclusion relationship?
+(e.g. "management" includes "communication"; "decision making" does not include "analysis")
+- If YES → classify as "matched"
+- If NO → classify as "partial"
+
+Calibration examples:
+- "Data Analysis" vs "Data-Driven Decision Making" → domain: same (data), action: different → partial
+- "Stakeholder Management" vs "Stakeholder Communication" → domain: same, action: management includes communication → matched
+- "Go-to-Market Strategy" vs "Project Management" → domain: different → missing
+- "Product Roadmap Planning" vs "Product Strategy Development" → domain: same, action: planning included in strategy → matched
+- "UX Design" vs "Data Analysis" → domain: different → missing
+
+Do NOT use percentage thresholds. Use the domain/action/scope framework only.
 
 COMPANY_KEYWORDS:
 ${companyList}
