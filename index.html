@@ -2500,87 +2500,115 @@
 
     <!-- ════ PAGE: MATCH ARCHIVING ════ -->
     <div id="page-matchstore" class="page">
-      <!-- HEADER -->
       <div class="page-header">
         <div class="page-eyebrow">MATCH ARCHIVING</div>
         <div class="page-title">Match Archiving</div>
-        <div class="page-sub">View job fit scores and keyword analysis results by company — with improvement guides</div>
+        <div class="page-sub">View job fit scores and keyword analysis results by company</div>
       </div>
 
+      <!-- 3-col layout -->
+      <div style="display:grid;grid-template-columns:280px 1fr 260px;height:calc(100vh - 200px);overflow:hidden;">
 
-      <!-- JD KEYWORD EXTRACTION (real input — step 2) -->
-      <div style="padding:20px 32px 0;">
-        <div class="card">
-          <div class="card-head">
-            <div class="card-title"><i class="ti ti-file-text"></i> JD Keyword Extraction</div>
+        <!-- ── LEFT: Company List ── -->
+        <div style="border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
+          <div style="padding:16px 16px 10px;">
+            <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:0 12px;">
+              <i class="ti ti-search" style="font-size:13px;color:var(--ink-4);"></i>
+              <input type="text" id="ms-search" placeholder="Search companies..." oninput="msFilterCompanies(this.value)"
+                style="border:none;background:none;outline:none;padding:9px 8px;font-size:13px;font-family:var(--ff-head);color:var(--ink);width:100%;">
+            </div>
           </div>
-          <div class="card-body">
-            <div class="form-grid" style="margin-bottom:16px;">
-              <div class="form-group">
-                <label class="form-label">Company Name</label>
-                <input class="form-input" type="text" id="jd-company-input" placeholder="e.g. Acme Corp">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Job Title</label>
-                <input class="form-input" type="text" id="jd-role-input" placeholder="e.g. Product Manager">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Job Description *</label>
-              <textarea class="form-input" id="jd-text-input" rows="10" placeholder="Paste the full job description here..." style="resize:vertical;min-height:160px;line-height:1.6;"></textarea>
-            </div>
-            <div style="display:flex;align-items:center;gap:12px;margin-top:14px;">
-              <button class="btn-primary" id="jd-extract-btn" onclick="extractJdKeywords()" style="display:flex;align-items:center;gap:6px;">
-                <i class="ti ti-sparkles" style="font-size:14px;"></i> Extract Keywords
-              </button>
-              <span id="jd-extract-status" style="font-size:12px;color:var(--ink-4);"></span>
-            </div>
-            <!-- extracted keywords preview + save -->
-            <div id="jd-extract-result" style="display:none;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
-              <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Extracted Company Keywords</div>
-              <div id="jd-extract-pills" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-              <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
-                <button class="btn-primary" id="jd-save-btn" onclick="saveCompanyKeywords()" style="display:flex;align-items:center;gap:6px;">
-                  <i class="ti ti-bookmark" style="font-size:14px;"></i> Save to My Companies
-                </button>
-                <button class="btn-primary" id="jd-match-btn" onclick="analyzeFit()" style="display:flex;align-items:center;gap:6px;">
-                  <i class="ti ti-chart-bar" style="font-size:14px;"></i> Analyze Fit
-                </button>
-                <span id="jd-save-status" style="font-size:12px;color:var(--ink-4);"></span>
-                <span id="jd-match-status" style="font-size:12px;color:var(--ink-4);"></span>
-              </div>
-
-              <!-- match result: score + matched / partial / missing -->
-              <div id="jd-match-result" style="display:none;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
-                <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px;">
-                  <span style="font-size:36px;font-weight:800;color:var(--ink);line-height:1;" id="jd-match-score">0</span>
-                  <span style="font-size:14px;color:var(--ink-4);">/ 100 Job Fit Score</span>
-                  <span style="margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:600;align-self:center;">
-                    <span style="color:var(--success);">● Matched <span id="jd-cnt-matched">0</span></span>
-                    <span style="color:var(--warn);">● Partial <span id="jd-cnt-partial">0</span></span>
-                    <span style="color:var(--danger);">● Missing <span id="jd-cnt-missing">0</span></span>
-                  </span>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
-                  <div>
-                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--success);margin-bottom:8px;">Matched</div>
-                    <div id="jd-group-matched" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-                  </div>
-                  <div>
-                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--warn);margin-bottom:8px;">Partial</div>
-                    <div id="jd-group-partial" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-                  </div>
-                  <div>
-                    <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--danger);margin-bottom:8px;">Missing</div>
-                    <div id="jd-group-missing" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div style="padding:0 12px 6px;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);" id="ms-count-label">0 companies</div>
+          <div id="ms-company-list" style="flex:1;overflow-y:auto;padding:0 8px 16px;display:flex;flex-direction:column;gap:4px;"></div>
+          <div style="padding:12px 16px;border-top:1px solid var(--border);">
+            <button onclick="navigate('match')" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:10px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">
+              <i class="ti ti-plus" style="font-size:14px;"></i> Add Company
+            </button>
           </div>
         </div>
-      </div>
 
+        <!-- ── CENTER: Match Detail ── -->
+        <div id="ms-center" style="overflow-y:auto;display:flex;flex-direction:column;">
+
+          <!-- empty state -->
+          <div id="ms-empty" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:48px;color:var(--ink-4);">
+            <i class="ti ti-building" style="font-size:40px;opacity:0.3;"></i>
+            <div style="font-size:14px;font-weight:500;">Select a company to view match details</div>
+            <div style="font-size:12px;">Your analyzed companies will appear on the left</div>
+          </div>
+
+          <!-- detail (hidden until company selected) -->
+          <div id="ms-detail" style="display:none;padding:28px 32px;display:flex;flex-direction:column;gap:20px;">
+
+            <!-- company header -->
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div id="ms-co-avatar" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;background:var(--accent);"></div>
+              <div style="flex:1;">
+                <div id="ms-co-name" style="font-size:18px;font-weight:700;color:var(--ink);"></div>
+                <div id="ms-co-role" style="font-size:13px;color:var(--ink-3);margin-top:2px;"></div>
+              </div>
+              <div id="ms-co-analyzed" style="font-size:11px;color:var(--ink-4);"></div>
+            </div>
+
+            <!-- score card -->
+            <div style="background:var(--ink);border-radius:16px;padding:28px 32px;color:#fff;">
+              <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;">MATCH SCORE</div>
+              <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
+                <span id="ms-score-num" style="font-size:56px;font-weight:800;line-height:1;color:#fff;">—</span>
+                <span style="font-size:20px;color:rgba(255,255,255,0.6);">%</span>
+              </div>
+              <div id="ms-score-rank" style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="ms-score-breakdown"></div>
+            </div>
+
+            <!-- keyword match -->
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+              <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Keyword Match</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;" id="ms-kw-groups"></div>
+            </div>
+
+            <!-- JD input for new analysis -->
+            <div id="ms-jd-section" style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+              <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Job Description <span style="background:rgba(239,68,68,0.1);color:var(--danger);padding:2px 8px;border-radius:99px;font-size:10px;margin-left:6px;">REQUIRED</span></div>
+              <textarea id="ms-jd-input" rows="6" placeholder="Paste job description to analyze fit..."
+                style="width:100%;resize:vertical;padding:12px 14px;font-size:13px;font-family:var(--ff-head);color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);outline:none;line-height:1.6;box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+                <button onclick="msRunAnalysis()" style="font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Analyze Fit</button>
+                <span id="ms-jd-status" style="font-size:12px;color:var(--ink-4);"></span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── RIGHT: Stats Panel ── -->
+        <div style="border-left:1px solid var(--border);overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:24px;">
+
+          <!-- competency distribution -->
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Competency Distribution</div>
+            <div id="ms-competency-bars" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+
+          <!-- company score comparison -->
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Score Comparison</div>
+            <div id="ms-comparison-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+
+          <!-- AI insights -->
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">AI Insights</div>
+            <div id="ms-insights" style="display:flex;flex-direction:column;gap:10px;">
+              <div style="background:var(--surface);border-radius:10px;padding:14px 16px;">
+                <div style="font-size:11px;font-weight:600;color:var(--ink-3);margin-bottom:4px;">Run an analysis to see insights</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
 
     <!-- ════ PAGE: LANDING ════ -->
@@ -5969,6 +5997,8 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     // Refresh dynamic content when entering the Blocks page.
     if (target === 'blocks') loadUserBlocks();
+    // matchstore 진입 시 기업 목록 로드
+    if (target === 'matchstore') initMatchStore();
     // page-add 진입 시 mode 결정 (edit-scribble > scribble > new 우선순위)
     if (target === 'add') {
       _addMode = window.editingScribbleId ? 'edit-scribble' : (window.currentParentId ? 'scribble' : 'new');
@@ -5987,19 +6017,172 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (target === 'help') showHelpTab('faq');
     // match-result 진입 시 분석 자동 실행
     if (target === 'match-result') runMatchResultAnalysis();
-    // 잠금 페이지 진입 시 오버레이 top 재계산 + 스크롤 제어
-    if (target === 'match' || target === 'matchstore') {
-      setTimeout(() => initLockOverlays(), 50);
+  }
+
+  /* ── MATCH STORE ── */
+  let _msCompanies = [];
+  let _msSelected  = null;
+
+  async function initMatchStore() {
+    if (!currentUser) return;
+    const { data, error } = await _sb.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+    _msCompanies = data || [];
+    msRenderList(_msCompanies);
+    if (_msCompanies.length > 0) msSelectCompany(_msCompanies[0]);
+  }
+
+  function msRenderList(companies) {
+    const list  = document.getElementById('ms-company-list');
+    const label = document.getElementById('ms-count-label');
+    if (!list) return;
+    label.textContent = companies.length + ' compan' + (companies.length === 1 ? 'y' : 'ies');
+    list.innerHTML = '';
+    if (companies.length === 0) {
+      list.innerHTML = '<div style="padding:24px 8px;text-align:center;font-size:12px;color:var(--ink-4);">No companies yet.<br>Add one to get started.</div>';
+      return;
+    }
+    companies.forEach(co => {
+      const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
+      const score    = co.fit_score != null ? co.fit_score + '%' : '—';
+      const scoreColor = co.fit_score >= 80 ? 'var(--success)' : co.fit_score >= 60 ? 'var(--warn)' : co.fit_score != null ? 'var(--danger)' : 'var(--ink-4)';
+      const isActive = _msSelected && _msSelected.id === co.id;
+      const el = document.createElement('div');
+      el.style.cssText = `display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;background:${isActive ? 'var(--accent-light)' : 'transparent'};border:1px solid ${isActive ? 'var(--accent)' : 'transparent'};transition:all 0.12s;`;
+      el.onmouseenter = () => { if (!isActive) { el.style.background = 'var(--surface)'; } };
+      el.onmouseleave = () => { if (!isActive) { el.style.background = 'transparent'; el.style.border = '1px solid transparent'; } };
+      el.onclick = () => msSelectCompany(co);
+      el.innerHTML = `
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.company_name || '')}</div>
+          <div style="font-size:11px;color:var(--ink-4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.job_title || '')}</div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:${scoreColor};flex-shrink:0;">${score}</div>
+      `;
+      list.appendChild(el);
+    });
+  }
+
+  function msSelectCompany(co) {
+    _msSelected = co;
+    msRenderList(_msCompanies);
+
+    const empty  = document.getElementById('ms-empty');
+    const detail = document.getElementById('ms-detail');
+    if (empty)  empty.style.display  = 'none';
+    if (detail) detail.style.display = 'flex';
+
+    // header
+    const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
+    document.getElementById('ms-co-avatar').textContent = initials;
+    document.getElementById('ms-co-name').textContent   = co.company_name || '';
+    document.getElementById('ms-co-role').textContent   = co.job_title || '';
+    document.getElementById('ms-co-analyzed').textContent = co.updated_at ? 'Last analyzed · ' + new Date(co.updated_at).toLocaleDateString() : '';
+
+    // score
+    const scoreNum = document.getElementById('ms-score-num');
+    scoreNum.textContent = co.fit_score != null ? co.fit_score : '—';
+    document.getElementById('ms-score-rank').textContent = co.fit_score >= 80 ? '🎯 Strong match' : co.fit_score >= 60 ? '📈 Good foundation' : co.fit_score != null ? '⚡ Needs improvement' : 'Run analysis to see your score';
+
+    // breakdown
+    const bd = document.getElementById('ms-score-breakdown');
+    const breakdown = [
+      { label: 'Job Fit',    val: co.job_fit_score },
+      { label: 'Keywords',   val: co.keyword_score },
+      { label: 'Experience', val: co.experience_score },
+      { label: 'Period',     val: co.period_score },
+    ];
+    bd.innerHTML = breakdown.map(b => b.val != null ? `
+      <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;">
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px;">${b.label}</div>
+        <div style="font-size:18px;font-weight:700;color:#fff;">${b.val}</div>
+      </div>` : '').join('');
+
+    // keyword groups
+    const kwEl = document.getElementById('ms-kw-groups');
+    const matched = co.matched_keywords || [];
+    const missing = co.missing_keywords || [];
+    kwEl.innerHTML = `
+      <div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--success);margin-bottom:8px;">Matched ${matched.length}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">${matched.slice(0,8).map(k => `<span style="font-size:11px;background:var(--success-light);color:var(--success);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--danger);margin-bottom:8px;">Missing ${missing.length}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">${missing.slice(0,8).map(k => `<span style="font-size:11px;background:var(--danger-light);color:var(--danger);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:8px;">Company Keywords</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">${(co.company_keywords||[]).slice(0,6).map(k => `<span style="font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--ink-3);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+      </div>
+    `;
+
+    // right panel - competency
+    const compBars = document.getElementById('ms-competency-bars');
+    const cats = [
+      { label: 'Strategy & Planning', val: co.score_strategy },
+      { label: 'Data & Analysis',     val: co.score_data },
+      { label: 'Leadership & Org',    val: co.score_leadership },
+      { label: 'Marketing & Content', val: co.score_marketing },
+      { label: 'UX / Research',       val: co.score_ux },
+    ].filter(c => c.val != null);
+    compBars.innerHTML = cats.length ? cats.map(c => `
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span style="font-size:12px;color:var(--ink-2);">${c.label}</span>
+          <span style="font-size:12px;font-weight:600;color:var(--ink);">${c.val}%</span>
+        </div>
+        <div style="height:4px;background:var(--surface-2);border-radius:99px;overflow:hidden;">
+          <div style="width:${c.val}%;height:100%;background:var(--accent);border-radius:99px;"></div>
+        </div>
+      </div>`).join('') : '<div style="font-size:12px;color:var(--ink-4);">Run analysis to see competency data</div>';
+
+    // right panel - comparison
+    const compList = document.getElementById('ms-comparison-list');
+    compList.innerHTML = _msCompanies.filter(c => c.fit_score != null).sort((a,b) => b.fit_score - a.fit_score).map(c => `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:${c.id===co.id?'var(--accent-light)':'var(--surface)'};border:1px solid ${c.id===co.id?'var(--accent)':'transparent'};">
+        <div style="width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;">${(c.company_name||'?').slice(0,2).toUpperCase()}</div>
+        <span style="font-size:12px;font-weight:500;color:var(--ink);flex:1;">${escapeHtml(c.company_name)}</span>
+        <span style="font-size:12px;font-weight:700;color:var(--ink);">${c.fit_score}%</span>
+        <div style="width:50px;height:3px;background:var(--surface-3);border-radius:99px;overflow:hidden;"><div style="width:${c.fit_score}%;height:100%;background:var(--accent);border-radius:99px;"></div></div>
+      </div>`).join('') || '<div style="font-size:12px;color:var(--ink-4);">No analyzed companies yet</div>';
+
+    // AI insights
+    const insightsEl = document.getElementById('ms-insights');
+    const insights = co.ai_insights;
+    if (insights) {
+      insightsEl.innerHTML = `
+        ${insights.strength ? `<div style="background:var(--success-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--success);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">💪 Strength</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.strength)}</div></div>` : ''}
+        ${insights.gap ? `<div style="background:var(--warn-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--warn);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">⚠️ Gap</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.gap)}</div></div>` : ''}
+        ${insights.next ? `<div style="background:var(--accent-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">🎯 Next Step</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.next)}</div></div>` : ''}
+      `;
     } else {
-      // 다른 페이지로 이동 시 잠금 페이지 height 초기화
-      ['page-match', 'page-matchstore'].forEach(id => {
-        const pg = document.getElementById(id);
-        if (pg && pg.classList.contains('unlocked')) { pg.style.height = ''; pg.style.overflow = ''; }
-      });
+      insightsEl.innerHTML = '<div style="background:var(--surface);border-radius:10px;padding:14px 16px;"><div style="font-size:12px;color:var(--ink-4);">Run an analysis to see AI insights</div></div>';
     }
   }
 
-  let sidebarCollapsed = false;
+  function msFilterCompanies(q) {
+    const filtered = q.trim() === '' ? _msCompanies : _msCompanies.filter(c => (c.company_name||'').toLowerCase().includes(q.toLowerCase()) || (c.job_title||'').toLowerCase().includes(q.toLowerCase()));
+    msRenderList(filtered);
+  }
+
+  async function msRunAnalysis() {
+    if (!_msSelected) return;
+    const jd = (document.getElementById('ms-jd-input')?.value || '').trim();
+    const statusEl = document.getElementById('ms-jd-status');
+    if (!jd) { statusEl.textContent = 'Please paste a job description first.'; return; }
+    statusEl.textContent = 'Analyzing…';
+    // reuse existing analyzeFit logic via temp inputs
+    const cidEl  = document.getElementById('jd-company-input');
+    const roleEl = document.getElementById('jd-role-input');
+    const textEl = document.getElementById('jd-text-input');
+    if (cidEl)  cidEl.value  = _msSelected.company_name || '';
+    if (roleEl) roleEl.value = _msSelected.job_title    || '';
+    if (textEl) textEl.value = jd;
+    await extractJdKeywords();
+    statusEl.textContent = 'Done!';
+    setTimeout(() => { statusEl.textContent = ''; }, 2000);
+  }
   function toggleSidebar() {
     sidebarCollapsed = !sidebarCollapsed;
     const sb = document.getElementById('sidebar');
