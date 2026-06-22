@@ -2538,7 +2538,7 @@
           </div>
 
           <!-- detail (hidden until company selected) -->
-          <div id="ms-detail" style="display:none;padding:28px 32px;display:flex;flex-direction:column;gap:20px;">
+          <div id="ms-detail" style="display:none;padding:28px 32px;flex-direction:column;gap:20px;">
 
             <!-- company header -->
             <div style="display:flex;align-items:center;gap:14px;">
@@ -6118,7 +6118,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     const empty  = document.getElementById('ms-empty');
     const detail = document.getElementById('ms-detail');
     if (empty)  empty.style.display  = 'none';
-    if (detail) detail.style.display = 'flex';
+    if (detail) { detail.style.display = 'flex'; detail.style.flexDirection = 'column'; }
 
     // header
     const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
@@ -6545,7 +6545,11 @@ What I learned: Consistency matters more than quality of individual posts`;
   function initLockOverlays() {
     // lock overlays removed
   }
-  window.addEventListener('load', () => setTimeout(initLockOverlays, 100));
+  window.addEventListener('load', () => {
+    setTimeout(initLockOverlays, 100);
+    // matchstore 샘플 데이터 미리 로드
+    setTimeout(initMatchStore, 200);
+  });
 
   function onProfileClick() {
     if (!currentUser) navigate('login');
