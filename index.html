@@ -6026,10 +6026,55 @@ What I learned: Consistency matters more than quality of individual posts`;
   async function initMatchStore() {
     if (!currentUser) return;
     const { data, error } = await _sb.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-    _msCompanies = data || [];
+    _msCompanies = (data && data.length > 0) ? data : _msSampleData;
     msRenderList(_msCompanies);
     if (_msCompanies.length > 0) msSelectCompany(_msCompanies[0]);
   }
+
+  const _msSampleData = [
+    {
+      id: 'sample-1', company_name: 'Google', job_title: 'Product Manager · Search Division',
+      fit_score: 87, updated_at: new Date().toISOString(),
+      job_fit_score: 92, keyword_score: 85, experience_score: 88, period_score: 80,
+      matched_keywords: ['Strategic Planning', 'GTM', 'Data Analysis', 'OKR', 'B2B', 'Roadmap'],
+      missing_keywords: ['A/B Testing', 'SQL', 'Agile'],
+      company_keywords: ['Product Strategy', 'Cross-functional', 'Growth', 'Analytics', 'User Research'],
+      score_strategy: 92, score_data: 78, score_leadership: 65, score_marketing: 58, score_ux: 44,
+      ai_insights: {
+        strength: 'GTM + B2B strategy experience is a strong differentiator for PM roles. Cross-functional leadership adds significant weight.',
+        gap: 'A/B testing and SQL blocks are missing across all JDs. Adding these could boost match score by up to +12%.',
+        next: 'Add quantifiable metrics to your Data Analysis block. Google match score could reach 93%+ with DAU and retention metrics.'
+      }
+    },
+    {
+      id: 'sample-2', company_name: 'Apple', job_title: 'iOS Product Manager · App Division',
+      fit_score: 73, updated_at: new Date().toISOString(),
+      job_fit_score: 78, keyword_score: 70, experience_score: 72, period_score: 68,
+      matched_keywords: ['Product Strategy', 'User Research', 'Roadmap', 'Leadership'],
+      missing_keywords: ['Swift', 'iOS Development', 'Xcode', 'App Store Optimization'],
+      company_keywords: ['Design Thinking', 'Privacy', 'Hardware Integration', 'iOS Ecosystem'],
+      score_strategy: 75, score_data: 62, score_leadership: 70, score_marketing: 48, score_ux: 80,
+      ai_insights: {
+        strength: 'Strong UX research background aligns well with Apple\'s design-first culture.',
+        gap: 'Technical iOS development skills are expected even for PM roles. Consider adding relevant project experience.',
+        next: 'Highlight any mobile product experience and design collaboration in your blocks.'
+      }
+    },
+    {
+      id: 'sample-3', company_name: 'Kakao', job_title: 'Growth Lead · Platform Division',
+      fit_score: 68, updated_at: new Date().toISOString(),
+      job_fit_score: 70, keyword_score: 65, experience_score: 68, period_score: 72,
+      matched_keywords: ['Growth Strategy', 'B2C', 'Data Analysis', 'Marketing'],
+      missing_keywords: ['Python', 'CRM', 'Retention Marketing'],
+      company_keywords: ['Super App', 'Platform Strategy', 'Ecosystem', 'KakaoTalk'],
+      score_strategy: 68, score_data: 72, score_leadership: 60, score_marketing: 75, score_ux: 55,
+      ai_insights: {
+        strength: 'B2C marketing and growth experience directly maps to Kakao\'s platform expansion needs.',
+        gap: 'CRM and retention marketing keywords appear in 3 of 4 JDs but are missing from your blocks.',
+        next: 'Add a retention or lifecycle marketing project to significantly improve your score.'
+      }
+    }
+  ];
 
   function msRenderList(companies) {
     const list  = document.getElementById('ms-company-list');
