@@ -5961,7 +5961,7 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function navigate(target) {
     // 비로그인 상태에서 보호된 페이지 접근 시 랜딩 페이지로
-    const publicPages = ['login', 'signup', 'landing', 'help'];
+    const publicPages = ['login', 'signup', 'landing', 'help', 'matchstore'];
     if (!currentUser && !publicPages.includes(target)) {
       target = 'landing';
     }
@@ -6024,9 +6024,12 @@ What I learned: Consistency matters more than quality of individual posts`;
   let _msSelected  = null;
 
   async function initMatchStore() {
-    if (!currentUser) return;
-    const { data, error } = await _sb.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-    _msCompanies = (data && data.length > 0) ? data : _msSampleData;
+    let companies = [];
+    if (currentUser) {
+      const { data } = await _sb.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+      companies = data || [];
+    }
+    _msCompanies = companies.length > 0 ? companies : _msSampleData;
     msRenderList(_msCompanies);
     if (_msCompanies.length > 0) msSelectCompany(_msCompanies[0]);
   }
