@@ -6113,51 +6113,80 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     const empty  = document.getElementById('ms-empty');
     const detail = document.getElementById('ms-detail');
-    if (empty)  empty.style.display  = 'none';
-    if (detail) { detail.style.display = 'flex'; detail.style.flexDirection = 'column'; }
+    if (empty)  empty.style.display = 'none';
+    if (!detail) return;
+    detail.style.display = 'flex';
+    detail.style.flexDirection = 'column';
 
-    // header
     const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
-    document.getElementById('ms-co-avatar').textContent = initials;
-    document.getElementById('ms-co-name').textContent   = co.company_name || '';
-    document.getElementById('ms-co-role').textContent   = co.job_title || '';
-    document.getElementById('ms-co-analyzed').textContent = co.updated_at ? 'Last analyzed · ' + new Date(co.updated_at).toLocaleDateString() : '';
-
-    // score
-    const scoreNum = document.getElementById('ms-score-num');
-    scoreNum.textContent = co.fit_score != null ? co.fit_score : '—';
-    document.getElementById('ms-score-rank').textContent = co.fit_score >= 80 ? '🎯 Strong match' : co.fit_score >= 60 ? '📈 Good foundation' : co.fit_score != null ? '⚡ Needs improvement' : 'Run analysis to see your score';
-
-    // breakdown
-    const bd = document.getElementById('ms-score-breakdown');
+    const scoreRank = co.fit_score >= 80 ? '🎯 Strong match' : co.fit_score >= 60 ? '📈 Good foundation' : co.fit_score != null ? '⚡ Needs improvement' : 'Run analysis to see your score';
     const breakdown = [
-      { label: 'Job Fit',    val: co.job_fit_score },
-      { label: 'Keywords',   val: co.keyword_score },
+      { label: 'Job Fit', val: co.job_fit_score },
+      { label: 'Keywords', val: co.keyword_score },
       { label: 'Experience', val: co.experience_score },
-      { label: 'Period',     val: co.period_score },
+      { label: 'Period', val: co.period_score },
     ];
-    bd.innerHTML = breakdown.map(b => b.val != null ? `
-      <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;">
-        <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px;">${b.label}</div>
-        <div style="font-size:18px;font-weight:700;color:#fff;">${b.val}</div>
-      </div>` : '').join('');
-
-    // keyword groups
-    const kwEl = document.getElementById('ms-kw-groups');
     const matched = co.matched_keywords || [];
     const missing = co.missing_keywords || [];
-    kwEl.innerHTML = `
-      <div>
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--success);margin-bottom:8px;">Matched ${matched.length}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;">${matched.slice(0,8).map(k => `<span style="font-size:11px;background:var(--success-light);color:var(--success);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+    const compKws = co.company_keywords || [];
+
+    detail.innerHTML = `
+      <!-- company header -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;background:var(--accent);">${initials}</div>
+        <div style="flex:1;">
+          <div style="font-size:18px;font-weight:700;color:var(--ink);">${escapeHtml(co.company_name||'')}</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:2px;">${escapeHtml(co.job_title||'')}</div>
+        </div>
+        <div style="font-size:11px;color:var(--ink-4);">${co.updated_at ? 'Last analyzed · ' + new Date(co.updated_at).toLocaleDateString() : ''}</div>
       </div>
-      <div>
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--danger);margin-bottom:8px;">Missing ${missing.length}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;">${missing.slice(0,8).map(k => `<span style="font-size:11px;background:var(--danger-light);color:var(--danger);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+
+      <!-- score card -->
+      <div style="background:var(--ink);border-radius:16px;padding:28px 32px;color:#fff;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;">MATCH SCORE</div>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
+          <span style="font-size:56px;font-weight:800;line-height:1;color:#fff;">${co.fit_score != null ? co.fit_score : '—'}</span>
+          <span style="font-size:20px;color:rgba(255,255,255,0.6);">%</span>
+        </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;">${scoreRank}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          ${breakdown.filter(b => b.val != null).map(b => `
+            <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;">
+              <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px;">${b.label}</div>
+              <div style="font-size:18px;font-weight:700;color:#fff;">${b.val}</div>
+            </div>`).join('')}
+        </div>
       </div>
-      <div>
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:8px;">Company Keywords</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;">${(co.company_keywords||[]).slice(0,6).map(k => `<span style="font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--ink-3);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+
+      <!-- keyword match -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Keyword Match</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--success);margin-bottom:8px;">Matched ${matched.length}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${matched.map(k=>`<span style="font-size:11px;background:var(--success-light);color:var(--success);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--danger);margin-bottom:8px;">Missing ${missing.length}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${missing.map(k=>`<span style="font-size:11px;background:var(--danger-light);color:var(--danger);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:8px;">Company KW</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${compKws.map(k=>`<span style="font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--ink-3);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JD input -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Job Description <span style="background:rgba(239,68,68,0.1);color:var(--danger);padding:2px 8px;border-radius:99px;font-size:10px;margin-left:6px;">REQUIRED</span></div>
+        <textarea id="ms-jd-input" rows="6" placeholder="Paste job description to analyze fit..."
+          style="width:100%;resize:vertical;padding:12px 14px;font-size:13px;font-family:var(--ff-head);color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);outline:none;line-height:1.6;box-sizing:border-box;"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+          <button onclick="msRunAnalysis()" style="font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Analyze Fit</button>
+          <span id="ms-jd-status" style="font-size:12px;color:var(--ink-4);"></span>
+        </div>
       </div>
     `;
 
@@ -6543,8 +6572,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
   window.addEventListener('load', () => {
     setTimeout(initLockOverlays, 100);
-    // matchstore 샘플 데이터 미리 로드
-    setTimeout(initMatchStore, 200);
+    setTimeout(initMatchStore, 800);
   });
 
   function onProfileClick() {
