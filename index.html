@@ -48,7 +48,7 @@
     --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
   }
 
-  html, body { width: 100%; min-height: 100vh; background: var(--surface); font-family: var(--ff-head); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  html, body { width: 100%; min-height: 100vh; background: var(--white); font-family: var(--ff-head); color: var(--ink); -webkit-font-smoothing: antialiased; }
 
   /* ── PAGE SYSTEM ── */
   .page { display: none; }
@@ -141,7 +141,7 @@
     border-radius: 8px; white-space: nowrap;
   }
   .sb-item i { font-size: 16px; opacity: 0.6; flex-shrink: 0; }
-  .sb-item:hover { background: var(--surface); color: var(--ink); }
+  .sb-item:hover { background: var(--white); color: var(--ink); }
   .sb-item:hover i { opacity: 1; }
   .sb-item.active {
     background: var(--ink); color: #fff;
@@ -263,7 +263,7 @@
      PAGE 2 · ADD EXPERIENCE
   ════════════════════════════════════════ */
   .page-header {
-    background: var(--surface);
+    background: var(--white);
     padding: 28px 24px 18px;
   }
   .page-eyebrow {
@@ -299,7 +299,7 @@
   .form-label-count { font-size: 11px; font-weight: 400; color: var(--ink-4); text-transform: none; letter-spacing: 0; }
   .form-input {
     font-family: var(--ff-head); font-size: 13.5px; color: var(--ink);
-    background: var(--surface); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--r); padding: 8px 12px; outline: none;
     transition: border 0.12s, background 0.12s, box-shadow 0.12s; width: 100%;
   }
@@ -323,11 +323,11 @@
   }
   .exp-chip i { font-size: 13px; }
   .exp-chip.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
-  .exp-chip:hover:not(.active) { border-color: var(--border-strong); color: var(--ink); background: var(--surface); }
+  .exp-chip:hover:not(.active) { border-color: var(--border-strong); color: var(--ink); background: var(--white); }
 
   #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; font-family: var(--ff-head); }
 
-  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 56px); overflow: hidden; background: var(--surface); }
+  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 56px); overflow: hidden; background: var(--white); }
 
   .add-columns {
     display: grid;
@@ -441,7 +441,7 @@
   .kw-area {
     border: 1.5px dashed var(--border-strong); border-radius: var(--r);
     padding: 10px; min-height: 60px; display: flex; flex-wrap: wrap;
-    gap: 6px; align-items: flex-start; background: var(--surface);
+    gap: 6px; align-items: flex-start; background: var(--white);
   }
   .kw-tag {
     display: flex; align-items: center; gap: 4px;
@@ -461,7 +461,7 @@
   .char-count { font-size: 11px; color: var(--ink-4); text-align: right; margin-top: 3px; }
 
   .impact-box {
-    background: var(--surface); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--r); padding: 14px; margin-top: 6px;
   }
   .impact-box-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px; }
@@ -510,7 +510,7 @@
   .exp-chip.active {
     background: var(--accent-light); border-color: var(--accent); color: var(--accent);
   }
-  .exp-chip:hover:not(.active) { background: var(--surface); }
+  .exp-chip:hover:not(.active) { background: var(--white); }
   #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; }
   #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 56px); overflow: hidden; }
   .add-columns { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
@@ -558,7 +558,7 @@
   /* preview panel */
   .add-layout { display: grid; grid-template-columns: 1fr 288px; gap: 0; }
   .add-form-col { padding: 28px 40px; border-right: 1px solid var(--border); }
-  .add-preview-col { padding: 24px 20px; background: var(--surface); }
+  .add-preview-col { padding: 24px 20px; background: var(--white); }
   .preview-label {
     font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--ink-4); margin-bottom: 12px;
@@ -619,14 +619,14 @@
   .co-panel-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 9px; }
   .co-search-box {
     display: flex; align-items: center; gap: 8px;
-    background: var(--surface); border: 1px solid var(--border-strong);
+    background: var(--white); border: 1px solid var(--border-strong);
     border-radius: var(--r); padding: 0 10px;
   }
   .co-search-box i { font-size: 14px; color: var(--ink-4); }
   .co-search-box input { background: none; border: none; outline: none; font-family: var(--ff-head); font-size: 12px; color: var(--ink); padding: 7px 0; width: 100%; }
   .co-list { flex: 1; overflow-y: auto; }
   .co-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.12s; }
-  .co-item:hover { background: var(--surface); }
+  .co-item:hover { background: var(--white); }
   .co-item.active { background: var(--accent-light); }
   .co-item.active .co-item-name { color: var(--accent-2); }
   .co-logo-sm { width: 36px; height: 36px; border-radius: var(--r); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
@@ -668,7 +668,7 @@
   .role-list { display: flex; flex-direction: column; gap: 7px; }
   .role-item {
     display: flex; align-items: center; gap: 12px; padding: 11px 14px;
-    background: var(--surface); border-radius: var(--r); border: 1px solid var(--border);
+    background: var(--white); border-radius: var(--r); border: 1px solid var(--border);
   }
   .role-item.top { background: var(--accent-light); border-color: var(--accent-mid); }
   .role-rank { font-family: var(--ff-mono); font-size: 11px; color: var(--ink-3); width: 20px; }
@@ -721,7 +721,7 @@
   .gauge-fill.green { background: var(--success); }
   .gauge-fill.amber { background: var(--warn); }
   .gauge-fill.teal  { background: #0D9488; }
-  .compare-item { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: var(--r); border: 1px solid var(--border); background: var(--surface); margin-bottom: 5px; }
+  .compare-item { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-radius: var(--r); border: 1px solid var(--border); background: var(--white); margin-bottom: 5px; }
   .compare-item.current { border-color: var(--accent-mid); background: var(--accent-light); }
   .compare-item:last-child { margin-bottom: 0; }
   .compare-logo { width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; flex-shrink: 0; }
@@ -870,7 +870,7 @@
   .tl-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 6px; }
   .tl-tag { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 99px; border: 1px solid var(--border-strong); color: var(--ink-4); background: var(--surface-2); }
   .tl-tag.blue { border-color: var(--accent-mid); color: var(--accent-2); background: var(--accent-light); }
-  .tl-impact { font-size: 12px; color: var(--ink-2); line-height: 1.6; padding: 7px 11px; background: var(--surface); border-radius: var(--r); border-left: 2px solid var(--accent); }
+  .tl-impact { font-size: 12px; color: var(--ink-2); line-height: 1.6; padding: 7px 11px; background: var(--white); border-radius: var(--r); border-left: 2px solid var(--accent); }
 
   .gap-item { padding: 11px 13px; border-radius: var(--r); border: 1px solid var(--border); background: var(--white); box-shadow: var(--shadow-sm); }
   .gap-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
@@ -978,7 +978,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 16px;
-    background: var(--surface);
+    background: var(--white);
     border-radius: 10px;
     width: 100%;
     box-sizing: border-box;
@@ -1054,7 +1054,7 @@
   .blk-section-sep { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
   .blk-folder { border: 1px solid var(--border); border-radius: var(--rl); background: var(--white); margin-bottom: 8px; overflow: hidden; }
   .blk-folder-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; }
-  .blk-folder-body { border-top: 1px solid var(--border); background: var(--surface); padding: 12px 16px 14px; }
+  .blk-folder-body { border-top: 1px solid var(--border); background: var(--white); padding: 12px 16px 14px; }
   .blk-folder-entry { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
   .blk-folder-entry:last-of-type { border-bottom: none; }
 
@@ -1185,7 +1185,7 @@
   }
   .btn-google:hover:not(:disabled) {
     border-color: var(--border-strong);
-    background: var(--surface);
+    background: var(--white);
   }
   .btn-google:disabled { opacity: 0.65; cursor: not-allowed; }
   .btn-google-icon { flex-shrink: 0; }
@@ -1238,7 +1238,7 @@
   .user-menu-head {
     padding: 14px 16px;
     border-bottom: 1px solid var(--border);
-    background: var(--surface);
+    background: var(--white);
   }
   .user-menu-email {
     font-size: 12px; font-weight: 600; color: var(--ink);
@@ -1258,13 +1258,13 @@
     cursor: pointer;
     transition: background 0.1s;
   }
-  .user-menu-item:hover { background: var(--surface); }
+  .user-menu-item:hover { background: var(--white); }
   .user-menu-item i { font-size: 15px; color: var(--ink-3); }
   .user-menu-item.danger { color: var(--danger); }
   .user-menu-item.danger i { color: var(--danger); }
 
   /* ── 글래스모피즘 잠금 오버레이 ── */
-  .lock-overlay-wrap { position: relative; overflow: hidden; }
+  .lock-overlay-wrap { position: relative; }
   .lock-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -1437,7 +1437,7 @@
   .hiw-panel-title { font-size: 28px; font-weight: 800; color: var(--ink); letter-spacing: -0.025em; line-height: 1.25; margin-bottom: 16px; }
   .hiw-panel-desc { font-size: 15px; color: var(--ink-3); line-height: 1.8; margin-bottom: 28px; }
   .hiw-mockup-shell { background: var(--white); border: 1px solid #E5E7EB; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04); }
-  .hiw-mockup-topbar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; border-bottom: 1px solid #F0F0F0; background: #FAFAFA; }
+  .hiw-mockup-topbar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; border-bottom: 1px solid #F0F0F0; background: #FFFFFF; }
   .hiw-mock-dot { width: 9px; height: 9px; border-radius: 50%; }
   .hiw-mock-dot.r { background: #FF5F57; }
   .hiw-mock-dot.y { background: #FFBD2E; }
@@ -1493,7 +1493,7 @@
   .up2-pdf-icon { width: 26px; height: 26px; border-radius: 6px; background: #F3F4F6; color: #9CA3AF; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
   .up2-fname { font-size: 12px; font-weight: 500; color: #111827; flex: 1; }
   .up2-analyzed { font-size: 11px; font-weight: 500; color: #16A34A; background: #F0FDF4; border: 1px solid #BBF7D0; padding: 2px 8px; border-radius: 99px; display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
-  .up2-dropzone { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 48px; border: 1.5px dashed #E5E7EB; border-radius: 8px; background: #FAFAFA; padding: 10px 16px; }
+  .up2-dropzone { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 48px; border: 1.5px dashed #E5E7EB; border-radius: 8px; background: #FFFFFF; padding: 10px 16px; }
   .up2-drop-icon { font-size: 12px; color: #9CA3AF; }
   .up2-drop-text { font-size: 11px; color: #9CA3AF; }
   .up2-req-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -2205,11 +2205,8 @@
         <div class="lock-overlay-sub">Click to preview</div>
       </div>
 
-      <!-- Two col: form left, saved list right -->
-      <div style="display:grid;grid-template-columns:1fr 340px;min-height:calc(100vh - 200px);">
-
-        <!-- FORM COL -->
-        <div style="padding:36px 48px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:32px;">
+      <!-- Single col: form only -->
+      <div style="padding:36px 56px;display:flex;flex-direction:column;gap:32px;max-width:780px;">
 
           <!-- ① Company + Job Title -->
           <div>
@@ -2326,75 +2323,6 @@
           </div>
 
         </div>
-
-        <!-- RIGHT: Saved Companies -->
-        <div style="padding:28px 24px;background:var(--surface);display:flex;flex-direction:column;gap:16px;">
-
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);">Companies in Analysis <span style="background:var(--accent-light);color:var(--accent-2);padding:2px 8px;border-radius:99px;font-size:11px;">3</span></div>
-
-          <!-- saved company cards -->
-          <div style="display:flex;flex-direction:column;gap:10px;">
-
-            <div style="background:var(--white);border:1.5px solid var(--accent-mid);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow-sm);">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <div style="width:34px;height:34px;border-radius:8px;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">GG</div>
-                <div style="flex:1;">
-                  <div style="font-size:13px;font-weight:700;color:var(--ink);">Google</div>
-                  <div style="font-size:11px;color:var(--ink-4);">Product Manager · Search Division</div>
-                </div>
-                <div style="font-size:13px;font-weight:800;color:var(--success);">87%</div>
-              </div>
-              <div style="height:3px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:10px;"><div style="width:87%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent));border-radius:99px;"></div></div>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span style="font-size:10px;font-weight:600;color:var(--success);background:var(--success-light);padding:2px 8px;border-radius:99px;display:flex;align-items:center;gap:3px;"><i class="ti ti-file-check" style="font-size:11px;"></i> JD Uploaded</span>
-                <span style="font-size:10px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:2px 8px;border-radius:99px;">Analysis Complete</span>
-                <button onclick="navigate('matchstore')" style="margin-left:auto;font-size:11px;font-weight:600;color:var(--accent-2);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px;">Report <i class="ti ti-chevron-right" style="font-size:12px;"></i></button>
-              </div>
-            </div>
-
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow-sm);">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <div style="width:34px;height:34px;border-radius:8px;background:#555555;color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">AP</div>
-                <div style="flex:1;">
-                  <div style="font-size:13px;font-weight:700;color:var(--ink);">Apple</div>
-                  <div style="font-size:11px;color:var(--ink-4);">iOS Engineer · App Division</div>
-                </div>
-                <div style="font-size:13px;font-weight:800;color:var(--success);">73%</div>
-              </div>
-              <div style="height:3px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:10px;"><div style="width:73%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent));border-radius:99px;"></div></div>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span style="font-size:10px;font-weight:600;color:var(--success);background:var(--success-light);padding:2px 8px;border-radius:99px;display:flex;align-items:center;gap:3px;"><i class="ti ti-file-check" style="font-size:11px;"></i> JD Uploaded</span>
-                <span style="font-size:10px;font-weight:600;color:var(--success);background:var(--success-light);padding:2px 8px;border-radius:99px;">Analysis Complete</span>
-              </div>
-            </div>
-
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow-sm);">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <div style="width:34px;height:34px;border-radius:8px;background:#CC0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">TS</div>
-                <div style="flex:1;">
-                  <div style="font-size:13px;font-weight:700;color:var(--ink);">Tesla</div>
-                  <div style="font-size:11px;color:var(--ink-4);">Growth Lead · Autopilot</div>
-                </div>
-                <div style="font-size:13px;font-weight:800;color:var(--warn);">—</div>
-              </div>
-              <div style="height:3px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:10px;"></div>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span style="font-size:10px;font-weight:600;color:var(--warn);background:var(--warn-light);padding:2px 8px;border-radius:99px;display:flex;align-items:center;gap:3px;"><i class="ti ti-upload" style="font-size:11px;"></i> JD Required</span>
-                <span style="font-size:10px;font-weight:600;color:var(--ink-4);background:var(--surface-2);padding:2px 8px;border-radius:99px;">Not Analyzed</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- add new hint -->
-          <div style="border:1.5px dashed var(--border-strong);border-radius:var(--rl);padding:18px;text-align:center;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border-strong)'">
-            <i class="ti ti-plus" style="font-size:20px;color:var(--ink-4);margin-bottom:6px;display:block;"></i>
-            <div style="font-size:12px;font-weight:600;color:var(--ink-4);">Add New Company</div>
-          </div>
-
-
-        </div>
-      </div>
     </div>
 
     <!-- ════ PAGE: MATCH RESULT ════ -->
