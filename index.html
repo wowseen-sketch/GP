@@ -6311,19 +6311,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
 
   function initLockOverlays() {
-    ['page-match', 'page-matchstore'].forEach(pageId => {
-      const page = document.getElementById(pageId);
-      if (!page) return;
-      const overlay = page.querySelector('.lock-overlay');
-      if (!overlay) return;
-      const header = page.querySelector('.page-header');
-      const headerH = header ? header.offsetHeight : 120;
-      overlay.style.top = headerH + 'px';
-      if (!page.classList.contains('unlocked')) {
-        page.style.height = 'calc(100vh - 56px)';
-        page.style.overflow = 'hidden';
-      }
-    });
+    // lock overlays removed
   }
   window.addEventListener('load', () => setTimeout(initLockOverlays, 100));
 
