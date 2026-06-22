@@ -335,29 +335,29 @@
     grid-template-columns: 320px 1fr;
     flex: 1;
     overflow: hidden;
-    gap: 16px;
-    padding: 16px 24px 24px;
+    gap: 24px;
+    padding: 32px 48px 48px;
   }
   .add-left {
     overflow-y: auto;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     box-shadow: var(--shadow-sm);
   }
-  .add-left-inner { padding: 22px 20px; }
+  .add-left-inner { padding: 28px 26px; }
   .add-right {
     display: flex; flex-direction: column;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     min-width: 0;
   }
   .add-right-head {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 22px;
+    padding: 20px 28px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
   }
@@ -379,13 +379,13 @@
   }
   .add-right-foot {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 22px 16px;
+    padding: 16px 28px 20px;
     border-top: 1px solid var(--border);
     flex-shrink: 0; background: var(--white);
   }
   @media (max-width: 768px) {
     #page-add.active { height: auto; overflow: visible; }
-    .add-columns { grid-template-columns: 1fr; overflow: visible; padding: 16px; }
+    .add-columns { grid-template-columns: 1fr; overflow: visible; padding: 20px; }
     .add-right { overflow: visible; }
     .add-right #exp-freetext { flex: none; min-height: 240px; }
   }
