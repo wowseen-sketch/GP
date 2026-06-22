@@ -5036,15 +5036,8 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
 
     const fc = style.color || 'var(--accent)';
-    const bgMap = {
-      '#FF9300': '#FFF4E6', '#6366F1': '#EEF2FF', '#10B981': '#FFF4E6',
-      '#8B5CF6': '#F5F3FF', '#EF4444': '#FEF2F2', '#EC4899': '#FDF2F8', '#9CA3AF': '#F9FAFB'
-    };
-    const headerBg = bgMap[fc] || '#FFF4E6';
 
     const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,4);
-
-    // 키워드 pill 색상 - 레퍼런스처럼 각기 다른 파스텔
     const pillColors = [
       { bg: '#FFF4E6', color: '#E07800' },
       { bg: '#EEF2FF', color: '#4F46E5' },
@@ -5064,9 +5057,9 @@ What I learned: Consistency matters more than quality of individual posts`;
     el.className = 'blk-card dyn';
     el.dataset.type = cat;
     el.innerHTML = `
-      <div class="blk-card-top" style="background:${headerBg};">
-        <span style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:${fc};font-family:var(--ff-head);">${escapeHtml(style.label)}</span>
-        <span style="font-size:11px;color:${fc};opacity:0.7;font-family:var(--ff-head);">${escapeHtml(period)}</span>
+      <div class="blk-card-top" style="background:${fc};">
+        <span style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#fff;font-family:var(--ff-head);">${escapeHtml(style.label)}</span>
+        <span style="font-size:11px;color:rgba(255,255,255,0.8);font-family:var(--ff-head);">${escapeHtml(period)}</span>
       </div>
       <div class="blk-card-body">
         <div class="blk-card-title">${escapeHtml(row.title || 'Untitled')}</div>
