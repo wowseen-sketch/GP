@@ -5653,57 +5653,74 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
 
   function bdViewHtml(row) {
-    const v = x => (x != null && String(x).trim()) ? escapeHtml(x) : null;
+    const v = x => (x != null && String(x).trim()) ? String(x).trim() : null;
     const period = bdPeriodStr(row);
 
-    const infoCard = (label, val) => val ? `
-      <div style="display:flex;flex-direction:column;gap:3px;">
+    const metaChip = (label, val) => val ? `
+      <div style="display:flex;flex-direction:column;gap:2px;">
         <span style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);">${label}</span>
-        <span style="font-size:13.5px;color:var(--ink);font-weight:500;">${val}</span>
+        <span style="font-size:13px;font-weight:500;color:var(--ink);">${escapeHtml(val)}</span>
       </div>` : '';
 
-    const block = (label, content) => content ? `
-      <div style="background:var(--surface);border-radius:12px;padding:16px 18px;">
-        <div style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">${label}</div>
-        <div style="font-size:13.5px;color:var(--ink-2);line-height:1.7;">${content}</div>
-      </div>` : '';
+    const starCard = (letter, color, title, content) => {
+      if (!content) return '';
+      // 줄바꿈 → 문단 분리, 150자 넘으면 요약
+      const lines = content.split(/\n+/).filter(l => l.trim()).slice(0, 3);
+      const html = lines.map(l => `<p style="margin:0 0 6px;font-size:13px;color:var(--ink-2);line-height:1.65;">${escapeHtml(l.trim())}</p>`).join('');
+      return `
+        <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:${color}10;border-bottom:1px solid ${color}22;">
+            <div style="width:26px;height:26px;border-radius:8px;background:${color};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <span style="font-size:12px;font-weight:800;color:#fff;">${letter}</span>
+            </div>
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:${color};">${title}</span>
+          </div>
+          <div style="padding:14px 16px;">${html}</div>
+        </div>`;
+    };
 
-    const tagsBlock = (label, arr) => {
+    const tagsRow = (label, arr) => {
       const items = Array.isArray(arr) ? arr.filter(Boolean) : [];
       if (!items.length) return '';
       return `
-        <div style="background:var(--surface);border-radius:12px;padding:16px 18px;">
-          <div style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">${label}</div>
+        <div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">${label}</div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;">${items.map(t =>
-            `<span style="font-size:11.5px;color:var(--ink-2);background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:99px;">${escapeHtml(t)}</span>`
+            `<span style="font-size:11.5px;color:var(--ink-2);background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:99px;">${escapeHtml(t)}</span>`
           ).join('')}</div>
         </div>`;
     };
 
-    return `
-      <!-- Overview -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:4px 0 16px;">
-        ${infoCard('Activity Type', v(row.activity_type))}
-        ${infoCard('Organization',  v(row.organization))}
-        ${infoCard('Period',        period ? escapeHtml(period) : null)}
-        ${infoCard('Role',          v(row.role))}
-      </div>
-      <div style="border-top:1px solid var(--border);margin-bottom:16px;"></div>
+    // STAR 매핑: goal+strategy → S/T, actions → A, outcome+failure → R
+    const situation = [v(row.goal), v(row.strategy)].filter(Boolean).join('\n\n');
+    const action    = v(row.actions);
+    const result    = [v(row.outcome_measurable), v(row.failure_improvement), v(row.takeaway)].filter(Boolean).join('\n\n');
 
-      <!-- Experience blocks -->
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        ${block('Goal', v(row.goal))}
-        ${block('Strategy', v(row.strategy))}
-        ${block('Actions', v(row.actions))}
-        ${block('Failure & Improvement', v(row.failure_improvement))}
-        ${block('Measurable Outcome', v(row.measurable_outcome))}
-        ${block('Takeaway', v(row.takeaway))}
-        ${block('Applied Elsewhere', v(row.applied_elsewhere))}
-        ${block('Free Text', v(row.freetext))}
-        <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
-        ${tagsBlock('Job Keywords', row.job_keywords)}
-        ${tagsBlock('Competency Keywords', row.competency_keywords)}
+    return `
+      <!-- Meta -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:4px 0 18px;">
+        ${metaChip('Type', v(row.activity_type))}
+        ${metaChip('Organization', v(row.organization))}
+        ${metaChip('Period', period ? escapeHtml(period) : null)}
+        ${metaChip('Role', v(row.role))}
       </div>
+      <div style="height:1px;background:var(--border);margin-bottom:18px;"></div>
+
+      <!-- STAR -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${starCard('S', '#6366F1', 'Situation & Task', situation)}
+        ${starCard('A', '#FF9300', 'Action', action)}
+        ${starCard('R', '#10B981', 'Result', result)}
+        ${v(row.applied) ? starCard('→', '#64748B', 'Applied Elsewhere', v(row.applied)) : ''}
+      </div>
+
+      <!-- Keywords -->
+      ${(row.competency_keywords?.length || row.job_keywords?.length) ? `
+      <div style="height:1px;background:var(--border);margin:18px 0;"></div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        ${tagsRow('Competency Keywords', row.competency_keywords)}
+        ${tagsRow('Job Keywords', row.job_keywords)}
+      </div>` : ''}
     `;
   }
 
