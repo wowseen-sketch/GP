@@ -3545,12 +3545,9 @@
      View + inline-edit for a saved experience_blocks row.
      Body (#bd-body) and footer (#bd-footer) are rendered by JS
      (renderBlockDetail) depending on view vs. edit mode. -->
-<div id="block-detail-modal" style="display:none;position:fixed;inset:0;z-index:520;align-items:stretch;justify-content:flex-end;">
-  <!-- backdrop -->
-  <div onclick="closeBlockDetail()" style="position:absolute;inset:0;background:rgba(0,0,0,0.25);"></div>
-
+<div id="block-detail-modal" style="display:none;position:fixed;top:0;right:0;bottom:0;width:50vw;min-width:480px;z-index:520;">
   <!-- side panel -->
-  <div style="position:relative;width:50vw;min-width:480px;max-width:720px;height:100%;background:var(--white);box-shadow:-8px 0 40px rgba(0,0,0,0.12);overflow:hidden;display:flex;flex-direction:column;animation:slideInRight 0.28s cubic-bezier(0.4,0,0.2,1);"
+  <div style="width:100%;height:100%;background:var(--white);box-shadow:-8px 0 40px rgba(0,0,0,0.1);overflow:hidden;display:flex;flex-direction:column;animation:slideInRight 0.28s cubic-bezier(0.4,0,0.2,1);">
 
     <!-- HEADER -->
     <div style="background:var(--white);padding:16px 24px;flex-shrink:0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
@@ -3566,10 +3563,10 @@
     <div id="bd-title" style="font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;padding:24px 28px 0;flex-shrink:0;">Title</div>
 
     <!-- BODY (rendered by renderBlockDetail) -->
-    <div id="bd-body" style="flex:1;overflow-y:auto;padding:26px 30px;background:#fff;"></div>
+    <div id="bd-body" style="flex:1;overflow-y:auto;padding:20px 24px 24px;background:#fff;"></div>
 
-    <!-- FOOTER (buttons rendered by renderBlockDetail) -->
-    <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
+    <!-- FOOTER -->
+    <div style="padding:14px 24px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
       <div id="bd-status" style="font-size:12px;color:var(--ink-4);"></div>
       <div id="bd-footer" style="margin-left:auto;display:flex;align-items:center;gap:10px;"></div>
     </div>
@@ -5632,8 +5629,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     setBdStatus('');
     renderBlockDetail();
     const m = document.getElementById('block-detail-modal');
-    if (m) m.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    if (m) m.style.display = 'block';
   }
 
   function closeBlockDetail() {
@@ -5658,27 +5654,56 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function bdViewHtml(row) {
     const v = x => (x != null && String(x).trim()) ? escapeHtml(x) : null;
-    const basicRow = (label, val) =>
-      `<div class="bd-field"><span class="bd-field-label">${label}</span>
-        <div class="bd-field-value${val ? '' : ' empty'}">${val || '—'}</div></div>`;
-
     const period = bdPeriodStr(row);
 
+    const infoCard = (label, val) => val ? `
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <span style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);">${label}</span>
+        <span style="font-size:13.5px;color:var(--ink);font-weight:500;">${val}</span>
+      </div>` : '';
+
+    const block = (label, content) => content ? `
+      <div style="background:var(--surface);border-radius:12px;padding:16px 18px;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">${label}</div>
+        <div style="font-size:13.5px;color:var(--ink-2);line-height:1.7;">${content}</div>
+      </div>` : '';
+
+    const tagsBlock = (label, arr) => {
+      const items = Array.isArray(arr) ? arr.filter(Boolean) : [];
+      if (!items.length) return '';
+      return `
+        <div style="background:var(--surface);border-radius:12px;padding:16px 18px;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">${label}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">${items.map(t =>
+            `<span style="font-size:11.5px;color:var(--ink-2);background:var(--white);border:1px solid var(--border);padding:4px 12px;border-radius:99px;">${escapeHtml(t)}</span>`
+          ).join('')}</div>
+        </div>`;
+    };
+
     return `
-      <div class="bd-section-label">Overview</div>
-      <div class="bd-grid-2">
-        ${basicRow('Activity Type', v(row.activity_type))}
-        ${basicRow('Organization',  v(row.organization))}
-        ${basicRow('Period',        period ? escapeHtml(period) : null)}
-        ${basicRow('Role',          v(row.role))}
+      <!-- Overview -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:4px 0 16px;">
+        ${infoCard('Activity Type', v(row.activity_type))}
+        ${infoCard('Organization',  v(row.organization))}
+        ${infoCard('Period',        period ? escapeHtml(period) : null)}
+        ${infoCard('Role',          v(row.role))}
       </div>
+      <div style="border-top:1px solid var(--border);margin-bottom:16px;"></div>
 
-      <div class="bd-section-label">PDCA Structured Experience</div>
-      ${BD_PDCA_FIELDS.map(([col, label]) => basicRow(label, v(row[col]))).join('')}
-
-      <div class="bd-section-label">AI Analysis Results</div>
-      ${BD_AI_FIELDS.map(([col, label]) =>
-        `<div class="bd-field"><span class="bd-field-label">${label}</span>${bdTagsHtml(row[col])}</div>`).join('')}
+      <!-- Experience blocks -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${block('Goal', v(row.goal))}
+        ${block('Strategy', v(row.strategy))}
+        ${block('Actions', v(row.actions))}
+        ${block('Failure & Improvement', v(row.failure_improvement))}
+        ${block('Measurable Outcome', v(row.measurable_outcome))}
+        ${block('Takeaway', v(row.takeaway))}
+        ${block('Applied Elsewhere', v(row.applied_elsewhere))}
+        ${block('Free Text', v(row.freetext))}
+        <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
+        ${tagsBlock('Job Keywords', row.job_keywords)}
+        ${tagsBlock('Competency Keywords', row.competency_keywords)}
+      </div>
     `;
   }
 
@@ -6712,4 +6737,3 @@ What I learned: Consistency matters more than quality of individual posts`;
 </script>
 </body>
 </html>
-<!-- v2 -->
