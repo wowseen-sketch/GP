@@ -1079,19 +1079,26 @@
   /* ── ONGOING FOLDER CARD GRID ── */
   .blk-ongoing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
   .blk-folder-card {
-    border: 1px solid #3b82f6; border-radius: 12px; padding: 14px 14px 10px;
+    border: 1.5px solid #3b82f6; border-radius: 20px; padding: 0;
     background: #fff; cursor: pointer;
-    transition: box-shadow 0.15s, transform 0.1s;
-    display: flex; flex-direction: column; gap: 5px;
+    transition: box-shadow 0.18s, transform 0.15s;
+    box-shadow: 0 2px 10px rgba(59,130,246,0.08);
+    display: flex; flex-direction: column;
+    overflow: hidden;
   }
-  .blk-folder-card:hover { box-shadow: 0 4px 16px rgba(59,130,246,0.15); transform: translateY(-1px); }
-  .blk-folder-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
-  .blk-folder-card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
-  .blk-folder-badge { font-size: 10px; font-weight: 600; background: #eff6ff; color: #3b82f6; border-radius: 99px; padding: 2px 8px; }
+  .blk-folder-card:hover { box-shadow: 0 8px 28px rgba(59,130,246,0.15); transform: translateY(-3px); }
+  .blk-folder-card-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px 12px;
+    background: #EFF6FF;
+  }
+  .blk-folder-card-meta { display: flex; align-items: center; gap: 6px; }
+  .blk-folder-badge { font-size: 10px; font-weight: 700; background: #3b82f6; color: #fff; border-radius: 99px; padding: 3px 9px; letter-spacing:0.04em; }
   .blk-pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: #3b82f6; flex-shrink: 0; animation: pulse 2s infinite; }
-  .blk-folder-card-title { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; }
-  .blk-folder-card-date { font-size: 11px; color: var(--ink-4); }
-  .blk-folder-card-footer { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 4px; font-size: 11px; color: #3b82f6; font-weight: 500; }
+  .blk-folder-card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 0; }
+  .blk-folder-card-title { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.3; margin-bottom: 6px; }
+  .blk-folder-card-date { font-size: 11.5px; color: var(--ink-4); margin-bottom: 14px; }
+  .blk-folder-card-footer { font-size: 11.5px; color: #3b82f6; font-weight: 600; padding-top: 12px; border-top: 1px solid #DBEAFE; }
 
   /* ── FOLDER MODAL ── */
   .folder-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.32); z-index: 1000; display: flex; align-items: center; justify-content: center; }
@@ -5081,18 +5088,17 @@ What I learned: Consistency matters more than quality of individual posts`;
     el.dataset.type = activityTypeToCategory(row.activity_type);
     el.innerHTML = `
       <div class="blk-folder-card-top">
-        <div>
-          ${FOLDER_SVG}
-          <div class="blk-folder-card-meta">
-            ${actType ? `<span style="font-size:9px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:0.06em;">${escapeHtml(actType)}</span>` : ''}
-            <span class="blk-folder-badge">Ongoing</span>
-          </div>
+        <div class="blk-folder-card-meta">
+          ${actType ? `<span style="font-size:10px;font-weight:600;color:#3b82f6;text-transform:uppercase;letter-spacing:0.06em;">${escapeHtml(actType)}</span>` : ''}
+          <span class="blk-folder-badge">Ongoing</span>
         </div>
         <div class="blk-pulse-dot"></div>
       </div>
-      <div class="blk-folder-card-title">${escapeHtml(row.title || 'Untitled')}</div>
-      <div class="blk-folder-card-date">${escapeHtml(dateStr)}</div>
-      <div class="blk-folder-card-footer">${count} scribble${count !== 1 ? 's' : ''} inside →</div>
+      <div class="blk-folder-card-body">
+        <div class="blk-folder-card-title">${escapeHtml(row.title || 'Untitled')}</div>
+        <div class="blk-folder-card-date">${escapeHtml(dateStr)}</div>
+        <div class="blk-folder-card-footer">${count} scribble${count !== 1 ? 's' : ''} inside →</div>
+      </div>
     `;
 
     el.addEventListener('click', () => openFolderModal(row));
