@@ -1348,33 +1348,16 @@
   /* ══════════════════════════════════════
      LANDING PAGE
   ══════════════════════════════════════ */
-  body.landing-mode .nav,
-  body.landing-mode .sidebar,
-  body.landing-mode #status-bar { display: none !important; }
-  body.landing-mode .layout { padding-top: 0; }
-  body.landing-mode .main { margin-left: 0; min-height: 100vh; }
-  #page-landing { overflow-x: hidden; background: var(--white); }
 
   /* Hero — scoped to avoid dashboard conflict */
-  #page-landing .hero {
     padding: 80px 48px 80px; background: var(--white);
     position: relative; overflow: hidden; border-bottom: none;
   }
-  #page-landing .hero-bg {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background: radial-gradient(ellipse 70% 60% at 70% 20%, rgba(56,189,224,0.07) 0%, transparent 60%),
                 radial-gradient(ellipse 50% 50% at 20% 80%, rgba(0,129,221,0.05) 0%, transparent 60%);
     pointer-events: none;
   }
-  #page-landing .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 520px; gap: 64px; align-items: center; }
-  #page-landing .hero-eyebrow { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--accent-2); text-transform: uppercase; background: var(--accent-light); border: 1px solid var(--accent-mid); padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; }
-  #page-landing .hero-title { font-size: 52px; font-weight: 800; color: var(--ink); line-height: 1.12; letter-spacing: -0.03em; margin-bottom: 20px; }
-  #page-landing .hero-title em { color: var(--accent-2); font-style: normal; }
-  #page-landing .hero-title .grad { background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  #page-landing .hero-sub { font-size: 17px; color: var(--ink-3); line-height: 1.75; max-width: 480px; margin-bottom: 36px; }
-  #page-landing .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-  #page-landing .hero-note { margin-top: 16px; font-size: 12px; color: var(--ink-4); }
-
   /* Landing buttons */
   .btn-primary { font-size: 14px; font-weight: 600; color: #fff; background: var(--accent); border: none; padding: 12px 26px; border-radius: var(--r); cursor: pointer; transition: opacity 0.15s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(0,129,221,0.3); }
   .btn-primary:hover { opacity: 0.88; }
@@ -2630,333 +2613,6 @@
     </div>
 
     <!-- ════ PAGE: LANDING ════ -->
-    <div id="page-landing" class="page">
-
-      <!-- Hero -->
-      <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-inner">
-          <div>
-            <h1 class="hero-title anim-2">Stop guessing.<br><span class="grad">See your fit score.</span></h1>
-            <p class="hero-sub anim-3">Exppi extracts competency keywords from your experiences, then matches them against real JD and IR data — a precise fit score and clear improvement direction.<br>Not gut feeling. Actual data.</p>
-            <div class="hero-actions anim-4">
-              <button class="btn-primary" onclick="navigate('signup')">Sign Up →</button>
-              <button class="btn-outline" onclick="navigate('login')">Sign In</button>
-            </div>
-          </div>
-          <div class="hero-card-wrap anim-3">
-            <div class="hero-card-float top">
-              <div class="hcf-icon green"><i class="ti ti-trending-up"></i></div>
-              <div><div class="hcf-text-main">Fit Score Increased</div><div class="hcf-text-sub">+12 pts · After adding project</div></div>
-            </div>
-            <div class="hero-main-card">
-              <div class="hmc-job-header">
-                <div class="hmc-job-left">
-                  <div class="hmc-job-avatar">GG</div>
-                  <div>
-                    <div class="hmc-job-company">Google</div>
-                    <div class="hmc-job-role">Product Manager</div>
-                    <div class="hmc-job-chips">
-                      <span class="hmc-job-chip green">Analysis Complete</span>
-                      <span class="hmc-job-chip blue">JD Uploaded</span>
-                    </div>
-                  </div>
-                </div>
-                <button class="hmc-btn-report"><i class="ti ti-chart-bar"></i> Full Report</button>
-              </div>
-              <div class="hmc-body">
-                <div class="hmc-score-panel">
-                  <div>
-                    <div class="hmc-score-big">87<span>%</span></div>
-                    <div class="hmc-score-label">Job Fit Score</div>
-                    <div class="hmc-score-grade"><i class="ti ti-trending-up" style="font-size:12px"></i> Top 12%</div>
-                  </div>
-                  <div class="hmc-divider"></div>
-                  <div class="hmc-bars">
-                    <div class="hmc-bar-row"><div class="hmc-bar-lbl">Keyword Match</div><div class="hmc-bar-track"><div class="hmc-bar-fill" style="width:92%"></div></div><div class="hmc-bar-val">92</div></div>
-                    <div class="hmc-bar-row"><div class="hmc-bar-lbl">Exp. Relevance</div><div class="hmc-bar-track"><div class="hmc-bar-fill" style="width:85%"></div></div><div class="hmc-bar-val">85</div></div>
-                    <div class="hmc-bar-row"><div class="hmc-bar-lbl">Skill Coverage</div><div class="hmc-bar-track"><div class="hmc-bar-fill" style="width:78%"></div></div><div class="hmc-bar-val">78</div></div>
-                    <div class="hmc-bar-row"><div class="hmc-bar-lbl">Exp. Quality</div><div class="hmc-bar-track"><div class="hmc-bar-fill" style="width:88%"></div></div><div class="hmc-bar-val">88</div></div>
-                  </div>
-                </div>
-                <div class="hmc-sub-card">
-                  <div class="hmc-sub-header">
-                    <div style="display:flex;align-items:center;gap:16px;">
-                      <div class="hmc-sub-title"><i class="ti ti-tag"></i> Keyword Match Analysis</div>
-                      <div class="hmc-match-counts"><span style="color:var(--accent)">Matched 9</span> · <span style="color:#D97706">Partial 4</span> · <span style="color:#DC2626">Missing 3</span></div>
-                    </div>
-                  </div>
-                  <div class="hmc-kw-cols">
-                    <div>
-                      <div class="hmc-kw-col-label"><i class="ti ti-user"></i> My Keywords</div>
-                      <div class="hmc-chips">
-                        <span class="hmc-chip matched">Strategic Planning</span><span class="hmc-chip matched">GTM</span><span class="hmc-chip matched">Data Analysis</span><span class="hmc-chip matched">OKR</span><span class="hmc-chip matched">B2B</span><span class="hmc-chip partial">SQL</span><span class="hmc-chip partial">UX Research</span>
-                      </div>
-                    </div>
-                    <div>
-                      <div class="hmc-kw-col-label"><i class="ti ti-building"></i> JD Required</div>
-                      <div class="hmc-chips">
-                        <span class="hmc-chip matched">Strategic Planning</span><span class="hmc-chip matched">GTM</span><span class="hmc-chip matched">B2B</span><span class="hmc-chip missing">Service Planning</span><span class="hmc-chip missing">Agile</span><span class="hmc-chip missing">A/B Testing</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="hmc-sub-card">
-                  <div class="hmc-sub-header"><div class="hmc-sub-title"><i class="ti ti-map"></i> Improvement Guide</div></div>
-                  <div class="hmc-guide-label">Experience Rewrite Direction</div>
-                  <div class="hmc-suggestion">
-                    <div class="hmc-suggestion-title">GTM Strategy Block</div>
-                    <div class="hmc-suggestion-body">Add A/B testing and KPI setting language. Replace 'planned and executed' with specific user funnel improvements and measurable conversion metrics.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="hero-card-float bot">
-              <div class="hcf-icon blue"><i class="ti ti-building"></i></div>
-              <div><div class="hcf-text-main">Google · Matched</div><div class="hcf-text-sub">PM Role · Top 8%</div></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- How It Works -->
-      <section class="section">
-        <div class="section-inner">
-          <div class="section-eyebrow reveal">How It Works</div>
-          <h2 class="section-title reveal" style="margin-bottom:32px;">Three steps from experience to results.</h2>
-          <div class="hiw-step-nav">
-            <button class="hiw-tab active" onclick="switchTab(0)">
-              <div class="hiw-tab-text"><div class="hiw-tab-step">Step 01</div><div class="hiw-tab-label">Add your experiences</div></div>
-              <div class="hiw-tab-num">01</div>
-            </button>
-            <button class="hiw-tab" onclick="switchTab(1)">
-              <div class="hiw-tab-text"><div class="hiw-tab-step">Step 02</div><div class="hiw-tab-label">Upload JD &amp; IR</div></div>
-              <div class="hiw-tab-num">02</div>
-            </button>
-            <button class="hiw-tab" onclick="switchTab(2)">
-              <div class="hiw-tab-text"><div class="hiw-tab-step">Step 03</div><div class="hiw-tab-label">See your fit score</div></div>
-              <div class="hiw-tab-num">03</div>
-            </button>
-          </div>
-          <div class="hiw-content-area">
-            <div class="hiw-panels-wrap">
-              <!-- Panel 01 -->
-              <div class="hiw-panel active" id="hiw-0">
-                <div class="hiw-grid">
-                  <div class="hiw-text-col">
-                    <div class="hiw-step-label">Step 01</div>
-                    <h3 class="hiw-panel-title">Add your experiences. We extract the keywords.</h3>
-                    <p class="hiw-panel-desc">Answer structured questions about your projects, internships, and activities. Exppi organizes your experience using the PDCA framework, and extracts the exact competency keywords that matter — based on O*NET standards.</p>
-                  </div>
-                  <div>
-                    <div class="hiw-mockup-shell">
-                      <div class="exp-editor">
-                        <div class="exp-editor-left">
-                          <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9CA3AF;margin-bottom:12px;">EXPERIENCE DETAIL</div>
-                          <div class="pdca-scaler">
-                            <div class="pdca-card">
-                              <div class="pdca-card-header"><span class="pdca-step-lbl">PLAN</span><span class="pdca-q-text">What were you trying to achieve?</span><div class="pdca-help-btn">?</div></div>
-                              <div class="pdca-subfield"><div class="pdca-sf-header"><span class="pdca-sf-label">GOAL</span></div><div class="pdca-input">e.g. "Increase new member sign-ups by 50 within one semester"</div></div>
-                              <div class="pdca-subfield"><div class="pdca-sf-header"><span class="pdca-sf-label">STRATEGY</span></div><div class="pdca-input">e.g. "Launched a peer referral program and redesigned the intro session"</div></div>
-                            </div>
-                            <div class="pdca-card">
-                              <div class="pdca-card-header"><span class="pdca-step-lbl">DO</span><span class="pdca-q-text">What did you actually do?</span><div class="pdca-help-btn">?</div></div>
-                              <div class="pdca-subfield"><div class="pdca-sf-header"><span class="pdca-sf-label">YOUR ACTIONS</span></div><div class="pdca-textarea">e.g. "Built 60 surveys, led weekly data reviews, managed vendor calls"</div></div>
-                              <div class="pdca-subfield"><div class="pdca-sf-header"><span class="pdca-sf-label">UNEXPECTED CHALLENGE &amp; HOW YOU HANDLED IT</span><span class="pdca-sf-opt">Optional</span></div><div class="pdca-input">e.g. "Two members quit mid-project; I split their tasks and kept the deadline"</div></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="exp-editor-divider"></div>
-                        <div class="exp-editor-right">
-                          <div class="hiw-kw-label">Extracted Competencies</div>
-                          <div class="kw-bars">
-                            <div class="hiw-bar-row"><div class="hiw-bar-lbl">Strategic Planning</div><div class="hiw-bar-track"><div class="hiw-bar-fill" style="width:92%"></div></div><div class="hiw-bar-val">92</div></div>
-                            <div class="hiw-bar-row"><div class="hiw-bar-lbl">GTM Execution</div><div class="hiw-bar-track"><div class="hiw-bar-fill" style="width:85%"></div></div><div class="hiw-bar-val">85</div></div>
-                            <div class="hiw-bar-row"><div class="hiw-bar-lbl">Cross-functional</div><div class="hiw-bar-track"><div class="hiw-bar-fill" style="width:78%"></div></div><div class="hiw-bar-val">78</div></div>
-                            <div class="hiw-bar-row"><div class="hiw-bar-lbl">B2B Strategy</div><div class="hiw-bar-track"><div class="hiw-bar-fill" style="width:71%"></div></div><div class="hiw-bar-val">71</div></div>
-                          </div>
-                          <div style="margin-top:24px;">
-                            <div class="hiw-kw-label">Extracted Keywords</div>
-                            <div class="hiw-chips">
-                              <span class="hiw-chip blue">Strategic Planning</span><span class="hiw-chip blue">GTM</span><span class="hiw-chip blue">B2B</span><span class="hiw-chip blue">Cross-functional</span><span class="hiw-chip blue">OKR</span><span class="hiw-chip blue">Marketing</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Panel 02 -->
-              <div class="hiw-panel" id="hiw-1">
-                <div class="hiw-grid">
-                  <div class="hiw-text-col">
-                    <div class="hiw-step-label">Step 02</div>
-                    <h3 class="hiw-panel-title">Upload the JD &amp; IR. We read what they actually want.</h3>
-                    <p class="hiw-panel-desc">Upload the job description and company IR report. Exppi surfaces hidden signals — growth priorities, culture, and team direction — straight from the source.</p>
-                  </div>
-                  <div>
-                    <div class="hiw-mockup-shell">
-                      <div class="jd-upload-area">
-                        <div class="up-scaler">
-                          <div class="up2-company"><div class="up2-avatar">GG</div><div><div class="up2-name">Google</div><div class="up2-role">Product Manager</div></div></div>
-                          <div class="up2-section">
-                            <div class="up2-row-label"><span class="up2-lbl">JD FILE UPLOAD</span><span class="up2-chip-req">Required</span></div>
-                            <div class="up2-file-row"><div class="up2-pdf-icon"><i class="ti ti-file-type-pdf"></i></div><span class="up2-fname">ProductManager_JD.pdf</span><span class="up2-analyzed"><i class="ti ti-check"></i> Analyzed</span></div>
-                          </div>
-                          <div class="up2-section">
-                            <div class="up2-row-label"><span class="up2-lbl">IR MATERIALS UPLOAD</span><span class="up2-chip-opt">Optional</span></div>
-                            <div class="up2-dropzone"><i class="ti ti-upload up2-drop-icon"></i><span class="up2-drop-text">Drop IR file here</span></div>
-                          </div>
-                          <div class="up2-section">
-                            <div class="up2-row-label" style="margin-bottom:14px;"><span class="up2-lbl">ROLE REQUIREMENTS EXTRACTED</span></div>
-                            <div class="up2-req-cols">
-                              <div><div class="up2-col-lbl"><i class="ti ti-briefcase"></i> CORE SKILLS</div><div class="up2-chips"><span class="up2-chip-gray">Agile</span><span class="up2-chip-gray">A/B Testing</span><span class="up2-chip-gray">KPI Design</span><span class="up2-chip-gray">Roadmapping</span></div></div>
-                              <div><div class="up2-col-lbl"><i class="ti ti-trending-up"></i> FROM IR</div><div class="up2-chips"><span class="up2-chip-gold">AI Strategy</span><span class="up2-chip-gold">Cloud Growth</span><span class="up2-chip-gold">B2B Scale</span></div></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Panel 03 -->
-              <div class="hiw-panel" id="hiw-2">
-                <div class="hiw-grid">
-                  <div class="hiw-text-col" style="min-width:0;">
-                    <div class="hiw-step-label">Step 03</div>
-                    <h3 class="hiw-panel-title">See your fit score. Know exactly what to improve.</h3>
-                    <p class="hiw-panel-desc">Get a precise match score across four dimensions — Keywords, Relevance, Skill Coverage, and Quality. See which keywords align and which are missing, and receive a concrete improvement guide.</p>
-                  </div>
-                  <div style="min-width:0;overflow:hidden;">
-                    <div class="hiw-mockup-shell">
-                      <div class="score-dashboard">
-                        <div class="s3-company-header"><div class="s3-avatar">GG</div><div style="display:flex;flex-direction:column;justify-content:center;"><div class="s3-company-name">Google</div><div class="s3-company-role">Product Manager</div></div></div>
-                        <div class="s3-score-panel">
-                          <div class="score-top-row">
-                            <div class="score-main-num">
-                              <div class="score-big">87<sup>%</sup></div>
-                              <div class="score-label-main">Job Fit Score</div>
-                              <div style="display:flex;justify-content:center;margin-top:7px;"><div class="score-grade-badge">↗ Top 12%</div></div>
-                            </div>
-                            <div class="score-vert-divider"></div>
-                            <div class="score-sub-bars">
-                              <div class="score-sub-row"><div class="score-sub-lbl">Keyword Match</div><div class="score-sub-track"><div class="score-sub-fill" style="width:92%"></div></div><div class="score-sub-val">92</div></div>
-                              <div class="score-sub-row"><div class="score-sub-lbl">Exp. Relevance</div><div class="score-sub-track"><div class="score-sub-fill" style="width:85%"></div></div><div class="score-sub-val">85</div></div>
-                              <div class="score-sub-row"><div class="score-sub-lbl">Skill Coverage</div><div class="score-sub-track"><div class="score-sub-fill" style="width:78%"></div></div><div class="score-sub-val">78</div></div>
-                              <div class="score-sub-row"><div class="score-sub-lbl">Exp. Quality</div><div class="score-sub-track"><div class="score-sub-fill" style="width:88%"></div></div><div class="score-sub-val">88</div></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="s3-kw-card">
-                          <div class="s3-kw-header"><span class="s3-kw-title">Keyword Match Analysis</span><span class="s3-kw-counts"><span style="color:#059669">Matched 5</span><span style="color:#9CA3AF"> · </span><span style="color:#DC2626">Missing 3</span></span></div>
-                          <div class="s3-kw-row"><div class="s3-kw-lbl-matched">MATCHED</div><div class="s3-chips"><span class="s3-match-chip">Strategic Planning</span><span class="s3-match-chip">GTM</span><span class="s3-match-chip">Data Analysis</span><span class="s3-match-chip">OKR</span><span class="s3-match-chip">B2B</span></div></div>
-                          <div class="s3-kw-row"><div class="s3-kw-lbl-missing">MISSING</div><div class="s3-chips"><span class="s3-miss-chip">Service Planning</span><span class="s3-miss-chip">Agile</span><span class="s3-miss-chip">A/B Testing</span></div></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- /hiw-panels-wrap -->
-          </div><!-- /hiw-content-area -->
-        </div>
-      </section>
-
-      <!-- Who It's For -->
-      <section class="section" style="background:var(--white);padding-top:64px;padding-bottom:64px;">
-        <div class="section-inner">
-          <div class="section-eyebrow reveal">Who It's For</div>
-          <h2 class="section-title reveal">Built for anyone job hunting.<br>Especially if you're one of these.</h2>
-          <div class="who-grid">
-            <div class="who-card reveal">
-              <div class="who-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3.33 1.67 8.67 1.67 12 0v-5"/></svg></div>
-              <div class="who-title">Repeatedly Rejected Applicants</div>
-              <div class="who-desc">You've applied everywhere. The rejections keep coming — and no one tells you why. It's time to stop guessing.</div>
-            </div>
-            <div class="who-card reveal">
-              <div class="who-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
-              <div class="who-title">Entry-Level Job Seekers</div>
-              <div class="who-desc">You have experiences, but you don't know how to make them sound like qualifications. Let's fix that.</div>
-            </div>
-            <div class="who-card reveal">
-              <div class="who-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13"/><path d="M17 8l-3-3"/><path d="M17 8l-3 3"/><path d="M20 16H7"/><path d="M7 16l3 3"/><path d="M7 16l3-3"/></svg></div>
-              <div class="who-title">Career Switchers</div>
-              <div class="who-desc">You're ready for something new — but not sure how much of your background actually transfers. Find out before you apply.</div>
-            </div>
-            <div class="who-card reveal">
-              <div class="who-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>
-              <div class="who-title">Multi-Role Applicants</div>
-              <div class="who-desc">Applying to multiple roles at once? See your real fit for each one — and stop sending the same resume everywhere.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Before / After -->
-      <section class="section" style="background:#F8FAFB;padding-top:72px;padding-bottom:80px;">
-        <div class="section-inner">
-          <div class="section-eyebrow reveal">What Changes</div>
-          <h2 class="section-title reveal">What's different with Exppi</h2>
-          <p class="section-sub reveal" style="margin-bottom:48px;">Stop guessing. Start applying with clarity.</p>
-          <div class="ba-grid">
-            <div class="ba-col ba-before">
-              <div class="ba-col-head"><div class="ba-badge before-badge">Before</div><div class="ba-col-title">Without Exppi</div></div>
-              <div class="ba-items">
-                <div class="ba-item"><span class="ba-x">✕</span> You apply and wait — no idea if your resume even got through.</div>
-                <div class="ba-item"><span class="ba-x">✕</span> You read the JD but can't tell if your experience actually fits.</div>
-                <div class="ba-item"><span class="ba-x">✕</span> Rejections keep coming with no feedback on what to change.</div>
-              </div>
-            </div>
-            <div class="ba-divider"><div class="ba-arrow">▶</div></div>
-            <div class="ba-col ba-after">
-              <div class="ba-col-head"><div class="ba-badge after-badge">After</div><div class="ba-col-title">With Exppi</div></div>
-              <div class="ba-items">
-                <div class="ba-item"><span class="ba-o">✓</span> See your exact fit score before you hit submit.</div>
-                <div class="ba-item"><span class="ba-o">✓</span> Exppi extracts the competency keywords your JD is actually looking for.</div>
-                <div class="ba-item"><span class="ba-o">✓</span> Get a clear improvement guide — know what's missing and how to fix it.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CTA -->
-      <section class="cta-section">
-        <div class="cta-bg"></div>
-        <div class="cta-inner">
-          <h2 class="cta-title reveal">See the <span class="grad">real value</span><br>of your experience</h2>
-          <p class="cta-sub reveal">Start for free. No credit card required.</p>
-          <div class="cta-actions reveal">
-            <button class="btn-cta-primary" onclick="navigate('signup')"><i class="ti ti-arrow-right"></i> Sign Up</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Footer -->
-      <footer class="footer">
-        <div class="footer-inner">
-          <div class="footer-top">
-            <div class="footer-brand">
-              <div class="footer-logo"><div class="nav-logo-icon"><i class="ti ti-bolt"></i></div> Exppi</div>
-              <div class="footer-tagline">Career clarity, powered by data.</div>
-            </div>
-            <div class="footer-links">
-              <div>
-                <div class="footer-col-title">Contact</div>
-                <a class="footer-link" href="https://instagram.com/exppi.official" target="_blank" style="display:flex;align-items:center;gap:7px;"><i class="ti ti-brand-instagram" style="font-size:15px;color:var(--ink-3);"></i> @exppi.official</a>
-                <a class="footer-link" href="mailto:exppiple@gmail.com" style="display:flex;align-items:center;gap:7px;"><i class="ti ti-mail" style="font-size:15px;color:var(--ink-3);"></i> exppiple@gmail.com</a>
-              </div>
-            </div>
-          </div>
-          <div class="footer-bottom">
-            <div class="footer-copy">© 2026 Exppi. All rights reserved.</div>
-          </div>
-        </div>
-      </footer>
-
-    </div><!-- /page-landing -->
 
     <!-- ════ PAGE: LOGIN ════ -->
     <div id="page-login" class="page">
@@ -3695,9 +3351,8 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
   const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const pages = ['landing','add','blocks','match','matchstore','match-result','login','signup','help'];
+  const pages = ['add','blocks','match','matchstore','match-result','login','signup','help'];
   const pageTitles = {
-    landing:    'Home',
         add:        'Add Experience',
     blocks:     'Experience Blocks',
     match:      'Matching Analysis',
@@ -5970,7 +5625,8 @@ What I learned: Consistency matters more than quality of individual posts`;
     svg.innerHTML = html;
   }
 
-  window.addEventListener('load', () => { setTimeout(renderMindmap, 60); });
+  window.addEventListener('load', () => {
+    setTimeout(() => navigate('blocks'), 100); setTimeout(renderMindmap, 60); });
   window.addEventListener('resize', renderMindmap);
 
   // ── FILTER BLOCKS (dropdown) ─────────────────────────
@@ -6027,16 +5683,12 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function navigate(target) {
     // 비로그인 상태에서 보호된 페이지 접근 시 랜딩 페이지로
-    const publicPages = ['login', 'signup', 'landing', 'help', 'matchstore'];
+    const publicPages = ['login', 'signup', 'help', 'matchstore', 'blocks', 'add', 'match', 'matchstore', 'match-result'];
     if (!currentUser && !publicPages.includes(target)) {
-      target = 'landing';
+      target = 'blocks';
     }
     // landing-mode: hide app nav/sidebar when on landing page
-    if (target === 'landing') {
-      document.body.classList.add('landing-mode');
-    } else {
-      document.body.classList.remove('landing-mode');
-    }
+    document.body.classList.remove('landing-mode');
     pages.forEach(p => {
       const el = document.getElementById('page-' + p);
       if (el) el.classList.remove('active');
@@ -6422,7 +6074,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     currentUser = normalizeUser(session ? session.user : null);
     renderAuthUI();
     if (!currentUser) {
-      navigate('landing');
+      navigate('blocks');
     }
   }
 
@@ -6641,6 +6293,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     // lock overlays removed
   }
   window.addEventListener('load', () => {
+    setTimeout(() => navigate('blocks'), 100);
     setTimeout(initLockOverlays, 100);
     setTimeout(initMatchStore, 800);
   });
