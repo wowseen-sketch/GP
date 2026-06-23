@@ -2219,124 +2219,122 @@
       </div>
 
 
-      <!-- Single col: form only -->
-      <div style="padding:36px 56px;display:flex;flex-direction:column;gap:32px;max-width:780px;">
+      <!-- 2-col layout -->
+      <div style="padding:28px 40px 48px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
 
-          <!-- ① Company + Job Title -->
-          <div>
-            <div class="form-section-title" style="margin-top:0;"><i class="ti ti-building"></i> Company · Job Info</div>
-            <div class="form-grid">
-              <div class="form-group">
-                <label class="form-label">Company Name *</label>
-                <div style="position:relative;">
-                  <input class="form-input" type="text" placeholder="e.g. Google, Google, Apple" id="company-input" oninput="filterSuggest(this.value)">
-                  <!-- autocomplete dropdown -->
-                  <div id="company-suggest" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1px solid var(--border-strong);border-radius:var(--r);box-shadow:var(--shadow);z-index:50;overflow:hidden;">
-                    <div class="suggest-item" onclick="selectCompany('Google')"><div style="width:28px;height:28px;border-radius:6px;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">GG</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Google</div><div style="font-size:11px;color:var(--ink-4);">Tech · Search & AI</div></div></div>
-                    <div class="suggest-item" onclick="selectCompany('Apple')"><div style="width:28px;height:28px;border-radius:6px;background:#555555;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">AP</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Apple</div><div style="font-size:11px;color:var(--ink-4);">Tech · Consumer</div></div></div>
-                    <div class="suggest-item" onclick="selectCompany('Tesla')"><div style="width:28px;height:28px;border-radius:6px;background:#CC0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">TS</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Tesla</div><div style="font-size:11px;color:var(--ink-4);">EV · Automotive</div></div></div>
-                    <div class="suggest-item" onclick="selectCompany('Meta')"><div style="width:28px;height:28px;border-radius:6px;background:#0866FF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">MT</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Meta</div><div style="font-size:11px;color:var(--ink-4);">Tech · Social</div></div></div>
-                    <div class="suggest-item" onclick="selectCompany('Amazon')"><div style="width:28px;height:28px;border-radius:6px;background:#FF9900;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">AM</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Amazon</div><div style="font-size:11px;color:var(--ink-4);">E-commerce · Cloud</div></div></div>
-                    <div class="suggest-item" onclick="selectCompany('Microsoft')"><div style="width:28px;height:28px;border-radius:6px;background:#00A4EF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">MS</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Microsoft</div><div style="font-size:11px;color:var(--ink-4);">Tech · Enterprise</div></div></div>
-                    <div class="suggest-item" onclick="selectCompany('OpenAI')"><div style="width:28px;height:28px;border-radius:6px;background:#10A37F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">OA</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">OpenAI</div><div style="font-size:11px;color:var(--ink-4);">AI · Research</div></div></div>
-                  </div>
+        <!-- LEFT: Company + Job Info -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+          <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+            <i class="ti ti-building" style="font-size:16px;color:var(--accent);"></i>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);">Company & Job Info</span>
+          </div>
+          <div style="padding:20px 22px;display:flex;flex-direction:column;gap:14px;">
+            <div class="form-group">
+              <label class="form-label">Company Name <span style="color:var(--accent);">*</span></label>
+              <div style="position:relative;">
+                <input class="form-input" type="text" placeholder="e.g. Google, Apple" id="company-input" oninput="filterSuggest(this.value)">
+                <div id="company-suggest" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1px solid var(--border-strong);border-radius:var(--r);box-shadow:var(--shadow);z-index:50;overflow:hidden;">
+                  <div class="suggest-item" onclick="selectCompany('Google')"><div style="width:28px;height:28px;border-radius:6px;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">GG</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Google</div><div style="font-size:11px;color:var(--ink-4);">Tech · Search & AI</div></div></div>
+                  <div class="suggest-item" onclick="selectCompany('Apple')"><div style="width:28px;height:28px;border-radius:6px;background:#555555;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">AP</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Apple</div><div style="font-size:11px;color:var(--ink-4);">Tech · Consumer</div></div></div>
+                  <div class="suggest-item" onclick="selectCompany('Tesla')"><div style="width:28px;height:28px;border-radius:6px;background:#CC0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">TS</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Tesla</div><div style="font-size:11px;color:var(--ink-4);">EV · Automotive</div></div></div>
+                  <div class="suggest-item" onclick="selectCompany('Meta')"><div style="width:28px;height:28px;border-radius:6px;background:#0866FF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">MT</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Meta</div><div style="font-size:11px;color:var(--ink-4);">Tech · Social</div></div></div>
+                  <div class="suggest-item" onclick="selectCompany('Amazon')"><div style="width:28px;height:28px;border-radius:6px;background:#FF9900;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">AM</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Amazon</div><div style="font-size:11px;color:var(--ink-4);">E-commerce · Cloud</div></div></div>
+                  <div class="suggest-item" onclick="selectCompany('Microsoft')"><div style="width:28px;height:28px;border-radius:6px;background:#00A4EF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">MS</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">Microsoft</div><div style="font-size:11px;color:var(--ink-4);">Tech · Enterprise</div></div></div>
+                  <div class="suggest-item" onclick="selectCompany('OpenAI')"><div style="width:28px;height:28px;border-radius:6px;background:#10A37F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">OA</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);">OpenAI</div><div style="font-size:11px;color:var(--ink-4);">AI · Research</div></div></div>
                 </div>
               </div>
-              <div class="form-group">
-                <label class="form-label">Job Title *</label>
-                <input class="form-input" type="text" id="match-role-input" placeholder="e.g. Product Manager, Product Manager">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Department / Team <span style="font-size:10px;color:var(--ink-4);font-weight:400;text-transform:none;letter-spacing:0;">(Optional)</span></label>
-                <input class="form-input" type="text" placeholder="e.g. Service Dev. Division, Platform CIC">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Experience Level <span style="font-size:10px;color:var(--ink-4);font-weight:400;text-transform:none;letter-spacing:0;">(Optional)</span></label>
-                <select class="form-input form-select">
-                  <option value="">Select</option>
-                  <option>Entry Level</option>
-                  <option>1+ Years</option>
-                  <option>2+ Years</option>
-                  <option>3+ Years</option>
-                  <option>5+ Years</option>
-                </select>
-              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Job Title <span style="color:var(--accent);">*</span></label>
+              <input class="form-input" type="text" id="match-role-input" placeholder="e.g. Product Manager">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department / Team <span style="font-size:10px;color:var(--ink-4);font-weight:400;">(Optional)</span></label>
+              <input class="form-input" type="text" placeholder="e.g. Platform CIC">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Experience Level <span style="font-size:10px;color:var(--ink-4);font-weight:400;">(Optional)</span></label>
+              <select class="form-input form-select">
+                <option value="">Select</option>
+                <option>Entry Level</option>
+                <option>1+ Years</option>
+                <option>2+ Years</option>
+                <option>3+ Years</option>
+                <option>5+ Years</option>
+              </select>
             </div>
           </div>
+        </div>
 
-          <!-- ② JD Upload (Required) -->
-          <div>
-            <div class="form-section-title" style="margin-top:0;"><i class="ti ti-file-description"></i> Job Description <span style="margin-left:6px;font-size:11px;background:var(--danger-light);color:var(--danger);padding:2px 9px;border-radius:99px;font-weight:600;">Required</span></div>
+        <!-- RIGHT: JD + IR + Actions -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
 
-            <!-- Tab switcher -->
-            <div style="display:flex;width:100%;background:#F3F4F6;border-radius:8px;padding:4px;margin-bottom:12px;">
-              <button id="jd-tab-file" onclick="switchJdTab('file')" style="flex:1;padding:8px 0;background:#fff;border:none;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.10);cursor:pointer;font-size:13px;font-weight:700;color:#111827;text-align:center;transition:all 0.15s;">File upload</button>
-              <button id="jd-tab-paste" onclick="switchJdTab('paste')" style="flex:1;padding:8px 0;background:transparent;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;color:#9CA3AF;text-align:center;transition:all 0.15s;">Paste text</button>
+          <!-- JD Upload -->
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+            <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+              <i class="ti ti-file-description" style="font-size:16px;color:var(--accent);"></i>
+              <span style="font-size:13px;font-weight:600;color:var(--ink);">Job Description</span>
+              <span style="margin-left:4px;font-size:10px;background:var(--danger-light);color:var(--danger);padding:2px 8px;border-radius:99px;font-weight:600;">Required</span>
             </div>
-
-            <!-- File upload panel (default) -->
-            <div id="jd-panel-file">
-              <div id="jd-dropzone" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border-strong)'" ondrop="handleDrop(event,'jd')" style="border:2px dashed var(--border-strong);border-radius:var(--rl);padding:32px;text-align:center;cursor:pointer;background:var(--surface);transition:border-color 0.15s;" onclick="document.getElementById('jd-file').click()">
-                <i class="ti ti-upload" style="font-size:28px;color:var(--ink-4);margin-bottom:10px;display:block;"></i>
-                <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">Drop your JD file here or click to upload</div>
-                <div style="font-size:12px;color:var(--ink-4);">PDF, DOCX, TXT · Max 10MB</div>
-                <input type="file" id="jd-file" accept=".pdf,.docx,.txt" style="display:none;" onchange="handleFileSelect(this,'jd')">
+            <div style="padding:16px 22px;">
+              <div style="display:flex;width:100%;background:#F3F4F6;border-radius:8px;padding:3px;margin-bottom:12px;">
+                <button id="jd-tab-file" onclick="switchJdTab('file')" style="flex:1;padding:7px 0;background:#fff;border:none;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.10);cursor:pointer;font-size:12.5px;font-weight:600;color:var(--ink);transition:all 0.15s;">File upload</button>
+                <button id="jd-tab-paste" onclick="switchJdTab('paste')" style="flex:1;padding:7px 0;background:transparent;border:none;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:500;color:var(--ink-4);transition:all 0.15s;">Paste text</button>
               </div>
-              <!-- uploaded state (hidden by default) -->
-              <div id="jd-uploaded" style="display:none;margin-top:10px;padding:13px 16px;background:var(--success-light);border:1px solid rgba(5,150,105,0.2);border-radius:var(--r);align-items:center;gap:12px;">
-                <i class="ti ti-file-check" style="font-size:20px;color:var(--success);flex-shrink:0;"></i>
-                <div style="flex:1;">
-                  <div style="font-size:13px;font-weight:600;color:var(--ink);" id="jd-filename">file.pdf</div>
-                  <div style="font-size:11px;color:var(--ink-4);">Uploaded</div>
+              <div id="jd-panel-file">
+                <div id="jd-dropzone" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border-strong)'" ondrop="handleDrop(event,'jd')" style="border:2px dashed var(--border-strong);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;background:var(--surface);transition:border-color 0.15s;" onclick="document.getElementById('jd-file').click()">
+                  <i class="ti ti-upload" style="font-size:24px;color:var(--ink-4);margin-bottom:8px;display:block;"></i>
+                  <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;">Drop file or click to upload</div>
+                  <div style="font-size:11.5px;color:var(--ink-4);">PDF, DOCX, TXT · Max 10MB</div>
+                  <input type="file" id="jd-file" accept=".pdf,.docx,.txt" style="display:none;" onchange="handleFileSelect(this,'jd')">
                 </div>
-                <button onclick="removeFile('jd')" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:16px;"><i class="ti ti-x"></i></button>
+                <div id="jd-uploaded" style="display:none;margin-top:10px;padding:12px 14px;background:var(--success-light);border:1px solid rgba(5,150,105,0.2);border-radius:var(--r);align-items:center;gap:10px;">
+                  <i class="ti ti-file-check" style="font-size:18px;color:var(--success);flex-shrink:0;"></i>
+                  <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--ink);" id="jd-filename">file.pdf</div><div style="font-size:11px;color:var(--ink-4);">Uploaded</div></div>
+                  <button onclick="removeFile('jd')" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:16px;"><i class="ti ti-x"></i></button>
+                </div>
               </div>
-            </div>
-
-            <!-- Paste text panel (hidden by default) -->
-            <div id="jd-panel-paste" style="display:none;">
-              <textarea id="jd-paste-textarea" oninput="_jdRawText=this.value" placeholder="Paste the full job description text here..." style="width:100%;min-height:180px;resize:vertical;padding:14px 16px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--border-strong);border-radius:var(--rl);outline:none;box-sizing:border-box;line-height:1.6;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-strong)'"></textarea>
+              <div id="jd-panel-paste" style="display:none;">
+                <textarea id="jd-paste-textarea" oninput="_jdRawText=this.value" placeholder="Paste the full job description here..." style="width:100%;min-height:140px;resize:vertical;padding:12px 14px;font-size:13px;font-family:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);outline:none;box-sizing:border-box;line-height:1.6;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+              </div>
             </div>
           </div>
 
-          <!-- ③ IR Materials Upload (Optional) -->
-          <div>
-            <div class="form-section-title" style="margin-top:0;"><i class="ti ti-chart-line"></i> IR Materials Upload <span style="margin-left:6px;font-size:11px;background:var(--surface-2);color:var(--ink-4);padding:2px 9px;border-radius:99px;font-weight:600;">Optional</span></div>
-            <div style="font-size:13px;color:var(--ink-3);margin-bottom:14px;line-height:1.6;">Upload IR reports or business documents for deeper company strategy alignment analysis</div>
-
-            <div id="ir-dropzone" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border-strong)'" ondrop="handleDrop(event,'ir')" style="border:2px dashed var(--border-strong);border-radius:var(--rl);padding:24px;text-align:center;cursor:pointer;background:var(--surface);transition:border-color 0.15s;" onclick="document.getElementById('ir-file').click()">
-              <i class="ti ti-presentation-analytics" style="font-size:24px;color:var(--ink-4);margin-bottom:8px;display:block;"></i>
-              <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;">IR Materials Upload (Optional)</div>
-              <div style="font-size:12px;color:var(--ink-4);">PDF · Max 20MB</div>
-              <input type="file" id="ir-file" accept=".pdf" style="display:none;" onchange="handleFileSelect(this,'ir')">
+          <!-- IR Upload -->
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+            <div style="padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+              <i class="ti ti-chart-line" style="font-size:16px;color:var(--accent);"></i>
+              <span style="font-size:13px;font-weight:600;color:var(--ink);">IR Materials</span>
+              <span style="margin-left:4px;font-size:10px;background:var(--surface-2);color:var(--ink-4);padding:2px 8px;border-radius:99px;font-weight:600;">Optional</span>
             </div>
-
-            <div id="ir-uploaded" style="display:none;margin-top:10px;padding:13px 16px;background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--r);align-items:center;gap:12px;">
-              <i class="ti ti-file-check" style="font-size:20px;color:var(--accent-2);flex-shrink:0;"></i>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:600;color:var(--ink);" id="ir-filename">Google_IR_2024.pdf</div>
-                <div style="font-size:11px;color:var(--ink-4);">Uploaded · 8.1MB</div>
+            <div style="padding:16px 22px;">
+              <p style="font-size:12.5px;color:var(--ink-3);margin-bottom:12px;line-height:1.5;">Upload IR reports for deeper company strategy alignment</p>
+              <div id="ir-dropzone" ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border-strong)'" ondrop="handleDrop(event,'ir')" style="border:2px dashed var(--border-strong);border-radius:var(--r);padding:18px;text-align:center;cursor:pointer;background:var(--surface);transition:border-color 0.15s;" onclick="document.getElementById('ir-file').click()">
+                <i class="ti ti-presentation-analytics" style="font-size:20px;color:var(--ink-4);margin-bottom:6px;display:block;"></i>
+                <div style="font-size:12.5px;font-weight:500;color:var(--ink-3);">PDF · Max 20MB</div>
+                <input type="file" id="ir-file" accept=".pdf" style="display:none;" onchange="handleFileSelect(this,'ir')">
               </div>
-              <button onclick="removeFile('ir')" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:16px;"><i class="ti ti-x"></i></button>
+              <div id="ir-uploaded" style="display:none;margin-top:10px;padding:12px 14px;background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--r);align-items:center;gap:10px;">
+                <i class="ti ti-file-check" style="font-size:18px;color:var(--accent-2);flex-shrink:0;"></i>
+                <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--ink);" id="ir-filename">Google_IR_2024.pdf</div><div style="font-size:11px;color:var(--ink-4);">Uploaded</div></div>
+                <button onclick="removeFile('ir')" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:16px;"><i class="ti ti-x"></i></button>
+              </div>
             </div>
           </div>
 
-          <!-- Bottom actions -->
-          <div style="display:flex;flex-direction:column;gap:10px;padding-top:8px;border-top:1px solid var(--border);">
-            <div id="match-start-error" style="display:none;font-size:12px;font-weight:600;color:var(--danger);background:var(--danger-light);padding:9px 14px;border-radius:var(--r);"></div>
-            <div style="display:flex;gap:10px;align-items:center;">
-              <button class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;color:var(--ink-4);">
-                <i class="ti ti-device-floppy" style="font-size:14px;"></i> Save Draft
-              </button>
-              <div style="margin-left:auto;">
-                <button onclick="startMatchAnalysis()" style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;background:var(--accent);border:none;padding:10px 22px;border-radius:var(--rl);cursor:pointer;transition:background 0.15s;letter-spacing:-0.01em;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-                  <i class="ti ti-sparkles" style="font-size:16px;"></i> Start Analysis
-                </button>
-              </div>
-            </div>
+          <!-- Actions -->
+          <div style="display:flex;align-items:center;gap:10px;padding-top:4px;">
+            <div id="match-start-error" style="display:none;font-size:12px;font-weight:600;color:var(--danger);background:var(--danger-light);padding:9px 14px;border-radius:var(--r);flex:1;"></div>
+            <button class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;color:var(--ink-4);">
+              <i class="ti ti-device-floppy" style="font-size:14px;"></i> Save Draft
+            </button>
+            <button onclick="startMatchAnalysis()" style="margin-left:auto;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:#fff;background:var(--accent);border:none;padding:10px 22px;border-radius:var(--r);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='var(--accent-dark)'" onmouseout="this.style.background='var(--accent)'">
+              Start Analysis
+            </button>
           </div>
 
         </div>
+      </div>
     </div>
 
     <!-- ════ PAGE: MATCH RESULT ════ -->
