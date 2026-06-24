@@ -5821,8 +5821,10 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function navigate(target) {
     // 비로그인 상태에서 보호된 페이지 접근 시 랜딩 페이지로
-    const publicPages = ['login', 'signup', 'help', 'matchstore', 'blocks', 'add', 'match', 'matchstore', 'match-result'];
+    const publicPages = ['landing', 'login', 'signup', 'help'];
     if (!currentUser && !publicPages.includes(target)) {
+      target = 'landing';
+    }
       target = 'blocks';
     }
     // landing-mode: hide app nav/sidebar when on landing page
