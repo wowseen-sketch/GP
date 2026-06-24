@@ -2830,7 +2830,7 @@
               <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);">
                 <i class="ti ti-user" style="font-size:15px;color:var(--accent);"></i> Personal Info
               </div>
-              <button onclick="navigate('profile-edit')" style="background:none;border:1px solid var(--border);border-radius:7px;padding:5px 12px;font-size:11.5px;color:var(--ink-3);cursor:pointer;">Edit</button>
+              <button onclick="showOnboarding()" style="background:none;border:1px solid var(--border);border-radius:7px;padding:5px 12px;font-size:11.5px;color:var(--ink-3);cursor:pointer;">Edit</button>
             </div>
             <div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px;" id="profile-personal-info">
               <div style="color:var(--ink-4);font-size:13px;">No info yet — complete onboarding to fill this in.</div>
@@ -6465,7 +6465,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (n === 1) { btn.textContent = 'Get started →'; }
     else if (n === _obTotal) {
       btn.textContent = 'Add first experience →';
-      btn.onclick = () => { saveObProfile(); closeOnboarding(); navigate('add'); };
+      btn.onclick = () => { saveObProfile().then(() => { closeOnboarding(); navigate('add'); }); };
       if (skip) skip.style.display = 'none';
     } else {
       btn.textContent = 'Next →';
