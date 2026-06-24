@@ -2615,6 +2615,74 @@
     </div>
 
     <!-- ════ PAGE: LANDING ════ -->
+    <div id="page-landing" class="page" style="display:none;">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:48px 24px;background:#FAFAFA;text-align:center;">
+
+        <!-- Logo -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:48px;">
+          <div style="width:40px;height:40px;background:var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+            <i class="ti ti-layout-grid" style="font-size:20px;color:#fff;"></i>
+          </div>
+        </div>
+
+        <!-- Hero -->
+        <div style="font-size:72px;font-weight:900;color:var(--ink);letter-spacing:-4px;line-height:1;margin-bottom:16px;">
+          Scribbi<span style="color:var(--accent);">.</span>
+        </div>
+        <div style="font-size:18px;color:var(--ink-3);max-width:480px;line-height:1.7;margin-bottom:48px;">
+          Turn your experiences into career assets.<br/>
+          AI matches your story to jobs you actually want.
+        </div>
+
+        <!-- CTA -->
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:64px;">
+          <button onclick="navigate('signup')" style="font-size:15px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:14px 32px;border-radius:12px;cursor:pointer;font-family:var(--ff-head);letter-spacing:-0.3px;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+            Get started — it's free
+          </button>
+          <button onclick="navigate('login')" style="font-size:15px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--border);padding:14px 28px;border-radius:12px;cursor:pointer;font-family:var(--ff-head);letter-spacing:-0.3px;">
+            Sign in
+          </button>
+        </div>
+
+        <!-- Feature pills -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;">
+          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">📁 Experience Blocks</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">🎯 Job Matching</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">✨ AI Analysis</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">📊 Score Insights</div>
+        </div>
+
+        <!-- App preview mockup -->
+        <div style="width:100%;max-width:720px;background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.08);">
+          <div style="height:44px;background:var(--ink);display:flex;align-items:center;padding:0 20px;gap:8px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+            <div style="margin-left:auto;font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.5px;">Scribbi.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:180px 1fr;height:280px;">
+            <div style="border-right:1px solid var(--border);padding:16px 0;background:#FAFAFA;">
+              <div style="padding:8px 16px;margin:0 8px;border-radius:8px;background:var(--ink);color:#fff;font-size:12px;font-weight:500;display:flex;align-items:center;gap:8px;"><i class="ti ti-folders" style="font-size:13px;"></i> Experience Archiving</div>
+              <div style="padding:8px 16px;margin:4px 8px;border-radius:8px;color:var(--ink-3);font-size:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-search" style="font-size:13px;opacity:0.6;"></i> Company / Job Match</div>
+              <div style="padding:8px 16px;margin:4px 8px;border-radius:8px;color:var(--ink-3);font-size:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-chart-bar" style="font-size:13px;opacity:0.6;"></i> Match Archiving</div>
+            </div>
+            <div style="padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;">
+              <div style="border:1px solid #EBEBEB;border-radius:14px;padding:16px;background:#fff;">
+                <div style="font-size:10px;color:#999;margin-bottom:8px;display:flex;align-items:center;gap:4px;"><i class="ti ti-file-text" style="font-size:12px;color:var(--accent);"></i> Projects</div>
+                <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">Campus Patent Universiade</div>
+                <div style="font-size:10px;color:#bbb;">2025.04 – 2024.11</div>
+              </div>
+              <div style="border:1px solid #EBEBEB;border-radius:14px;padding:16px;background:#fff;">
+                <div style="font-size:10px;color:#999;margin-bottom:8px;display:flex;align-items:center;gap:4px;"><i class="ti ti-file-text" style="font-size:12px;color:var(--accent);"></i> Internship</div>
+                <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">Marketing Team</div>
+                <div style="font-size:10px;color:#bbb;">2024.01 – 2024.06</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- ════ PAGE: LOGIN ════ -->
     <div id="page-login" class="page">
@@ -3416,7 +3484,7 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
   const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const pages = ['add','blocks','match','matchstore','match-result','login','signup','help'];
+  const pages = ['landing','add','blocks','match','matchstore','match-result','login','signup','help'];
   const pageTitles = {
         add:        'Add Experience',
     blocks:     'Experience Blocks',
@@ -5785,6 +5853,14 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     // Refresh dynamic content when entering the Blocks page.
     if (target === 'blocks') loadUserBlocks();
+    // landing 시 nav/sidebar 숨기기
+    const isLanding = target === 'landing';
+    const navEl = document.querySelector('.nav');
+    const sideEl = document.getElementById('sidebar');
+    const mainEl = document.querySelector('.main');
+    if (navEl) navEl.style.display = isLanding ? 'none' : '';
+    if (sideEl) sideEl.style.display = isLanding ? 'none' : '';
+    if (mainEl) { mainEl.style.marginLeft = isLanding ? '0' : ''; }
     // matchstore 진입 시 기업 목록 로드
     if (target === 'matchstore') initMatchStore();
     // page-add 진입 시 mode 결정 (edit-scribble > scribble > new 우선순위)
