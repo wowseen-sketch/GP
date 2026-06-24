@@ -2124,7 +2124,7 @@
       </div>
 
       <!-- Top Bar: Search + Category Filter + Add Button -->
-      <div style="padding:12px 24px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;position:sticky;top:52px;z-index:50;flex-wrap:wrap;">
+      <div style="padding:12px 40px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;position:sticky;top:52px;z-index:50;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r);padding:0 12px;flex:1;max-width:320px">
           <i class="ti ti-search" style="color:var(--ink-3);font-size:14px"></i>
           <input id="blk-search-input" type="text" placeholder="Search blocks, skills, or companies..." oninput="filterBlocksBySearch(this.value)" style="background:none;border:none;outline:none;font-family:var(--ff-head);font-size:13px;color:var(--ink);padding:8px 0;width:100%">
@@ -3434,7 +3434,7 @@
   <div style="width:100%;height:100%;background:var(--white);box-shadow:-8px 0 40px rgba(0,0,0,0.1);overflow:hidden;display:flex;flex-direction:column;animation:slideInRight 0.28s cubic-bezier(0.4,0,0.2,1);">
 
     <!-- HEADER -->
-    <div style="background:var(--white);padding:16px 24px;flex-shrink:0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+    <div style="background:var(--white);padding:16px 40px;flex-shrink:0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:10px;min-width:0;">
         <div id="bd-eyebrow" style="font-size:11px;font-weight:600;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;">Experience Block</div>
         <span style="color:var(--border-strong);">·</span>
@@ -6210,9 +6210,11 @@ What I learned: Consistency matters more than quality of individual posts`;
   async function confirmDeleteBlock(id) {
     if (!confirm('Delete this block?')) return;
     if (!currentUser) return;
+    // 자식 블럭 먼저 삭제 (FK constraint)
+    await supa.from('experience_blocks').delete().eq('parent_id', id).eq('user_id', currentUser.id);
     const { error } = await supa.from('experience_blocks').delete().eq('id', id).eq('user_id', currentUser.id);
     if (!error) loadUserBlocks();
-    else alert('삭제 실패: ' + error.message);
+    else alert('Delete failed: ' + error.message);
   }
 
   function toggleSidebar() {
