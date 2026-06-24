@@ -80,13 +80,70 @@ Analytical or scientific software, Business intelligence and data analysis softw
 STEP 4. From TYPE B items, select matching Transferable Skills from this list:
 Social Perceptiveness, Coordination, Persuasion, Negotiation, Instructing, Service Orientation, Complex Problem Solving, Operations Analysis, Technology Design, Programming, Quality Control Analysis, Judgment and Decision Making, Systems Analysis, Systems Evaluation, Time Management, Management of Financial Resources, Management of Personnel Resources
 
-STEP 5. Based on the selected Work Activities, Software Skills, and Transferable Skills, generate competency_keywords that:
-- Sound natural in the US hiring market
-- Represent specific business capabilities a candidate must demonstrate
-- Are expressed as professional noun phrases
-- Match the same language format as candidate-side competency keywords for direct comparison
+STEP 5. Based on the selected Work Activities, Software Skills, and Transferable Skills, generate competency_keywords.
+
+Use these exact conversion examples as your guide — the output must follow the same pattern:
+
+Work Activities → competency keywords:
+- "Analyzing Data or Information" → "Data Analysis and Interpretation"
+- "Developing Objectives and Strategies" → "Strategic Planning and Execution"
+- "Coordinating the Work and Activities of Others" → "Cross-Functional Team Coordination"
+- "Making Decisions and Solving Problems" → "Data-Driven Decision Making"
+- "Thinking Creatively" → "Creative Problem Solving"
+- "Selling or Influencing Others" → "Stakeholder Influence and Persuasion"
+- "Communicating with People Outside the Organization" → "External Stakeholder Communication"
+- "Communicating with Supervisors, Peers, or Subordinates" → "Cross-Level Team Communication"
+- "Developing and Building Teams" → "Team Development and Leadership"
+- "Guiding, Directing, and Motivating Subordinates" → "People Management and Motivation"
+- "Organizing, Planning, and Prioritizing Work" → "Project Planning and Prioritization"
+- "Providing Consultation and Advice to Others" → "Strategic Advisory and Consulting"
+- "Interpreting the Meaning of Information for Others" → "Data Storytelling and Communication"
+- "Evaluating Information to Determine Compliance with Standards" → "Quality Assurance and Compliance"
+- "Resolving Conflicts and Negotiating with Others" → "Conflict Resolution and Negotiation"
+- "Training and Teaching Others" → "Training and Knowledge Transfer"
+- "Monitoring and Controlling Resources" → "Resource Planning and Control"
+- "Processing Information" → "Information Processing and Synthesis"
+- "Getting Information" → "Market and Competitive Research"
+- "Updating and Using Relevant Knowledge" → "Continuous Learning and Knowledge Application"
+- "Identifying Objects, Actions, and Events" → "Pattern Recognition and Insight Generation"
+- "Scheduling Work and Activities" → "Workflow Scheduling and Coordination"
+- "Staffing Organizational Units" → "Talent Acquisition and Team Building"
+- "Judging the Qualities of Objects, Services, or People" → "Evaluation and Quality Judgment"
+- "Estimating the Quantifiable Characteristics of Products, Events, or Information" → "Quantitative Estimation and Forecasting"
+- "Performing for or Working Directly with the Public" → "Customer-Facing Communication"
+- "Establishing and Maintaining Interpersonal Relationships" → "Relationship Building and Stakeholder Management"
+- "Working with Computers" → "Digital Tool Proficiency"
+- "Documenting/Recording Information" → "Documentation and Reporting"
+
+Transferable Skills → competency keywords:
+- "Complex Problem Solving" → "Complex Problem Solving and Solution Design"
+- "Judgment and Decision Making" → "Strategic Judgment and Decision Making"
+- "Systems Analysis" → "Systems Thinking and Process Analysis"
+- "Operations Analysis" → "Operations Analysis and Requirements Design"
+- "Coordination" → "Cross-Functional Coordination"
+- "Persuasion" → "Influence and Stakeholder Persuasion"
+- "Negotiation" → "Negotiation and Conflict Resolution"
+- "Social Perceptiveness" → "Interpersonal Awareness and Empathy"
+- "Service Orientation" → "Customer-Centric Service Delivery"
+- "Time Management" → "Time and Priority Management"
+- "Management of Personnel Resources" → "People Leadership and Team Management"
+- "Management of Financial Resources" → "Budget Planning and Financial Management"
+- "Management of Material Resources" → "Resource Allocation and Operations Management"
+- "Quality Control Analysis" → "Quality Control and Performance Evaluation"
+- "Systems Evaluation" → "System Performance Evaluation and Optimization"
+- "Technology Design" → "Technology Design and Innovation"
+- "Programming" → "Software Development and Programming"
+- "Instructing" → "Training Design and Knowledge Transfer"
+- "Troubleshooting" → "Technical Troubleshooting and Problem Resolution"
+
+Software Skills → use the software category name directly as-is (e.g. "Project management software", "Data mining software")
+
+Rules:
+- Follow the conversion pattern above strictly
+- Do NOT invent new expressions outside this pattern
+- If a selected item is not in the examples above, follow the closest pattern
 - Return 8 to 15 keywords total
-- Do NOT simply copy O*NET category names — synthesize them into job-market language
+- No duplicates
 
 Return ONLY this JSON. No explanation. No markdown.
 {
