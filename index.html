@@ -1263,6 +1263,11 @@
   .user-menu.show { display: block; }
   @keyframes menuIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  #page-landing.active {
+    position: fixed; inset: 0; z-index: 300;
+    background: #FAFAFA; overflow-y: auto;
+    display: block !important;
+  }
   .user-menu-head {
     padding: 14px 16px;
     border-bottom: 1px solid var(--border);
@@ -5855,14 +5860,6 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     // Refresh dynamic content when entering the Blocks page.
     if (target === 'blocks') loadUserBlocks();
-    // landing 시 nav/sidebar 숨기기
-    const isLanding = target === 'landing';
-    const navEl = document.querySelector('.nav');
-    const sideEl = document.getElementById('sidebar');
-    const mainEl = document.querySelector('.main');
-    if (navEl) navEl.style.display = isLanding ? 'none' : '';
-    if (sideEl) sideEl.style.display = isLanding ? 'none' : '';
-    if (mainEl) { mainEl.style.marginLeft = isLanding ? '0' : ''; }
     // matchstore 진입 시 기업 목록 로드
     if (target === 'matchstore') initMatchStore();
     // page-add 진입 시 mode 결정 (edit-scribble > scribble > new 우선순위)
