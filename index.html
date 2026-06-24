@@ -1637,22 +1637,19 @@
     </div>
     <div class="sb-content" id="sb-content">
 
-      <!-- 핵심 액션 -->
-      <div class="sb-section" style="margin-top:12px;">
+      <!-- 입력 & 매칭 -->
+      <div class="sb-section" style="margin-top:4px;">
+        <div class="sb-label">Create</div>
         <div class="sb-item" id="sb-add" onclick="navigate('add')"><i class="ti ti-circle-plus"></i> <span class="sb-text">Add Experience</span></div>
-      </div>
-
-      <div class="sb-divider"></div>
-
-      <!-- 경험 관리 -->
-      <div class="sb-section">
-        <div class="sb-label">Experience</div>
-        <div class="sb-item" id="sb-blocks" onclick="navigate('blocks')"><i class="ti ti-folders"></i> <span class="sb-text">Experience Archiving <span class="sb-badge">12</span></span></div>
         <div class="sb-item" id="sb-match" onclick="navigate('match')"><i class="ti ti-search"></i> <span class="sb-text">Company / Job Match</span></div>
-        <div class="sb-item" id="sb-matchstore" onclick="navigate('matchstore')"><i class="ti ti-chart-bar"></i> <span class="sb-text">Match Archiving <span class="sb-badge blue">3</span></span></div>
       </div>
 
-      <div class="sb-divider"></div>
+      <!-- 아카이브 -->
+      <div class="sb-section">
+        <div class="sb-label">Archive</div>
+        <div class="sb-item" id="sb-blocks" onclick="navigate('blocks')"><i class="ti ti-folders"></i> <span class="sb-text">Experience Archiving</span></div>
+        <div class="sb-item" id="sb-matchstore" onclick="navigate('matchstore')"><i class="ti ti-chart-bar"></i> <span class="sb-text">Match Archiving</span></div>
+      </div>
 
       <!-- 계정 -->
       <div class="sb-section">
@@ -5549,20 +5546,17 @@ What I learned: Consistency matters more than quality of individual posts`;
         <span style="font-size:13px;font-weight:500;color:var(--ink);">${escapeHtml(val)}</span>
       </div>` : '';
 
-    const starCard = (letter, color, title, content) => {
+    const starCard = (letter, title, content) => {
       if (!content) return '';
-      // 줄바꿈 → 문단 분리, 150자 넘으면 요약
-      const lines = content.split(/\n+/).filter(l => l.trim()).slice(0, 3);
-      const html = lines.map(l => `<p style="margin:0 0 6px;font-size:13px;color:var(--ink-2);line-height:1.65;">${escapeHtml(l.trim())}</p>`).join('');
+      const paras = content.split(/\n+/).filter(l => l.trim());
+      const html = paras.map(l => `<p style="margin:0 0 10px;font-size:13.5px;color:var(--ink-2);line-height:1.75;">${escapeHtml(l.trim())}</p>`).join('');
       return `
-        <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;">
-          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:${color}10;border-bottom:1px solid ${color}22;">
-            <div style="width:26px;height:26px;border-radius:8px;background:${color};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:12px;font-weight:800;color:#fff;">${letter}</span>
-            </div>
-            <span style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:${color};">${title}</span>
+        <div style="padding:0 0 0 18px;border-left:2px solid #E5E7EB;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="width:20px;height:20px;border-radius:5px;background:var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;">${letter}</span>
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-3);">${title}</span>
           </div>
-          <div style="padding:14px 16px;">${html}</div>
+          <div>${html}</div>
         </div>`;
     };
 
@@ -5594,11 +5588,11 @@ What I learned: Consistency matters more than quality of individual posts`;
       <div style="height:1px;background:var(--border);margin-bottom:18px;"></div>
 
       <!-- STAR -->
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        ${starCard('S', '#6366F1', 'Situation & Task', situation)}
-        ${starCard('A', '#FF9300', 'Action', action)}
-        ${starCard('R', '#10B981', 'Result', result)}
-        ${v(row.applied) ? starCard('→', '#64748B', 'Applied Elsewhere', v(row.applied)) : ''}
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        ${starCard('S', 'Situation & Task', situation)}
+        ${starCard('A', 'Action', action)}
+        ${starCard('R', 'Result', result)}
+        ${v(row.applied) ? starCard('→', 'Applied Elsewhere', v(row.applied)) : ''}
       </div>
 
       <!-- Keywords -->
