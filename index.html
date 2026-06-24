@@ -3799,7 +3799,7 @@
         .not('end_date', 'is', null);
       if (blocksErr) throw blocksErr;
 
-      const blocks = (blocksData || []).filter(b => b.title);
+      const blocks = (blocksData || []).filter(b => b.title && !b.is_current && b.end_date);
 
       const { data: ranked, error: rankErr } = await supa.functions.invoke('recommend-blocks', {
         body: { company_keywords: companyKeywords, blocks },
@@ -3809,11 +3809,11 @@
       const blockMap = Object.fromEntries(blocks.map(b => [b.id, b]));
       _brmBlocks = (Array.isArray(ranked) ? ranked : [])
         .filter(r => blockMap[r.id])
-        .map(r => ({ ...blockMap[r.id], relevance: r.relevance, reason: r.reason }));
+        .map(r => ({ ...blockMap[r.id], relevance: r.relevance, reason: r.reason }))
+        .slice(0, 5);
 
-      const top5   = _brmBlocks.slice(0, 5);
-      const high   = top5.slice(0, 3);
-      const others = top5.slice(3);
+      const high   = _brmBlocks.slice(0, 3);
+      const others = _brmBlocks.slice(3);
 
       let html = '';
       if (high.length) {
