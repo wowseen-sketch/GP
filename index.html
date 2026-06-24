@@ -2819,36 +2819,36 @@
           <div class="ob-step" id="ob-1" style="text-align:center;">
             <div style="font-size:42px;font-weight:900;color:var(--ink);letter-spacing:-2px;margin-bottom:12px;">Scribbi<span style="color:var(--accent);">.</span></div>
             <div style="font-size:15px;color:var(--ink-3);line-height:1.7;max-width:360px;margin:0 auto 24px;">
-              경험을 기록하고, 커리어를 설계하세요.<br/>당신의 스토리를 AI가 채용 언어로 번역합니다.
+              Record your experiences, design your career.<br/>AI translates your story into the language of hiring.
             </div>
             <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">📁 경험 블럭 정리</div>
-              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">🎯 채용공고 매칭</div>
-              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">✨ AI 분석</div>
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">📁 Experience Blocks</div>
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">🎯 Job Matching</div>
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">✨ AI Analysis</div>
             </div>
           </div>
 
           <!-- Step 2: 기본 정보 -->
           <div class="ob-step" id="ob-2" style="display:none;">
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 1 · 기본 정보</div>
-            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">나에 대해 알려주세요</div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 1 · Basic Info</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">Tell us about yourself</div>
             <div style="display:flex;flex-direction:column;gap:14px;">
               <div class="form-group">
-                <label class="form-label">이름</label>
-                <input class="form-input" type="text" id="ob-name" placeholder="이름을 입력해주세요">
+                <label class="form-label">Name</label>
+                <input class="form-input" type="text" id="ob-name" placeholder="Name을 입력해주세요">
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div class="form-group">
-                  <label class="form-label">생년월일</label>
+                  <label class="form-label">Date of Birth</label>
                   <input class="form-input" type="date" id="ob-birth">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">성별</label>
+                  <label class="form-label">Gender</label>
                   <select class="form-input form-select" id="ob-gender">
-                    <option value="">선택</option>
-                    <option value="male">남성</option>
-                    <option value="female">여성</option>
-                    <option value="other">기타</option>
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
               </div>
@@ -2857,35 +2857,35 @@
 
           <!-- Step 3: 학력 -->
           <div class="ob-step" id="ob-3" style="display:none;">
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 2 · 학력</div>
-            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">학력을 입력해주세요</div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 2 · Education</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">Tell us about your education</div>
             <div style="display:flex;flex-direction:column;gap:14px;">
               <div class="form-group">
-                <label class="form-label">학교명</label>
-                <input class="form-input" type="text" id="ob-school" placeholder="예: 숙명여자대학교">
+                <label class="form-label">School / University</label>
+                <input class="form-input" type="text" id="ob-school" placeholder="e.g. Sookmyung Women's University">
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div class="form-group">
-                  <label class="form-label">전공</label>
-                  <input class="form-input" type="text" id="ob-major" placeholder="예: 경영학과">
+                  <label class="form-label">Major</label>
+                  <input class="form-input" type="text" id="ob-major" placeholder="e.g. Business Administration">
                 </div>
                 <div class="form-group">
-                  <label class="form-label">졸업 연도</label>
+                  <label class="form-label">Graduation Year</label>
                   <select class="form-input form-select" id="ob-grad">
-                    <option value="">선택</option>
-                    ${Array.from({length:10},(_,i)=>`<option value="${2026-i}">${2026-i}년 ${i===0?'(예정)':''}</option>`).join('')}
-                    <option value="2015">2015년 이전</option>
+                    <option value="">Select</option>
+                    ${Array.from({length:10},(_,i)=>`<option value="${2026-i}">${2026-i} ${i===0?'(예정)':''}</option>`).join('')}
+                    <option value="2015">2015 or earlier</option>
                   </select>
                 </div>
               </div>
               <div class="form-group">
-                <label class="form-label">학적 상태</label>
+                <label class="form-label">Enrollment Status</label>
                 <select class="form-input form-select" id="ob-status">
-                  <option value="">선택</option>
-                  <option value="enrolled">재학 중</option>
-                  <option value="leave">휴학 중</option>
-                  <option value="graduated">졸업</option>
-                  <option value="expected">졸업예정</option>
+                  <option value="">Select</option>
+                  <option value="enrolled">Enrolled</option>
+                  <option value="leave">Leave of Absence</option>
+                  <option value="graduated">Graduated</option>
+                  <option value="expected">Graduated예정</option>
                 </select>
               </div>
             </div>
@@ -2893,26 +2893,26 @@
 
           <!-- Step 4: 커리어 목표 -->
           <div class="ob-step" id="ob-4" style="display:none;">
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 3 · 커리어 목표</div>
-            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">어떤 커리어를 꿈꾸나요?</div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 3 · Career Goals</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">What career are you aiming for?</div>
             <div style="display:flex;flex-direction:column;gap:14px;">
               <div class="form-group">
-                <label class="form-label">희망 직무</label>
-                <input class="form-input" type="text" id="ob-role" placeholder="예: 서비스 기획자, PM, 마케터">
+                <label class="form-label">Desired Role</label>
+                <input class="form-input" type="text" id="ob-role" placeholder="e.g. Product Manager, Service Planner, Marketer">
               </div>
               <div class="form-group">
-                <label class="form-label">관심 산업</label>
-                <input class="form-input" type="text" id="ob-industry" placeholder="예: IT, 스타트업, 금융, 콘텐츠">
+                <label class="form-label">Industry of Interest</label>
+                <input class="form-input" type="text" id="ob-industry" placeholder="e.g. Tech, Startup, Finance, Content">
               </div>
               <div class="form-group">
-                <label class="form-label">취업 희망 시기</label>
+                <label class="form-label">Job Search Timeline</label>
                 <select class="form-input form-select" id="ob-timeline">
-                  <option value="">선택</option>
-                  <option value="now">바로 (현재 구직 중)</option>
-                  <option value="6m">6개월 이내</option>
-                  <option value="1y">1년 이내</option>
-                  <option value="2y">1~2년 후</option>
-                  <option value="exploring">탐색 중</option>
+                  <option value="">Select</option>
+                  <option value="now">Now (actively job seeking)</option>
+                  <option value="6m">Within 6 months</option>
+                  <option value="1y">Within 1 year</option>
+                  <option value="2y">In 1–2 years</option>
+                  <option value="exploring">Just exploring</option>
                 </select>
               </div>
             </div>
@@ -2921,9 +2921,9 @@
           <!-- Step 5: 완료 -->
           <div class="ob-step" id="ob-5" style="display:none;text-align:center;">
             <div style="font-size:48px;margin-bottom:16px;">🎉</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px;">준비 완료!</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px;">You're all set!</div>
             <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:320px;margin:0 auto;">
-              첫 번째 경험을 추가해보세요.<br/>2분이면 충분해요.
+              Start by adding your first experience.<br/>It only takes 2 minutes.
             </div>
           </div>
 
@@ -2939,8 +2939,8 @@
             <div class="ob-dot" onclick="goObStep(5)"></div>
           </div>
           <div style="display:flex;gap:10px;align-items:center;">
-            <button id="ob-skip-btn" onclick="closeOnboarding()" style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--ink-4);padding:8px 12px;">건너뛰기</button>
-            <button id="ob-next-btn" onclick="obNext()" style="background:var(--accent);border:none;color:#fff;font-size:13px;font-weight:600;padding:10px 24px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">시작하기 →</button>
+            <button id="ob-skip-btn" onclick="closeOnboarding()" style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--ink-4);padding:8px 12px;">Skip</button>
+            <button id="ob-next-btn" onclick="obNext()" style="background:var(--accent);border:none;color:#fff;font-size:13px;font-weight:600;padding:10px 24px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Get started →</button>
           </div>
         </div>
       </div>
@@ -6087,7 +6087,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!u) return null;
     const createdAt = u.created_at ? new Date(u.created_at) : null;
     const isNew = createdAt ? (Date.now() - createdAt.getTime() < 5 * 60 * 1000) : false;
-    // 구글 로그인 시 user_metadata에서 실제 이름 가져오기
+    // 구글 로그인 시 user_metadata에서 실제 Name 가져오기
     const meta = u.user_metadata || {};
     const displayName = meta.full_name || meta.name || meta.given_name || (u.email ? u.email.split('@')[0] : 'there');
     return { id: u.id, email: u.email || '', initials: getInitials(u.email), isNew, displayName };
@@ -6301,13 +6301,13 @@ What I learned: Consistency matters more than quality of individual posts`;
     document.querySelectorAll('.ob-dot').forEach((d, i) => d.classList.toggle('active', i === n - 1));
     const btn = document.getElementById('ob-next-btn');
     const skip = document.getElementById('ob-skip-btn');
-    if (n === 1) { btn.textContent = '시작하기 →'; }
+    if (n === 1) { btn.textContent = 'Get started →'; }
     else if (n === _obTotal) {
-      btn.textContent = '경험 추가하기 →';
+      btn.textContent = 'Add first experience →';
       btn.onclick = () => { saveObProfile(); closeOnboarding(); navigate('add'); };
       if (skip) skip.style.display = 'none';
     } else {
-      btn.textContent = '다음 →';
+      btn.textContent = 'Next →';
       btn.onclick = obNext;
     }
   }
