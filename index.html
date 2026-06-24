@@ -1263,7 +1263,6 @@
   .user-menu.show { display: block; }
   @keyframes menuIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
-
   .user-menu-head {
     padding: 14px 16px;
     border-bottom: 1px solid var(--border);
@@ -2616,74 +2615,6 @@
     </div>
 
     <!-- ════ PAGE: LANDING ════ -->
-    <div id="page-landing" class="page" style="display:none;">
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:48px 24px;background:#FAFAFA;text-align:center;">
-
-        <!-- Logo -->
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:48px;">
-          <div style="width:40px;height:40px;background:var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:center;">
-            <i class="ti ti-layout-grid" style="font-size:20px;color:#fff;"></i>
-          </div>
-        </div>
-
-        <!-- Hero -->
-        <div style="font-size:72px;font-weight:900;color:var(--ink);letter-spacing:-4px;line-height:1;margin-bottom:16px;">
-          Scribbi<span style="color:var(--accent);">.</span>
-        </div>
-        <div style="font-size:18px;color:var(--ink-3);max-width:480px;line-height:1.7;margin-bottom:48px;">
-          Turn your experiences into career assets.<br/>
-          AI matches your story to jobs you actually want.
-        </div>
-
-        <!-- CTA -->
-        <div style="display:flex;gap:12px;align-items:center;margin-bottom:64px;">
-          <button onclick="navigate('signup')" style="font-size:15px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:14px 32px;border-radius:12px;cursor:pointer;font-family:var(--ff-head);letter-spacing:-0.3px;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-            Get started — it's free
-          </button>
-          <button onclick="navigate('login')" style="font-size:15px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--border);padding:14px 28px;border-radius:12px;cursor:pointer;font-family:var(--ff-head);letter-spacing:-0.3px;">
-            Sign in
-          </button>
-        </div>
-
-        <!-- Feature pills -->
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;">
-          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">📁 Experience Blocks</div>
-          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">🎯 Job Matching</div>
-          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">✨ AI Analysis</div>
-          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">📊 Score Insights</div>
-        </div>
-
-        <!-- App preview mockup -->
-        <div style="width:100%;max-width:720px;background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.08);">
-          <div style="height:44px;background:var(--ink);display:flex;align-items:center;padding:0 20px;gap:8px;">
-            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
-            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
-            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
-            <div style="margin-left:auto;font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.5px;">Scribbi.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;height:280px;">
-            <div style="border-right:1px solid var(--border);padding:16px 0;background:#FAFAFA;">
-              <div style="padding:8px 16px;margin:0 8px;border-radius:8px;background:var(--ink);color:#fff;font-size:12px;font-weight:500;display:flex;align-items:center;gap:8px;"><i class="ti ti-folders" style="font-size:13px;"></i> Experience Archiving</div>
-              <div style="padding:8px 16px;margin:4px 8px;border-radius:8px;color:var(--ink-3);font-size:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-search" style="font-size:13px;opacity:0.6;"></i> Company / Job Match</div>
-              <div style="padding:8px 16px;margin:4px 8px;border-radius:8px;color:var(--ink-3);font-size:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-chart-bar" style="font-size:13px;opacity:0.6;"></i> Match Archiving</div>
-            </div>
-            <div style="padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;">
-              <div style="border:1px solid #EBEBEB;border-radius:14px;padding:16px;background:#fff;">
-                <div style="font-size:10px;color:#999;margin-bottom:8px;display:flex;align-items:center;gap:4px;"><i class="ti ti-file-text" style="font-size:12px;color:var(--accent);"></i> Projects</div>
-                <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">Campus Patent Universiade</div>
-                <div style="font-size:10px;color:#bbb;">2025.04 – 2024.11</div>
-              </div>
-              <div style="border:1px solid #EBEBEB;border-radius:14px;padding:16px;background:#fff;">
-                <div style="font-size:10px;color:#999;margin-bottom:8px;display:flex;align-items:center;gap:4px;"><i class="ti ti-file-text" style="font-size:12px;color:var(--accent);"></i> Internship</div>
-                <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">Marketing Team</div>
-                <div style="font-size:10px;color:#bbb;">2024.01 – 2024.06</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
 
     <!-- ════ PAGE: LOGIN ════ -->
     <div id="page-login" class="page">
@@ -2872,151 +2803,88 @@
     <!-- ════ ONBOARDING MODAL ════ -->
     <div id="onboarding-modal" style="
       display:none; position:fixed; inset:0; z-index:1000;
-      background:rgba(10,20,40,0.6); backdrop-filter:blur(8px);
+      background:rgba(10,20,40,0.55); backdrop-filter:blur(6px);
       align-items:center; justify-content:center;
     ">
-      <div style="background:#fff;border-radius:24px;width:560px;max-width:94vw;box-shadow:0 32px 80px rgba(0,0,0,0.22);overflow:hidden;position:relative;">
-
+      <div style="
+        background:#fff; border-radius:24px; width:540px; max-width:92vw;
+        box-shadow:0 24px 64px rgba(0,0,0,0.18); overflow:hidden; position:relative;
+      ">
         <!-- 진행바 -->
         <div style="height:3px;background:var(--surface);">
-          <div id="ob-progress" style="height:3px;background:var(--accent);width:20%;transition:width 0.4s ease;"></div>
+          <div id="ob-progress" style="height:3px;background:var(--accent);width:25%;transition:width 0.4s ease;"></div>
         </div>
 
-        <div style="padding:40px 44px 32px;min-height:320px;">
+        <!-- 슬라이드 영역 -->
+        <div style="padding:40px 44px 32px; min-height:280px;">
 
-          <!-- Step 1: 브랜딩 -->
-          <div class="ob-step" id="ob-1" style="text-align:center;">
-            <div style="font-size:42px;font-weight:900;color:var(--ink);letter-spacing:-2px;margin-bottom:12px;">Scribbi<span style="color:var(--accent);">.</span></div>
-            <div style="font-size:15px;color:var(--ink-3);line-height:1.7;max-width:360px;margin:0 auto 24px;">
-              Record your experiences, design your career.<br/>AI translates your story into the language of hiring.
-            </div>
-            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">📁 Experience Blocks</div>
-              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">🎯 Job Matching</div>
-              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">✨ AI Analysis</div>
+          <!-- Step 1 -->
+          <div class="ob-step" id="ob-1">
+            <div style="font-size:36px;margin-bottom:16px;">📁</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Welcome to Exppi!</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
+              Exppi helps you organize your career experiences into blocks — and match them to jobs you actually want.
             </div>
           </div>
 
-          <!-- Step 2: 기본 정보 -->
+          <!-- Step 2 -->
           <div class="ob-step" id="ob-2" style="display:none;">
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 1 · Basic Info</div>
-            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">Tell us about yourself</div>
-            <div style="display:flex;flex-direction:column;gap:14px;">
-              <div class="form-group">
-                <label class="form-label">Name</label>
-                <input class="form-input" type="text" id="ob-name" placeholder="Name을 입력해주세요">
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                <div class="form-group">
-                  <label class="form-label">Date of Birth</label>
-                  <input class="form-input" type="date" id="ob-birth">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Gender</label>
-                  <select class="form-input form-select" id="ob-gender">
-                    <option value="">Select</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
+            <div style="font-size:36px;margin-bottom:16px;">✍️</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Add your experiences</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
+              Log projects, work, leadership — anything you've done. Answer a few questions and AI extracts the keywords for you.
             </div>
           </div>
 
-          <!-- Step 3: 학력 -->
+          <!-- Step 3 -->
           <div class="ob-step" id="ob-3" style="display:none;">
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 2 · Education</div>
-            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">Tell us about your education</div>
-            <div style="display:flex;flex-direction:column;gap:14px;">
-              <div class="form-group">
-                <label class="form-label">School / University</label>
-                <input class="form-input" type="text" id="ob-school" placeholder="e.g. Sookmyung Women's University">
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                <div class="form-group">
-                  <label class="form-label">Major</label>
-                  <input class="form-input" type="text" id="ob-major" placeholder="e.g. Business Administration">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Graduation Year</label>
-                  <select class="form-input form-select" id="ob-grad">
-                    <option value="">Select</option>
-                    ${Array.from({length:10},(_,i)=>`<option value="${2026-i}">${2026-i} ${i===0?'(예정)':''}</option>`).join('')}
-                    <option value="2015">2015 or earlier</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Enrollment Status</label>
-                <select class="form-input form-select" id="ob-status">
-                  <option value="">Select</option>
-                  <option value="enrolled">Enrolled</option>
-                  <option value="leave">Leave of Absence</option>
-                  <option value="graduated">Graduated</option>
-                  <option value="expected">Graduated예정</option>
-                </select>
-              </div>
+            <div style="font-size:36px;margin-bottom:16px;">🎯</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Match to companies</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
+              Upload a job description and see how well your experience blocks fit — with a score and improvement guide.
             </div>
           </div>
 
-          <!-- Step 4: 커리어 목표 -->
+          <!-- Step 4 -->
           <div class="ob-step" id="ob-4" style="display:none;">
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 3 · Career Goals</div>
-            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">What career are you aiming for?</div>
-            <div style="display:flex;flex-direction:column;gap:14px;">
-              <div class="form-group">
-                <label class="form-label">Desired Role</label>
-                <input class="form-input" type="text" id="ob-role" placeholder="e.g. Product Manager, Service Planner, Marketer">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Industry of Interest</label>
-                <input class="form-input" type="text" id="ob-industry" placeholder="e.g. Tech, Startup, Finance, Content">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Job Search Timeline</label>
-                <select class="form-input form-select" id="ob-timeline">
-                  <option value="">Select</option>
-                  <option value="now">Now (actively job seeking)</option>
-                  <option value="6m">Within 6 months</option>
-                  <option value="1y">Within 1 year</option>
-                  <option value="2y">In 1–2 years</option>
-                  <option value="exploring">Just exploring</option>
-                </select>
-              </div>
+            <div style="font-size:36px;margin-bottom:16px;">🚀</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">You're all set!</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
+              Start by adding your first experience. It only takes 2 minutes.
             </div>
           </div>
-
-          <!-- Step 5: 완료 -->
-          <div class="ob-step" id="ob-5" style="display:none;text-align:center;">
-            <div style="font-size:48px;margin-bottom:16px;">🎉</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px;">You're all set!</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:320px;margin:0 auto;">
-              Start by adding your first experience.<br/>It only takes 2 minutes.
-            </div>
-          </div>
-
         </div>
 
         <!-- 하단 버튼 -->
-        <div style="padding:16px 44px 32px;display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;gap:6px;" id="ob-dots">
+        <div style="
+          padding:20px 44px 32px;
+          display:flex; align-items:center; justify-content:space-between;
+        ">
+          <div style="display:flex;gap:8px;" id="ob-dots">
             <div class="ob-dot active" onclick="goObStep(1)"></div>
             <div class="ob-dot" onclick="goObStep(2)"></div>
             <div class="ob-dot" onclick="goObStep(3)"></div>
             <div class="ob-dot" onclick="goObStep(4)"></div>
-            <div class="ob-dot" onclick="goObStep(5)"></div>
           </div>
           <div style="display:flex;gap:10px;align-items:center;">
-            <button id="ob-skip-btn" onclick="closeOnboarding()" style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--ink-4);padding:8px 12px;">Skip</button>
-            <button id="ob-next-btn" onclick="obNext()" style="background:var(--accent);border:none;color:#fff;font-size:13px;font-weight:600;padding:10px 24px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Get started →</button>
+            <button onclick="closeOnboarding()" style="
+              font-size:13px;color:var(--ink-4);background:none;border:none;cursor:pointer;padding:8px 4px;
+            ">Skip</button>
+            <button id="ob-next-btn" onclick="nextObStep()" style="
+              background:var(--accent);
+              color:#fff;border:none;border-radius:99px;padding:10px 28px;
+              font-size:14px;font-weight:700;cursor:pointer;
+            ">Next →</button>
           </div>
         </div>
       </div>
     </div>
+
     <style>
-      .ob-dot { width:7px;height:7px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:background 0.2s; }
-      .ob-dot.active { background:var(--accent); }
+      .ob-dot {
+        width:7px;height:7px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:background 0.2s;
+      }
+      .ob-dot.active { background:var(--accent-2); }
     </style>
   </main>
 </div>
@@ -5822,10 +5690,8 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function navigate(target) {
     // 비로그인 상태에서 보호된 페이지 접근 시 랜딩 페이지로
-    const publicPages = ['login', 'signup', 'help'];
+    const publicPages = ['login', 'signup', 'help', 'matchstore', 'blocks', 'add', 'match', 'matchstore', 'match-result'];
     if (!currentUser && !publicPages.includes(target)) {
-      target = 'login';
-    }
       target = 'blocks';
     }
     // landing-mode: hide app nav/sidebar when on landing page
@@ -6124,7 +5990,6 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!currentUser) return;
     const { error } = await supa.from('experience_blocks').delete().eq('id', id).eq('user_id', currentUser.id);
     if (!error) loadUserBlocks();
-    else alert('삭제 실패: ' + error.message);
   }
 
   function toggleSidebar() {
@@ -6158,7 +6023,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!u) return null;
     const createdAt = u.created_at ? new Date(u.created_at) : null;
     const isNew = createdAt ? (Date.now() - createdAt.getTime() < 5 * 60 * 1000) : false;
-    // 구글 로그인 시 user_metadata에서 실제 Name 가져오기
+    // 구글 로그인 시 user_metadata에서 실제 이름 가져오기
     const meta = u.user_metadata || {};
     const displayName = meta.full_name || meta.name || meta.given_name || (u.email ? u.email.split('@')[0] : 'there');
     return { id: u.id, email: u.email || '', initials: getInitials(u.email), isNew, displayName };
@@ -6352,7 +6217,7 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   // ── 온보딩 ──
   let _obStep = 1;
-  const _obTotal = 5;
+  const _obTotal = 4;
 
   function showOnboarding() {
     const modal = document.getElementById('onboarding-modal');
@@ -6360,7 +6225,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
   function closeOnboarding() {
     document.getElementById('onboarding-modal').style.display = 'none';
-    localStorage.setItem('scribbi_onboarded', '1');
+    localStorage.setItem('exppi_onboarded', '1');
   }
   function goObStep(n) {
     _obStep = n;
@@ -6368,43 +6233,29 @@ What I learned: Consistency matters more than quality of individual posts`;
       const el = document.getElementById('ob-' + i);
       if (el) el.style.display = i === n ? 'block' : 'none';
     }
+    // 진행바
     document.getElementById('ob-progress').style.width = (n / _obTotal * 100) + '%';
-    document.querySelectorAll('.ob-dot').forEach((d, i) => d.classList.toggle('active', i === n - 1));
+    // 점
+    document.querySelectorAll('.ob-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === n - 1);
+    });
+    // 마지막 버튼
     const btn = document.getElementById('ob-next-btn');
-    const skip = document.getElementById('ob-skip-btn');
-    if (n === 1) { btn.textContent = 'Get started →'; }
-    else if (n === _obTotal) {
-      btn.textContent = 'Add first experience →';
-      btn.onclick = () => { saveObProfile(); closeOnboarding(); navigate('add'); };
-      if (skip) skip.style.display = 'none';
+    if (n === _obTotal) {
+      btn.textContent = 'Get started!';
+      btn.onclick = () => { closeOnboarding(); navigate('add'); };
     } else {
       btn.textContent = 'Next →';
-      btn.onclick = obNext;
+      btn.onclick = nextObStep;
     }
   }
-  function obNext() {
+  function nextObStep() {
     if (_obStep < _obTotal) goObStep(_obStep + 1);
   }
-  async function saveObProfile() {
-    if (!currentUser) return;
-    const profile = {
-      user_id: currentUser.id,
-      name: document.getElementById('ob-name')?.value || '',
-      birth: document.getElementById('ob-birth')?.value || '',
-      gender: document.getElementById('ob-gender')?.value || '',
-      school: document.getElementById('ob-school')?.value || '',
-      major: document.getElementById('ob-major')?.value || '',
-      grad_year: document.getElementById('ob-grad')?.value || '',
-      edu_status: document.getElementById('ob-status')?.value || '',
-      desired_role: document.getElementById('ob-role')?.value || '',
-      desired_industry: document.getElementById('ob-industry')?.value || '',
-      job_timeline: document.getElementById('ob-timeline')?.value || '',
-    };
-    await supa.from('user_profiles').upsert(profile, { onConflict: 'user_id' });
-  }
 
+  // 첫 방문 시 자동 표시 (renderAuthUI 이후 호출됨)
   function checkShowOnboarding() {
-    if (!localStorage.getItem('scribbi_onboarded') && currentUser) {
+    if (!localStorage.getItem('exppi_onboarded') && currentUser) {
       setTimeout(showOnboarding, 600);
     }
   }
