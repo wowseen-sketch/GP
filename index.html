@@ -3793,8 +3793,10 @@
 
       const { data: blocksData, error: blocksErr } = await supa
         .from('experience_blocks')
-        .select('id, title, competency_keywords')
-        .eq('user_id', currentUser.id);
+        .select('id, title, competency_keywords, is_current, end_date')
+        .eq('user_id', currentUser.id)
+        .eq('is_current', false)
+        .not('end_date', 'is', null);
       if (blocksErr) throw blocksErr;
 
       const blocks = (blocksData || []).filter(b => b.title);
@@ -3809,8 +3811,9 @@
         .filter(r => blockMap[r.id])
         .map(r => ({ ...blockMap[r.id], relevance: r.relevance, reason: r.reason }));
 
-      const high   = _brmBlocks.filter(b => b.relevance === 'high');
-      const others = _brmBlocks.filter(b => b.relevance !== 'high');
+      const top5   = _brmBlocks.slice(0, 5);
+      const high   = top5.slice(0, 3);
+      const others = top5.slice(3);
 
       let html = '';
       if (high.length) {
@@ -3831,7 +3834,7 @@
 
       if (contentEl) { contentEl.innerHTML = html; contentEl.style.display = 'flex'; }
       if (loadingEl) loadingEl.style.display = 'none';
-      if (countEl)   countEl.textContent = Math.min(high.length, 5);
+      if (countEl)   countEl.textContent = high.length;
     } catch (err) {
       console.error('[openBlockRecommendModal] failed:', err);
       if (loadingEl) loadingEl.style.display = 'none';
