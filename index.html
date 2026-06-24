@@ -59,47 +59,47 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 200;
     display: flex; align-items: center;
     height: 52px; padding: 0 24px;
-    background: var(--ink);
-    border-bottom: none;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
   }
   .nav-logo {
     display: flex; align-items: center; gap: 9px;
-    font-size: 16px; font-weight: 700; color: #fff;
+    font-size: 16px; font-weight: 700; color: var(--ink);
     letter-spacing: -0.01em; margin-right: 24px; cursor: pointer;
     text-decoration: none;
   }
   .nav-logo-icon {
     width: 26px; height: 26px; border-radius: 6px;
-    background: rgba(255,255,255,0.15);
+    background: var(--ink);
     display: flex; align-items: center; justify-content: center;
     color: #fff; font-size: 13px;
   }
   .nav-breadcrumb {
     display: flex; align-items: center; gap: 6px;
-    font-size: 13px; color: rgba(255,255,255,0.45); margin-right: 32px;
+    font-size: 13px; color: var(--ink-3); margin-right: 32px;
   }
-  .nav-breadcrumb-sep { color: rgba(255,255,255,0.2); }
-  .nav-breadcrumb-current { color: rgba(255,255,255,0.85); font-weight: 500; }
+  .nav-breadcrumb-sep { color: var(--border-strong); }
+  .nav-breadcrumb-current { color: var(--ink); font-weight: 500; }
   .nav-tabs { display: flex; gap: 2px; flex: 1; }
   .nav-tab {
     display: flex; align-items: center; gap: 6px;
     font-size: 13px; font-weight: 500; letter-spacing: -0.01em;
-    color: rgba(255,255,255,0.5); padding: 6px 14px;
+    color: var(--ink-3); padding: 6px 14px;
     border-radius: var(--r); border: none; background: none; cursor: pointer;
     transition: all 0.15s; text-decoration: none;
   }
   .nav-tab i { font-size: 15px; }
-  .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.1); }
-  .nav-tab.active { color: #fff; background: rgba(255,255,255,0.12); }
+  .nav-tab:hover { color: var(--ink); background: var(--surface-2); }
+  .nav-tab.active { color: var(--accent-2); background: var(--accent-light); }
   .nav-right { display: flex; align-items: center; gap: 8px; }
   .nav-icon-btn {
     width: 32px; height: 32px; border-radius: 7px;
-    border: 1px solid rgba(255,255,255,0.15); background: transparent;
+    border: 1px solid var(--border); background: var(--white);
     display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,0.6); font-size:15px; cursor: pointer;
+    color: var(--ink-3); font-size:15px; cursor: pointer;
     transition: all 0.12s;
   }
-  .nav-icon-btn:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
+  .nav-icon-btn:hover { border-color: var(--border-strong); color: var(--ink); }
   .nav-avatar {
     width: 28px; height: 28px; border-radius: 50%;
     background: var(--accent);
@@ -111,7 +111,7 @@
   .nav-avatar-dot {
     position: absolute; bottom: 1px; right: 1px;
     width: 8px; height: 8px; border-radius: 50%;
-    background: #22C55E; border: 2px solid var(--ink);
+    background: #22C55E; border: 2px solid var(--white);
   }
 
   /* ── LAYOUT ── */
@@ -939,8 +939,8 @@
   .sidebar.collapsed ~ .status-bar { left: 56px; }
   .sb-toggle-btn {
     display: flex; align-items: center; justify-content: flex-end;
-    padding: 8px 14px 4px; cursor: pointer; color: var(--ink-4);
-    font-size: 17px; transition: color 0.15s; z-index: 1;
+    padding: 10px 14px 8px; cursor: pointer; color: var(--ink-4);
+    font-size: 17px; transition: color 0.15s;
   }
   .sb-toggle-btn:hover { color: var(--accent); }
   .sidebar.collapsed .sb-toggle-btn { justify-content: center; padding: 0; height: 24px; }
@@ -4703,9 +4703,14 @@ What I learned: Consistency matters more than quality of individual posts`;
     el.dataset.type = cat;
     el.style.background = c.bg;
     el.innerHTML = `
-      <div class="blk-cat-label" style="color:#999;">
-        <i class="ti ti-file-text" style="font-size:14px;opacity:0.7;"></i>
-        ${escapeHtml(c.label)}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:auto;">
+        <div class="blk-cat-label" style="color:#999;">
+          <i class="ti ti-file-text" style="font-size:14px;opacity:0.7;"></i>
+          ${escapeHtml(c.label)}
+        </div>
+        <button onclick="event.stopPropagation();confirmDeleteBlock('${row.id}')" style="background:none;border:none;cursor:pointer;color:#ccc;font-size:13px;padding:0;display:flex;align-items:center;transition:color 0.12s;" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='#ccc'">
+          <i class="ti ti-trash"></i>
+        </button>
       </div>
       <div class="blk-card-title" style="color:#FF9300;">${escapeHtml(row.title || 'Untitled')}</div>
       <div class="blk-card-period" style="color:#999;">${escapeHtml(period)}</div>
@@ -5980,6 +5985,13 @@ What I learned: Consistency matters more than quality of individual posts`;
     statusEl.textContent = 'Done!';
     setTimeout(() => { statusEl.textContent = ''; }, 2000);
   }
+  async function confirmDeleteBlock(id) {
+    if (!confirm('이 블럭을 삭제할까요?')) return;
+    if (!currentUser) return;
+    const { error } = await supa.from('experience_blocks').delete().eq('id', id).eq('user_id', currentUser.id);
+    if (!error) loadUserBlocks();
+  }
+
   function toggleSidebar() {
     sidebarCollapsed = !sidebarCollapsed;
     const sb = document.getElementById('sidebar');
