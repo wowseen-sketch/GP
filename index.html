@@ -3816,11 +3816,11 @@
         (relevanceOrder[a.relevance] ?? 3) - (relevanceOrder[b.relevance] ?? 3)
       );
 
-      const top5 = sortedBlocks.slice(0, 5);
-      _brmBlocks = top5;
+      const limited = sortedBlocks.slice(0, 5);
+      _brmBlocks = limited;
 
-      const high   = top5.slice(0, 3);
-      const others = top5.slice(3, 5);
+      const high   = limited.slice(0, 3);
+      const others = limited.slice(3, 5);
 
       let html = '';
       if (high.length) {
