@@ -1263,11 +1263,7 @@
   .user-menu.show { display: block; }
   @keyframes menuIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
-  #page-landing.active {
-    position: fixed; inset: 0; z-index: 300;
-    background: #FAFAFA; overflow-y: auto;
-    display: block !important;
-  }
+
   .user-menu-head {
     padding: 14px 16px;
     border-bottom: 1px solid var(--border);
@@ -3489,7 +3485,7 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
   const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const pages = ['landing','add','blocks','match','matchstore','match-result','login','signup','help'];
+  const pages = ['add','blocks','match','matchstore','match-result','login','signup','help'];
   const pageTitles = {
         add:        'Add Experience',
     blocks:     'Experience Blocks',
@@ -5826,9 +5822,9 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function navigate(target) {
     // 비로그인 상태에서 보호된 페이지 접근 시 랜딩 페이지로
-    const publicPages = ['landing', 'login', 'signup', 'help'];
+    const publicPages = ['login', 'signup', 'help'];
     if (!currentUser && !publicPages.includes(target)) {
-      target = 'landing';
+      target = 'login';
     }
       target = 'blocks';
     }
