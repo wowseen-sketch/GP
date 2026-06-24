@@ -2803,88 +2803,151 @@
     <!-- ════ ONBOARDING MODAL ════ -->
     <div id="onboarding-modal" style="
       display:none; position:fixed; inset:0; z-index:1000;
-      background:rgba(10,20,40,0.55); backdrop-filter:blur(6px);
+      background:rgba(10,20,40,0.6); backdrop-filter:blur(8px);
       align-items:center; justify-content:center;
     ">
-      <div style="
-        background:#fff; border-radius:24px; width:540px; max-width:92vw;
-        box-shadow:0 24px 64px rgba(0,0,0,0.18); overflow:hidden; position:relative;
-      ">
+      <div style="background:#fff;border-radius:24px;width:560px;max-width:94vw;box-shadow:0 32px 80px rgba(0,0,0,0.22);overflow:hidden;position:relative;">
+
         <!-- 진행바 -->
         <div style="height:3px;background:var(--surface);">
-          <div id="ob-progress" style="height:3px;background:var(--accent);width:25%;transition:width 0.4s ease;"></div>
+          <div id="ob-progress" style="height:3px;background:var(--accent);width:20%;transition:width 0.4s ease;"></div>
         </div>
 
-        <!-- 슬라이드 영역 -->
-        <div style="padding:40px 44px 32px; min-height:280px;">
+        <div style="padding:40px 44px 32px;min-height:320px;">
 
-          <!-- Step 1 -->
-          <div class="ob-step" id="ob-1">
-            <div style="font-size:36px;margin-bottom:16px;">📁</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Welcome to Exppi!</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
-              Exppi helps you organize your career experiences into blocks — and match them to jobs you actually want.
+          <!-- Step 1: 브랜딩 -->
+          <div class="ob-step" id="ob-1" style="text-align:center;">
+            <div style="font-size:42px;font-weight:900;color:var(--ink);letter-spacing:-2px;margin-bottom:12px;">Scribbi<span style="color:var(--accent);">.</span></div>
+            <div style="font-size:15px;color:var(--ink-3);line-height:1.7;max-width:360px;margin:0 auto 24px;">
+              경험을 기록하고, 커리어를 설계하세요.<br/>당신의 스토리를 AI가 채용 언어로 번역합니다.
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">📁 경험 블럭 정리</div>
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">🎯 채용공고 매칭</div>
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">✨ AI 분석</div>
             </div>
           </div>
 
-          <!-- Step 2 -->
+          <!-- Step 2: 기본 정보 -->
           <div class="ob-step" id="ob-2" style="display:none;">
-            <div style="font-size:36px;margin-bottom:16px;">✍️</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Add your experiences</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
-              Log projects, work, leadership — anything you've done. Answer a few questions and AI extracts the keywords for you.
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 1 · 기본 정보</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">나에 대해 알려주세요</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">이름</label>
+                <input class="form-input" type="text" id="ob-name" placeholder="이름을 입력해주세요">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                  <label class="form-label">생년월일</label>
+                  <input class="form-input" type="date" id="ob-birth">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">성별</label>
+                  <select class="form-input form-select" id="ob-gender">
+                    <option value="">선택</option>
+                    <option value="male">남성</option>
+                    <option value="female">여성</option>
+                    <option value="other">기타</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Step 3 -->
+          <!-- Step 3: 학력 -->
           <div class="ob-step" id="ob-3" style="display:none;">
-            <div style="font-size:36px;margin-bottom:16px;">🎯</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Match to companies</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
-              Upload a job description and see how well your experience blocks fit — with a score and improvement guide.
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 2 · 학력</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">학력을 입력해주세요</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">학교명</label>
+                <input class="form-input" type="text" id="ob-school" placeholder="예: 숙명여자대학교">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                  <label class="form-label">전공</label>
+                  <input class="form-input" type="text" id="ob-major" placeholder="예: 경영학과">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">졸업 연도</label>
+                  <select class="form-input form-select" id="ob-grad">
+                    <option value="">선택</option>
+                    ${Array.from({length:10},(_,i)=>`<option value="${2026-i}">${2026-i}년 ${i===0?'(예정)':''}</option>`).join('')}
+                    <option value="2015">2015년 이전</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">학적 상태</label>
+                <select class="form-input form-select" id="ob-status">
+                  <option value="">선택</option>
+                  <option value="enrolled">재학 중</option>
+                  <option value="leave">휴학 중</option>
+                  <option value="graduated">졸업</option>
+                  <option value="expected">졸업예정</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <!-- Step 4 -->
+          <!-- Step 4: 커리어 목표 -->
           <div class="ob-step" id="ob-4" style="display:none;">
-            <div style="font-size:36px;margin-bottom:16px;">🚀</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">You're all set!</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
-              Start by adding your first experience. It only takes 2 minutes.
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 3 · 커리어 목표</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">어떤 커리어를 꿈꾸나요?</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">희망 직무</label>
+                <input class="form-input" type="text" id="ob-role" placeholder="예: 서비스 기획자, PM, 마케터">
+              </div>
+              <div class="form-group">
+                <label class="form-label">관심 산업</label>
+                <input class="form-input" type="text" id="ob-industry" placeholder="예: IT, 스타트업, 금융, 콘텐츠">
+              </div>
+              <div class="form-group">
+                <label class="form-label">취업 희망 시기</label>
+                <select class="form-input form-select" id="ob-timeline">
+                  <option value="">선택</option>
+                  <option value="now">바로 (현재 구직 중)</option>
+                  <option value="6m">6개월 이내</option>
+                  <option value="1y">1년 이내</option>
+                  <option value="2y">1~2년 후</option>
+                  <option value="exploring">탐색 중</option>
+                </select>
+              </div>
             </div>
           </div>
+
+          <!-- Step 5: 완료 -->
+          <div class="ob-step" id="ob-5" style="display:none;text-align:center;">
+            <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px;">준비 완료!</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:320px;margin:0 auto;">
+              첫 번째 경험을 추가해보세요.<br/>2분이면 충분해요.
+            </div>
+          </div>
+
         </div>
 
         <!-- 하단 버튼 -->
-        <div style="
-          padding:20px 44px 32px;
-          display:flex; align-items:center; justify-content:space-between;
-        ">
-          <div style="display:flex;gap:8px;" id="ob-dots">
+        <div style="padding:16px 44px 32px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;gap:6px;" id="ob-dots">
             <div class="ob-dot active" onclick="goObStep(1)"></div>
             <div class="ob-dot" onclick="goObStep(2)"></div>
             <div class="ob-dot" onclick="goObStep(3)"></div>
             <div class="ob-dot" onclick="goObStep(4)"></div>
+            <div class="ob-dot" onclick="goObStep(5)"></div>
           </div>
           <div style="display:flex;gap:10px;align-items:center;">
-            <button onclick="closeOnboarding()" style="
-              font-size:13px;color:var(--ink-4);background:none;border:none;cursor:pointer;padding:8px 4px;
-            ">Skip</button>
-            <button id="ob-next-btn" onclick="nextObStep()" style="
-              background:var(--accent);
-              color:#fff;border:none;border-radius:99px;padding:10px 28px;
-              font-size:14px;font-weight:700;cursor:pointer;
-            ">Next →</button>
+            <button id="ob-skip-btn" onclick="closeOnboarding()" style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--ink-4);padding:8px 12px;">건너뛰기</button>
+            <button id="ob-next-btn" onclick="obNext()" style="background:var(--accent);border:none;color:#fff;font-size:13px;font-weight:600;padding:10px 24px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">시작하기 →</button>
           </div>
         </div>
       </div>
     </div>
-
     <style>
-      .ob-dot {
-        width:7px;height:7px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:background 0.2s;
-      }
-      .ob-dot.active { background:var(--accent-2); }
+      .ob-dot { width:7px;height:7px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:background 0.2s; }
+      .ob-dot.active { background:var(--accent); }
     </style>
   </main>
 </div>
@@ -5990,6 +6053,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!currentUser) return;
     const { error } = await supa.from('experience_blocks').delete().eq('id', id).eq('user_id', currentUser.id);
     if (!error) loadUserBlocks();
+    else alert('삭제 실패: ' + error.message);
   }
 
   function toggleSidebar() {
@@ -6217,7 +6281,7 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   // ── 온보딩 ──
   let _obStep = 1;
-  const _obTotal = 4;
+  const _obTotal = 5;
 
   function showOnboarding() {
     const modal = document.getElementById('onboarding-modal');
@@ -6225,7 +6289,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
   function closeOnboarding() {
     document.getElementById('onboarding-modal').style.display = 'none';
-    localStorage.setItem('exppi_onboarded', '1');
+    localStorage.setItem('scribbi_onboarded', '1');
   }
   function goObStep(n) {
     _obStep = n;
@@ -6233,29 +6297,43 @@ What I learned: Consistency matters more than quality of individual posts`;
       const el = document.getElementById('ob-' + i);
       if (el) el.style.display = i === n ? 'block' : 'none';
     }
-    // 진행바
     document.getElementById('ob-progress').style.width = (n / _obTotal * 100) + '%';
-    // 점
-    document.querySelectorAll('.ob-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === n - 1);
-    });
-    // 마지막 버튼
+    document.querySelectorAll('.ob-dot').forEach((d, i) => d.classList.toggle('active', i === n - 1));
     const btn = document.getElementById('ob-next-btn');
-    if (n === _obTotal) {
-      btn.textContent = 'Get started!';
-      btn.onclick = () => { closeOnboarding(); navigate('add'); };
+    const skip = document.getElementById('ob-skip-btn');
+    if (n === 1) { btn.textContent = '시작하기 →'; }
+    else if (n === _obTotal) {
+      btn.textContent = '경험 추가하기 →';
+      btn.onclick = () => { saveObProfile(); closeOnboarding(); navigate('add'); };
+      if (skip) skip.style.display = 'none';
     } else {
-      btn.textContent = 'Next →';
-      btn.onclick = nextObStep;
+      btn.textContent = '다음 →';
+      btn.onclick = obNext;
     }
   }
-  function nextObStep() {
+  function obNext() {
     if (_obStep < _obTotal) goObStep(_obStep + 1);
   }
+  async function saveObProfile() {
+    if (!currentUser) return;
+    const profile = {
+      user_id: currentUser.id,
+      name: document.getElementById('ob-name')?.value || '',
+      birth: document.getElementById('ob-birth')?.value || '',
+      gender: document.getElementById('ob-gender')?.value || '',
+      school: document.getElementById('ob-school')?.value || '',
+      major: document.getElementById('ob-major')?.value || '',
+      grad_year: document.getElementById('ob-grad')?.value || '',
+      edu_status: document.getElementById('ob-status')?.value || '',
+      desired_role: document.getElementById('ob-role')?.value || '',
+      desired_industry: document.getElementById('ob-industry')?.value || '',
+      job_timeline: document.getElementById('ob-timeline')?.value || '',
+    };
+    await supa.from('user_profiles').upsert(profile, { onConflict: 'user_id' });
+  }
 
-  // 첫 방문 시 자동 표시 (renderAuthUI 이후 호출됨)
   function checkShowOnboarding() {
-    if (!localStorage.getItem('exppi_onboarded') && currentUser) {
+    if (!localStorage.getItem('scribbi_onboarded') && currentUser) {
       setTimeout(showOnboarding, 600);
     }
   }
