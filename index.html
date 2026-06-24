@@ -3807,13 +3807,15 @@
       if (rankErr) throw rankErr;
 
       const blockMap = Object.fromEntries(blocks.map(b => [b.id, b]));
-      _brmBlocks = (Array.isArray(ranked) ? ranked : [])
+      const rankedBlocks = (Array.isArray(ranked) ? ranked : [])
         .filter(r => blockMap[r.id])
-        .map(r => ({ ...blockMap[r.id], relevance: r.relevance, reason: r.reason }))
-        .slice(0, 5);
+        .map(r => ({ ...blockMap[r.id], relevance: r.relevance, reason: r.reason }));
 
-      const high   = _brmBlocks.slice(0, 3);
-      const others = _brmBlocks.slice(3);
+      const top5 = rankedBlocks.slice(0, 5);
+      _brmBlocks = top5;
+
+      const high   = top5.slice(0, 3);
+      const others = top5.slice(3, 5);
 
       let html = '';
       if (high.length) {
