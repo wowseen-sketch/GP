@@ -6558,8 +6558,6 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   async function loadProfilePage() {
     if (!currentUser) return;
-
-    // 이메일/아바타
     const email = currentUser.email || '';
     const initials = email.slice(0,2).toUpperCase();
     const avEl = document.getElementById('profile-avatar-lg');
@@ -6568,94 +6566,71 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (avEl) avEl.textContent = initials;
     if (emailEl) emailEl.textContent = email;
 
-    // user_profiles 테이블에서 온보딩 데이터 가져오기
-    const { data: prof } = await supa.from('user_profiles').select('*').eq('user_id', currentUser.id).single();
-
     const infoRow = (label, val) => val ? `
       <div style="display:flex;flex-direction:column;gap:2px;">
         <span style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);">${label}</span>
         <span style="font-size:13.5px;font-weight:500;color:var(--ink);">${val}</span>
       </div>` : '';
 
+    const { data: prof } = await supa.from('user_profiles').select('*').eq('user_id', currentUser.id).single();
     if (prof) {
       if (nameEl) nameEl.textContent = prof.name || email.split('@')[0];
-
-      // 배지
       const roleBadge = document.getElementById('profile-role-badge');
       const indBadge = document.getElementById('profile-industry-badge');
       const schoolBadge = document.getElementById('profile-school-badge');
       if (roleBadge && prof.desired_role) { roleBadge.textContent = prof.desired_role; roleBadge.style.display = ''; }
       if (indBadge && prof.desired_industry) { indBadge.textContent = prof.desired_industry; indBadge.style.display = ''; }
       if (schoolBadge && prof.school) { schoolBadge.textContent = prof.school; schoolBadge.style.display = ''; }
-
-      // 나이 계산
       let ageStr = '';
-      if (prof.birth) {
-        const age = new Date().getFullYear() - new Date(prof.birth).getFullYear();
-        ageStr = age + ' years old';
-      }
-
-      // Personal Info
+      if (prof.birth) { const age = new Date().getFullYear() - new Date(prof.birth).getFullYear(); ageStr = age + ' years old'; }
       const personalEl = document.getElementById('profile-personal-info');
       if (personalEl) personalEl.innerHTML = `
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-          ${infoRow('Name', prof.name)}
-          ${infoRow('Age', ageStr)}
-          ${infoRow('Gender', prof.gender === 'male' ? 'Male' : prof.gender === 'female' ? 'Female' : prof.gender)}
-          ${infoRow('Email', email)}
+          ${infoRow('Name', prof.name)}${infoRow('Age', ageStr)}${infoRow('Gender', prof.gender)}${infoRow('Email', email)}
         </div>
         <div style="height:1px;background:var(--border);"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-          ${infoRow('School', prof.school)}
-          ${infoRow('Major', prof.major)}
-          ${infoRow('Grad Year', prof.grad_year)}
-          ${infoRow('Status', prof.edu_status === 'enrolled' ? 'Enrolled' : prof.edu_status === 'graduated' ? 'Graduated' : prof.edu_status === 'expected' ? 'Expected Graduation' : prof.edu_status)}
+          ${infoRow('School', prof.school)}${infoRow('Major', prof.major)}${infoRow('Grad Year', prof.grad_year)}${infoRow('Status', prof.edu_status)}
         </div>`;
-
-      // Career Info
       const timelineMap = { now:'Actively job seeking', '6m':'Within 6 months', '1y':'Within 1 year', '2y':'In 1–2 years', exploring:'Just exploring' };
       const careerEl = document.getElementById('profile-career-info');
       if (careerEl) careerEl.innerHTML = `
         <div style="display:flex;flex-direction:column;gap:14px;">
-          ${infoRow('Desired Role', prof.desired_role)}
-          ${infoRow('Industry', prof.desired_industry)}
-          ${infoRow('Timeline', timelineMap[prof.job_timeline] || prof.job_timeline)}
+          ${infoRow('Desired Role', prof.desired_role)}${infoRow('Industry', prof.desired_industry)}${infoRow('Timeline', timelineMap[prof.job_timeline] || prof.job_timeline)}
         </div>`;
     } else {
       if (nameEl) nameEl.textContent = email.split('@')[0];
     }
 
-    // 블럭 통계
     const { data: blocks } = await supa.from('experience_blocks').select('activity_type, end_date').eq('user_id', currentUser.id);
     const total = blocks?.length || 0;
     const ongoing = blocks?.filter(b => !b.end_date).length || 0;
-    document.getElementById('stat-total').textContent = total;
-    document.getElementById('stat-ongoing').textContent = ongoing;
-
-    // 카테고리 breakdown
+    const statTotal = document.getElementById('stat-total');
+    const statOngoing = document.getElementById('stat-ongoing');
+    if (statTotal) statTotal.textContent = total;
+    if (statOngoing) statOngoing.textContent = ongoing;
     if (blocks && blocks.length > 0) {
       const cats = {};
       blocks.forEach(b => { const c = b.activity_type || 'other'; cats[c] = (cats[c]||0) + 1; });
       const colors = { work:'#FF9300', internship:'#FF9300', projects:'#10B981', education:'#6366F1', organizations:'#8B5CF6', competition:'#EF4444', volunteering:'#EC4899', other:'#9CA3AF' };
       const breakdownEl = document.getElementById('profile-breakdown');
-      if (breakdownEl) breakdownEl.innerHTML = `
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          ${Object.entries(cats).map(([cat, cnt]) => `
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="width:80px;font-size:12px;color:var(--ink-2);font-weight:500;text-transform:capitalize;">${cat}</div>
-              <div style="flex:1;height:6px;background:var(--surface);border-radius:99px;overflow:hidden;">
-                <div style="width:${Math.round(cnt/total*100)}%;height:100%;background:${colors[cat]||'var(--accent)'};border-radius:99px;"></div>
-              </div>
-              <div style="font-size:12px;font-weight:600;color:var(--ink);width:20px;text-align:right;">${cnt}</div>
-            </div>`).join('')}
-        </div>`;
+      if (breakdownEl) breakdownEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px;">${
+        Object.entries(cats).map(([cat, cnt]) => `
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:80px;font-size:12px;color:var(--ink-2);font-weight:500;text-transform:capitalize;">${cat}</div>
+            <div style="flex:1;height:6px;background:var(--surface);border-radius:99px;overflow:hidden;">
+              <div style="width:${Math.round(cnt/total*100)}%;height:100%;background:${colors[cat]||'var(--accent)'};border-radius:99px;"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink);width:20px;text-align:right;">${cnt}</div>
+          </div>`).join('')
+      }</div>`;
     }
-
-    // 기업 매치 통계
     const { data: cos } = await supa.from('companies').select('fit_score').eq('user_id', currentUser.id);
-    document.getElementById('stat-companies').textContent = cos?.length || 0;
-    const best = cos?.reduce((max, c) => c.fit_score > max ? c.fit_score : max, 0);
-    document.getElementById('stat-best-match').textContent = best ? best + '%' : '—';
+    const statCo = document.getElementById('stat-companies');
+    const statBest = document.getElementById('stat-best-match');
+    if (statCo) statCo.textContent = cos?.length || 0;
+    const best = cos?.reduce((mx, c) => (c.fit_score||0) > mx ? (c.fit_score||0) : mx, 0);
+    if (statBest) statBest.textContent = best ? best + '%' : '—';
   }
 
   function toggleUserMenu() {
