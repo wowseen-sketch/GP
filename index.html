@@ -1263,6 +1263,7 @@
   .user-menu.show { display: block; }
   @keyframes menuIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
   .user-menu-head {
     padding: 14px 16px;
     border-bottom: 1px solid var(--border);
@@ -2615,6 +2616,74 @@
     </div>
 
     <!-- ════ PAGE: LANDING ════ -->
+    <div id="page-landing" class="page" style="display:none;">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:48px 24px;background:#FAFAFA;text-align:center;">
+
+        <!-- Logo -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:48px;">
+          <div style="width:40px;height:40px;background:var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+            <i class="ti ti-layout-grid" style="font-size:20px;color:#fff;"></i>
+          </div>
+        </div>
+
+        <!-- Hero -->
+        <div style="font-size:72px;font-weight:900;color:var(--ink);letter-spacing:-4px;line-height:1;margin-bottom:16px;">
+          Scribbi<span style="color:var(--accent);">.</span>
+        </div>
+        <div style="font-size:18px;color:var(--ink-3);max-width:480px;line-height:1.7;margin-bottom:48px;">
+          Turn your experiences into career assets.<br/>
+          AI matches your story to jobs you actually want.
+        </div>
+
+        <!-- CTA -->
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:64px;">
+          <button onclick="navigate('signup')" style="font-size:15px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:14px 32px;border-radius:12px;cursor:pointer;font-family:var(--ff-head);letter-spacing:-0.3px;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+            Get started — it's free
+          </button>
+          <button onclick="navigate('login')" style="font-size:15px;font-weight:600;color:var(--ink);background:#fff;border:1.5px solid var(--border);padding:14px 28px;border-radius:12px;cursor:pointer;font-family:var(--ff-head);letter-spacing:-0.3px;">
+            Sign in
+          </button>
+        </div>
+
+        <!-- Feature pills -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;">
+          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">📁 Experience Blocks</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">🎯 Job Matching</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">✨ AI Analysis</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--ink-2);">📊 Score Insights</div>
+        </div>
+
+        <!-- App preview mockup -->
+        <div style="width:100%;max-width:720px;background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.08);">
+          <div style="height:44px;background:var(--ink);display:flex;align-items:center;padding:0 20px;gap:8px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);"></div>
+            <div style="margin-left:auto;font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.5px;">Scribbi.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:180px 1fr;height:280px;">
+            <div style="border-right:1px solid var(--border);padding:16px 0;background:#FAFAFA;">
+              <div style="padding:8px 16px;margin:0 8px;border-radius:8px;background:var(--ink);color:#fff;font-size:12px;font-weight:500;display:flex;align-items:center;gap:8px;"><i class="ti ti-folders" style="font-size:13px;"></i> Experience Archiving</div>
+              <div style="padding:8px 16px;margin:4px 8px;border-radius:8px;color:var(--ink-3);font-size:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-search" style="font-size:13px;opacity:0.6;"></i> Company / Job Match</div>
+              <div style="padding:8px 16px;margin:4px 8px;border-radius:8px;color:var(--ink-3);font-size:12px;display:flex;align-items:center;gap:8px;"><i class="ti ti-chart-bar" style="font-size:13px;opacity:0.6;"></i> Match Archiving</div>
+            </div>
+            <div style="padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;">
+              <div style="border:1px solid #EBEBEB;border-radius:14px;padding:16px;background:#fff;">
+                <div style="font-size:10px;color:#999;margin-bottom:8px;display:flex;align-items:center;gap:4px;"><i class="ti ti-file-text" style="font-size:12px;color:var(--accent);"></i> Projects</div>
+                <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">Campus Patent Universiade</div>
+                <div style="font-size:10px;color:#bbb;">2025.04 – 2024.11</div>
+              </div>
+              <div style="border:1px solid #EBEBEB;border-radius:14px;padding:16px;background:#fff;">
+                <div style="font-size:10px;color:#999;margin-bottom:8px;display:flex;align-items:center;gap:4px;"><i class="ti ti-file-text" style="font-size:12px;color:var(--accent);"></i> Internship</div>
+                <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:4px;">Marketing Team</div>
+                <div style="font-size:10px;color:#bbb;">2024.01 – 2024.06</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- ════ PAGE: LOGIN ════ -->
     <div id="page-login" class="page">
@@ -2700,6 +2769,95 @@
             <a onclick="navigate('login')">Sign in</a>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ════ PAGE: PROFILE ════ -->
+    <div id="page-profile" class="page">
+      <div class="page-header">
+        <div class="page-eyebrow">ACCOUNT</div>
+        <div class="page-title">My Profile</div>
+        <div class="page-sub">Your personal info and career stats</div>
+      </div>
+      <div style="padding:32px 48px 56px;display:flex;flex-direction:column;gap:24px;max-width:900px;">
+
+        <!-- Hero card -->
+        <div style="background:var(--ink);border-radius:20px;padding:32px;display:flex;align-items:center;gap:28px;position:relative;overflow:hidden;">
+          <div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,147,0,0.12);pointer-events:none;"></div>
+          <div id="profile-avatar-lg" style="width:72px;height:72px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div id="profile-name-lg" style="font-size:24px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:4px;">—</div>
+            <div id="profile-email-lg" style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:12px;"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span id="profile-role-badge" style="display:none;font-size:11.5px;background:rgba(255,147,0,0.2);color:var(--accent);padding:4px 12px;border-radius:99px;font-weight:600;"></span>
+              <span id="profile-industry-badge" style="display:none;font-size:11.5px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);padding:4px 12px;border-radius:99px;"></span>
+              <span id="profile-school-badge" style="display:none;font-size:11.5px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);padding:4px 12px;border-radius:99px;"></span>
+            </div>
+          </div>
+          <button onclick="navigate('add')" style="background:var(--accent);border:none;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:10px;cursor:pointer;font-family:var(--ff-head);flex-shrink:0;">+ Add Experience</button>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;" id="profile-stats-grid">
+          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 22px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Total Blocks</div>
+            <div id="stat-total" style="font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-1px;">—</div>
+            <div style="font-size:11px;color:var(--ink-4);margin-top:4px;">experiences saved</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 22px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Ongoing</div>
+            <div id="stat-ongoing" style="font-size:32px;font-weight:800;color:var(--accent);letter-spacing:-1px;">—</div>
+            <div style="font-size:11px;color:var(--ink-4);margin-top:4px;">in progress</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 22px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Companies Analyzed</div>
+            <div id="stat-companies" style="font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-1px;">—</div>
+            <div style="font-size:11px;color:var(--ink-4);margin-top:4px;">job matches</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 22px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Best Match</div>
+            <div id="stat-best-match" style="font-size:32px;font-weight:800;color:var(--success);letter-spacing:-1px;">—</div>
+            <div style="font-size:11px;color:var(--ink-4);margin-top:4px;">fit score</div>
+          </div>
+        </div>
+
+        <!-- 2-col: personal info + career info -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+          <!-- Personal Info -->
+          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+            <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);">
+                <i class="ti ti-user" style="font-size:15px;color:var(--accent);"></i> Personal Info
+              </div>
+              <button onclick="navigate('profile-edit')" style="background:none;border:1px solid var(--border);border-radius:7px;padding:5px 12px;font-size:11.5px;color:var(--ink-3);cursor:pointer;">Edit</button>
+            </div>
+            <div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px;" id="profile-personal-info">
+              <div style="color:var(--ink-4);font-size:13px;">No info yet — complete onboarding to fill this in.</div>
+            </div>
+          </div>
+
+          <!-- Career Goals -->
+          <div style="background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+            <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);">
+              <i class="ti ti-target" style="font-size:15px;color:var(--accent);"></i> Career Goals
+            </div>
+            <div style="padding:18px 22px;display:flex;flex-direction:column;gap:14px;" id="profile-career-info">
+              <div style="color:var(--ink-4);font-size:13px;">No info yet — complete onboarding to fill this in.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience breakdown -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+          <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);">
+            <i class="ti ti-chart-bar" style="font-size:15px;color:var(--accent);"></i> Experience Breakdown
+          </div>
+          <div style="padding:18px 22px;" id="profile-breakdown">
+            <div style="color:var(--ink-4);font-size:13px;">Add experiences to see your breakdown.</div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -2803,88 +2961,151 @@
     <!-- ════ ONBOARDING MODAL ════ -->
     <div id="onboarding-modal" style="
       display:none; position:fixed; inset:0; z-index:1000;
-      background:rgba(10,20,40,0.55); backdrop-filter:blur(6px);
+      background:rgba(10,20,40,0.6); backdrop-filter:blur(8px);
       align-items:center; justify-content:center;
     ">
-      <div style="
-        background:#fff; border-radius:24px; width:540px; max-width:92vw;
-        box-shadow:0 24px 64px rgba(0,0,0,0.18); overflow:hidden; position:relative;
-      ">
+      <div style="background:#fff;border-radius:24px;width:560px;max-width:94vw;box-shadow:0 32px 80px rgba(0,0,0,0.22);overflow:hidden;position:relative;">
+
         <!-- 진행바 -->
         <div style="height:3px;background:var(--surface);">
-          <div id="ob-progress" style="height:3px;background:var(--accent);width:25%;transition:width 0.4s ease;"></div>
+          <div id="ob-progress" style="height:3px;background:var(--accent);width:20%;transition:width 0.4s ease;"></div>
         </div>
 
-        <!-- 슬라이드 영역 -->
-        <div style="padding:40px 44px 32px; min-height:280px;">
+        <div style="padding:40px 44px 32px;min-height:320px;">
 
-          <!-- Step 1 -->
-          <div class="ob-step" id="ob-1">
-            <div style="font-size:36px;margin-bottom:16px;">📁</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Welcome to Exppi!</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
-              Exppi helps you organize your career experiences into blocks — and match them to jobs you actually want.
+          <!-- Step 1: 브랜딩 -->
+          <div class="ob-step" id="ob-1" style="text-align:center;">
+            <div style="font-size:42px;font-weight:900;color:var(--ink);letter-spacing:-2px;margin-bottom:12px;">Scribbi<span style="color:var(--accent);">.</span></div>
+            <div style="font-size:15px;color:var(--ink-3);line-height:1.7;max-width:360px;margin:0 auto 24px;">
+              Record your experiences, design your career.<br/>AI translates your story into the language of hiring.
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">📁 Experience Blocks</div>
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">🎯 Job Matching</div>
+              <div style="background:var(--surface);border-radius:10px;padding:12px 16px;font-size:12.5px;color:var(--ink-2);">✨ AI Analysis</div>
             </div>
           </div>
 
-          <!-- Step 2 -->
+          <!-- Step 2: 기본 정보 -->
           <div class="ob-step" id="ob-2" style="display:none;">
-            <div style="font-size:36px;margin-bottom:16px;">✍️</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Add your experiences</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
-              Log projects, work, leadership — anything you've done. Answer a few questions and AI extracts the keywords for you.
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 1 · Basic Info</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">Tell us about yourself</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">Name</label>
+                <input class="form-input" type="text" id="ob-name" placeholder="Name을 입력해주세요">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                  <label class="form-label">Date of Birth</label>
+                  <input class="form-input" type="date" id="ob-birth">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Gender</label>
+                  <select class="form-input form-select" id="ob-gender">
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Step 3 -->
+          <!-- Step 3: 학력 -->
           <div class="ob-step" id="ob-3" style="display:none;">
-            <div style="font-size:36px;margin-bottom:16px;">🎯</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">Match to companies</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
-              Upload a job description and see how well your experience blocks fit — with a score and improvement guide.
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 2 · Education</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">Tell us about your education</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">School / University</label>
+                <input class="form-input" type="text" id="ob-school" placeholder="e.g. Sookmyung Women's University">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                  <label class="form-label">Major</label>
+                  <input class="form-input" type="text" id="ob-major" placeholder="e.g. Business Administration">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Graduation Year</label>
+                  <select class="form-input form-select" id="ob-grad">
+                    <option value="">Select</option>
+                    ${Array.from({length:10},(_,i)=>`<option value="${2026-i}">${2026-i} ${i===0?'(예정)':''}</option>`).join('')}
+                    <option value="2015">2015 or earlier</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Enrollment Status</label>
+                <select class="form-input form-select" id="ob-status">
+                  <option value="">Select</option>
+                  <option value="enrolled">Enrolled</option>
+                  <option value="leave">Leave of Absence</option>
+                  <option value="graduated">Graduated</option>
+                  <option value="expected">Graduated예정</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <!-- Step 4 -->
+          <!-- Step 4: 커리어 목표 -->
           <div class="ob-step" id="ob-4" style="display:none;">
-            <div style="font-size:36px;margin-bottom:16px;">🚀</div>
-            <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:10px;">You're all set!</div>
-            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:380px;">
-              Start by adding your first experience. It only takes 2 minutes.
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Step 3 · Career Goals</div>
+            <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px;">What career are you aiming for?</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">Desired Role</label>
+                <input class="form-input" type="text" id="ob-role" placeholder="e.g. Product Manager, Service Planner, Marketer">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Industry of Interest</label>
+                <input class="form-input" type="text" id="ob-industry" placeholder="e.g. Tech, Startup, Finance, Content">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Job Search Timeline</label>
+                <select class="form-input form-select" id="ob-timeline">
+                  <option value="">Select</option>
+                  <option value="now">Now (actively job seeking)</option>
+                  <option value="6m">Within 6 months</option>
+                  <option value="1y">Within 1 year</option>
+                  <option value="2y">In 1–2 years</option>
+                  <option value="exploring">Just exploring</option>
+                </select>
+              </div>
             </div>
           </div>
+
+          <!-- Step 5: 완료 -->
+          <div class="ob-step" id="ob-5" style="display:none;text-align:center;">
+            <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px;">You're all set!</div>
+            <div style="font-size:14px;color:var(--ink-3);line-height:1.7;max-width:320px;margin:0 auto;">
+              Start by adding your first experience.<br/>It only takes 2 minutes.
+            </div>
+          </div>
+
         </div>
 
         <!-- 하단 버튼 -->
-        <div style="
-          padding:20px 44px 32px;
-          display:flex; align-items:center; justify-content:space-between;
-        ">
-          <div style="display:flex;gap:8px;" id="ob-dots">
+        <div style="padding:16px 44px 32px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;gap:6px;" id="ob-dots">
             <div class="ob-dot active" onclick="goObStep(1)"></div>
             <div class="ob-dot" onclick="goObStep(2)"></div>
             <div class="ob-dot" onclick="goObStep(3)"></div>
             <div class="ob-dot" onclick="goObStep(4)"></div>
+            <div class="ob-dot" onclick="goObStep(5)"></div>
           </div>
           <div style="display:flex;gap:10px;align-items:center;">
-            <button onclick="closeOnboarding()" style="
-              font-size:13px;color:var(--ink-4);background:none;border:none;cursor:pointer;padding:8px 4px;
-            ">Skip</button>
-            <button id="ob-next-btn" onclick="nextObStep()" style="
-              background:var(--accent);
-              color:#fff;border:none;border-radius:99px;padding:10px 28px;
-              font-size:14px;font-weight:700;cursor:pointer;
-            ">Next →</button>
+            <button id="ob-skip-btn" onclick="closeOnboarding()" style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--ink-4);padding:8px 12px;">Skip</button>
+            <button id="ob-next-btn" onclick="obNext()" style="background:var(--accent);border:none;color:#fff;font-size:13px;font-weight:600;padding:10px 24px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Get started →</button>
           </div>
         </div>
       </div>
     </div>
-
     <style>
-      .ob-dot {
-        width:7px;height:7px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:background 0.2s;
-      }
-      .ob-dot.active { background:var(--accent-2); }
+      .ob-dot { width:7px;height:7px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:background 0.2s; }
+      .ob-dot.active { background:var(--accent); }
     </style>
   </main>
 </div>
@@ -3353,7 +3574,7 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cmNtb2xhY3BjanNnaHFneGxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5NDE4NzYsImV4cCI6MjA5MzUxNzg3Nn0.N6zcPpd8tS2PzWBNWni1NIRHGCYaYThoRC6aKTN_ANE';
   const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const pages = ['add','blocks','match','matchstore','match-result','login','signup','help'];
+  const pages = ['add','blocks','match','matchstore','match-result','login','signup','help','profile'];
   const pageTitles = {
         add:        'Add Experience',
     blocks:     'Experience Blocks',
@@ -5690,8 +5911,10 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function navigate(target) {
     // 비로그인 상태에서 보호된 페이지 접근 시 랜딩 페이지로
-    const publicPages = ['login', 'signup', 'help', 'matchstore', 'blocks', 'add', 'match', 'matchstore', 'match-result'];
+    const publicPages = ['login', 'signup', 'help'];
     if (!currentUser && !publicPages.includes(target)) {
+      target = 'login';
+    }
       target = 'blocks';
     }
     // landing-mode: hide app nav/sidebar when on landing page
@@ -5724,6 +5947,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (target === 'blocks') loadUserBlocks();
     // matchstore 진입 시 기업 목록 로드
     if (target === 'matchstore') initMatchStore();
+    if (target === 'profile') loadProfilePage();
     // page-add 진입 시 mode 결정 (edit-scribble > scribble > new 우선순위)
     if (target === 'add') {
       _addMode = window.editingScribbleId ? 'edit-scribble' : (window.currentParentId ? 'scribble' : 'new');
@@ -5990,6 +6214,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!currentUser) return;
     const { error } = await supa.from('experience_blocks').delete().eq('id', id).eq('user_id', currentUser.id);
     if (!error) loadUserBlocks();
+    else alert('삭제 실패: ' + error.message);
   }
 
   function toggleSidebar() {
@@ -6023,7 +6248,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!u) return null;
     const createdAt = u.created_at ? new Date(u.created_at) : null;
     const isNew = createdAt ? (Date.now() - createdAt.getTime() < 5 * 60 * 1000) : false;
-    // 구글 로그인 시 user_metadata에서 실제 이름 가져오기
+    // 구글 로그인 시 user_metadata에서 실제 Name 가져오기
     const meta = u.user_metadata || {};
     const displayName = meta.full_name || meta.name || meta.given_name || (u.email ? u.email.split('@')[0] : 'there');
     return { id: u.id, email: u.email || '', initials: getInitials(u.email), isNew, displayName };
@@ -6217,7 +6442,7 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   // ── 온보딩 ──
   let _obStep = 1;
-  const _obTotal = 4;
+  const _obTotal = 5;
 
   function showOnboarding() {
     const modal = document.getElementById('onboarding-modal');
@@ -6225,7 +6450,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
   function closeOnboarding() {
     document.getElementById('onboarding-modal').style.display = 'none';
-    localStorage.setItem('exppi_onboarded', '1');
+    localStorage.setItem('scribbi_onboarded', '1');
   }
   function goObStep(n) {
     _obStep = n;
@@ -6233,29 +6458,43 @@ What I learned: Consistency matters more than quality of individual posts`;
       const el = document.getElementById('ob-' + i);
       if (el) el.style.display = i === n ? 'block' : 'none';
     }
-    // 진행바
     document.getElementById('ob-progress').style.width = (n / _obTotal * 100) + '%';
-    // 점
-    document.querySelectorAll('.ob-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === n - 1);
-    });
-    // 마지막 버튼
+    document.querySelectorAll('.ob-dot').forEach((d, i) => d.classList.toggle('active', i === n - 1));
     const btn = document.getElementById('ob-next-btn');
-    if (n === _obTotal) {
-      btn.textContent = 'Get started!';
-      btn.onclick = () => { closeOnboarding(); navigate('add'); };
+    const skip = document.getElementById('ob-skip-btn');
+    if (n === 1) { btn.textContent = 'Get started →'; }
+    else if (n === _obTotal) {
+      btn.textContent = 'Add first experience →';
+      btn.onclick = () => { saveObProfile(); closeOnboarding(); navigate('add'); };
+      if (skip) skip.style.display = 'none';
     } else {
       btn.textContent = 'Next →';
-      btn.onclick = nextObStep;
+      btn.onclick = obNext;
     }
   }
-  function nextObStep() {
+  function obNext() {
     if (_obStep < _obTotal) goObStep(_obStep + 1);
   }
+  async function saveObProfile() {
+    if (!currentUser) return;
+    const profile = {
+      user_id: currentUser.id,
+      name: document.getElementById('ob-name')?.value || '',
+      birth: document.getElementById('ob-birth')?.value || '',
+      gender: document.getElementById('ob-gender')?.value || '',
+      school: document.getElementById('ob-school')?.value || '',
+      major: document.getElementById('ob-major')?.value || '',
+      grad_year: document.getElementById('ob-grad')?.value || '',
+      edu_status: document.getElementById('ob-status')?.value || '',
+      desired_role: document.getElementById('ob-role')?.value || '',
+      desired_industry: document.getElementById('ob-industry')?.value || '',
+      job_timeline: document.getElementById('ob-timeline')?.value || '',
+    };
+    await supa.from('user_profiles').upsert(profile, { onConflict: 'user_id' });
+  }
 
-  // 첫 방문 시 자동 표시 (renderAuthUI 이후 호출됨)
   function checkShowOnboarding() {
-    if (!localStorage.getItem('exppi_onboarded') && currentUser) {
+    if (!localStorage.getItem('scribbi_onboarded') && currentUser) {
       setTimeout(showOnboarding, 600);
     }
   }
@@ -6313,8 +6552,110 @@ What I learned: Consistency matters more than quality of individual posts`;
   });
 
   function onProfileClick() {
-    if (!currentUser) navigate('login');
-    // When signed in, sidebar Profile is currently informational only.
+    if (!currentUser) { navigate('login'); return; }
+    navigate('profile');
+  }
+
+  async function loadProfilePage() {
+    if (!currentUser) return;
+
+    // 이메일/아바타
+    const email = currentUser.email || '';
+    const initials = email.slice(0,2).toUpperCase();
+    const avEl = document.getElementById('profile-avatar-lg');
+    const nameEl = document.getElementById('profile-name-lg');
+    const emailEl = document.getElementById('profile-email-lg');
+    if (avEl) avEl.textContent = initials;
+    if (emailEl) emailEl.textContent = email;
+
+    // user_profiles 테이블에서 온보딩 데이터 가져오기
+    const { data: prof } = await supa.from('user_profiles').select('*').eq('user_id', currentUser.id).single();
+
+    const infoRow = (label, val) => val ? `
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);">${label}</span>
+        <span style="font-size:13.5px;font-weight:500;color:var(--ink);">${val}</span>
+      </div>` : '';
+
+    if (prof) {
+      if (nameEl) nameEl.textContent = prof.name || email.split('@')[0];
+
+      // 배지
+      const roleBadge = document.getElementById('profile-role-badge');
+      const indBadge = document.getElementById('profile-industry-badge');
+      const schoolBadge = document.getElementById('profile-school-badge');
+      if (roleBadge && prof.desired_role) { roleBadge.textContent = prof.desired_role; roleBadge.style.display = ''; }
+      if (indBadge && prof.desired_industry) { indBadge.textContent = prof.desired_industry; indBadge.style.display = ''; }
+      if (schoolBadge && prof.school) { schoolBadge.textContent = prof.school; schoolBadge.style.display = ''; }
+
+      // 나이 계산
+      let ageStr = '';
+      if (prof.birth) {
+        const age = new Date().getFullYear() - new Date(prof.birth).getFullYear();
+        ageStr = age + ' years old';
+      }
+
+      // Personal Info
+      const personalEl = document.getElementById('profile-personal-info');
+      if (personalEl) personalEl.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          ${infoRow('Name', prof.name)}
+          ${infoRow('Age', ageStr)}
+          ${infoRow('Gender', prof.gender === 'male' ? 'Male' : prof.gender === 'female' ? 'Female' : prof.gender)}
+          ${infoRow('Email', email)}
+        </div>
+        <div style="height:1px;background:var(--border);"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          ${infoRow('School', prof.school)}
+          ${infoRow('Major', prof.major)}
+          ${infoRow('Grad Year', prof.grad_year)}
+          ${infoRow('Status', prof.edu_status === 'enrolled' ? 'Enrolled' : prof.edu_status === 'graduated' ? 'Graduated' : prof.edu_status === 'expected' ? 'Expected Graduation' : prof.edu_status)}
+        </div>`;
+
+      // Career Info
+      const timelineMap = { now:'Actively job seeking', '6m':'Within 6 months', '1y':'Within 1 year', '2y':'In 1–2 years', exploring:'Just exploring' };
+      const careerEl = document.getElementById('profile-career-info');
+      if (careerEl) careerEl.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          ${infoRow('Desired Role', prof.desired_role)}
+          ${infoRow('Industry', prof.desired_industry)}
+          ${infoRow('Timeline', timelineMap[prof.job_timeline] || prof.job_timeline)}
+        </div>`;
+    } else {
+      if (nameEl) nameEl.textContent = email.split('@')[0];
+    }
+
+    // 블럭 통계
+    const { data: blocks } = await supa.from('experience_blocks').select('activity_type, end_date').eq('user_id', currentUser.id);
+    const total = blocks?.length || 0;
+    const ongoing = blocks?.filter(b => !b.end_date).length || 0;
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-ongoing').textContent = ongoing;
+
+    // 카테고리 breakdown
+    if (blocks && blocks.length > 0) {
+      const cats = {};
+      blocks.forEach(b => { const c = b.activity_type || 'other'; cats[c] = (cats[c]||0) + 1; });
+      const colors = { work:'#FF9300', internship:'#FF9300', projects:'#10B981', education:'#6366F1', organizations:'#8B5CF6', competition:'#EF4444', volunteering:'#EC4899', other:'#9CA3AF' };
+      const breakdownEl = document.getElementById('profile-breakdown');
+      if (breakdownEl) breakdownEl.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          ${Object.entries(cats).map(([cat, cnt]) => `
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:80px;font-size:12px;color:var(--ink-2);font-weight:500;text-transform:capitalize;">${cat}</div>
+              <div style="flex:1;height:6px;background:var(--surface);border-radius:99px;overflow:hidden;">
+                <div style="width:${Math.round(cnt/total*100)}%;height:100%;background:${colors[cat]||'var(--accent)'};border-radius:99px;"></div>
+              </div>
+              <div style="font-size:12px;font-weight:600;color:var(--ink);width:20px;text-align:right;">${cnt}</div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    // 기업 매치 통계
+    const { data: cos } = await supa.from('companies').select('fit_score').eq('user_id', currentUser.id);
+    document.getElementById('stat-companies').textContent = cos?.length || 0;
+    const best = cos?.reduce((max, c) => c.fit_score > max ? c.fit_score : max, 0);
+    document.getElementById('stat-best-match').textContent = best ? best + '%' : '—';
   }
 
   function toggleUserMenu() {
