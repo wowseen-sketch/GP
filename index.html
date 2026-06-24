@@ -58,70 +58,70 @@
   .nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 200;
     display: flex; align-items: center;
-    height: 56px; padding: 0 28px;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
+    height: 52px; padding: 0 24px;
+    background: var(--ink);
+    border-bottom: none;
   }
   .nav-logo {
     display: flex; align-items: center; gap: 9px;
-    font-size: 16px; font-weight: 700; color: var(--ink);
+    font-size: 16px; font-weight: 700; color: #fff;
     letter-spacing: -0.01em; margin-right: 24px; cursor: pointer;
     text-decoration: none;
   }
   .nav-logo-icon {
-    width: 28px; height: 28px; border-radius: 7px;
-    background: var(--ink);
+    width: 26px; height: 26px; border-radius: 6px;
+    background: rgba(255,255,255,0.15);
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 14px;
+    color: #fff; font-size: 13px;
   }
   .nav-breadcrumb {
     display: flex; align-items: center; gap: 6px;
-    font-size: 13px; color: var(--ink-3); margin-right: 32px;
+    font-size: 13px; color: rgba(255,255,255,0.45); margin-right: 32px;
   }
-  .nav-breadcrumb-sep { color: var(--border-strong); }
-  .nav-breadcrumb-current { color: var(--ink); font-weight: 500; }
+  .nav-breadcrumb-sep { color: rgba(255,255,255,0.2); }
+  .nav-breadcrumb-current { color: rgba(255,255,255,0.85); font-weight: 500; }
   .nav-tabs { display: flex; gap: 2px; flex: 1; }
   .nav-tab {
     display: flex; align-items: center; gap: 6px;
     font-size: 13px; font-weight: 500; letter-spacing: -0.01em;
-    color: var(--ink-3); padding: 6px 14px;
+    color: rgba(255,255,255,0.5); padding: 6px 14px;
     border-radius: var(--r); border: none; background: none; cursor: pointer;
     transition: all 0.15s; text-decoration: none;
   }
   .nav-tab i { font-size: 15px; }
-  .nav-tab:hover { color: var(--ink); background: var(--surface-2); }
-  .nav-tab.active { color: var(--accent-2); background: var(--accent-light); }
+  .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .nav-tab.active { color: #fff; background: rgba(255,255,255,0.12); }
   .nav-right { display: flex; align-items: center; gap: 8px; }
   .nav-icon-btn {
-    width: 34px; height: 34px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--white);
+    width: 32px; height: 32px; border-radius: 7px;
+    border: 1px solid rgba(255,255,255,0.15); background: transparent;
     display: flex; align-items: center; justify-content: center;
-    color: var(--ink-3); font-size: 16px; cursor: pointer;
+    color: rgba(255,255,255,0.6); font-size:15px; cursor: pointer;
     transition: all 0.12s;
   }
-  .nav-icon-btn:hover { border-color: var(--border-strong); color: var(--ink); }
+  .nav-icon-btn:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
   .nav-avatar {
-    width: 30px; height: 30px; border-radius: 50%;
+    width: 28px; height: 28px; border-radius: 50%;
     background: var(--accent);
     color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 600; cursor: pointer;
+    font-size: 10px; font-weight: 600; cursor: pointer;
     position: relative;
   }
   .nav-avatar-dot {
     position: absolute; bottom: 1px; right: 1px;
     width: 8px; height: 8px; border-radius: 50%;
-    background: #22C55E; border: 2px solid var(--white);
+    background: #22C55E; border: 2px solid var(--ink);
   }
 
   /* ── LAYOUT ── */
-  .layout { display: flex; padding-top: 56px; min-height: 100vh; }
+  .layout { display: flex; padding-top: 52px; min-height: 100vh; }
 
   /* ── SIDEBAR ── */
   .sidebar {
     width: 220px; flex-shrink: 0; background: var(--white);
-    border-right: 1px solid var(--border); padding: 8px 0 8px;
-    position: fixed; top: 56px; left: 0; bottom: 0;
+    border-right: 1px solid var(--border); padding: 16px 0 8px;
+    position: fixed; top: 52px; left: 0; bottom: 0;
     overflow-y: auto; z-index: 100;
   }
   .sb-section { margin-bottom: 2px; }
@@ -141,7 +141,7 @@
     border-radius: 8px; white-space: nowrap;
   }
   .sb-item i { font-size: 16px; opacity: 0.6; flex-shrink: 0; }
-  .sb-item:hover { background: var(--white); color: var(--ink); }
+  .sb-item:hover { background: var(--surface); color: var(--ink); }
   .sb-item:hover i { opacity: 1; }
   .sb-item.active {
     background: var(--ink); color: #fff;
@@ -161,7 +161,7 @@
   .sb-divider { display: none; }
 
   /* ── MAIN ── */
-  .main { margin-left: 220px; flex: 1; min-height: calc(100vh - 56px); display: flex; flex-direction: column; }
+  .main { margin-left: 220px; flex: 1; min-height: calc(100vh - 52px); display: flex; flex-direction: column; }
 
   /* ════════════════════════════════════════
      PAGE 1 · DASHBOARD
@@ -328,7 +328,7 @@
 
   #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; font-family: var(--ff-head); }
 
-  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 56px); overflow: hidden; background: var(--white); }
+  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 52px); overflow: hidden; background: var(--white); }
 
   .add-columns {
     display: grid;
@@ -513,7 +513,7 @@
   }
   .exp-chip:hover:not(.active) { background: var(--white); }
   #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; }
-  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 56px); overflow: hidden; }
+  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 52px); overflow: hidden; }
   .add-columns { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
   .add-left { flex: 0 0 28%; max-width: 28%; overflow-y: auto; border-right: 0.5px solid var(--border); padding: 24px; background: var(--white); }
   .add-right { flex: 1; display: flex; flex-direction: column; padding: 24px; overflow: hidden; }
@@ -938,14 +938,13 @@
   .sidebar.collapsed + .main { margin-left: 56px; }
   .sidebar.collapsed ~ .status-bar { left: 56px; }
   .sb-toggle-btn {
-    position: absolute; top: 16px; left: 0; right: 0; height: 24px;
     display: flex; align-items: center; justify-content: flex-end;
-    padding: 0 14px; cursor: pointer; color: var(--ink-4);
+    padding: 8px 14px 4px; cursor: pointer; color: var(--ink-4);
     font-size: 17px; transition: color 0.15s; z-index: 1;
   }
   .sb-toggle-btn:hover { color: var(--accent); }
   .sidebar.collapsed .sb-toggle-btn { justify-content: center; padding: 0; height: 24px; }
-  .sb-content { padding-top: 12px; }
+  .sb-content { padding-top: 0; }
   .sb-text { display: inline; }
 
   /* ── NAV LINKS hidden ── */
@@ -1122,7 +1121,7 @@
 
   /* ── AUTH PAGES (login / signup) ── */
   .auth-wrap {
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 52px);
     display: flex; align-items: center; justify-content: center;
     padding: 48px 20px;
     background:
