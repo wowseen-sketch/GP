@@ -2441,7 +2441,7 @@
         <!-- body -->
         <div style="padding:24px 28px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:20px;">
 
-          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">5</strong> to use in the analysis.</div>
+          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">3</strong> to use in the analysis.</div>
 
           <!-- recommended blocks (auto-selected) -->
           <div>
@@ -6822,9 +6822,9 @@ What I learned: Consistency matters more than quality of individual posts`;
   };
 
   const _origOpenBlockRecommendModal = openBlockRecommendModal;
-  openBlockRecommendModal = function() {
+  openBlockRecommendModal = async function() {
     if (!currentUser) return openAuthRequiredModal('match');
-    return _origOpenBlockRecommendModal();
+    return await _origOpenBlockRecommendModal();
   };
 
   // ── DELEGATED GATING for "Save Draft" buttons ──
