@@ -6768,6 +6768,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   };
 
   openBlockRecommendModal = async function() {
+    console.log('[modal] called, currentUser:', currentUser, '_pendingAnalysis:', _pendingAnalysis);
     if (!currentUser) return openAuthRequiredModal('match');
     const modal = document.getElementById('block-recommend-modal');
     const loadingEl = document.getElementById('brm-loading');
@@ -6819,6 +6820,7 @@ What I learned: Consistency matters more than quality of individual posts`;
       if (loadingEl) loadingEl.style.display = 'none';
       if (countEl) countEl.textContent = recommended.length;
     } catch (err) {
+      console.error('[modal catch]', err);
       console.error('[openBlockRecommendModal] failed:', err);
       if (loadingEl) loadingEl.style.display = 'none';
       if (errorEl) { errorEl.textContent = 'Failed to load recommendations: ' + (err.message || 'check console'); errorEl.style.display = 'block'; }
