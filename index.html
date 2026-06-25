@@ -6050,7 +6050,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   async function initMatchStore() {
     let companies = [];
     if (currentUser) {
-      const { data } = await _sb.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+      const { data } = await supa.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
       companies = data || [];
     }
     _msCompanies = companies.length > 0 ? companies : _msSampleData;
