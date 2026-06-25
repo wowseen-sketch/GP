@@ -2445,6 +2445,20 @@
       </div>
     </div>
 
+    <!-- ════ BLOCK DETAIL SIDE PANEL ════ -->
+    <div id="mr-block-panel" style="position:fixed;top:0;right:-52vw;width:50vw;min-width:360px;height:100vh;background:var(--white);box-shadow:-8px 0 40px rgba(0,0,0,0.15);z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;">
+      <div style="padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+        <div id="mr-bp-eyebrow" style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.07em;"></div>
+        <button onclick="closeBlockDetailPanel()" style="background:none;border:none;cursor:pointer;color:var(--ink-3);font-size:20px;line-height:1;padding:4px;"><i class="ti ti-x"></i></button>
+      </div>
+      <div id="mr-bp-content" style="overflow-y:auto;flex:1;padding:28px 24px;"></div>
+      <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;background:var(--white);">
+        <button onclick="closeBlockDetailPanel()" class="btn-secondary-lg">Close</button>
+        <button onclick="navigate('blocks')" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;">Improve This Experience</button>
+      </div>
+    </div>
+    <div id="mr-block-panel-backdrop" onclick="closeBlockDetailPanel()" style="display:none;position:fixed;inset:0;z-index:399;background:rgba(17,24,39,0.3);"></div>
+
     <!-- ════ BLOCK RECOMMEND MODAL ════ -->
     <div id="block-recommend-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;">
       <div onclick="closeBlockRecommendModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
@@ -3885,6 +3899,55 @@
     </div>`;
   }
 
+  function closeBlockDetailPanel() {
+    const panel = document.getElementById('mr-block-panel');
+    const backdrop = document.getElementById('mr-block-panel-backdrop');
+    if (panel) panel.style.right = '-52vw';
+    if (backdrop) backdrop.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function openBlockDetailPanel(blockId) {
+    const panel = document.getElementById('mr-block-panel');
+    const backdrop = document.getElementById('mr-block-panel-backdrop');
+    const content = document.getElementById('mr-bp-content');
+    const eyebrow = document.getElementById('mr-bp-eyebrow');
+    if (!panel || !content) return;
+    panel.style.right = '0';
+    if (backdrop) backdrop.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--ink-4);font-size:14px;">Loading...</div>';
+    const { data, error } = await supa.from('experience_blocks').select('*').eq('id', blockId).single();
+    if (error || !data) {
+      content.innerHTML = '<div style="color:#DC2626;padding:20px;font-size:13px;">Failed to load block details.</div>';
+      return;
+    }
+    const period = (data.start_date || '') + (data.end_date ? ' – ' + data.end_date : ' – present');
+    const typeLabel = (data.type || '').toUpperCase();
+    if (eyebrow) eyebrow.textContent = `EXPERIENCE BLOCK${typeLabel ? ' · ' + typeLabel : ''}${period ? ' · ' + period : ''}`;
+    const star = data.star_structured || {};
+    const starSection = (badge, label, text) => text ? `
+      <div style="margin-bottom:18px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${badge}</span>
+          <span style="font-size:13px;font-weight:700;color:var(--ink);">${label}</span>
+        </div>
+        <div style="font-size:13px;color:var(--ink-3);line-height:1.65;padding-left:30px;">${escapeHtml(text)}</div>
+      </div>` : '';
+    const chips = (data.competency_keywords || []).map(k => `<span class="kw-pill matched">${escapeHtml(k)}</span>`).join('');
+    content.innerHTML = `
+      <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:16px;">${escapeHtml(data.title || '')}</div>
+      <div style="display:flex;gap:24px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);">
+        <div><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">Type</div><div style="font-size:13px;font-weight:600;color:var(--ink);">${escapeHtml(data.type || '—')}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">Period</div><div style="font-size:13px;font-weight:600;color:var(--ink);">${escapeHtml(period)}</div></div>
+      </div>
+      ${starSection('S', 'Situation &amp; Task', [star.situation, star.task].filter(Boolean).join(' '))}
+      ${starSection('A', 'Action', star.action)}
+      ${starSection('R', 'Result', star.result)}
+      ${chips ? `<div style="padding-top:4px;"><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Competency Keywords</div><div style="display:flex;flex-wrap:wrap;gap:6px;">${chips}</div></div>` : ''}
+    `;
+  }
+
   function closeBlockRecommendModal() {
     document.getElementById('block-recommend-modal').style.display = 'none';
     document.body.style.overflow = '';
@@ -4068,13 +4131,20 @@
       const panel = document.getElementById('mr-panel-' + t);
       const active = t === tab;
       if (btn) {
-        btn.style.background     = active ? '#fff' : 'transparent';
-        btn.style.boxShadow      = active ? '0 1px 4px rgba(0,0,0,0.1)' : 'none';
-        btn.style.color          = active ? 'var(--ink)' : 'var(--ink-4)';
-        btn.style.fontWeight     = active ? '700' : '500';
+        btn.style.background = active ? '#fff' : 'transparent';
+        btn.style.boxShadow  = active ? '0 1px 4px rgba(0,0,0,0.1)' : 'none';
+        btn.style.color      = active ? 'var(--ink)' : 'var(--ink-4)';
+        btn.style.fontWeight = active ? '700' : '500';
       }
       if (panel) panel.style.display = active ? 'block' : 'none';
     });
+    // Show "How to Improve" only in Overall tab
+    const missingSection = document.getElementById('mr-missing-section');
+    if (missingSection) {
+      const cards = document.getElementById('mr-missing-cards');
+      const hasContent = cards && cards.children.length > 0;
+      missingSection.style.display = (tab === 'overall' && hasContent) ? 'block' : 'none';
+    }
   }
   function saveToMatchArchive() { alert('Saved!'); }
   async function runMatchResultAnalysis() {
@@ -4148,13 +4218,22 @@
     window._matchByBlock = (matchData && matchData.by_block) || [];
     const byexpEl = document.getElementById('mr-byexp-content');
     if (byexpEl) {
+      const chipGroup = (list, cls, label, color) =>
+        `<div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:5px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${list.length ? list.map(k=>`<span class="kw-pill ${cls}">${escapeHtml(k)}</span>`).join('') : '<span style="font-size:11px;color:var(--ink-4);">None</span>'}</div></div>`;
       byexpEl.innerHTML = window._matchByBlock.map(blk => {
+        const matchedKws = (blk.results || []).filter(r => r.status === 'matched').map(r => r.keyword);
         const partialKws = (blk.results || []).filter(r => r.status === 'partial').map(r => r.keyword);
-        return `<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px;margin-bottom:12px;">
-          <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(blk.block_title || '')}</div>
-          <div style="font-size:12px;color:var(--ink-4);margin-bottom:10px;">${escapeHtml(blk.block_period || '')}</div>
-          ${partialKws.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${partialKws.map(k=>`<span class="kw-pill partial">${escapeHtml(k)}</span>`).join('')}</div>` : ''}
-          <button onclick="navigate('blocks')" style="font-size:12px;font-weight:600;color:var(--accent);background:none;border:1px solid var(--accent);padding:6px 14px;border-radius:var(--rl);cursor:pointer;">이 경험 보완하러 가기</button>
+        const missingKws = (blk.results || []).filter(r => r.status === 'missing').map(r => r.keyword);
+        return `<div onclick="openBlockDetailPanel(this.dataset.id)" data-id="${escapeHtml(blk.block_id)}" style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);">${escapeHtml(blk.block_title || '')}</div>
+            <div style="font-size:11px;color:var(--ink-4);">${escapeHtml(blk.block_period || '')}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+            ${chipGroup(matchedKws,'matched','Matched','#16A34A')}
+            ${chipGroup(partialKws,'partial','Partial','#D97706')}
+            ${chipGroup(missingKws,'missing','Missing','#DC2626')}
+          </div>
         </div>`;
       }).join('');
     }
