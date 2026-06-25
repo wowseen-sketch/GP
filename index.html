@@ -4956,7 +4956,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,2);
     const tagsHtml = kws.map(k => {
       const short = k.length > 22 ? k.slice(0, 20) + '…' : k;
-      return `<span style="font-size:11px;color:#fff;background:rgba(255,255,255,0.28);opacity:0.9;padding:4px 11px;border-radius:99px;font-family:var(--ff-head);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;">${escapeHtml(short)}</span>`;
+      return `<span style="font-size:11px;color:${c.text};background:rgba(255,255,255,0.35);padding:4px 11px;border-radius:99px;font-family:var(--ff-head);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;">${escapeHtml(short)}</span>`;
     }).join('');
 
     const el = document.createElement('div');
