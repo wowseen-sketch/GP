@@ -2422,7 +2422,7 @@
     <!-- ════ BLOCK RECOMMEND MODAL ════ -->
     <div id="block-recommend-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;">
       <div onclick="closeBlockRecommendModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
-      <div style="position:relative;width:680px;max-width:92vw;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.22s ease;max-height:88vh;">
+      <div style="position:relative;width:860px;max-width:95vw;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.22s ease;max-height:92vh;">
 
         <!-- header -->
         <div style="background:var(--accent);padding:22px 28px;flex-shrink:0;">
@@ -2441,24 +2441,34 @@
         <!-- body -->
         <div style="padding:24px 28px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:20px;">
 
-          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">3</strong> to use in the analysis.</div>
+          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select the ones you want to use in the analysis.</div>
 
           <!-- dynamic content injected by openBlockRecommendModal() -->
-          <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:40px 0;">
+          <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:40px 0;min-height:400px;">
             <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
           </div>
-          <div id="brm-content" style="display:none;flex-direction:column;gap:20px;"></div>
+          <div id="brm-content" style="display:none;flex-direction:column;gap:20px;min-height:400px;"></div>
           <div id="brm-error" style="display:none;font-size:13px;color:#e53e3e;padding:16px;border-radius:8px;background:#fff5f5;"></div>
 
         </div>
 
         <!-- footer -->
         <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
-          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> blocks selected</div>
+          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">0</span> blocks selected</div>
+          <button onclick="openBrmArchivePanel()" title="Add block from archive" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:var(--white);cursor:pointer;color:var(--ink-2);font-size:18px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-2)'"><i class="ti ti-plus"></i></button>
           <button onclick="closeBlockRecommendModal()" class="btn-secondary-lg" style="margin-left:auto;">Cancel</button>
           <button onclick="(function(){ const selected=[...document.querySelectorAll('.rec-block.selected')]; const ids=selected.map(el=>el.dataset.id); const allKw=[]; const selBlocks=(_brmBlocks||[]).filter(b=>ids.includes(b.id)); selBlocks.forEach(b=>{(b.competency_keywords||[]).forEach(k=>{if(!allKw.includes(k))allKw.push(k);})}); _pendingAnalysis.selectedKeywords=allKw; _pendingAnalysis.selectedBlocks=selBlocks.map(b=>({id:b.id,title:b.title,keywords:b.competency_keywords||[],period:(b.start_date||'')+(b.end_date?' – '+b.end_date:' – present')})); closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <i class="ti ti-chart-bar" style="font-size:15px;"></i> Analyze with These Blocks
           </button>
+        </div>
+
+        <!-- archive sub-panel: slides over the modal body -->
+        <div id="brm-archive-panel" style="display:none;position:absolute;inset:0;z-index:20;background:var(--white);flex-direction:column;">
+          <div style="background:var(--accent);padding:18px 28px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.01em;">Add from Archive</div>
+            <button onclick="closeBrmArchivePanel()" style="background:rgba(255,255,255,0.2);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button>
+          </div>
+          <div id="brm-archive-list" style="overflow-y:auto;flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:8px;"></div>
         </div>
 
       </div>
@@ -3859,6 +3869,69 @@
     const counter = document.getElementById('selected-count');
     if (counter) counter.textContent = count;
   }
+
+  let _brmArchiveBlocks = [];
+
+  async function openBrmArchivePanel() {
+    const panel = document.getElementById('brm-archive-panel');
+    const list = document.getElementById('brm-archive-list');
+    if (!panel || !list) return;
+    panel.style.display = 'flex';
+    list.innerHTML = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">Loading...</div>';
+
+    const shownIds = new Set((_brmBlocks || []).map(b => b.id));
+    const { data, error } = await supa.from('experience_blocks')
+      .select('id, title, competency_keywords, start_date, end_date')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+
+    if (error || !data) {
+      list.innerHTML = '<div style="font-size:13px;color:#e53e3e;padding:16px;">Failed to load blocks.</div>';
+      return;
+    }
+
+    _brmArchiveBlocks = data.filter(b => !shownIds.has(b.id) && b.competency_keywords && b.competency_keywords.length > 0);
+
+    if (!_brmArchiveBlocks.length) {
+      list.innerHTML = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">No additional blocks available.</div>';
+      return;
+    }
+
+    list.innerHTML = _brmArchiveBlocks.map(b => {
+      const pills = (b.competency_keywords || []).slice(0, 5).map(k =>
+        `<span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 9px;border-radius:99px;">${escapeHtml(String(k))}</span>`
+      ).join('');
+      const period = (b.start_date || '') + (b.end_date ? ' – ' + b.end_date : ' – present');
+      return `<div onclick="addBlockFromArchive('${escapeHtml(b.id)}')" style="padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--rl);cursor:pointer;transition:border-color 0.15s,background 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='var(--accent-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.background=''">
+        <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(b.title || '')}</div>
+        <div style="font-size:11px;color:var(--ink-4);margin-bottom:6px;">${escapeHtml(period)}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">${pills}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function closeBrmArchivePanel() {
+    const panel = document.getElementById('brm-archive-panel');
+    if (panel) panel.style.display = 'none';
+  }
+
+  function addBlockFromArchive(id) {
+    const block = _brmArchiveBlocks.find(b => b.id === id);
+    if (!block) return;
+    if (!_brmBlocks) _brmBlocks = [];
+    if (!_brmBlocks.find(b => b.id === block.id)) _brmBlocks.push(block);
+    const contentEl = document.getElementById('brm-content');
+    if (contentEl) {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = _renderBlockCard(block, false);
+      contentEl.appendChild(wrapper.firstChild);
+    }
+    const count = document.querySelectorAll('.rec-block.selected').length;
+    const counter = document.getElementById('selected-count');
+    if (counter) counter.textContent = count;
+    closeBrmArchivePanel();
+  }
+
   function filterSuggest(val) {
     const box = document.getElementById('company-suggest');
     if (!box) return;
