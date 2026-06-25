@@ -3810,84 +3810,10 @@
     showFbToast();
   }
 
-  let _brmBlocks = [];
-
-  async function openBlockRecommendModal() {
-    const modal = document.getElementById('block-recommend-modal');
-    const loadingEl = document.getElementById('brm-loading');
-    const contentEl = document.getElementById('brm-content');
-    const errorEl = document.getElementById('brm-error');
-    const countEl = document.getElementById('selected-count');
-    if (!modal) return;
-    modal.style.display = 'flex';
+  function openBlockRecommendModal() {
+    document.getElementById('block-recommend-modal').style.display = 'flex';
     document.body.style.overflow = 'hidden';
-    if (loadingEl) loadingEl.style.display = 'flex';
-    if (contentEl) contentEl.style.display = 'none';
-    if (errorEl) errorEl.style.display = 'none';
-    try {
-      const { company, role, jdText } = _pendingAnalysis;
-      const { data: jdData, error: jdErr } = await supa.functions.invoke('extract-jd-keywords', { body: { company, role, jd_text: jdText } });
-      if (jdErr) throw jdErr;
-      const companyKeywords = (jdData && jdData.company_keywords) || [];
-      _pendingAnalysis.companyKeywords = companyKeywords;
-      const { data: blocksData, error: blocksErr } = await supa
-        .from('experience_blocks')
-        .select('id, title, competency_keywords')
-        .eq('user_id', currentUser.id)
-        .not('end_date', 'is', null)
-        .or('is_current.is.null,is_current.eq.false');
-      if (blocksErr) throw blocksErr;
-      const blocks = (blocksData || []).filter(b => b.competency_keywords && b.competency_keywords.length > 0);
-      const { data: ranked, error: rankErr } = await supa.functions.invoke('recommend-blocks', { body: { company_keywords: companyKeywords, blocks } });
-      if (rankErr) throw rankErr;
-      const blockMap = {};
-      blocks.forEach(b => { blockMap[b.id] = b; });
-      const rankedBlocks = (Array.isArray(ranked) ? ranked : [])
-        .filter(r => blockMap[r.id])
-        .map(r => ({ ...blockMap[r.id], score: r.score, reason: r.reason }))
-        .sort((a, b) => b.score - a.score);
-      _brmBlocks = rankedBlocks.slice(0, 5);
-      const recommended = _brmBlocks.slice(0, 3);
-      const others = _brmBlocks.slice(3, 5);
-      let html = '';
-      if (recommended.length) {
-        html += `<div style="margin-bottom:16px;">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">⭐ Recommended · Auto-selected</div>
-          <div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
-        </div>`;
-      }
-      if (others.length) {
-        html += `<div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div>
-          <div style="display:flex;flex-direction:column;gap:8px;">${others.map(b => _renderBlockCard(b, false)).join('')}</div>
-        </div>`;
-      }
-      if (!_brmBlocks.length) {
-        html = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">No experience blocks found. Add experiences first.</div>';
-      }
-      if (contentEl) { contentEl.innerHTML = html; contentEl.style.display = 'flex'; }
-      if (loadingEl) loadingEl.style.display = 'none';
-      if (countEl) countEl.textContent = recommended.length;
-    } catch (err) {
-      console.error('[openBlockRecommendModal] failed:', err);
-      if (loadingEl) loadingEl.style.display = 'none';
-      if (errorEl) { errorEl.textContent = 'Failed to load recommendations: ' + (err.message || 'check console'); errorEl.style.display = 'block'; }
-    }
   }
-
-  function _renderBlockCard(block, selected) {
-    const pills = Array.isArray(block.competency_keywords)
-      ? block.competency_keywords.slice(0, 6).map(k => `<span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 9px;border-radius:99px;">${escapeHtml(String(k))}</span>`).join('')
-      : '';
-    const cls = selected ? 'rec-block selected' : 'rec-block';
-    return `<div class="${cls}" data-id="${escapeHtml(block.id)}" onclick="toggleBlock(this)">
-      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(block.title || '')}</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;${block.reason ? 'margin-bottom:6px;' : ''}">${pills}</div>
-      ${block.reason ? `<div style="font-size:11px;color:var(--ink-4);">${escapeHtml(block.reason)}</div>` : ''}
-      <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
-    </div>`;
-  }
-
   function closeBlockRecommendModal() {
     document.getElementById('block-recommend-modal').style.display = 'none';
     document.body.style.overflow = '';
@@ -4973,14 +4899,14 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
 
     const colorMap = {
-      work:          { bg: '#6DD5BA', accent: '#6DD5BA', text: '#0D3D2A', label: 'Work Experience',   doodle: `<line x1="220" y1="20" x2="220" y2="52" stroke="#3BA888" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="204" y1="36" x2="236" y2="36" stroke="#3BA888" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="248" y1="55" x2="262" y2="42" stroke="#3BA888" stroke-width="6" stroke-linecap="round" opacity="0.4"/><line x1="248" y1="42" x2="262" y2="55" stroke="#3BA888" stroke-width="6" stroke-linecap="round" opacity="0.4"/><circle cx="192" cy="72" r="18" fill="none" stroke="#3BA888" stroke-width="7" opacity="0.42"/><circle cx="192" cy="72" r="8" fill="none" stroke="#3BA888" stroke-width="5" opacity="0.32"/>` },
-      internship:    { bg: '#B8D97A', accent: '#B8D97A', text: '#2A4208', label: 'Internship',        doodle: `<path d="M170,15 L186,36 L202,15 L218,36 L234,15 L250,36 L264,15" fill="none" stroke="#7AAE30" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.48"/><path d="M178,52 L194,70 L210,52 L226,70 L244,52 L260,70" fill="none" stroke="#7AAE30" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M174,86 L190,102 L208,86 L226,102 L244,86 L262,102" fill="none" stroke="#7AAE30" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.32"/>` },
-      projects:      { bg: '#FFC066', accent: '#FFC066', text: '#5A2D00', label: 'Projects',          doodle: `<circle cx="238" cy="128" r="78" fill="none" stroke="#D4880A" stroke-width="9" opacity="0.4"/><circle cx="238" cy="128" r="54" fill="none" stroke="#D4880A" stroke-width="7" opacity="0.32"/><circle cx="238" cy="128" r="32" fill="none" stroke="#D4880A" stroke-width="6" opacity="0.26"/><circle cx="238" cy="128" r="14" fill="none" stroke="#D4880A" stroke-width="5" opacity="0.22"/>` },
-      education:     { bg: '#F46E5F', accent: '#F46E5F', text: '#fff',    label: 'Education',         doodle: `<path d="M148,168 L174,126 L194,152 L218,92 L240,118 L264,62 L278,82" fill="none" stroke="#C03A28" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.42"/><circle cx="174" cy="126" r="6" fill="#C03A28" opacity="0.42"/><circle cx="218" cy="92" r="6" fill="#C03A28" opacity="0.42"/><circle cx="264" cy="62" r="6" fill="#C03A28" opacity="0.42"/><line x1="148" y1="174" x2="278" y2="174" stroke="#C03A28" stroke-width="4" stroke-linecap="round" opacity="0.3"/>` },
-      organizations: { bg: '#B88ACC', accent: '#B88ACC', text: '#2A0A4A', label: 'Organizations',     doodle: `<path d="M228,38 C233,18 255,18 255,38 C275,33 275,55 255,55 C255,75 233,75 233,55 C213,55 213,33 228,38Z" fill="none" stroke="#7A3AA0" stroke-width="7" opacity="0.42"/><path d="M194,100 C197,82 214,82 214,100 C232,97 232,115 214,115 C214,133 197,133 194,115 C176,115 176,97 194,100Z" fill="none" stroke="#7A3AA0" stroke-width="5" opacity="0.34"/><circle cx="222" cy="155" r="16" fill="none" stroke="#7A3AA0" stroke-width="5" opacity="0.3"/>` },
-      competition:   { bg: '#6AAED6', accent: '#6AAED6', text: '#082840', label: 'Competition',       doodle: `<line x1="160" y1="10" x2="160" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="192" y1="10" x2="192" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="224" y1="10" x2="224" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="256" y1="10" x2="256" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="35" x2="280" y2="35" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="70" x2="280" y2="70" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="105" x2="280" y2="105" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="140" x2="280" y2="140" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><circle cx="160" cy="35" r="5" fill="#2070A8" opacity="0.5"/><circle cx="192" cy="70" r="5" fill="#2070A8" opacity="0.5"/><circle cx="224" cy="105" r="5" fill="#2070A8" opacity="0.5"/><circle cx="256" cy="140" r="5" fill="#2070A8" opacity="0.5"/>` },
-      volunteering:  { bg: '#B8D97A', accent: '#B8D97A', text: '#2A4208', label: 'Volunteering',      doodle: `<path d="M170,15 L186,36 L202,15 L218,36 L234,15 L250,36 L264,15" fill="none" stroke="#7AAE30" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.48"/>` },
-      other:         { bg: '#C8C8C8', accent: '#C8C8C8', text: '#333',    label: 'Other',             doodle: `` },
+      work:          { bg: '#AEEEDD', accent: '#AEEEDD', text: '#0D4030', label: 'Work Experience',   doodle: `<line x1="220" y1="20" x2="220" y2="55" stroke="#4ABBA0" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="203" y1="37" x2="238" y2="37" stroke="#4ABBA0" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="248" y1="65" x2="263" y2="50" stroke="#4ABBA0" stroke-width="6" stroke-linecap="round" opacity="0.38"/><line x1="248" y1="50" x2="263" y2="65" stroke="#4ABBA0" stroke-width="6" stroke-linecap="round" opacity="0.38"/><circle cx="185" cy="105" r="22" fill="none" stroke="#4ABBA0" stroke-width="7" opacity="0.4"/><circle cx="185" cy="105" r="10" fill="none" stroke="#4ABBA0" stroke-width="5" opacity="0.3"/>` },
+      internship:    { bg: '#DDEEAA', accent: '#DDEEAA', text: '#2A4208', label: 'Internship',        doodle: `<path d="M150,15 L166,38 L182,15 L198,38 L214,15 L230,38 L246,15 L262,38 L276,15" fill="none" stroke="#8ABB40" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/><path d="M155,58 L171,78 L187,58 L203,78 L220,58 L237,78 L253,58" fill="none" stroke="#8ABB40" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.36"/><path d="M160,98 L176,116 L193,98 L210,116 L227,98 L244,116" fill="none" stroke="#8ABB40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/>` },
+      projects:      { bg: '#FFE0A0', accent: '#FFE0A0', text: '#5A3000', label: 'Projects',          doodle: `<circle cx="238" cy="128" r="80" fill="none" stroke="#E0A030" stroke-width="9" opacity="0.38"/><circle cx="238" cy="128" r="56" fill="none" stroke="#E0A030" stroke-width="7" opacity="0.3"/><circle cx="238" cy="128" r="34" fill="none" stroke="#E0A030" stroke-width="6" opacity="0.24"/><circle cx="238" cy="128" r="15" fill="none" stroke="#E0A030" stroke-width="5" opacity="0.2"/>` },
+      education:     { bg: '#FFAAA0', accent: '#FFAAA0', text: '#5A1000', label: 'Education',         doodle: `<path d="M148,168 L174,126 L194,152 L218,92 L240,118 L264,62 L278,82" fill="none" stroke="#D04030" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="174" cy="126" r="6" fill="#D04030" opacity="0.38"/><circle cx="218" cy="92" r="6" fill="#D04030" opacity="0.38"/><circle cx="264" cy="62" r="6" fill="#D04030" opacity="0.38"/><line x1="148" y1="174" x2="278" y2="174" stroke="#D04030" stroke-width="4" stroke-linecap="round" opacity="0.28"/>` },
+      organizations: { bg: '#DDBBEE', accent: '#DDBBEE', text: '#2A0848', label: 'Organizations',     doodle: `<path d="M228,38 C233,18 255,18 255,38 C275,33 275,55 255,55 C255,75 233,75 233,55 C213,55 213,33 228,38Z" fill="none" stroke="#8840BB" stroke-width="7" opacity="0.4"/><path d="M194,100 C197,82 212,82 212,100 C230,97 230,115 212,115 C212,133 197,133 194,115 C176,115 176,97 194,100Z" fill="none" stroke="#8840BB" stroke-width="5" opacity="0.32"/><circle cx="222" cy="155" r="16" fill="none" stroke="#8840BB" stroke-width="5" opacity="0.28"/>` },
+      competition:   { bg: '#AACCEE', accent: '#AACCEE', text: '#082038', label: 'Competition',       doodle: `<line x1="160" y1="10" x2="160" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="192" y1="10" x2="192" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="224" y1="10" x2="224" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="256" y1="10" x2="256" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="35" x2="280" y2="35" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="70" x2="280" y2="70" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="105" x2="280" y2="105" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="140" x2="280" y2="140" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><circle cx="160" cy="35" r="5" fill="#2070A8" opacity="0.48"/><circle cx="192" cy="70" r="5" fill="#2070A8" opacity="0.48"/><circle cx="224" cy="105" r="5" fill="#2070A8" opacity="0.48"/><circle cx="256" cy="140" r="5" fill="#2070A8" opacity="0.48"/>` },
+      volunteering:  { bg: '#DDEEAA', accent: '#DDEEAA', text: '#2A4208', label: 'Volunteering',      doodle: `<path d="M150,15 L166,38 L182,15 L198,38 L214,15 L230,38 L246,15 L262,38 L276,15" fill="none" stroke="#8ABB40" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>` },
+      other:         { bg: '#E0E0E0', accent: '#E0E0E0', text: '#444',    label: 'Other',             doodle: `` },
     };
     const c = colorMap[cat] || colorMap.other;
 
