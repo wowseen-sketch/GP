@@ -2433,61 +2433,9 @@
 
           <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">5</strong> to use in the analysis.</div>
 
-          <!-- recommended blocks (auto-selected) -->
-          <div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-2);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-star-filled" style="font-size:12px;"></i> Recommended · Auto-selected</div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-
-              <div class="rec-block selected" onclick="toggleBlock(this)">
-                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Project</span></div>
-                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">New Product GTM Strategy</div>
-                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2024.01 – 2024.06 · 6 months</div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">Strategic Planning</span><span class="tag blue">GTM</span><span class="tag">B2B</span></div>
-                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
-              </div>
-
-              <div class="rec-block selected" onclick="toggleBlock(this)">
-                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Work Experience</span></div>
-                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Data-Driven User Analysis</div>
-                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.11 – 2023.02 · 4 months</div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">SQL</span><span class="tag blue">Tableau</span><span class="tag">Data Analysis</span></div>
-                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
-              </div>
-
-              <div class="rec-block selected" onclick="toggleBlock(this)">
-                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Leadership</span></div>
-                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Team OKR Design & Operations</div>
-                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.07 – 2022.10 · 4 months</div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">OKR</span><span class="tag blue">Leadership</span><span class="tag">Cross-functional</span></div>
-                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- other blocks -->
-          <div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-
-              <div class="rec-block" onclick="toggleBlock(this)" style="opacity:0.65;">
-                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.05em;">Work Experience</span></div>
-                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Content Marketing Campaign</div>
-                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.01 – 2022.06 · 6 months</div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag">Content</span><span class="tag">SNS Marketing</span></div>
-                <div class="rec-check" style="display:none;"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
-              </div>
-
-              <div class="rec-block" onclick="toggleBlock(this)" style="opacity:0.65;">
-                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.05em;">Project</span></div>
-                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">App Renewal UX Research</div>
-                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2021.09 – 2021.12 · 4 months</div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag">UX Research</span><span class="tag">Interview</span></div>
-                <div class="rec-check" style="display:none;"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
-              </div>
-
-            </div>
-          </div>
+          <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:40px;font-size:13px;color:var(--ink-4);">Finding your best matching experiences...</div>
+          <div id="brm-content" style="display:none;flex-direction:column;gap:8px;overflow-y:auto;max-height:420px;"></div>
+          <div id="brm-error" style="display:none;padding:16px;font-size:13px;color:#dc2626;"></div>
 
         </div>
 
