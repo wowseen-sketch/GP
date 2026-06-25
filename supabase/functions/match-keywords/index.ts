@@ -104,7 +104,8 @@ async function classifyKeywords(
   try {
     parsed = JSON.parse(rawText);
   } catch {
-    const match = rawText.match(/\{[\s\S]*\}/);
+    const stripped = rawText.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+    const match = stripped.match(/\{[\s\S]*\}/);
     if (!match) throw new Error("Failed to parse AI response");
     parsed = JSON.parse(match[0]);
   }

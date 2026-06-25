@@ -74,7 +74,8 @@ ${blocks.map(b => `ID: ${b.id}\nTitle: ${b.title}\nKeywords: ${JSON.stringify(b.
       const parsed = JSON.parse(rawText);
       result = Array.isArray(parsed) ? parsed : [];
     } catch {
-      const m = rawText.match(/\[[\s\S]*\]/);
+      const stripped = rawText.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+      const m = stripped.match(/\[[\s\S]*\]/);
       if (m) {
         try {
           const parsed = JSON.parse(m[0]);

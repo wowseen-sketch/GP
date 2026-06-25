@@ -180,7 +180,8 @@ Return ONLY this JSON. No explanation. No markdown.
   try {
     result = JSON.parse(rawText);
   } catch {
-    const match = rawText.match(/\{[\s\S]*\}/);
+    const stripped = rawText.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+    const match = stripped.match(/\{[\s\S]*\}/);
     if (match) {
       result = JSON.parse(match[0]);
     } else {
