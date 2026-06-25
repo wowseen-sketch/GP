@@ -1030,10 +1030,9 @@
     margin-bottom: auto;
   }
   .blk-card-title {
-    font-size: 22px; font-weight: 900;
-    line-height: 1.2; font-family: var(--ff-head);
+    font-size: 20px; font-weight: 700;
+    line-height: 1.3; font-family: var(--ff-head);
     margin-top: 24px; margin-bottom: 10px;
-    letter-spacing: -0.5px;
     display: -webkit-box; -webkit-line-clamp: 2;
     -webkit-box-orient: vertical; overflow: hidden;
   }
@@ -2413,7 +2412,7 @@
     <!-- ════ BLOCK RECOMMEND MODAL ════ -->
     <div id="block-recommend-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;">
       <div onclick="closeBlockRecommendModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
-      <div style="position:relative;width:680px;max-width:92vw;min-height:600px;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.22s ease;max-height:88vh;">
+      <div style="position:relative;width:680px;max-width:92vw;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.22s ease;max-height:88vh;">
 
         <!-- header -->
         <div style="background:var(--accent);padding:22px 28px;flex-shrink:0;">
@@ -2429,27 +2428,74 @@
           </div>
         </div>
 
-        <!-- toast -->
-        <div id="brm-toast" style="display:none;position:absolute;top:82px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:99px;white-space:nowrap;z-index:10;pointer-events:none;"></div>
-
         <!-- body -->
         <div style="padding:24px 28px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:20px;">
 
-          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">3</strong> to use in the analysis.</div>
+          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">5</strong> to use in the analysis.</div>
 
-          <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:80px;">
-            <div style="width:36px;height:36px;border:3px solid #f3f3f3;border-top:3px solid var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+          <!-- recommended blocks (auto-selected) -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent-2);margin-bottom:10px;display:flex;align-items:center;gap:6px;"><i class="ti ti-star-filled" style="font-size:12px;"></i> Recommended · Auto-selected</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+
+              <div class="rec-block selected" onclick="toggleBlock(this)">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Project</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">New Product GTM Strategy</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2024.01 – 2024.06 · 6 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">Strategic Planning</span><span class="tag blue">GTM</span><span class="tag">B2B</span></div>
+                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+              <div class="rec-block selected" onclick="toggleBlock(this)">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Work Experience</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Data-Driven User Analysis</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.11 – 2023.02 · 4 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">SQL</span><span class="tag blue">Tableau</span><span class="tag">Data Analysis</span></div>
+                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+              <div class="rec-block selected" onclick="toggleBlock(this)">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:0.05em;">Leadership</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Team OKR Design & Operations</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.07 – 2022.10 · 4 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag blue">OKR</span><span class="tag blue">Leadership</span><span class="tag">Cross-functional</span></div>
+                <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+            </div>
           </div>
-          <div id="brm-content" style="display:none;flex-direction:column;gap:8px;overflow-y:auto;max-height:480px;"></div>
-          <div id="brm-error" style="display:none;padding:16px;font-size:13px;color:#dc2626;"></div>
+
+          <!-- other blocks -->
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+
+              <div class="rec-block" onclick="toggleBlock(this)" style="opacity:0.65;">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.05em;">Work Experience</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">Content Marketing Campaign</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2022.01 – 2022.06 · 6 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag">Content</span><span class="tag">SNS Marketing</span></div>
+                <div class="rec-check" style="display:none;"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+              <div class="rec-block" onclick="toggleBlock(this)" style="opacity:0.65;">
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;"><span style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.05em;">Project</span></div>
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;">App Renewal UX Research</div>
+                <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;">2021.09 – 2021.12 · 4 months</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;"><span class="tag">UX Research</span><span class="tag">Interview</span></div>
+                <div class="rec-check" style="display:none;"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+              </div>
+
+            </div>
+          </div>
 
         </div>
 
         <!-- footer -->
         <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
-          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> / 3 blocks selected</div>
+          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> blocks selected</div>
           <button onclick="closeBlockRecommendModal()" class="btn-secondary-lg" style="margin-left:auto;">Cancel</button>
-          <button onclick="(function(){ const selected = [...document.querySelectorAll('.rec-block.selected')]; const ids = selected.map(el => el.dataset.id); const allKw = []; (_brmBlocks || []).filter(b => ids.includes(b.id)).forEach(b => { (b.competency_keywords || []).forEach(k => { if (!allKw.includes(k)) allKw.push(k); }); }); _pendingAnalysis.selectedKeywords = allKw; closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <button onclick="" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <i class="ti ti-chart-bar" style="font-size:15px;"></i> Analyze with These Blocks
           </button>
         </div>
@@ -3806,7 +3852,7 @@
       let html = '';
       if (recommended.length) {
         html += `<div style="margin-bottom:16px;">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px;">⭐ Recommended · Auto-selected<button onclick="" style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);border:1.5px solid var(--accent);color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">+</button></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">⭐ Recommended · Auto-selected</div>
           <div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
         </div>`;
       }
@@ -3836,7 +3882,8 @@
     const cls = selected ? 'rec-block selected' : 'rec-block';
     return `<div class="${cls}" data-id="${escapeHtml(block.id)}" onclick="toggleBlock(this)">
       <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(block.title || '')}</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;">${pills}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;${block.reason ? 'margin-bottom:6px;' : ''}">${pills}</div>
+      ${block.reason ? `<div style="font-size:11px;color:var(--ink-4);">${escapeHtml(block.reason)}</div>` : ''}
       <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
     </div>`;
   }
@@ -3845,23 +3892,7 @@
     document.getElementById('block-recommend-modal').style.display = 'none';
     document.body.style.overflow = '';
   }
-  function showBrmToast(msg) {
-    const toast = document.getElementById('brm-toast');
-    if (!toast) return;
-    toast.textContent = msg;
-    toast.style.display = 'block';
-    clearTimeout(toast._timer);
-    toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 2500);
-  }
   function toggleBlock(el) {
-    const isSelected = el.classList.contains('selected');
-    if (!isSelected) {
-      const currentCount = document.querySelectorAll('.rec-block.selected').length;
-      if (currentCount >= 3) {
-        showBrmToast('Please deselect one experience first');
-        return;
-      }
-    }
     el.classList.toggle('selected');
     const count = document.querySelectorAll('.rec-block.selected').length;
     const counter = document.getElementById('selected-count');
@@ -3962,7 +3993,7 @@
     }
     if (errEl) errEl.style.display = 'none';
     _pendingAnalysis = { company, role, jdText: _jdRawText };
-    openBlockRecommendModal();
+    navigate('match-result');
   }
   async function runMatchResultAnalysis() {
     if (!_pendingAnalysis) return;
@@ -3978,7 +4009,7 @@
       });
       if (jdErr) throw jdErr;
       const companyKeywords = (jdData && jdData.company_keywords) || [];
-      const myKeywords = (_pendingAnalysis.selectedKeywords && _pendingAnalysis.selectedKeywords.length > 0) ? _pendingAnalysis.selectedKeywords : await gatherMyKeywords();
+      const myKeywords = await gatherMyKeywords();
       const { data: matchData, error: matchErr } = await supa.functions.invoke('match-keywords', {
         body: { company_keywords: companyKeywords, my_keywords: myKeywords },
       });
@@ -4942,28 +4973,28 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
 
     const colorMap = {
-      work:          { bg: '#AEEEDD', accent: '#AEEEDD', text: '#0D4030', label: 'Work Experience',   doodle: `<line x1="220" y1="20" x2="220" y2="55" stroke="#4ABBA0" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="203" y1="37" x2="238" y2="37" stroke="#4ABBA0" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="248" y1="65" x2="263" y2="50" stroke="#4ABBA0" stroke-width="6" stroke-linecap="round" opacity="0.38"/><line x1="248" y1="50" x2="263" y2="65" stroke="#4ABBA0" stroke-width="6" stroke-linecap="round" opacity="0.38"/><circle cx="185" cy="105" r="22" fill="none" stroke="#4ABBA0" stroke-width="7" opacity="0.4"/><circle cx="185" cy="105" r="10" fill="none" stroke="#4ABBA0" stroke-width="5" opacity="0.3"/>` },
-      internship:    { bg: '#DDEEAA', accent: '#DDEEAA', text: '#2A4208', label: 'Internship',        doodle: `<path d="M150,15 L166,38 L182,15 L198,38 L214,15 L230,38 L246,15 L262,38 L276,15" fill="none" stroke="#8ABB40" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/><path d="M155,58 L171,78 L187,58 L203,78 L220,58 L237,78 L253,58" fill="none" stroke="#8ABB40" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.36"/><path d="M160,98 L176,116 L193,98 L210,116 L227,98 L244,116" fill="none" stroke="#8ABB40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/>` },
-      projects:      { bg: '#FFE0A0', accent: '#FFE0A0', text: '#5A3000', label: 'Projects',          doodle: `<circle cx="238" cy="128" r="80" fill="none" stroke="#E0A030" stroke-width="9" opacity="0.38"/><circle cx="238" cy="128" r="56" fill="none" stroke="#E0A030" stroke-width="7" opacity="0.3"/><circle cx="238" cy="128" r="34" fill="none" stroke="#E0A030" stroke-width="6" opacity="0.24"/><circle cx="238" cy="128" r="15" fill="none" stroke="#E0A030" stroke-width="5" opacity="0.2"/>` },
-      education:     { bg: '#FFAAA0', accent: '#FFAAA0', text: '#5A1000', label: 'Education',         doodle: `<path d="M148,168 L174,126 L194,152 L218,92 L240,118 L264,62 L278,82" fill="none" stroke="#D04030" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="174" cy="126" r="6" fill="#D04030" opacity="0.38"/><circle cx="218" cy="92" r="6" fill="#D04030" opacity="0.38"/><circle cx="264" cy="62" r="6" fill="#D04030" opacity="0.38"/><line x1="148" y1="174" x2="278" y2="174" stroke="#D04030" stroke-width="4" stroke-linecap="round" opacity="0.28"/>` },
-      organizations: { bg: '#DDBBEE', accent: '#DDBBEE', text: '#2A0848', label: 'Organizations',     doodle: `<path d="M228,38 C233,18 255,18 255,38 C275,33 275,55 255,55 C255,75 233,75 233,55 C213,55 213,33 228,38Z" fill="none" stroke="#8840BB" stroke-width="7" opacity="0.4"/><path d="M194,100 C197,82 212,82 212,100 C230,97 230,115 212,115 C212,133 197,133 194,115 C176,115 176,97 194,100Z" fill="none" stroke="#8840BB" stroke-width="5" opacity="0.32"/><circle cx="222" cy="155" r="16" fill="none" stroke="#8840BB" stroke-width="5" opacity="0.28"/>` },
-      competition:   { bg: '#AACCEE', accent: '#AACCEE', text: '#082038', label: 'Competition',       doodle: `<line x1="160" y1="10" x2="160" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="192" y1="10" x2="192" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="224" y1="10" x2="224" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="256" y1="10" x2="256" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="35" x2="280" y2="35" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="70" x2="280" y2="70" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="105" x2="280" y2="105" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="140" x2="280" y2="140" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><circle cx="160" cy="35" r="5" fill="#2070A8" opacity="0.48"/><circle cx="192" cy="70" r="5" fill="#2070A8" opacity="0.48"/><circle cx="224" cy="105" r="5" fill="#2070A8" opacity="0.48"/><circle cx="256" cy="140" r="5" fill="#2070A8" opacity="0.48"/>` },
-      volunteering:  { bg: '#DDEEAA', accent: '#DDEEAA', text: '#2A4208', label: 'Volunteering',      doodle: `<path d="M150,15 L166,38 L182,15 L198,38 L214,15 L230,38 L246,15 L262,38 L276,15" fill="none" stroke="#8ABB40" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>` },
-      other:         { bg: '#E0E0E0', accent: '#E0E0E0', text: '#fff',    label: 'Other',             doodle: `` },
+      work:          { bg: '#6DD5BA', accent: '#6DD5BA', text: '#0D3D2A', label: 'Work Experience',   doodle: `<line x1="220" y1="20" x2="220" y2="52" stroke="#3BA888" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="204" y1="36" x2="236" y2="36" stroke="#3BA888" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="248" y1="55" x2="262" y2="42" stroke="#3BA888" stroke-width="6" stroke-linecap="round" opacity="0.4"/><line x1="248" y1="42" x2="262" y2="55" stroke="#3BA888" stroke-width="6" stroke-linecap="round" opacity="0.4"/><circle cx="192" cy="72" r="18" fill="none" stroke="#3BA888" stroke-width="7" opacity="0.42"/><circle cx="192" cy="72" r="8" fill="none" stroke="#3BA888" stroke-width="5" opacity="0.32"/>` },
+      internship:    { bg: '#B8D97A', accent: '#B8D97A', text: '#2A4208', label: 'Internship',        doodle: `<path d="M170,15 L186,36 L202,15 L218,36 L234,15 L250,36 L264,15" fill="none" stroke="#7AAE30" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.48"/><path d="M178,52 L194,70 L210,52 L226,70 L244,52 L260,70" fill="none" stroke="#7AAE30" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M174,86 L190,102 L208,86 L226,102 L244,86 L262,102" fill="none" stroke="#7AAE30" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.32"/>` },
+      projects:      { bg: '#FFC066', accent: '#FFC066', text: '#5A2D00', label: 'Projects',          doodle: `<circle cx="238" cy="128" r="78" fill="none" stroke="#D4880A" stroke-width="9" opacity="0.4"/><circle cx="238" cy="128" r="54" fill="none" stroke="#D4880A" stroke-width="7" opacity="0.32"/><circle cx="238" cy="128" r="32" fill="none" stroke="#D4880A" stroke-width="6" opacity="0.26"/><circle cx="238" cy="128" r="14" fill="none" stroke="#D4880A" stroke-width="5" opacity="0.22"/>` },
+      education:     { bg: '#F46E5F', accent: '#F46E5F', text: '#fff',    label: 'Education',         doodle: `<path d="M148,168 L174,126 L194,152 L218,92 L240,118 L264,62 L278,82" fill="none" stroke="#C03A28" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.42"/><circle cx="174" cy="126" r="6" fill="#C03A28" opacity="0.42"/><circle cx="218" cy="92" r="6" fill="#C03A28" opacity="0.42"/><circle cx="264" cy="62" r="6" fill="#C03A28" opacity="0.42"/><line x1="148" y1="174" x2="278" y2="174" stroke="#C03A28" stroke-width="4" stroke-linecap="round" opacity="0.3"/>` },
+      organizations: { bg: '#B88ACC', accent: '#B88ACC', text: '#2A0A4A', label: 'Organizations',     doodle: `<path d="M228,38 C233,18 255,18 255,38 C275,33 275,55 255,55 C255,75 233,75 233,55 C213,55 213,33 228,38Z" fill="none" stroke="#7A3AA0" stroke-width="7" opacity="0.42"/><path d="M194,100 C197,82 214,82 214,100 C232,97 232,115 214,115 C214,133 197,133 194,115 C176,115 176,97 194,100Z" fill="none" stroke="#7A3AA0" stroke-width="5" opacity="0.34"/><circle cx="222" cy="155" r="16" fill="none" stroke="#7A3AA0" stroke-width="5" opacity="0.3"/>` },
+      competition:   { bg: '#6AAED6', accent: '#6AAED6', text: '#082840', label: 'Competition',       doodle: `<line x1="160" y1="10" x2="160" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="192" y1="10" x2="192" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="224" y1="10" x2="224" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="256" y1="10" x2="256" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="35" x2="280" y2="35" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="70" x2="280" y2="70" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="105" x2="280" y2="105" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="140" x2="280" y2="140" stroke="#2070A8" stroke-width="2.5" opacity="0.32"/><circle cx="160" cy="35" r="5" fill="#2070A8" opacity="0.5"/><circle cx="192" cy="70" r="5" fill="#2070A8" opacity="0.5"/><circle cx="224" cy="105" r="5" fill="#2070A8" opacity="0.5"/><circle cx="256" cy="140" r="5" fill="#2070A8" opacity="0.5"/>` },
+      volunteering:  { bg: '#B8D97A', accent: '#B8D97A', text: '#2A4208', label: 'Volunteering',      doodle: `<path d="M170,15 L186,36 L202,15 L218,36 L234,15 L250,36 L264,15" fill="none" stroke="#7AAE30" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.48"/>` },
+      other:         { bg: '#C8C8C8', accent: '#C8C8C8', text: '#333',    label: 'Other',             doodle: `` },
     };
     const c = colorMap[cat] || colorMap.other;
 
     const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,2);
     const tagsHtml = kws.map(k => {
       const short = k.length > 22 ? k.slice(0, 20) + '…' : k;
-      return `<span style="font-size:11px;color:${c.text};background:rgba(255,255,255,0.35);padding:4px 11px;border-radius:99px;font-family:var(--ff-head);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;">${escapeHtml(short)}</span>`;
+      const tagBg = c.text === '#fff' ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.1)';
+      return `<span style="font-size:11px;color:${c.text};background:${tagBg};padding:4px 11px;border-radius:99px;font-family:var(--ff-head);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;">${escapeHtml(short)}</span>`;
     }).join('');
 
     const el = document.createElement('div');
     el.className = 'blk-card dyn';
     el.dataset.type = cat;
     el.style.background = c.bg;
-    el.style.color = c.text;
     el.style.border = 'none';
     el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
     el.innerHTML = `
@@ -6014,7 +6045,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   async function initMatchStore() {
     let companies = [];
     if (currentUser) {
-      const { data } = await supa.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+      const { data } = await _sb.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
       companies = data || [];
     }
     _msCompanies = companies.length > 0 ? companies : _msSampleData;
@@ -6736,64 +6767,10 @@ What I learned: Consistency matters more than quality of individual posts`;
     return _origOpenAnalysisModal();
   };
 
-  openBlockRecommendModal = async function() {
-    console.log('[modal] called, currentUser:', currentUser, '_pendingAnalysis:', _pendingAnalysis);
+  const _origOpenBlockRecommendModal = openBlockRecommendModal;
+  openBlockRecommendModal = function() {
     if (!currentUser) return openAuthRequiredModal('match');
-    const modal = document.getElementById('block-recommend-modal');
-    const loadingEl = document.getElementById('brm-loading');
-    const contentEl = document.getElementById('brm-content');
-    const errorEl = document.getElementById('brm-error');
-    const countEl = document.getElementById('selected-count');
-    if (!modal) return;
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    if (loadingEl) loadingEl.style.display = 'flex';
-    if (contentEl) contentEl.style.display = 'none';
-    if (errorEl) errorEl.style.display = 'none';
-    try {
-      const { company, role, jdText } = _pendingAnalysis;
-      const { data: jdData, error: jdErr } = await supa.functions.invoke('extract-jd-keywords', { body: { company, role, jd_text: jdText } });
-      if (jdErr) throw jdErr;
-      const companyKeywords = (jdData && jdData.company_keywords) || [];
-      _pendingAnalysis.companyKeywords = companyKeywords;
-      const { data: blocksData, error: blocksErr } = await supa
-        .from('experience_blocks')
-        .select('id, title, competency_keywords')
-        .eq('user_id', currentUser.id)
-        .not('end_date', 'is', null)
-        .or('is_current.is.null,is_current.eq.false');
-      if (blocksErr) throw blocksErr;
-      const blocks = (blocksData || []).filter(b => b.competency_keywords && b.competency_keywords.length > 0);
-      const { data: ranked, error: rankErr } = await supa.functions.invoke('recommend-blocks', { body: { company_keywords: companyKeywords, blocks } });
-      if (rankErr) throw rankErr;
-      const blockMap = {};
-      blocks.forEach(b => { blockMap[b.id] = b; });
-      const rankedBlocks = (Array.isArray(ranked) ? ranked : [])
-        .filter(r => blockMap[r.id])
-        .map(r => ({ ...blockMap[r.id], score: r.score, reason: r.reason }))
-        .sort((a, b) => b.score - a.score);
-      _brmBlocks = rankedBlocks.slice(0, 5);
-      const recommended = _brmBlocks.slice(0, 3);
-      const others = _brmBlocks.slice(3, 5);
-      let html = '';
-      if (recommended.length) {
-        html += `<div style="margin-bottom:16px;"><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px;">⭐ Recommended · Auto-selected<button onclick="" style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);border:1.5px solid var(--accent);color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">+</button></div><div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div></div>`;
-      }
-      if (others.length) {
-        html += `<div><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div><div style="display:flex;flex-direction:column;gap:8px;">${others.map(b => _renderBlockCard(b, false)).join('')}</div></div>`;
-      }
-      if (!_brmBlocks.length) {
-        html = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">No experience blocks found. Add experiences first.</div>';
-      }
-      if (contentEl) { contentEl.innerHTML = html; contentEl.style.display = 'flex'; }
-      if (loadingEl) loadingEl.style.display = 'none';
-      if (countEl) countEl.textContent = recommended.length;
-    } catch (err) {
-      console.error('[modal catch]', err);
-      console.error('[openBlockRecommendModal] failed:', err);
-      if (loadingEl) loadingEl.style.display = 'none';
-      if (errorEl) { errorEl.textContent = 'Failed to load recommendations: ' + (err.message || 'check console'); errorEl.style.display = 'block'; }
-    }
+    return _origOpenBlockRecommendModal();
   };
 
   // ── DELEGATED GATING for "Save Draft" buttons ──
@@ -6836,4 +6813,3 @@ What I learned: Consistency matters more than quality of individual posts`;
 </script>
 </body>
 </html>
- 
