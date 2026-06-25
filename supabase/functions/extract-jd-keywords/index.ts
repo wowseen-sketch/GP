@@ -155,50 +155,70 @@ Return ONLY this JSON. No explanation. No markdown.
 
   const userMessage = `Analyze the job description above and return the JSON.`;
 
-  const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\n" + userMessage }] }],
-      generationConfig: { temperature: 0, maxOutputTokens: 1024 },
-    }),
-  });
-
-  if (!geminiRes.ok) {
-    const errText = await geminiRes.text();
-    console.error("Gemini API error:", errText);
-    return new Response(JSON.stringify({ error: "Upstream API error" }), {
-      status: 502,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-    });
-  }
-
-  const data = await geminiRes.json();
-  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-
-  let result: { work_activities?: string[]; software_skills?: string[]; transferable_skills?: string[]; company_keywords: string[] };
   try {
-    result = JSON.parse(rawText);
-  } catch {
-    const stripped = rawText.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
-    const match = stripped.match(/\{[\s\S]*\}/);
-    if (match) {
-      result = JSON.parse(match[0]);
-    } else {
-      return new Response(JSON.stringify({ error: "Failed to parse AI response" }), {
+    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\n" + userMessage }] }],
+        generationConfig: { temperature: 0, maxOutputTokens: 4096 },
+      }),
+    });
+
+    if (!geminiRes.ok) {
+      const errText = await geminiRes.text();
+      console.error("Gemini API error:", errText);
+      return new Response(JSON.stringify({ error: "Upstream API error" }), {
+        status: 502,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      });
+    }
+
+    const data = await geminiRes.json();
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    console.log("Gemini rawText (first 300):", rawText.slice(0, 300));
+
+    if (!rawText) {
+      console.error("Gemini returned empty text. Full response:", JSON.stringify(data).slice(0, 500));
+      return new Response(JSON.stringify({ error: "Empty response from AI" }), {
         status: 500,
         headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
       });
     }
+
+    // Strip markdown code fences before any parse attempt
+    const cleaned = rawText.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+
+    let result: { work_activities?: string[]; software_skills?: string[]; transferable_skills?: string[]; company_keywords: string[] };
+    try {
+      result = JSON.parse(cleaned);
+    } catch {
+      const match = cleaned.match(/\{[\s\S]*\}/);
+      if (match) {
+        result = JSON.parse(match[0]);
+      } else {
+        console.error("Failed to parse AI response. cleaned (first 300):", cleaned.slice(0, 300));
+        return new Response(JSON.stringify({ error: "Failed to parse AI response" }), {
+          status: 500,
+          headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    // Normalize: ensure company_keywords is always a clean string array.
+    const keywords = Array.isArray(result?.company_keywords)
+      ? result.company_keywords.map((k) => String(k).trim()).filter(Boolean)
+      : [];
+
+    return new Response(JSON.stringify({ company_keywords: keywords }), {
+      status: 200,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    console.error("Unhandled error in extract-jd-keywords:", err);
+    return new Response(JSON.stringify({ error: String(err) }), {
+      status: 500,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+    });
   }
-
-  // Normalize: ensure company_keywords is always a clean string array.
-  const keywords = Array.isArray(result?.company_keywords)
-    ? result.company_keywords.map((k) => String(k).trim()).filter(Boolean)
-    : [];
-
-  return new Response(JSON.stringify({ company_keywords: keywords }), {
-    status: 200,
-    headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-  });
 });
