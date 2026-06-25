@@ -693,10 +693,10 @@
   .kw-match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .kw-col-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px; }
   .kw-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
-  .kw-pill { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 99px; border: 1px solid; }
-  .kw-pill.matched { background: #F0F9FF; color: #0369A1; border-color: #BAE6FD; }
-  .kw-pill.partial  { background: #FFFBEB; color: #92400E; border-color: #FDE68A; }
-  .kw-pill.missing  { background: #FFF1F2; color: #9F1239; border-color: #FECDD3; }
+  .kw-pill { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 99px; border: none; }
+  .kw-pill.matched { background: #DCFCE7; color: #16A34A; }
+  .kw-pill.partial  { background: #FEF3C7; color: #D97706; }
+  .kw-pill.missing  { background: #FEE2E2; color: #DC2626; }
 
   .exp-match-list { display: flex; flex-direction: column; gap: 7px; }
   .exp-match-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r); border: 1px solid var(--border); background: var(--white); box-shadow: var(--shadow-sm); }
@@ -2349,26 +2349,50 @@
         <!-- Tier Score Card -->
         <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:28px 36px;margin-bottom:24px;">
           <div id="mr-tier-label" style="font-size:22px;font-weight:900;color:var(--ink);margin-bottom:14px;letter-spacing:-0.02em;">—</div>
-          <div style="display:flex;gap:4px;margin-bottom:16px;">
-            <div data-seg="0" style="flex:1;height:8px;border-radius:99px;background:#E24B4A;opacity:0.25;transition:opacity 0.3s;"></div>
-            <div data-seg="1" style="flex:1;height:8px;border-radius:99px;background:#EF9F27;opacity:0.25;transition:opacity 0.3s;"></div>
-            <div data-seg="2" style="flex:1;height:8px;border-radius:99px;background:#EAB308;opacity:0.25;transition:opacity 0.3s;"></div>
-            <div data-seg="3" style="flex:1;height:8px;border-radius:99px;background:#84CC16;opacity:0.25;transition:opacity 0.3s;"></div>
-            <div data-seg="4" style="flex:1;height:8px;border-radius:99px;background:#22C55E;opacity:0.25;transition:opacity 0.3s;"></div>
+          <div style="margin-bottom:16px;">
+            <div style="display:flex;gap:4px;margin-bottom:6px;">
+              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div data-seg-marker="0" style="display:none;width:6px;height:6px;border-radius:50%;background:#E24B4A;"></div>
+                <div data-seg="0" style="width:100%;height:8px;border-radius:99px;background:#E24B4A;opacity:0.25;transition:opacity 0.3s;"></div>
+              </div>
+              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div data-seg-marker="1" style="display:none;width:6px;height:6px;border-radius:50%;background:#EF9F27;"></div>
+                <div data-seg="1" style="width:100%;height:8px;border-radius:99px;background:#EF9F27;opacity:0.25;transition:opacity 0.3s;"></div>
+              </div>
+              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div data-seg-marker="2" style="display:none;width:6px;height:6px;border-radius:50%;background:#EAB308;"></div>
+                <div data-seg="2" style="width:100%;height:8px;border-radius:99px;background:#EAB308;opacity:0.25;transition:opacity 0.3s;"></div>
+              </div>
+              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div data-seg-marker="3" style="display:none;width:6px;height:6px;border-radius:50%;background:#84CC16;"></div>
+                <div data-seg="3" style="width:100%;height:8px;border-radius:99px;background:#84CC16;opacity:0.25;transition:opacity 0.3s;"></div>
+              </div>
+              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div data-seg-marker="4" style="display:none;width:6px;height:6px;border-radius:50%;background:#22C55E;"></div>
+                <div data-seg="4" style="width:100%;height:8px;border-radius:99px;background:#22C55E;opacity:0.25;transition:opacity 0.3s;"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:4px;">
+              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Not a Fit</div>
+              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Needs Work</div>
+              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Moderate Fit</div>
+              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Good Fit</div>
+              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Strong Fit</div>
+            </div>
           </div>
           <div style="display:flex;gap:24px;">
             <div style="display:flex;align-items:center;gap:7px;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#0369A1;flex-shrink:0;display:inline-block;"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#16A34A;flex-shrink:0;display:inline-block;"></span>
               <span style="font-size:13px;color:var(--ink-4);">Matched</span>
               <span id="mr-cnt-matched" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
             </div>
             <div style="display:flex;align-items:center;gap:7px;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#92400E;flex-shrink:0;display:inline-block;"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#D97706;flex-shrink:0;display:inline-block;"></span>
               <span style="font-size:13px;color:var(--ink-4);">Partial</span>
               <span id="mr-cnt-partial" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
             </div>
             <div style="display:flex;align-items:center;gap:7px;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#9F1239;flex-shrink:0;display:inline-block;"></span>
+              <span style="width:10px;height:10px;border-radius:50%;background:#DC2626;flex-shrink:0;display:inline-block;"></span>
               <span style="font-size:13px;color:var(--ink-4);">Missing</span>
               <span id="mr-cnt-missing" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
             </div>
@@ -2377,22 +2401,24 @@
 
         <!-- Tabs: Overall / By Experience -->
         <div style="margin-bottom:24px;">
-          <div style="display:flex;border-bottom:2px solid var(--border);margin-bottom:16px;">
-            <button id="mr-tab-overall" onclick="mrSwitchTab('overall')" style="padding:10px 20px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;border-bottom:2px solid var(--accent);color:var(--accent);margin-bottom:-2px;">Overall</button>
-            <button id="mr-tab-byexp" onclick="mrSwitchTab('byexp')" style="padding:10px 20px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:var(--ink-4);margin-bottom:-2px;">By Experience</button>
+          <div style="margin-bottom:16px;">
+            <div style="background:var(--surface);border-radius:99px;padding:4px;display:flex;width:fit-content;">
+              <button id="mr-tab-overall" onclick="mrSwitchTab('overall')" style="padding:8px 20px;font-size:13px;font-weight:700;border:none;cursor:pointer;border-radius:99px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.1);color:var(--ink);">Overall</button>
+              <button id="mr-tab-byexp" onclick="mrSwitchTab('byexp')" style="padding:8px 20px;font-size:13px;font-weight:500;border:none;cursor:pointer;border-radius:99px;background:transparent;color:var(--ink-4);">By Experience</button>
+            </div>
           </div>
           <div id="mr-panel-overall">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
-              <div style="background:var(--white);border:1px solid #BAE6FD;border-radius:var(--rl);padding:18px;">
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#0369A1;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-check"></i> Matched</div>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#16A34A;margin-bottom:8px;">Matched</div>
                 <div id="mr-group-matched" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
               </div>
-              <div style="background:var(--white);border:1px solid #FDE68A;border-radius:var(--rl);padding:18px;">
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#92400E;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-adjustments"></i> Partial</div>
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#D97706;margin-bottom:8px;">Partial Match</div>
                 <div id="mr-group-partial" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
               </div>
-              <div style="background:var(--white);border:1px solid #FECDD3;border-radius:var(--rl);padding:18px;">
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9F1239;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-x"></i> Missing</div>
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#DC2626;margin-bottom:8px;">Missing</div>
                 <div id="mr-group-missing" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
               </div>
             </div>
@@ -2404,7 +2430,7 @@
 
         <!-- Missing keyword cards -->
         <div id="mr-missing-section" style="margin-bottom:24px;display:none;">
-          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><i class="ti ti-alert-triangle" style="color:#9F1239;"></i> Missing Keywords</div>
+          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><i class="ti ti-alert-triangle" style="color:#DC2626;"></i> How to Improve</div>
           <div id="mr-missing-cards"></div>
         </div>
 
@@ -4041,7 +4067,12 @@
       const btn   = document.getElementById('mr-tab-' + t);
       const panel = document.getElementById('mr-panel-' + t);
       const active = t === tab;
-      if (btn)   { btn.style.borderBottomColor = active ? 'var(--accent)' : 'transparent'; btn.style.color = active ? 'var(--accent)' : 'var(--ink-4)'; }
+      if (btn) {
+        btn.style.background     = active ? '#fff' : 'transparent';
+        btn.style.boxShadow      = active ? '0 1px 4px rgba(0,0,0,0.1)' : 'none';
+        btn.style.color          = active ? 'var(--ink)' : 'var(--ink-4)';
+        btn.style.fontWeight     = active ? '700' : '500';
+      }
       if (panel) panel.style.display = active ? 'block' : 'none';
     });
   }
@@ -4093,6 +4124,9 @@
     document.querySelectorAll('[data-seg]').forEach(seg => {
       seg.style.opacity = parseInt(seg.dataset.seg) === tier.idx ? '1' : '0.25';
     });
+    document.querySelectorAll('[data-seg-marker]').forEach(marker => {
+      marker.style.display = parseInt(marker.dataset.segMarker) === tier.idx ? 'block' : 'none';
+    });
     const overall = (matchData && matchData.overall) || [];
     const counts = { matched: 0, partial: 0, missing: 0 };
     for (const r of overall) { if (counts[r.status] !== undefined) counts[r.status]++; }
@@ -4128,7 +4162,7 @@
     const missingCards   = document.getElementById('mr-missing-cards');
     if (missingCards) {
       if (groups.missing.length) {
-        missingCards.innerHTML = groups.missing.map(k => `<div style="padding:14px 16px;background:var(--white);border:1px solid #FECDD3;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">이 역량이 선택한 경험에서 발견되지 않았어요.</div></div><button onclick="navigate('blocks')" style="white-space:nowrap;font-size:12px;font-weight:600;color:#9F1239;background:none;border:1px solid #9F1239;padding:6px 14px;border-radius:var(--rl);cursor:pointer;">경험 보완하러 가기</button></div>`).join('');
+        missingCards.innerHTML = groups.missing.map(k => `<div style="padding:14px 16px;background:var(--white);border:1px solid #FECDD3;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This skill wasn't found in your selected experience blocks.</div></div><button onclick="navigate('blocks')" style="white-space:nowrap;font-size:12px;font-weight:600;color:#DC2626;background:none;border:1px solid #DC2626;padding:6px 14px;border-radius:var(--rl);cursor:pointer;">Add experience</button></div>`).join('');
         if (missingSection) missingSection.style.display = 'block';
       } else {
         if (missingSection) missingSection.style.display = 'none';
