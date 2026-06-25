@@ -82,31 +82,23 @@ async function classifyKeywords(
 
   const userMessage = `COMPANY_KEYWORDS:\n${companyList}\n\nMY_KEYWORDS:\n${myList}\n\nClassify every company keyword and return the JSON.`;
 
-  const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      max_tokens: 1024,
-      temperature: 0,
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: userMessage },
-      ],
+      contents: [{ role: "user", parts: [{ text: SYSTEM_PROMPT + "\n\n" + userMessage }] }],
+      generationConfig: { temperature: 0, maxOutputTokens: 1024 },
     }),
   });
 
-  if (!groqRes.ok) {
-    const errText = await groqRes.text();
-    console.error("Groq API error:", groqRes.status, errText);
-    throw new Error(`Upstream API error: ${groqRes.status}`);
+  if (!geminiRes.ok) {
+    const errText = await geminiRes.text();
+    console.error("Gemini API error:", geminiRes.status, errText);
+    throw new Error(`Upstream API error: ${geminiRes.status}`);
   }
 
-  const data = await groqRes.json();
-  const rawText: string = data?.choices?.[0]?.message?.content ?? "";
+  const data = await geminiRes.json();
+  const rawText: string = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
   let parsed: { results?: { keyword: string; status: string }[] };
   try {
@@ -136,7 +128,7 @@ serve(async (req: Request) => {
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   try {
-    const apiKey = Deno.env.get("GROQ_API_KEY");
+    const apiKey = Deno.env.get("GEMINI_API_KEY");
     if (!apiKey) return json({ error: "API key not configured" }, 500);
 
     let body: { company_keywords?: unknown; blocks?: unknown };

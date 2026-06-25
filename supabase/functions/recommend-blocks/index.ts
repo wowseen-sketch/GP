@@ -14,7 +14,7 @@ serve(async (req: Request) => {
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   try {
-    const apiKey = Deno.env.get("GROQ_API_KEY");
+    const apiKey = Deno.env.get("GEMINI_API_KEY");
     if (!apiKey) return json({ error: "API key not configured" }, 500);
 
     let body: { company_keywords?: string[]; blocks?: { id: string; title: string; competency_keywords: string[] }[] };
@@ -50,29 +50,24 @@ ${JSON.stringify(company_keywords)}
 Candidate experience blocks:
 ${blocks.map(b => `ID: ${b.id}\nTitle: ${b.title}\nKeywords: ${JSON.stringify(b.competency_keywords)}`).join('\n\n')}`;
 
-    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        max_tokens: 2048,
-        temperature: 0,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userMessage },
-        ],
+        contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\n" + userMessage }] }],
+        generationConfig: { temperature: 0, maxOutputTokens: 2048 },
       }),
     });
 
-    if (!groqRes.ok) {
-      const errText = await groqRes.text();
-      console.error("Groq API error:", groqRes.status, errText);
-      return json({ error: `Upstream API error: ${groqRes.status}` }, 502);
+    if (!geminiRes.ok) {
+      const errText = await geminiRes.text();
+      console.error("Gemini API error:", geminiRes.status, errText);
+      return json({ error: `Upstream API error: ${geminiRes.status}` }, 502);
     }
 
-    const groqData = await groqRes.json();
-    const rawText: string = groqData?.choices?.[0]?.message?.content ?? "";
-    console.log("Groq raw response:", rawText.slice(0, 500));
+    const geminiData = await geminiRes.json();
+    const rawText: string = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    console.log("Gemini raw response:", rawText.slice(0, 500));
 
     let result: { id: string; score: number; reason: string }[];
     try {
