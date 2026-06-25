@@ -82,7 +82,7 @@ async function classifyKeywords(
 
   const userMessage = `COMPANY_KEYWORDS:\n${companyList}\n\nMY_KEYWORDS:\n${myList}\n\nClassify every company keyword and return the JSON.`;
 
-  const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`, {
+  const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
