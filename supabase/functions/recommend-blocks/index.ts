@@ -6,20 +6,24 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const json = (data: unknown, status = 200) =>
+  new Response(JSON.stringify(data), { status, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
+
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS_HEADERS });
-  if (req.method !== "POST") return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
+  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
-  const apiKey = Deno.env.get("GROQ_API_KEY");
-  if (!apiKey) return new Response(JSON.stringify({ error: "API key not configured" }), { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
+  try {
+    const apiKey = Deno.env.get("GROQ_API_KEY");
+    if (!apiKey) return json({ error: "API key not configured" }, 500);
 
-  let body: { company_keywords?: string[]; blocks?: { id: string; title: string; competency_keywords: string[] }[] };
-  try { body = await req.json(); } catch { return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } }); }
+    let body: { company_keywords?: string[]; blocks?: { id: string; title: string; competency_keywords: string[] }[] };
+    try { body = await req.json(); } catch { return json({ error: "Invalid JSON" }, 400); }
 
-  const { company_keywords = [], blocks = [] } = body;
-  if (!blocks.length) return new Response(JSON.stringify([]), { status: 200, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
+    const { company_keywords = [], blocks = [] } = body;
+    if (!blocks.length) return json([], 200);
 
-  const systemPrompt = `You are a career matching engine. You will be given a list of company-required competency keywords and a candidate's experience blocks.
+    const systemPrompt = `You are a career matching engine. You will be given a list of company-required competency keywords and a candidate's experience blocks.
 
 Your job is to score each experience block from 0 to 100 based on how well its competency_keywords match the company_keywords.
 
@@ -32,53 +36,69 @@ Scoring criteria:
 - A block that covers less than 20% = 0-19
 - Scores must reflect relative ranking — no two blocks should have the exact same score unless they truly match equally
 
-Return ONLY a JSON array sorted by score descending. No explanation. No markdown.
+Return ONLY a JSON array. No explanation. No markdown. No code fences.
 [
-  { "id": "block_id", "score": 85, "reason": "one line explanation of why this score" },
+  { "id": "block_id", "score": 85, "reason": "one line explanation" },
   ...
 ]
 
 Include ALL blocks in the response. Do not skip any.`;
 
-  const userMessage = `Company-required keywords:
+    const userMessage = `Company-required keywords:
 ${JSON.stringify(company_keywords)}
 
 Candidate experience blocks:
 ${blocks.map(b => `ID: ${b.id}\nTitle: ${b.title}\nKeywords: ${JSON.stringify(b.competency_keywords)}`).join('\n\n')}`;
 
-  const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      max_tokens: 2048,
-      temperature: 0,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage }
-      ]
-    })
-  });
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        max_tokens: 2048,
+        temperature: 0,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userMessage },
+        ],
+      }),
+    });
 
-  if (!groqRes.ok) {
-    const errText = await groqRes.text();
-    console.error("Groq API error:", errText);
-    return new Response(JSON.stringify({ error: "Upstream API error" }), { status: 502, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
+    if (!groqRes.ok) {
+      const errText = await groqRes.text();
+      console.error("Groq API error:", groqRes.status, errText);
+      return json({ error: `Upstream API error: ${groqRes.status}` }, 502);
+    }
+
+    const groqData = await groqRes.json();
+    const rawText: string = groqData?.choices?.[0]?.message?.content ?? "";
+    console.log("Groq raw response:", rawText.slice(0, 500));
+
+    let result: { id: string; score: number; reason: string }[];
+    try {
+      const parsed = JSON.parse(rawText);
+      result = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      const m = rawText.match(/\[[\s\S]*\]/);
+      if (m) {
+        try {
+          const parsed = JSON.parse(m[0]);
+          result = Array.isArray(parsed) ? parsed : [];
+        } catch {
+          console.error("Failed to parse extracted JSON:", m[0].slice(0, 200));
+          return json({ error: "Failed to parse AI response" }, 500);
+        }
+      } else {
+        console.error("No JSON array found in response:", rawText.slice(0, 200));
+        return json({ error: "Failed to parse AI response" }, 500);
+      }
+    }
+
+    result.sort((a, b) => b.score - a.score);
+    return json(result, 200);
+
+  } catch (err) {
+    console.error("Unhandled error in recommend-blocks:", err);
+    return json({ error: String(err) }, 500);
   }
-
-  const data = await groqRes.json();
-  const rawText = data?.choices?.[0]?.message?.content ?? "";
-
-  let result: { id: string; score: number; reason: string }[];
-  try {
-    result = JSON.parse(rawText);
-  } catch {
-    const m = rawText.match(/\[[\s\S]*\]/);
-    if (m) { result = JSON.parse(m[0]); }
-    else return new Response(JSON.stringify({ error: "Failed to parse AI response" }), { status: 500, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
-  }
-
-  result.sort((a, b) => b.score - a.score);
-
-  return new Response(JSON.stringify(result), { status: 200, headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
 });
