@@ -18,7 +18,7 @@ serve(async (req: Request) => {
     });
   }
 
-  const apiKey = Deno.env.get("GEMINI_API_KEY");
+  const apiKey = Deno.env.get("GROQ_API_KEY");
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "API key not configured" }), {
       status: 500,
@@ -119,26 +119,33 @@ Return ONLY this JSON. No explanation. No markdown.
 
   const userMessage = `Analyze the experience described above and return the JSON.`;
 
-  const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+  const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
     body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\n" + userMessage }] }],
-      generationConfig: { temperature: 0, maxOutputTokens: 1024 },
+      model: "llama-3.3-70b-versatile",
+      max_tokens: 1024,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user",   content: userMessage },
+      ],
     }),
   });
 
-  if (!geminiRes.ok) {
-    const errText = await geminiRes.text();
-    console.error("Gemini API error:", errText);
+  if (!groqRes.ok) {
+    const errText = await groqRes.text();
+    console.error("Groq API error:", errText);
     return new Response(JSON.stringify({ error: "Upstream API error" }), {
       status: 502,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
-  const data = await geminiRes.json();
-  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+  const data = await groqRes.json();
+  const rawText = data?.choices?.[0]?.message?.content ?? "";
 
   let result: {
     work_activities: string[];

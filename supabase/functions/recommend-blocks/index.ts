@@ -14,7 +14,7 @@ serve(async (req: Request) => {
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   try {
-    const apiKey = Deno.env.get("GEMINI_API_KEY");
+    const apiKey = Deno.env.get("GROQ_API_KEY");
     if (!apiKey) return json({ error: "API key not configured" }, 500);
 
     let body: { company_keywords?: string[]; blocks?: { id: string; title: string; competency_keywords: string[] }[] };
@@ -36,9 +36,9 @@ Scoring criteria:
 - A block that covers less than 20% = 0-19
 - Scores must reflect relative ranking — no two blocks should have the exact same score unless they truly match equally
 
-Return ONLY a JSON array. No explanation. No markdown. No code fences. No newlines inside string values.
+Return ONLY a JSON array. No explanation. No markdown. No code fences.
 [
-  { "id": "block_id", "score": 85, "reason": "one line explanation under 20 words" },
+  { "id": "block_id", "score": 85, "reason": "one line explanation" },
   ...
 ]
 
@@ -50,42 +50,52 @@ ${JSON.stringify(company_keywords)}
 Candidate experience blocks:
 ${blocks.map(b => `ID: ${b.id}\nTitle: ${b.title}\nKeywords: ${JSON.stringify(b.competency_keywords)}`).join('\n\n')}`;
 
-    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
       body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\n" + userMessage }] }],
-        generationConfig: { temperature: 0, maxOutputTokens: 4096 },
+        model: "llama-3.3-70b-versatile",
+        max_tokens: 2048,
+        temperature: 0,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userMessage },
+        ],
       }),
     });
 
-    if (!geminiRes.ok) {
-      const errText = await geminiRes.text();
-      console.error("Gemini API error:", geminiRes.status, errText);
-      return json({ error: `Upstream API error: ${geminiRes.status}` }, 502);
+    if (!groqRes.ok) {
+      const errText = await groqRes.text();
+      console.error("Groq API error:", groqRes.status, errText);
+      return json({ error: `Upstream API error: ${groqRes.status}` }, 502);
     }
 
-    const geminiData = await geminiRes.json();
-    const rawText: string = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-    const finishReason = geminiData?.candidates?.[0]?.finishReason ?? "unknown";
-    console.log("recommend-blocks finishReason:", finishReason);
-    console.log("recommend-blocks rawText (first 400):", rawText.slice(0, 400));
+    const groqData = await groqRes.json();
+    const rawText: string = groqData?.choices?.[0]?.message?.content ?? "";
+    console.log("Groq raw response:", rawText.slice(0, 500));
 
-    const stripped = rawText.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
-    let parsed: { id: string; score: number; reason: string }[];
+    let result: { id: string; score: number; reason: string }[];
     try {
-      parsed = JSON.parse(stripped);
+      const parsed = JSON.parse(rawText);
+      result = Array.isArray(parsed) ? parsed : [];
     } catch {
-      const match = stripped.match(/\[[\s\S]*\]/);
-      if (!match) {
-        console.error("No JSON array found in response:", stripped.substring(0, 300));
+      const m = rawText.match(/\[[\s\S]*\]/);
+      if (m) {
+        try {
+          const parsed = JSON.parse(m[0]);
+          result = Array.isArray(parsed) ? parsed : [];
+        } catch {
+          console.error("Failed to parse extracted JSON:", m[0].slice(0, 200));
+          return json({ error: "Failed to parse AI response" }, 500);
+        }
+      } else {
+        console.error("No JSON array found in response:", rawText.slice(0, 200));
         return json({ error: "Failed to parse AI response" }, 500);
       }
-      parsed = JSON.parse(match[0]);
     }
 
-    parsed.sort((a, b) => b.score - a.score);
-    return json(parsed, 200);
+    result.sort((a, b) => b.score - a.score);
+    return json(result, 200);
 
   } catch (err) {
     console.error("Unhandled error in recommend-blocks:", err);
