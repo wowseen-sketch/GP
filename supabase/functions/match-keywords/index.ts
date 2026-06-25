@@ -7,34 +7,30 @@ const CORS_HEADERS = {
 };
 
 type MatchStatus = "matched" | "partial" | "missing";
+
 interface MatchItem {
   keyword: string;
   status: MatchStatus;
-  matched_with: string[];
 }
 
-// ─────────────────────────────────────────────────────────────
-// SWAPPABLE MATCHING LOGIC
-// Input : two keyword lists. Output: one classification per company
-//   keyword (matched | partial | missing) + which of my keywords justify it.
-// Scoring is NOT done here — the caller computes the score from these counts.
-// To change the matching approach later, replace this function only.
-// ─────────────────────────────────────────────────────────────
-async function classifyKeywords(
-  companyKeywords: string[],
-  myKeywords: string[],
-  apiKey: string,
-): Promise<{ results: MatchItem[] }> {
-  const companyList = companyKeywords.map((k, i) => `${i + 1}. ${k}`).join("\n");
-  const myList = myKeywords.length
-    ? myKeywords.map((k, i) => `${i + 1}. ${k}`).join("\n")
-    : "(none)";
+interface Block {
+  id: string;
+  title: string;
+  keywords: string[];
+  period?: string;
+}
 
-  const systemPrompt = `You are an AI job-fit matching engine.
+const json = (data: unknown, status = 200) =>
+  new Response(JSON.stringify(data), {
+    status,
+    headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+  });
+
+const SYSTEM_PROMPT = `You are an AI job-fit matching engine.
 
 You are given two lists of professional competency keywords:
 - COMPANY_KEYWORDS: competencies a job requires.
-- MY_KEYWORDS: competencies a candidate already has, drawn from their experience.
+- MY_KEYWORDS: competencies a candidate already has.
 
 For EACH company keyword, decide how well the candidate's keywords cover it BY MEANING, not by exact wording. Synonyms, paraphrases, and clearly implied equivalents count.
 
@@ -63,25 +59,28 @@ Calibration examples:
 
 Do NOT use percentage thresholds. Use the domain/action/scope framework only.
 
-COMPANY_KEYWORDS:
-${companyList}
-
-MY_KEYWORDS:
-${myList}
-
 Return ONLY this JSON. No explanation. No markdown.
 {
   "results": [
-    { "keyword": "<exact company keyword text>", "status": "matched", "matched_with": ["<my keyword>"] }
+    { "keyword": "<exact company keyword text>", "status": "matched" }
   ]
 }
 
 Rules:
 - Include EVERY company keyword exactly once, copying its original text verbatim.
-- "matched_with" lists the my-keywords that justify a matched/partial decision. Use an empty array for "missing".
-- Only use keywords that appear in the lists above. Do not invent new keywords.`;
+- Only valid statuses: "matched", "partial", "missing".`;
 
-  const userMessage = `Classify every company keyword and return the JSON.`;
+async function classifyKeywords(
+  companyKeywords: string[],
+  myKeywords: string[],
+  apiKey: string,
+): Promise<MatchItem[]> {
+  const companyList = companyKeywords.map((k, i) => `${i + 1}. ${k}`).join("\n");
+  const myList = myKeywords.length
+    ? myKeywords.map((k, i) => `${i + 1}. ${k}`).join("\n")
+    : "(none)";
+
+  const userMessage = `COMPANY_KEYWORDS:\n${companyList}\n\nMY_KEYWORDS:\n${myList}\n\nClassify every company keyword and return the JSON.`;
 
   const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
@@ -94,22 +93,22 @@ Rules:
       max_tokens: 1024,
       temperature: 0,
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user",   content: userMessage },
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: userMessage },
       ],
     }),
   });
 
   if (!groqRes.ok) {
     const errText = await groqRes.text();
-    console.error("Groq API error:", errText);
-    throw new Error("Upstream API error");
+    console.error("Groq API error:", groqRes.status, errText);
+    throw new Error(`Upstream API error: ${groqRes.status}`);
   }
 
   const data = await groqRes.json();
-  const rawText = data?.choices?.[0]?.message?.content ?? "";
+  const rawText: string = data?.choices?.[0]?.message?.content ?? "";
 
-  let parsed: { results?: MatchItem[] };
+  let parsed: { results?: { keyword: string; status: string }[] };
   try {
     parsed = JSON.parse(rawText);
   } catch {
@@ -118,86 +117,56 @@ Rules:
     parsed = JSON.parse(match[0]);
   }
 
-  // Reconcile against the original company list so the contract is guaranteed:
-  // every company keyword appears exactly once, with its exact text. Anything
-  // the model dropped or mislabeled defaults to "missing".
-  const byKeyword = new Map<string, MatchItem>();
+  const valid: MatchStatus[] = ["matched", "partial", "missing"];
+  const byKeyword = new Map<string, MatchStatus>();
   for (const item of parsed.results ?? []) {
-    if (item && typeof item.keyword === "string") {
-      byKeyword.set(item.keyword.trim().toLowerCase(), item);
+    if (item && typeof item.keyword === "string" && valid.includes(item.status as MatchStatus)) {
+      byKeyword.set(item.keyword.trim().toLowerCase(), item.status as MatchStatus);
     }
   }
 
-  const valid: MatchStatus[] = ["matched", "partial", "missing"];
-  const results: MatchItem[] = companyKeywords.map((kw) => {
-    const hit = byKeyword.get(kw.trim().toLowerCase());
-    const status: MatchStatus =
-      hit && valid.includes(hit.status) ? hit.status : "missing";
-    const matched_with =
-      status !== "missing" && Array.isArray(hit?.matched_with)
-        ? hit!.matched_with.map((m) => String(m).trim()).filter(Boolean)
-        : [];
-    return { keyword: kw, status, matched_with };
-  });
-
-  return { results };
+  return companyKeywords.map((kw) => ({
+    keyword: kw,
+    status: byKeyword.get(kw.trim().toLowerCase()) ?? "missing",
+  }));
 }
 
 serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
-  }
-
-  if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
-      status: 405,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-    });
-  }
-
-  const apiKey = Deno.env.get("GROQ_API_KEY");
-  if (!apiKey) {
-    return new Response(JSON.stringify({ error: "API key not configured" }), {
-      status: 500,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-    });
-  }
-
-  let body: { company_keywords?: unknown; my_keywords?: unknown };
-  try {
-    body = await req.json();
-  } catch {
-    return new Response(JSON.stringify({ error: "Invalid JSON" }), {
-      status: 400,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-    });
-  }
-
-  const companyKeywords = Array.isArray(body.company_keywords)
-    ? body.company_keywords.map((k) => String(k).trim()).filter(Boolean)
-    : [];
-  const myKeywords = Array.isArray(body.my_keywords)
-    ? body.my_keywords.map((k) => String(k).trim()).filter(Boolean)
-    : [];
-
-  if (!companyKeywords.length) {
-    return new Response(JSON.stringify({ error: "company_keywords is required" }), {
-      status: 400,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-    });
-  }
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS_HEADERS });
+  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   try {
-    const result = await classifyKeywords(companyKeywords, myKeywords, apiKey);
-    return new Response(JSON.stringify(result), {
-      status: 200,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-    });
+    const apiKey = Deno.env.get("GROQ_API_KEY");
+    if (!apiKey) return json({ error: "API key not configured" }, 500);
+
+    let body: { company_keywords?: unknown; blocks?: unknown };
+    try { body = await req.json(); } catch { return json({ error: "Invalid JSON" }, 400); }
+
+    const companyKeywords = Array.isArray(body.company_keywords)
+      ? (body.company_keywords as unknown[]).map((k) => String(k).trim()).filter(Boolean)
+      : [];
+    const blocks: Block[] = Array.isArray(body.blocks) ? body.blocks as Block[] : [];
+
+    if (!companyKeywords.length) return json({ error: "company_keywords is required" }, 400);
+
+    const allKeywords = blocks.flatMap((b) => b.keywords ?? []);
+
+    // Run overall + per-block classifications in parallel
+    const [overall, ...byBlockResults] = await Promise.all([
+      classifyKeywords(companyKeywords, allKeywords, apiKey),
+      ...blocks.map((block) => classifyKeywords(companyKeywords, block.keywords ?? [], apiKey)),
+    ]);
+
+    const by_block = blocks.map((block, i) => ({
+      block_id: block.id,
+      block_title: block.title,
+      block_period: block.period ?? "",
+      results: byBlockResults[i] ?? [],
+    }));
+
+    return json({ overall, by_block }, 200);
   } catch (err) {
-    console.error("match-keywords error:", err);
-    return new Response(JSON.stringify({ error: String((err as Error).message || err) }), {
-      status: 502,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
-    });
+    console.error("Unhandled error in match-keywords:", err);
+    return json({ error: String(err) }, 500);
   }
 });

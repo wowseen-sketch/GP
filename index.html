@@ -2346,61 +2346,71 @@
       <!-- Result state -->
       <div id="mr-result" style="display:none;padding:0 48px 48px;">
 
-        <!-- Score card -->
-        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:32px 36px;margin-bottom:24px;display:flex;align-items:center;gap:36px;">
-          <div style="text-align:center;flex-shrink:0;">
-            <div id="mr-score" style="font-size:64px;font-weight:900;line-height:1;letter-spacing:-0.03em;color:var(--ink);">0</div>
-            <div style="font-size:13px;color:var(--ink-4);font-weight:600;margin-top:4px;">/ 100 Job Fit Score</div>
+        <!-- Tier Score Card -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:28px 36px;margin-bottom:24px;">
+          <div id="mr-tier-label" style="font-size:22px;font-weight:900;color:var(--ink);margin-bottom:14px;letter-spacing:-0.02em;">—</div>
+          <div style="display:flex;gap:4px;margin-bottom:16px;">
+            <div data-seg="0" style="flex:1;height:8px;border-radius:99px;background:#E24B4A;opacity:0.25;transition:opacity 0.3s;"></div>
+            <div data-seg="1" style="flex:1;height:8px;border-radius:99px;background:#EF9F27;opacity:0.25;transition:opacity 0.3s;"></div>
+            <div data-seg="2" style="flex:1;height:8px;border-radius:99px;background:#EAB308;opacity:0.25;transition:opacity 0.3s;"></div>
+            <div data-seg="3" style="flex:1;height:8px;border-radius:99px;background:#84CC16;opacity:0.25;transition:opacity 0.3s;"></div>
+            <div data-seg="4" style="flex:1;height:8px;border-radius:99px;background:#22C55E;opacity:0.25;transition:opacity 0.3s;"></div>
           </div>
-          <div style="flex:1;">
-            <div style="height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:18px;">
-              <div id="mr-score-bar" style="height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width 0.6s ease;"></div>
+          <div style="display:flex;gap:24px;">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:#0369A1;flex-shrink:0;display:inline-block;"></span>
+              <span style="font-size:13px;color:var(--ink-4);">Matched</span>
+              <span id="mr-cnt-matched" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
             </div>
-            <div style="display:flex;gap:24px;">
-              <div style="display:flex;align-items:center;gap:7px;">
-                <span style="width:10px;height:10px;border-radius:50%;background:#0369A1;flex-shrink:0;display:inline-block;"></span>
-                <span style="font-size:13px;color:var(--ink-4);">Matched</span>
-                <span id="mr-cnt-matched" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:7px;">
-                <span style="width:10px;height:10px;border-radius:50%;background:#92400E;flex-shrink:0;display:inline-block;"></span>
-                <span style="font-size:13px;color:var(--ink-4);">Partial</span>
-                <span id="mr-cnt-partial" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:7px;">
-                <span style="width:10px;height:10px;border-radius:50%;background:#9F1239;flex-shrink:0;display:inline-block;"></span>
-                <span style="font-size:13px;color:var(--ink-4);">Missing</span>
-                <span id="mr-cnt-missing" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
-              </div>
+            <div style="display:flex;align-items:center;gap:7px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:#92400E;flex-shrink:0;display:inline-block;"></span>
+              <span style="font-size:13px;color:var(--ink-4);">Partial</span>
+              <span id="mr-cnt-partial" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:#9F1239;flex-shrink:0;display:inline-block;"></span>
+              <span style="font-size:13px;color:var(--ink-4);">Missing</span>
+              <span id="mr-cnt-missing" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
             </div>
           </div>
         </div>
 
-        <!-- Keyword groups -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px;">
-          <div style="background:var(--white);border:1px solid #BAE6FD;border-radius:var(--rl);padding:18px;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#0369A1;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-check"></i> Matched</div>
-            <div id="mr-group-matched" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <!-- Tabs: Overall / By Experience -->
+        <div style="margin-bottom:24px;">
+          <div style="display:flex;border-bottom:2px solid var(--border);margin-bottom:16px;">
+            <button id="mr-tab-overall" onclick="mrSwitchTab('overall')" style="padding:10px 20px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;border-bottom:2px solid var(--accent);color:var(--accent);margin-bottom:-2px;">Overall</button>
+            <button id="mr-tab-byexp" onclick="mrSwitchTab('byexp')" style="padding:10px 20px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:var(--ink-4);margin-bottom:-2px;">By Experience</button>
           </div>
-          <div style="background:var(--white);border:1px solid #FDE68A;border-radius:var(--rl);padding:18px;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#92400E;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-adjustments"></i> Partial</div>
-            <div id="mr-group-partial" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          <div id="mr-panel-overall">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+              <div style="background:var(--white);border:1px solid #BAE6FD;border-radius:var(--rl);padding:18px;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#0369A1;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-check"></i> Matched</div>
+                <div id="mr-group-matched" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              </div>
+              <div style="background:var(--white);border:1px solid #FDE68A;border-radius:var(--rl);padding:18px;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#92400E;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-adjustments"></i> Partial</div>
+                <div id="mr-group-partial" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              </div>
+              <div style="background:var(--white);border:1px solid #FECDD3;border-radius:var(--rl);padding:18px;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9F1239;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-x"></i> Missing</div>
+                <div id="mr-group-missing" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              </div>
+            </div>
           </div>
-          <div style="background:var(--white);border:1px solid #FECDD3;border-radius:var(--rl);padding:18px;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9F1239;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-x"></i> Missing</div>
-            <div id="mr-group-missing" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          <div id="mr-panel-byexp" style="display:none;">
+            <div id="mr-byexp-content"></div>
           </div>
         </div>
 
-        <!-- How to improve -->
-        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px;margin-bottom:24px;">
-          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;"><i class="ti ti-bulb" style="color:var(--accent);"></i> How to Improve</div>
-          <div id="mr-improve-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <!-- Missing keyword cards -->
+        <div id="mr-missing-section" style="margin-bottom:24px;display:none;">
+          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><i class="ti ti-alert-triangle" style="color:#9F1239;"></i> Missing Keywords</div>
+          <div id="mr-missing-cards"></div>
         </div>
 
         <!-- Bottom actions -->
         <div style="display:flex;gap:10px;padding-top:8px;border-top:1px solid var(--border);align-items:center;">
-          <button onclick="navigate('match')" class="btn-secondary-lg" style="display:flex;align-items:center;gap:6px;"><i class="ti ti-arrow-left" style="font-size:14px;"></i> Back</button>
+          <button onclick="saveToMatchArchive()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:6px;"><i class="ti ti-device-floppy" style="font-size:14px;"></i> Save to archive</button>
           <button disabled style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:12px 28px;border-radius:var(--rl);cursor:not-allowed;opacity:0.45;letter-spacing:-0.01em;">
             <i class="ti ti-file-description" style="font-size:16px;"></i> Build Tailored Resume
           </button>
@@ -2495,7 +2505,7 @@
         <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
           <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> blocks selected</div>
           <button onclick="closeBlockRecommendModal()" class="btn-secondary-lg" style="margin-left:auto;">Cancel</button>
-          <button onclick="" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <button onclick="(function(){ const selected=[...document.querySelectorAll('.rec-block.selected')]; const ids=selected.map(el=>el.dataset.id); const allKw=[]; const selBlocks=(_brmBlocks||[]).filter(b=>ids.includes(b.id)); selBlocks.forEach(b=>{(b.competency_keywords||[]).forEach(k=>{if(!allKw.includes(k))allKw.push(k);})}); _pendingAnalysis.selectedKeywords=allKw; _pendingAnalysis.selectedBlocks=selBlocks.map(b=>({id:b.id,title:b.title,keywords:b.competency_keywords||[],period:(b.start_date||'')+(b.end_date?' – '+b.end_date:' – present')})); closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <i class="ti ti-chart-bar" style="font-size:15px;"></i> Analyze with These Blocks
           </button>
         </div>
@@ -3995,6 +4005,23 @@
     _pendingAnalysis = { company, role, jdText: _jdRawText };
     navigate('match-result');
   }
+  function getScoreTier(score) {
+    if (score <= 20) return { label: 'Not a Fit',    color: '#E24B4A', idx: 0 };
+    if (score <= 40) return { label: 'Needs Work',   color: '#EF9F27', idx: 1 };
+    if (score <= 60) return { label: 'Moderate Fit', color: '#EAB308', idx: 2 };
+    if (score <= 80) return { label: 'Good Fit',     color: '#84CC16', idx: 3 };
+    return             { label: 'Strong Fit',        color: '#22C55E', idx: 4 };
+  }
+  function mrSwitchTab(tab) {
+    ['overall','byexp'].forEach(t => {
+      const btn   = document.getElementById('mr-tab-' + t);
+      const panel = document.getElementById('mr-panel-' + t);
+      const active = t === tab;
+      if (btn)   { btn.style.borderBottomColor = active ? 'var(--accent)' : 'transparent'; btn.style.color = active ? 'var(--accent)' : 'var(--ink-4)'; }
+      if (panel) panel.style.display = active ? 'block' : 'none';
+    });
+  }
+  function saveToMatchArchive() { alert('Saved!'); }
   async function runMatchResultAnalysis() {
     if (!_pendingAnalysis) return;
     const { company, role, jdText } = _pendingAnalysis;
@@ -4009,17 +4036,23 @@
       });
       if (jdErr) throw jdErr;
       const companyKeywords = (jdData && jdData.company_keywords) || [];
-      const myKeywords = await gatherMyKeywords();
+      let blocksForMatch = (_pendingAnalysis.selectedBlocks && _pendingAnalysis.selectedBlocks.length > 0)
+        ? _pendingAnalysis.selectedBlocks
+        : null;
+      if (!blocksForMatch) {
+        const myKeywords = await gatherMyKeywords();
+        blocksForMatch = [{ id: 'all', title: 'All Experiences', keywords: myKeywords }];
+      }
       const { data: matchData, error: matchErr } = await supa.functions.invoke('match-keywords', {
-        body: { company_keywords: companyKeywords, my_keywords: myKeywords },
+        body: { company_keywords: companyKeywords, blocks: blocksForMatch },
       });
       if (matchErr) throw matchErr;
-      const results = (matchData && matchData.results) || [];
+      const overall = (matchData && matchData.overall) || [];
       const counts = { matched: 0, partial: 0, missing: 0 };
-      for (const r of results) { if (counts[r.status] !== undefined) counts[r.status]++; }
-      const total = results.length || 1;
+      for (const r of overall) { if (counts[r.status] !== undefined) counts[r.status]++; }
+      const total = overall.length || 1;
       const score = Math.round((counts.matched * 1 + counts.partial * PARTIAL_WEIGHT) / total * 100);
-      renderMatchResult(score, counts, results);
+      renderMatchResult(score, matchData);
       document.getElementById('mr-loading').style.display = 'none';
       document.getElementById('mr-result').style.display  = 'block';
     } catch (err) {
@@ -4029,17 +4062,21 @@
       if (errEl) { errEl.textContent = 'Analysis failed: ' + (err.message || 'check console'); errEl.style.display = 'block'; }
     }
   }
-  function renderMatchResult(score, counts, results) {
-    const scoreEl = document.getElementById('mr-score');
-    scoreEl.textContent = score;
-    scoreEl.style.color = score >= 70 ? 'var(--success)' : score >= 45 ? 'var(--warn)' : 'var(--danger)';
+  function renderMatchResult(score, matchData) {
+    const tier = getScoreTier(score);
+    const tierLabel = document.getElementById('mr-tier-label');
+    if (tierLabel) { tierLabel.textContent = tier.label; tierLabel.style.color = tier.color; }
+    document.querySelectorAll('[data-seg]').forEach(seg => {
+      seg.style.opacity = parseInt(seg.dataset.seg) === tier.idx ? '1' : '0.25';
+    });
+    const overall = (matchData && matchData.overall) || [];
+    const counts = { matched: 0, partial: 0, missing: 0 };
+    for (const r of overall) { if (counts[r.status] !== undefined) counts[r.status]++; }
     document.getElementById('mr-cnt-matched').textContent = counts.matched;
     document.getElementById('mr-cnt-partial').textContent = counts.partial;
     document.getElementById('mr-cnt-missing').textContent = counts.missing;
-    const bar = document.getElementById('mr-score-bar');
-    if (bar) setTimeout(() => { bar.style.width = score + '%'; }, 50);
     const groups = { matched: [], partial: [], missing: [] };
-    for (const r of results) { (groups[r.status] || groups.missing).push(r.keyword); }
+    for (const r of overall) { (groups[r.status] || groups.missing).push(r.keyword); }
     const fill = (id, list, cls) => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -4050,11 +4087,28 @@
     fill('mr-group-matched', groups.matched, 'matched');
     fill('mr-group-partial', groups.partial, 'partial');
     fill('mr-group-missing', groups.missing, 'missing');
-    const improveEl = document.getElementById('mr-improve-list');
-    if (improveEl) {
-      improveEl.innerHTML = groups.missing.length
-        ? groups.missing.map(k => `<div style="padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;gap:4px;"><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This competency wasn't found in your experiences. Consider adding relevant experiences or highlighting transferable skills.</div></div>`).join('')
-        : '<div style="font-size:13px;color:var(--success);font-weight:600;">Great news — no missing keywords!</div>';
+    window._matchByBlock = (matchData && matchData.by_block) || [];
+    const byexpEl = document.getElementById('mr-byexp-content');
+    if (byexpEl) {
+      byexpEl.innerHTML = window._matchByBlock.map(blk => {
+        const partialKws = (blk.results || []).filter(r => r.status === 'partial').map(r => r.keyword);
+        return `<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px;margin-bottom:12px;">
+          <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(blk.block_title || '')}</div>
+          <div style="font-size:12px;color:var(--ink-4);margin-bottom:10px;">${escapeHtml(blk.block_period || '')}</div>
+          ${partialKws.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${partialKws.map(k=>`<span class="kw-pill partial">${escapeHtml(k)}</span>`).join('')}</div>` : ''}
+          <button onclick="navigate('blocks')" style="font-size:12px;font-weight:600;color:var(--accent);background:none;border:1px solid var(--accent);padding:6px 14px;border-radius:var(--rl);cursor:pointer;">이 경험 보완하러 가기</button>
+        </div>`;
+      }).join('');
+    }
+    const missingSection = document.getElementById('mr-missing-section');
+    const missingCards   = document.getElementById('mr-missing-cards');
+    if (missingCards) {
+      if (groups.missing.length) {
+        missingCards.innerHTML = groups.missing.map(k => `<div style="padding:14px 16px;background:var(--white);border:1px solid #FECDD3;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">이 역량이 선택한 경험에서 발견되지 않았어요.</div></div><button onclick="navigate('blocks')" style="white-space:nowrap;font-size:12px;font-weight:600;color:#9F1239;background:none;border:1px solid #9F1239;padding:6px 14px;border-radius:var(--rl);cursor:pointer;">경험 보완하러 가기</button></div>`).join('');
+        if (missingSection) missingSection.style.display = 'block';
+      } else {
+        if (missingSection) missingSection.style.display = 'none';
+      }
     }
   }
   function removeFile(type) {
