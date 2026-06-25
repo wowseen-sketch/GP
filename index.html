@@ -2495,7 +2495,7 @@
         <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
           <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> blocks selected</div>
           <button onclick="closeBlockRecommendModal()" class="btn-secondary-lg" style="margin-left:auto;">Cancel</button>
-          <button onclick="" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <button onclick="(function(){ const selected = [...document.querySelectorAll('.rec-block.selected')]; const ids = selected.map(el => el.dataset.id); const allKw = []; (_brmBlocks || []).filter(b => ids.includes(b.id)).forEach(b => { (b.competency_keywords || []).forEach(k => { if (!allKw.includes(k)) allKw.push(k); }); }); _pendingAnalysis.selectedKeywords = allKw; closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <i class="ti ti-chart-bar" style="font-size:15px;"></i> Analyze with These Blocks
           </button>
         </div>
@@ -3810,10 +3810,84 @@
     showFbToast();
   }
 
-  function openBlockRecommendModal() {
-    document.getElementById('block-recommend-modal').style.display = 'flex';
+  let _brmBlocks = [];
+
+  async function openBlockRecommendModal() {
+    const modal = document.getElementById('block-recommend-modal');
+    const loadingEl = document.getElementById('brm-loading');
+    const contentEl = document.getElementById('brm-content');
+    const errorEl = document.getElementById('brm-error');
+    const countEl = document.getElementById('selected-count');
+    if (!modal) return;
+    modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    if (loadingEl) loadingEl.style.display = 'flex';
+    if (contentEl) contentEl.style.display = 'none';
+    if (errorEl) errorEl.style.display = 'none';
+    try {
+      const { company, role, jdText } = _pendingAnalysis;
+      const { data: jdData, error: jdErr } = await supa.functions.invoke('extract-jd-keywords', { body: { company, role, jd_text: jdText } });
+      if (jdErr) throw jdErr;
+      const companyKeywords = (jdData && jdData.company_keywords) || [];
+      _pendingAnalysis.companyKeywords = companyKeywords;
+      const { data: blocksData, error: blocksErr } = await supa
+        .from('experience_blocks')
+        .select('id, title, competency_keywords')
+        .eq('user_id', currentUser.id)
+        .not('end_date', 'is', null)
+        .or('is_current.is.null,is_current.eq.false');
+      if (blocksErr) throw blocksErr;
+      const blocks = (blocksData || []).filter(b => b.competency_keywords && b.competency_keywords.length > 0);
+      const { data: ranked, error: rankErr } = await supa.functions.invoke('recommend-blocks', { body: { company_keywords: companyKeywords, blocks } });
+      if (rankErr) throw rankErr;
+      const blockMap = {};
+      blocks.forEach(b => { blockMap[b.id] = b; });
+      const rankedBlocks = (Array.isArray(ranked) ? ranked : [])
+        .filter(r => blockMap[r.id])
+        .map(r => ({ ...blockMap[r.id], score: r.score, reason: r.reason }))
+        .sort((a, b) => b.score - a.score);
+      _brmBlocks = rankedBlocks.slice(0, 5);
+      const recommended = _brmBlocks.slice(0, 3);
+      const others = _brmBlocks.slice(3, 5);
+      let html = '';
+      if (recommended.length) {
+        html += `<div style="margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">⭐ Recommended · Auto-selected</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
+        </div>`;
+      }
+      if (others.length) {
+        html += `<div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">${others.map(b => _renderBlockCard(b, false)).join('')}</div>
+        </div>`;
+      }
+      if (!_brmBlocks.length) {
+        html = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">No experience blocks found. Add experiences first.</div>';
+      }
+      if (contentEl) { contentEl.innerHTML = html; contentEl.style.display = 'flex'; }
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (countEl) countEl.textContent = recommended.length;
+    } catch (err) {
+      console.error('[openBlockRecommendModal] failed:', err);
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) { errorEl.textContent = 'Failed to load recommendations: ' + (err.message || 'check console'); errorEl.style.display = 'block'; }
+    }
   }
+
+  function _renderBlockCard(block, selected) {
+    const pills = Array.isArray(block.competency_keywords)
+      ? block.competency_keywords.slice(0, 6).map(k => `<span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 9px;border-radius:99px;">${escapeHtml(String(k))}</span>`).join('')
+      : '';
+    const cls = selected ? 'rec-block selected' : 'rec-block';
+    return `<div class="${cls}" data-id="${escapeHtml(block.id)}" onclick="toggleBlock(this)">
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(block.title || '')}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;${block.reason ? 'margin-bottom:6px;' : ''}">${pills}</div>
+      ${block.reason ? `<div style="font-size:11px;color:var(--ink-4);">${escapeHtml(block.reason)}</div>` : ''}
+      <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+    </div>`;
+  }
+
   function closeBlockRecommendModal() {
     document.getElementById('block-recommend-modal').style.display = 'none';
     document.body.style.overflow = '';
@@ -3919,7 +3993,7 @@
     }
     if (errEl) errEl.style.display = 'none';
     _pendingAnalysis = { company, role, jdText: _jdRawText };
-    navigate('match-result');
+    openBlockRecommendModal();
   }
   async function runMatchResultAnalysis() {
     if (!_pendingAnalysis) return;
@@ -3935,7 +4009,7 @@
       });
       if (jdErr) throw jdErr;
       const companyKeywords = (jdData && jdData.company_keywords) || [];
-      const myKeywords = await gatherMyKeywords();
+      const myKeywords = (_pendingAnalysis.selectedKeywords && _pendingAnalysis.selectedKeywords.length > 0) ? _pendingAnalysis.selectedKeywords : await gatherMyKeywords();
       const { data: matchData, error: matchErr } = await supa.functions.invoke('match-keywords', {
         body: { company_keywords: companyKeywords, my_keywords: myKeywords },
       });
