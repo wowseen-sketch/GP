@@ -3810,10 +3810,3007 @@
     showFbToast();
   }
 
-  function openBlockRecommendModal() {
-    document.getElementById('block-recommend-modal').style.display = 'flex';
+
+  function closeBlockRecommendModal() {
+    document.getElementById('block-recommend-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function toggleBlock(el) {
+    el.classList.toggle('selected');
+    const count = document.querySelectorAll('.rec-block.selected').length;
+    const counter = document.getElementById('selected-count');
+    if (counter) counter.textContent = count;
+  }
+  function filterSuggest(val) {
+    const box = document.getElementById('company-suggest');
+    if (!box) return;
+    const q = val.trim().toLowerCase();
+    if (!q) { box.style.display = 'none'; return; }
+    const companies = ['google','apple','tesla','meta','amazon','microsoft','openai'];
+    const hasMatch = companies.some(c => c.startsWith(q));
+    box.style.display = hasMatch ? 'block' : 'none';
+    box.querySelectorAll('.suggest-item').forEach(item => {
+      const name = item.querySelector('[style*="font-weight:600"]')?.textContent?.toLowerCase() || '';
+      item.style.display = name.startsWith(q) ? '' : 'none';
+    });
+  }
+  function selectCompany(name) {
+    const input = document.getElementById('company-input');
+    if (input) input.value = name;
+    const box = document.getElementById('company-suggest');
+    if (box) box.style.display = 'none';
+  }
+  function _processFile(file, type) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    function _showUploaded(text) {
+      if (type === 'jd') _jdRawText = text;
+      document.getElementById(type+'-dropzone').style.display = 'none';
+      const up = document.getElementById(type+'-uploaded');
+      up.style.display = 'flex';
+      document.getElementById(type+'-filename').textContent = file.name;
+      console.log('[processFile] first 200 chars:', text.slice(0, 200));
+    }
+    if (ext === 'txt') {
+      const reader = new FileReader();
+      reader.onload = e => _showUploaded(e.target.result);
+      reader.readAsText(file);
+    } else if (ext === 'pdf') {
+      const reader = new FileReader();
+      reader.onload = async e => {
+        const typedArray = new Uint8Array(e.target.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+        let text = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          text += content.items.map(s => s.str).join(' ') + '\n';
+        }
+        _showUploaded(text);
+      };
+      reader.readAsArrayBuffer(file);
+    } else if (ext === 'docx') {
+      const reader = new FileReader();
+      reader.onload = async e => {
+        const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
+        _showUploaded(result.value);
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  }
+  function handleFileSelect(input, type) {
+    if (!input.files.length) return;
+    _processFile(input.files[0], type);
+  }
+  function handleDrop(e, type) {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    _processFile(file, type);
+  }
+  function switchJdTab(tab) {
+    const isFile = tab === 'file';
+    const ft = document.getElementById('jd-tab-file');
+    const pt = document.getElementById('jd-tab-paste');
+    ft.style.background  = isFile  ? '#fff' : 'transparent';
+    ft.style.color       = isFile  ? '#111827' : '#9CA3AF';
+    ft.style.fontWeight  = isFile  ? '700' : '600';
+    ft.style.boxShadow   = isFile  ? '0 1px 3px rgba(0,0,0,0.10)' : 'none';
+    pt.style.background  = !isFile ? '#fff' : 'transparent';
+    pt.style.color       = !isFile ? '#111827' : '#9CA3AF';
+    pt.style.fontWeight  = !isFile ? '700' : '600';
+    pt.style.boxShadow   = !isFile ? '0 1px 3px rgba(0,0,0,0.10)' : 'none';
+    document.getElementById('jd-panel-file').style.display  = isFile  ? '' : 'none';
+    document.getElementById('jd-panel-paste').style.display = !isFile ? '' : 'none';
+  }
+  function startMatchAnalysis() {
+    const company = (document.getElementById('company-input')?.value || '').trim();
+    const role    = (document.getElementById('match-role-input')?.value || '').trim();
+    const errEl   = document.getElementById('match-start-error');
+    const missing = [];
+    if (!company)            missing.push('Company Name');
+    if (!role)               missing.push('Job Title');
+    if (!_jdRawText.trim()) missing.push('Job Description (upload a file or paste text)');
+    if (missing.length) {
+      if (errEl) { errEl.textContent = 'Please fill in: ' + missing.join(', '); errEl.style.display = 'block'; }
+      return;
+    }
+    if (errEl) errEl.style.display = 'none';
+    _pendingAnalysis = { company, role, jdText: _jdRawText };
+    navigate('match-result');
+  }
+  async function runMatchResultAnalysis() {
+    if (!_pendingAnalysis) return;
+    const { company, role, jdText } = _pendingAnalysis;
+    const eyebrow = document.getElementById('mr-eyebrow');
+    if (eyebrow) eyebrow.textContent = company.toUpperCase() + ' · ' + role.toUpperCase();
+    document.getElementById('mr-loading').style.display = 'flex';
+    document.getElementById('mr-result').style.display  = 'none';
+    document.getElementById('mr-error').style.display   = 'none';
+    try {
+      const { data: jdData, error: jdErr } = await supa.functions.invoke('extract-jd-keywords', {
+        body: { company, role, jd_text: jdText },
+      });
+      if (jdErr) throw jdErr;
+      const companyKeywords = (jdData && jdData.company_keywords) || [];
+      const myKeywords = await gatherMyKeywords();
+      const { data: matchData, error: matchErr } = await supa.functions.invoke('match-keywords', {
+        body: { company_keywords: companyKeywords, my_keywords: myKeywords },
+      });
+      if (matchErr) throw matchErr;
+      const results = (matchData && matchData.results) || [];
+      const counts = { matched: 0, partial: 0, missing: 0 };
+      for (const r of results) { if (counts[r.status] !== undefined) counts[r.status]++; }
+      const total = results.length || 1;
+      const score = Math.round((counts.matched * 1 + counts.partial * PARTIAL_WEIGHT) / total * 100);
+      renderMatchResult(score, counts, results);
+      document.getElementById('mr-loading').style.display = 'none';
+      document.getElementById('mr-result').style.display  = 'block';
+    } catch (err) {
+      console.error('[runMatchResultAnalysis] failed:', err);
+      document.getElementById('mr-loading').style.display = 'none';
+      const errEl = document.getElementById('mr-error');
+      if (errEl) { errEl.textContent = 'Analysis failed: ' + (err.message || 'check console'); errEl.style.display = 'block'; }
+    }
+  }
+  function renderMatchResult(score, counts, results) {
+    const scoreEl = document.getElementById('mr-score');
+    scoreEl.textContent = score;
+    scoreEl.style.color = score >= 70 ? 'var(--success)' : score >= 45 ? 'var(--warn)' : 'var(--danger)';
+    document.getElementById('mr-cnt-matched').textContent = counts.matched;
+    document.getElementById('mr-cnt-partial').textContent = counts.partial;
+    document.getElementById('mr-cnt-missing').textContent = counts.missing;
+    const bar = document.getElementById('mr-score-bar');
+    if (bar) setTimeout(() => { bar.style.width = score + '%'; }, 50);
+    const groups = { matched: [], partial: [], missing: [] };
+    for (const r of results) { (groups[r.status] || groups.missing).push(r.keyword); }
+    const fill = (id, list, cls) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = list.length
+        ? list.map(k => `<span class="kw-pill ${cls}">${escapeHtml(k)}</span>`).join('')
+        : '<span style="font-size:11px;color:var(--ink-4);">None</span>';
+    };
+    fill('mr-group-matched', groups.matched, 'matched');
+    fill('mr-group-partial', groups.partial, 'partial');
+    fill('mr-group-missing', groups.missing, 'missing');
+    const improveEl = document.getElementById('mr-improve-list');
+    if (improveEl) {
+      improveEl.innerHTML = groups.missing.length
+        ? groups.missing.map(k => `<div style="padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;gap:4px;"><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This competency wasn't found in your experiences. Consider adding relevant experiences or highlighting transferable skills.</div></div>`).join('')
+        : '<div style="font-size:13px;color:var(--success);font-weight:600;">Great news — no missing keywords!</div>';
+    }
+  }
+  function removeFile(type) {
+    document.getElementById(type+'-dropzone').style.display = 'block';
+    document.getElementById(type+'-uploaded').style.display = 'none';
+    document.getElementById(type+'-file').value = '';
+  }
+
+  function toggleChip(btn) {
+    if (btn.dataset.used === 'true') return;
+    const div = document.getElementById('exp-freetext');
+    const prompt = btn.dataset.prompt;
+    const chipId = prompt.replace(/[^a-zA-Z0-9]/g, '_');
+    const hasContent = div.innerHTML.trim() !== '';
+    if (hasContent) {
+      const hr = document.createElement('hr');
+      hr.style.cssText = 'border:none;border-top:1px solid var(--border);margin:8px 0;';
+      div.appendChild(hr);
+    }
+    const p = document.createElement('p');
+    p.dataset.chip = chipId;
+    p.style.cssText = 'margin:4px 0;';
+    p.textContent = prompt;
+    div.appendChild(p);
+    btn.dataset.used = 'true';
+    btn.style.cssText = btn.style.cssText + 'background:var(--surface-2);border-color:var(--border);color:var(--ink-4);';
+    updateExpCharCount();
+  }
+
+  function fillFreetextExample() {
+    const div = document.getElementById('exp-freetext');
+    if (!div) return;
+    div.innerText = `My role: Marketing team member
+Team setup: Team of 4 — 2 designers, 1 copywriter, 1 coordinator
+Goal or problem: Instagram engagement was dropping, needed to grow follower count and interaction rate
+How I executed: Ran weekly content calendar, scheduled and posted 3x per week
+How I collaborated: Worked with designers on visual direction, aligned with copywriter on tone
+How I strategized: Analyzed competitor accounts and identified reels as the highest-engagement format
+Tools I used: Canva, Notion, Later for scheduling
+The result: Follower count grew from 800 to 2,400 over 3 months
+Measurable impact: Average engagement rate increased from 1.2% to 4.8%
+The hard part: Team had different opinions on content tone, hard to align
+How I fixed it: Set up a shared style guide and weekly alignment meeting
+What I learned: Consistency matters more than quality of individual posts`;
+    updateExpCharCount();
+  }
+
+  function updateExpCharCount() {
+    const div = document.getElementById('exp-freetext');
+    const el = document.getElementById('exp-char-count');
+    if (div && el) el.textContent = div.innerText.length + ' characters';
+  }
+
+  function handleExpCurrentChange(cb) {
+    const end  = document.getElementById('exp-end');
+    const wrap = document.getElementById('ongoing-folder-select-wrap');
+    if (!end) return;
+    if (cb.checked) {
+      end.disabled      = true;
+      end.style.opacity = '0.4';
+      if (wrap) wrap.style.display = 'block';
+      _syncAnalyzeBtn(true);
+      loadOngoingFolders();
+    } else {
+      end.disabled      = false;
+      end.style.opacity = '1';
+      if (wrap) { wrap.style.display = 'none'; closeFolderDropdown(); }
+      const inputWrap = document.getElementById('new-folder-input-wrap');
+      if (inputWrap && inputWrap.style.display !== 'none') hideNewFolderInput();
+      _syncAnalyzeBtn(false);
+      window._selectedFolderId = null;
+      window.newFolderName     = null;
+    }
+  }
+
+  function _syncAnalyzeBtn(isOngoing) {
+    if (_addMode !== 'new') return;
+    const btn = document.getElementById('btn-analyze');
+    if (!btn) return;
+    if (isOngoing) {
+      btn.innerHTML        = 'Save as ongoing';
+      btn.style.background = '#1a1a1a';
+      btn.style.borderRadius = '999px';
+      btn.style.opacity    = '1';
+      btn.onmouseover = () => { btn.style.background = '#333'; };
+      btn.onmouseout  = () => { btn.style.background = '#1a1a1a'; };
+    } else {
+      btn.innerHTML        = 'Analyze Experience';
+      btn.style.background = 'var(--accent)';
+      btn.style.borderRadius = 'var(--rl)';
+      btn.style.opacity    = '1';
+      btn.onmouseover = () => { btn.style.opacity = '0.88'; };
+      btn.onmouseout  = () => { btn.style.opacity = '1'; };
+    }
+  }
+
+  async function loadOngoingFolders() {
+    if (!currentUser) return;
+    const dropdown = document.getElementById('ongoing-folder-dropdown');
+    if (!dropdown) return;
+    dropdown.innerHTML = '<div style="padding:10px 12px;font-size:12px;color:#aaa;">Loading…</div>';
+
+    const { data, error } = await supa
+      .from('experience_blocks')
+      .select('id, title')
+      .eq('user_id', currentUser.id)
+      .eq('is_current', true)
+      .is('parent_id', null)
+      .order('created_at', { ascending: false });
+
+    const folders = (!error && data) ? data : [];
+    let html = '';
+    folders.forEach(f => {
+      html += `<div data-id="${f.id}" data-name="${escapeHtml(f.title || 'Untitled')}" onclick="selectOngoingFolder(this.dataset.id, this.dataset.name)" style="padding:11px 14px;font-size:12px;color:#111;cursor:pointer;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background=''">${escapeHtml(f.title || 'Untitled')}</div>`;
+    });
+    html += `<div onclick="selectOngoingFolder('__new__', '+ Create new folder')" style="padding:11px 14px;font-size:12px;color:#888;font-style:italic;cursor:pointer;border-top:0.5px solid #f0f0f0;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background=''">+ Create new folder</div>`;
+    dropdown.innerHTML = html;
+  }
+
+  function toggleFolderDropdown() {
+    const dropdown = document.getElementById('ongoing-folder-dropdown');
+    const chevron  = document.getElementById('ongoing-folder-chevron');
+    if (!dropdown) return;
+    const isOpen = dropdown.style.display === 'block';
+    if (isOpen) { closeFolderDropdown(); }
+    else {
+      dropdown.style.display = 'block';
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    }
+  }
+
+  function closeFolderDropdown() {
+    const dropdown = document.getElementById('ongoing-folder-dropdown');
+    const chevron  = document.getElementById('ongoing-folder-chevron');
+    if (dropdown) dropdown.style.display = 'none';
+    if (chevron)  chevron.style.transform = '';
+  }
+
+  function selectOngoingFolder(id, name) {
+    closeFolderDropdown();
+    if (id === '__new__') {
+      showNewFolderInput();
+      return;
+    }
+    window._selectedFolderId = id;
+    const label   = document.getElementById('ongoing-folder-label');
+    const trigger = document.getElementById('ongoing-folder-trigger');
+    if (label)   { label.textContent = name; label.style.color = '#111'; }
+    if (trigger) trigger.style.color = '#111';
+  }
+
+  function showNewFolderInput() {
+    const selectWrap = document.getElementById('ongoing-folder-select-wrap');
+    const inputWrap  = document.getElementById('new-folder-input-wrap');
+    const input      = document.getElementById('new-folder-name-input');
+    if (selectWrap) selectWrap.style.display = 'none';
+    if (inputWrap)  inputWrap.style.display  = 'block';
+    if (input)      { input.value = ''; setTimeout(() => input.focus(), 50); }
+  }
+
+  function hideNewFolderInput() {
+    const selectWrap = document.getElementById('ongoing-folder-select-wrap');
+    const inputWrap  = document.getElementById('new-folder-input-wrap');
+    const input      = document.getElementById('new-folder-name-input');
+    if (inputWrap)  inputWrap.style.display  = 'none';
+    if (selectWrap) selectWrap.style.display = 'block';
+    if (input)      input.value = '';
+    const btn = document.getElementById('new-folder-create-btn');
+    if (btn) { btn.disabled = true; btn.style.background = '#ccc'; btn.style.cursor = 'not-allowed'; }
+  }
+
+  function onNewFolderInputChange(input) {
+    const btn = document.getElementById('new-folder-create-btn');
+    if (!btn) return;
+    const hasValue = input.value.trim().length > 0;
+    btn.disabled         = !hasValue;
+    btn.style.background = hasValue ? '#1a1a1a' : '#ccc';
+    btn.style.cursor     = hasValue ? 'pointer'  : 'not-allowed';
+  }
+
+  function confirmNewFolder() {
+    const input = document.getElementById('new-folder-name-input');
+    const name  = (input?.value || '').trim();
+    if (!name) return;
+    window.newFolderName     = name;
+    window._selectedFolderId = '__new__';
+    const label   = document.getElementById('ongoing-folder-label');
+    const trigger = document.getElementById('ongoing-folder-trigger');
+    if (label)   { label.textContent = name; label.style.color = '#111'; }
+    if (trigger) trigger.style.color = '#111';
+    hideNewFolderInput();
+  }
+
+  async function saveAsOngoing() {
+    if (!currentUser) return;
+    const val = id => (document.getElementById(id)?.value || '').trim();
+
+    // Validate required fields
+    const requiredFields = [
+      { id: 'exp-title',         label: 'Title' },
+      { id: 'exp-activity-type', label: 'Activity Type' },
+      { id: 'exp-start',         label: 'Start Date' },
+    ];
+    requiredFields.forEach(f => {
+      const el = document.getElementById(f.id);
+      if (!el) return;
+      el.style.borderColor = '';
+      const prev = el.parentNode.querySelector('.req-error-msg');
+      if (prev) prev.remove();
+    });
+    const missing = requiredFields.filter(f => !val(f.id));
+    if (missing.length > 0) {
+      missing.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (!el) return;
+        el.style.borderColor = '#EF4444';
+        const msg = document.createElement('div');
+        msg.className = 'req-error-msg';
+        msg.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        msg.innerHTML = '<i class="ti ti-alert-circle"></i> This field is required';
+        el.parentNode.appendChild(msg);
+      });
+      return;
+    }
+    const freetextEl  = document.getElementById('exp-freetext');
+    const freetextVal = (freetextEl?.innerText || '').trim();
+    if (!freetextVal) {
+      if (freetextEl) {
+        const prev = freetextEl.parentNode.querySelector('.req-error-msg');
+        if (prev) prev.remove();
+        freetextEl.style.borderColor = '#EF4444';
+        const msg = document.createElement('div');
+        msg.className = 'req-error-msg';
+        msg.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        msg.innerHTML = '<i class="ti ti-alert-circle"></i> This field is required';
+        freetextEl.parentNode.appendChild(msg);
+      }
+      return;
+    }
+    if (!window._selectedFolderId) {
+      showSaveToast('Please select a folder', true);
+      return;
+    }
+
+    const btn = document.getElementById('btn-analyze');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+    const monthToDate = m => m ? `${m}-01` : null;
+    const basePayload = {
+      user_id:       currentUser.id,
+      title:         val('exp-title'),
+      activity_type: val('exp-activity-type'),
+      organization:  val('exp-org') || null,
+      start_date:    monthToDate(val('exp-start')),
+      end_date:      null,
+      is_current:    true,
+      description:   freetextVal,
+    };
+
+    try {
+      if (window._selectedFolderId === '__new__') {
+        const folderName = window.newFolderName || val('exp-title') || 'New folder';
+        window.newFolderName = null;
+        const { data: folderData, error: folderErr } = await supa
+          .from('experience_blocks')
+          .insert({ user_id: currentUser.id, title: folderName, is_current: true, parent_id: null, start_date: basePayload.start_date })
+          .select('id').single();
+        if (folderErr || !folderData) {
+          showSaveToast('Folder creation failed: ' + (folderErr?.message || ''), true);
+          if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+          return;
+        }
+        const { error: scribErr } = await supa.from('experience_blocks').insert({ ...basePayload, parent_id: folderData.id });
+        if (scribErr) {
+          showSaveToast('Scribble save failed: ' + scribErr.message, true);
+          if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+          return;
+        }
+      } else {
+        const { error } = await supa.from('experience_blocks').insert({ ...basePayload, parent_id: window._selectedFolderId });
+        if (error) {
+          showSaveToast('Save failed: ' + error.message, true);
+          if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+          return;
+        }
+      }
+      window._selectedFolderId = null;
+      showSaveToast('Saved to ongoing!', false);
+      navigate('blocks');
+    } catch (e) {
+      showSaveToast('Unexpected error: ' + e.message, true);
+      if (btn) { btn.disabled = false; btn.innerHTML = 'Save as ongoing'; }
+    }
+  }
+
+  function openAnalysisModal() {
+    const isCurrent = document.getElementById('exp-current')?.checked || false;
+    if (isCurrent) { saveAsOngoing(); return; }
+
+    const val = id => (document.getElementById(id)?.value || '').trim();
+
+    const requiredFields = [
+      { id: 'exp-title',         label: 'Title' },
+      { id: 'exp-activity-type', label: 'Activity Type' },
+      { id: 'exp-start',         label: 'Start Date' },
+    ];
+    if (!isCurrent) requiredFields.splice(3, 0, { id: 'exp-end', label: 'End Date' });
+
+    requiredFields.forEach(f => {
+      const el = document.getElementById(f.id);
+      if (!el) return;
+      el.style.borderColor = '';
+      el.style.boxShadow = '';
+      const prev = el.parentNode.querySelector('.req-error-msg');
+      if (prev) prev.remove();
+    });
+
+    const missing = requiredFields.filter(f => !val(f.id));
+
+    if (missing.length > 0) {
+      missing.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (!el) return;
+        el.style.borderColor = '#EF4444';
+        const msg = document.createElement('div');
+        msg.className = 'req-error-msg';
+        msg.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        msg.innerHTML = '<i class="ti ti-alert-circle"></i> This field is required';
+        el.parentNode.appendChild(msg);
+      });
+      const firstEl = document.getElementById(missing[0].id);
+      if (firstEl) firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const freetextEl = document.getElementById('exp-freetext');
+    const freetextVal = (freetextEl?.innerText || '').trim();
+    const prevFtErr = freetextEl?.parentNode.querySelector('.req-error-msg');
+    if (prevFtErr) prevFtErr.remove();
+    if (freetextEl) freetextEl.style.borderColor = '';
+    if (!freetextVal) {
+      if (freetextEl) {
+        freetextEl.style.borderColor = '#EF4444';
+        const msg = document.createElement('div');
+        msg.className = 'req-error-msg';
+        msg.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        msg.innerHTML = '<i class="ti ti-alert-circle"></i> This field is required';
+        freetextEl.parentNode.appendChild(msg);
+        freetextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    _cachedAnalysis = null;
+    const m = document.getElementById('analysis-modal');
+    populateAnalysisModal(collectAddFormData());
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    runAnalysis();
+  }
+  function closeAnalysisModal() {
+    const m = document.getElementById('analysis-modal');
+    m.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // ── JD KEYWORD EXTRACTION (step 2) ─────────────
+  // Holds the most recent extraction so saveCompanyKeywords() can persist it.
+  let _cachedJd = null;
+  let _jdRawText = '';
+  let _pendingAnalysis = null;
+
+  // Calls the extract-jd-keywords edge function and previews the result on screen.
+  async function extractJdKeywords() {
+    const company = (document.getElementById('jd-company-input')?.value || '').trim();
+    const role    = (document.getElementById('jd-role-input')?.value || '').trim();
+    const jd_text = (document.getElementById('jd-text-input')?.value || '').trim();
+
+    const statusEl = document.getElementById('jd-extract-status');
+    const btn      = document.getElementById('jd-extract-btn');
+    const resultEl = document.getElementById('jd-extract-result');
+    const pillsEl  = document.getElementById('jd-extract-pills');
+
+    if (!jd_text) {
+      if (statusEl) { statusEl.textContent = 'Paste a job description first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Extracting…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    try {
+      const { data, error } = await supa.functions.invoke('extract-jd-keywords', {
+        body: { company, role, jd_text },
+      });
+      if (error) throw error;
+      const keywords = (data && data.company_keywords) || [];
+      // Stash the full extraction for the save step.
+      _cachedJd = { company, role, jd_text, keywords };
+      if (pillsEl) {
+        pillsEl.innerHTML = keywords.length
+          ? keywords.map(k => `<span style="font-size:12px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:4px 11px;border-radius:99px;">${escapeHtml(k)}</span>`).join('')
+          : '<span style="font-size:12px;color:var(--ink-4);">No keywords extracted</span>';
+      }
+      if (resultEl) resultEl.style.display = 'block';
+      // Reset the save status — this is a fresh extraction, not yet saved.
+      const saveStatusEl = document.getElementById('jd-save-status');
+      if (saveStatusEl) { saveStatusEl.textContent = ''; }
+      if (statusEl) { statusEl.textContent = `${keywords.length} keywords extracted`; statusEl.style.color = 'var(--success)'; }
+    } catch (err) {
+      console.error('[extractJdKeywords] failed:', err);
+      if (statusEl) { statusEl.textContent = 'Extraction failed — check console'; statusEl.style.color = 'var(--danger)'; }
+    }
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+  }
+
+  // ── SAVE EXTRACTED JD KEYWORDS (step 2-③) ──────
+  // Persists the current extraction to company_keywords.
+  // Upserts on (user_id, company_name, role_title) so re-saving the same
+  // company + role overwrites instead of piling up duplicate rows.
+  async function saveCompanyKeywords() {
+    const statusEl = document.getElementById('jd-save-status');
+    const btn      = document.getElementById('jd-save-btn');
+
+    // 1. Auth gate — same pattern as saveExperienceBlock.
+    if (!currentUser) {
+      openAuthRequiredModal('save');
+      return;
+    }
+
+    // 2. Need a fresh extraction to save.
+    if (!_cachedJd) {
+      if (statusEl) { statusEl.textContent = 'Extract keywords first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    const company_name = (_cachedJd.company || '').trim();
+    const role_title   = (_cachedJd.role   || '').trim();
+    const jd_text      = _cachedJd.jd_text || '';
+    const keywords     = _cachedJd.keywords || [];
+
+    // 3. Validate required fields.
+    if (!company_name)    { if (statusEl) { statusEl.textContent = 'Company name is required'; statusEl.style.color = 'var(--danger)'; } return; }
+    if (!role_title)      { if (statusEl) { statusEl.textContent = 'Job title is required';    statusEl.style.color = 'var(--danger)'; } return; }
+    if (!keywords.length) { if (statusEl) { statusEl.textContent = 'No keywords to save';      statusEl.style.color = 'var(--danger)'; } return; }
+
+    // 4. Upsert. keywords is a jsonb column (same as competency_keywords),
+    //    so supabase-js serializes the JS array to JSON automatically.
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Saving…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    const payload = {
+      user_id: currentUser.id,
+      company_name,
+      role_title,
+      jd_text,
+      keywords,
+    };
+
+    const { error } = await supa
+      .from('company_keywords')
+      .upsert(payload, { onConflict: 'user_id,company_name,role_title' });
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+
+    if (error) {
+      console.error('[saveCompanyKeywords] failed:', error);
+      if (statusEl) { statusEl.textContent = `Save failed: ${error.message}`; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+
+    if (statusEl) { statusEl.textContent = 'Saved ✓'; statusEl.style.color = 'var(--success)'; }
+    if (typeof showSaveToast === 'function') showSaveToast('Company keywords saved');
+  }
+
+  // ── FIT ANALYSIS (step 3) ──────────────────────
+  // Read EVERY experience block for the signed-in user and return the union of
+  // their competency_keywords (deduped, case-insensitive). Reads fresh from the
+  // DB — not just what's rendered on screen. Blocks with null/empty
+  // competency_keywords (e.g. old pre-AI blocks) are skipped.
+  async function gatherMyKeywords() {
+    if (!currentUser) return [];
+    const { data, error } = await supa
+      .from('experience_blocks')
+      .select('competency_keywords')
+      .eq('user_id', currentUser.id);
+    if (error) { console.error('[gatherMyKeywords] failed:', error); throw error; }
+
+    const seen = new Set();
+    const out = [];
+    for (const row of (data || [])) {
+      const kws = row.competency_keywords;   // jsonb -> JS array, or null
+      if (!Array.isArray(kws)) continue;      // null / not an array → skip
+      for (const k of kws) {
+        const s = String(k).trim();
+        if (!s) continue;
+        const key = s.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(s);
+      }
+    }
+    return out;
+  }
+
+  // Partial matches count as half. Tweak this one constant to re-weight.
+  const PARTIAL_WEIGHT = 0.5;
+
+  // Run the fit analysis: my keywords vs the extracted company keywords.
+  // Company side = _cachedJd.keywords, so this works whether or not the
+  // extraction was saved. The score is computed here in JS, not by the LLM.
+  async function analyzeFit() {
+    const statusEl = document.getElementById('jd-match-status');
+    const btn      = document.getElementById('jd-match-btn');
+    const resultEl = document.getElementById('jd-match-result');
+
+    // 1. Auth gate — my keywords come from the user's experience blocks.
+    if (!currentUser) { openAuthRequiredModal('save'); return; }
+
+    // 2. Need extracted company keywords.
+    if (!_cachedJd || !(_cachedJd.keywords || []).length) {
+      if (statusEl) { statusEl.textContent = 'Extract keywords first'; statusEl.style.color = 'var(--danger)'; }
+      return;
+    }
+    const companyKeywords = _cachedJd.keywords;
+
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+    if (statusEl) { statusEl.textContent = 'Analyzing…'; statusEl.style.color = 'var(--ink-4)'; }
+
+    try {
+      // 3. Gather my keywords from the DB.
+      const myKeywords = await gatherMyKeywords();
+
+      // 4. No experience keywords yet → nothing to match against. Stop early
+      //    with a clear message instead of calling the LLM (which would just
+      //    score everything 0 and look broken).
+      if (!myKeywords.length) {
+        if (statusEl) { statusEl.textContent = 'No keywords in your experience yet — add experience blocks first'; statusEl.style.color = 'var(--danger)'; }
+        if (resultEl) resultEl.style.display = 'none';
+        if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+        return;
+      }
+
+      // 5. Classify via the edge function.
+      const { data, error } = await supa.functions.invoke('match-keywords', {
+        body: { company_keywords: companyKeywords, my_keywords: myKeywords },
+      });
+      if (error) throw error;
+      const results = (data && data.results) || [];
+
+      // 6. Score in JS: (matched*1 + partial*0.5) / total company keywords * 100.
+      const counts = { matched: 0, partial: 0, missing: 0 };
+      for (const r of results) { if (counts[r.status] !== undefined) counts[r.status]++; }
+      const total = results.length || 1;
+      const score = Math.round((counts.matched * 1 + counts.partial * PARTIAL_WEIGHT) / total * 100);
+
+      // 7. Render.
+      renderFitResult(score, counts, results);
+      if (statusEl) { statusEl.textContent = ''; }
+    } catch (err) {
+      console.error('[analyzeFit] failed:', err);
+      if (statusEl) { statusEl.textContent = 'Analysis failed — check console'; statusEl.style.color = 'var(--danger)'; }
+    }
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+  }
+
+  // Paint the score, counts, and the three keyword groups.
+  function renderFitResult(score, counts, results) {
+    const resultEl = document.getElementById('jd-match-result');
+    document.getElementById('jd-match-score').textContent  = score;
+    document.getElementById('jd-cnt-matched').textContent  = counts.matched;
+    document.getElementById('jd-cnt-partial').textContent  = counts.partial;
+    document.getElementById('jd-cnt-missing').textContent  = counts.missing;
+
+    const groups = { matched: [], partial: [], missing: [] };
+    for (const r of results) { (groups[r.status] || groups.missing).push(r.keyword); }
+
+    const fill = (id, list, cls) => {
+      const el = document.getElementById(id);
+      el.innerHTML = list.length
+        ? list.map(k => `<span class="kw-pill ${cls}">${escapeHtml(k)}</span>`).join('')
+        : '<span style="font-size:11px;color:var(--ink-4);">None</span>';
+    };
+    fill('jd-group-matched', groups.matched, 'matched');
+    fill('jd-group-partial', groups.partial, 'partial');
+    fill('jd-group-missing', groups.missing, 'missing');
+
+    if (resultEl) resultEl.style.display = 'block';
+  }
+
+  // ── EXPERIENCE BLOCKS: helpers ─────────────────
+  // Map DB activity_type values to page-blocks section keys.
+  function activityTypeToCategory(type) {
+    const map = {
+      'Work Experience':           'work',
+      'Internship':                'internship',
+      'Education & Certification': 'education',
+      'Education / Certification': 'education',
+      'Projects':                  'projects',
+      'Project':                   'projects',
+      'Organizations':             'organizations',
+      'Leadership':                'organizations',
+      'Competition':               'competition',
+      'Volunteering':              'volunteering',
+      'Extracurricular':           'volunteering',
+      'Other':                     'other',
+    };
+    return map[type] || 'other';
+  }
+
+  // Read page-add form fields into a plain object.
+  function collectAddFormData() {
+    const val = id => (document.getElementById(id)?.value || '').trim();
+    const isCurrent = document.getElementById('exp-current')?.checked || false;
+    // <input type="month"> returns "YYYY-MM"; pad to a valid DATE.
+    const monthToDate = m => m ? `${m}-01` : null;
+    return {
+      title:         val('exp-title'),
+      activity_type: val('exp-activity-type'),
+      organization:  val('exp-org'),
+      start_date:    monthToDate(val('exp-start')),
+      end_date:      isCurrent ? null : monthToDate(val('exp-end')),
+      is_current:    isCurrent,
+      freetext:      (document.getElementById('exp-freetext')?.innerText || '').trim(),
+    };
+  }
+
+  // Populate analysis modal from page-add form data.
+  // TODO: replace with real AI call — for now this just echoes user input
+  // back into the modal layout. competencies/keywords/insights on the right
+  // side of the modal remain as static mock until real analysis is wired up.
+  function populateAnalysisModal(data) {
+    const setText = (id, txt) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = txt;
+    };
+
+    setText('am-title', data.title || 'Untitled Experience');
+
+    // Subtitle: "{type} · {start} – {end} · {duration}"
+    const fmtMonth = d => d ? d.slice(0, 7).replace('-', '.') : null;
+    const start = fmtMonth(data.start_date);
+    const end   = data.is_current ? 'Present' : fmtMonth(data.end_date);
+    const subParts = [];
+    if (data.activity_type) subParts.push(data.activity_type);
+    if (start || end) {
+      let period = `${start || '?'} – ${end || '?'}`;
+      // Duration only when both endpoints are real dates.
+      if (data.start_date && (data.end_date || data.is_current)) {
+        const s = new Date(data.start_date);
+        const e = data.is_current ? new Date() : new Date(data.end_date);
+        if (!isNaN(s) && !isNaN(e)) {
+          const months = (e.getFullYear() - s.getFullYear()) * 12
+                       + (e.getMonth() - s.getMonth()) + 1;
+          if (months > 0) {
+            const yrs = Math.floor(months / 12), mos = months % 12;
+            const parts = [];
+            if (yrs) parts.push(`${yrs} year${yrs > 1 ? 's' : ''}`);
+            if (mos) parts.push(`${mos} month${mos > 1 ? 's' : ''}`);
+            if (parts.length) period += ` · ${parts.join(' ')}`;
+          }
+        }
+      }
+      subParts.push(period);
+    }
+    setText('am-subtitle', subParts.join(' · '));
+
+    // STAR bodies — populated from API response fields.
+    const setStarEl = (id, txt) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = '';
+      const inner = document.createElement('div');
+      inner.style.cssText = 'padding:12px 20px 24px 12px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;';
+      inner.textContent = txt;
+      el.appendChild(inner);
+      el.scrollTop = 0;
+    };
+    setStarEl('am-situation', data.situation || '(no situation provided)');
+    setStarEl('am-task',      data.task      || '(no task provided)');
+    setStarEl('am-action',    data.action    || '(no action provided)');
+    setStarEl('am-result',    data.result    || '(no result provided)');
+  }
+
+  // Inline status line in the analysis modal footer (default / saving / error).
+  function setAnalysisModalStatus(msg, isError) {
+    const el = document.getElementById('am-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = isError ? 'var(--danger)' : 'var(--ink-4)';
+  }
+
+  function renderAnalysisTags(elId, items, tagClass = 'kw-tag') {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.innerHTML = items.length
+      ? items.map(k => `<span class="${tagClass}" style="cursor:default;">${escapeHtml(k)}</span>`).join('')
+      : `<span style="font-size:12px;color:var(--ink-4);">None identified</span>`;
+  }
+
+  // Cache for the most recent AI analysis result. Reset each time the modal opens.
+  let _cachedAnalysis = null;
+
+  // Call the analyze-experience edge function, render results in the right panel,
+  // and cache the result for saveExperienceBlock to reuse.
+  async function runAnalysis() {
+    const data = collectAddFormData();
+    const loadingEl = document.getElementById('am-body-loading');
+    const gridEl    = document.getElementById('am-body-grid');
+    const reBtn     = document.querySelector('[onclick="runAnalysis()"]');
+
+    if (loadingEl) { loadingEl.style.display = 'flex'; }
+    if (gridEl)    { gridEl.style.display    = 'none'; }
+    if (reBtn)     { reBtn.disabled = true; reBtn.style.opacity = '0.5'; }
+    setAnalysisModalStatus('Analyzing…', false);
+
+    const empty = { work_activities: [], software_skills: [], transferable_skills: [], competency_keywords: [] };
+    const requestBody = {
+      freetext: data.freetext,
+    };
+    console.log('freetext:', document.getElementById('exp-freetext').innerText);
+    console.log('[runAnalysis] invoking analyze-experience with body:', requestBody);
+    try {
+      const { data: aiData, error: fnError } = await supa.functions.invoke('analyze-experience', {
+        body: requestBody,
+      });
+      if (fnError) throw fnError;
+      console.log('[runAnalysis] response:', aiData);
+      _cachedAnalysis = aiData;
+    } catch (err) {
+      console.error('[runAnalysis] AI analysis failed:', err);
+      _cachedAnalysis = empty;
+      setAnalysisModalStatus('AI analysis failed — you can still save', false);
+    }
+
+    if (loadingEl) { loadingEl.style.display = 'none'; }
+    if (gridEl)    { gridEl.style.display    = 'grid'; }
+    if (reBtn)     { reBtn.disabled = false; reBtn.style.opacity = ''; }
+
+    renderAnalysisTags('am-work-activities',     _cachedAnalysis.work_activities     || [], 'kw-tag-grey');
+    renderAnalysisTags('am-transferable-skills', _cachedAnalysis.transferable_skills || [], 'kw-tag-grey');
+    renderAnalysisTags('am-software-skills',     _cachedAnalysis.software_skills     || [], 'kw-tag-grey');
+    renderAnalysisTags('am-competency-keywords', _cachedAnalysis.competency_keywords || []);
+
+    const star = (_cachedAnalysis.star_structured) || {};
+    const setStarText = (id, txt) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = '';
+      const inner = document.createElement('div');
+      inner.style.cssText = 'padding:12px 20px 24px 12px;font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;';
+      inner.textContent = txt;
+      el.appendChild(inner);
+      el.scrollTop = 0;
+    };
+    setStarText('am-situation', star.situation || '(no situation provided)');
+    setStarText('am-task',      star.task      || '(no task provided)');
+    setStarText('am-action',    star.action    || '(no action provided)');
+    setStarText('am-result',    star.result    || '(no result provided)');
+
+    // Inject O*NET callout dynamically right after #am-competency-keywords tags
+    if (!document.getElementById('am-onet-callout')) {
+      const callout = document.createElement('div');
+      callout.id = 'am-onet-callout';
+      callout.className = 'am-onet-callout';
+      callout.textContent = 'We analyze your experience based on O*NET — the official occupational classification system provided by the U.S. Department of Labor.';
+      const kwSection = document.getElementById('am-competency-keywords');
+      if (kwSection && kwSection.parentNode) {
+        const divider = document.createElement('div');
+        divider.style.cssText = 'height:1px;background:var(--border);';
+        kwSection.parentNode.after(divider);
+        divider.after(callout);
+      }
+    }
+
+    if (_cachedAnalysis.competency_keywords?.length) {
+      setAnalysisModalStatus('Ready to save this experience?', false);
+    }
+  }
+
+  // Persist the current experience block. Wired to the modal's "Save as Block" button.
+  async function saveExperienceBlock() {
+    // 1. Auth gate.
+    if (!currentUser) {
+      closeAnalysisModal();
+      openAuthRequiredModal('save');
+      return;
+    }
+
+    const data = collectAddFormData();
+
+    // 2. Validate required fields.
+    if (!data.title) {
+      setAnalysisModalStatus('Title is required', true); return;
+    }
+    if (!data.activity_type) {
+      setAnalysisModalStatus('Activity type is required', true); return;
+    }
+    if (!data.start_date) {
+      setAnalysisModalStatus('Start date is required', true); return;
+    }
+    if (!data.is_current && !data.end_date) {
+      setAnalysisModalStatus('End date is required (or mark as currently ongoing)', true); return;
+    }
+
+    // 3. If analysis hasn't completed yet, run it now.
+    if (!_cachedAnalysis) await runAnalysis();
+
+    const aiResult = _cachedAnalysis || {};
+
+    // 4. Insert.
+    const btn = document.getElementById('save-block-btn');
+    setAnalysisModalStatus('Saving…', false);
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+
+    const star = aiResult.star_structured || {};
+    const payload = {
+      user_id:              currentUser.id,
+      title:                data.title,
+      activity_type:        data.activity_type,
+      organization:         data.organization,
+      start_date:           data.start_date,
+      end_date:             data.end_date,
+      is_current:           data.is_current,
+      role:                 data.role,
+      description:          [star.situation, star.task].filter(Boolean).join('\n\n'),
+      goal:                 star.task      || '',
+      actions:              star.action    || '',
+      outcome_measurable:   star.result    || '',
+      work_activities:      aiResult.work_activities     || [],
+      software_skills:      aiResult.software_skills     || [],
+      transferable_skills:  aiResult.transferable_skills || [],
+      competency_keywords:  aiResult.competency_keywords || [],
+    };
+    if (window.currentParentId) payload.parent_id = window.currentParentId;
+    window.currentParentId = null;
+
+    const { error } = await supa.from('experience_blocks').insert(payload);
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+
+    if (error) {
+      setAnalysisModalStatus(`Save failed: ${error.message}`, true);
+      return;
+    }
+
+    // 5. Success.
+    setAnalysisModalStatus('Ready to save this experience?', false);
+    closeAnalysisModal();
+    showSaveToast('Experience block saved');
+    navigate('blocks');
+  }
+
+  // ── EXPERIENCE BLOCKS: load / render ───────────
+  // Section visual identity per category (matches the static section dots/labels).
+  const CATEGORY_STYLE = {
+    work:          { color: '#FF9300', label: 'Work Experience' },
+    internship:    { color: '#FF9300', label: 'Internship' },
+    education:     { color: '#FF9300', label: 'Education & Certification' },
+    projects:      { color: '#FF9300', label: 'Projects' },
+    organizations: { color: '#FF9300', label: 'Organizations' },
+    competition:   { color: '#FF9300', label: 'Competition' },
+    volunteering:  { color: '#FF9300', label: 'Volunteering' },
+    other:         { color: '#FF9300', label: 'Other' },
+  };
+
+  // Minimal HTML escaper for user-supplied text rendered via innerHTML.
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Remove previously rendered (Supabase-sourced) cards so re-renders don't stack.
+  function clearDynamicBlocks() {
+    document.querySelectorAll('.blk-card.dyn').forEach(el => el.remove());
+    document.querySelectorAll('.blk-folder.dyn').forEach(el => el.remove());
+    document.querySelectorAll('.blk-folder-card.dyn').forEach(el => el.remove());
+    const overlay = document.getElementById('folder-modal-overlay');
+    if (overlay) overlay.remove();
+    const oc = document.getElementById('blk-ongoing-count');
+    const cc = document.getElementById('blk-completed-count');
+    if (oc) oc.textContent = '0';
+    if (cc) cc.textContent = '0';
+  }
+
+  // Build a single .blk-card DOM node from a Supabase row.
+  function buildBlockCard(row, cat) {
+    const style = CATEGORY_STYLE[cat] || CATEGORY_STYLE.project;
+
+    // Period: "YYYY.MM – YYYY.MM · N months"
+    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : null;
+    const start = fmt(row.start_date);
+    const end   = row.is_current ? 'Present' : fmt(row.end_date);
+    let period  = `${start || '—'} – ${end || '—'}`;
+    if (row.start_date && (row.end_date || row.is_current)) {
+      const s = new Date(row.start_date);
+      const e = row.is_current ? new Date() : new Date(row.end_date);
+      if (!isNaN(s) && !isNaN(e)) {
+        const months = (e.getFullYear() - s.getFullYear()) * 12
+                     + (e.getMonth() - s.getMonth()) + 1;
+        if (months > 0) {
+          const yrs = Math.floor(months / 12), mos = months % 12;
+          const parts = [];
+          if (yrs) parts.push(`${yrs} year${yrs > 1 ? 's' : ''}`);
+          if (mos) parts.push(`${mos} month${mos > 1 ? 's' : ''}`);
+          if (parts.length) period += ` · ${parts.join(' ')}`;
+        }
+      }
+    }
+
+    const colorMap = {
+      work:          { bg: '#AEEEDD', accent: '#AEEEDD', text: '#0D4030', label: 'Work Experience',   doodle: `<line x1="220" y1="20" x2="220" y2="55" stroke="#4ABBA0" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="203" y1="37" x2="238" y2="37" stroke="#4ABBA0" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="248" y1="65" x2="263" y2="50" stroke="#4ABBA0" stroke-width="6" stroke-linecap="round" opacity="0.38"/><line x1="248" y1="50" x2="263" y2="65" stroke="#4ABBA0" stroke-width="6" stroke-linecap="round" opacity="0.38"/><circle cx="185" cy="105" r="22" fill="none" stroke="#4ABBA0" stroke-width="7" opacity="0.4"/><circle cx="185" cy="105" r="10" fill="none" stroke="#4ABBA0" stroke-width="5" opacity="0.3"/>` },
+      internship:    { bg: '#DDEEAA', accent: '#DDEEAA', text: '#2A4208', label: 'Internship',        doodle: `<path d="M150,15 L166,38 L182,15 L198,38 L214,15 L230,38 L246,15 L262,38 L276,15" fill="none" stroke="#8ABB40" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/><path d="M155,58 L171,78 L187,58 L203,78 L220,58 L237,78 L253,58" fill="none" stroke="#8ABB40" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.36"/><path d="M160,98 L176,116 L193,98 L210,116 L227,98 L244,116" fill="none" stroke="#8ABB40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/>` },
+      projects:      { bg: '#FFE0A0', accent: '#FFE0A0', text: '#5A3000', label: 'Projects',          doodle: `<circle cx="238" cy="128" r="80" fill="none" stroke="#E0A030" stroke-width="9" opacity="0.38"/><circle cx="238" cy="128" r="56" fill="none" stroke="#E0A030" stroke-width="7" opacity="0.3"/><circle cx="238" cy="128" r="34" fill="none" stroke="#E0A030" stroke-width="6" opacity="0.24"/><circle cx="238" cy="128" r="15" fill="none" stroke="#E0A030" stroke-width="5" opacity="0.2"/>` },
+      education:     { bg: '#FFAAA0', accent: '#FFAAA0', text: '#5A1000', label: 'Education',         doodle: `<path d="M148,168 L174,126 L194,152 L218,92 L240,118 L264,62 L278,82" fill="none" stroke="#D04030" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="174" cy="126" r="6" fill="#D04030" opacity="0.38"/><circle cx="218" cy="92" r="6" fill="#D04030" opacity="0.38"/><circle cx="264" cy="62" r="6" fill="#D04030" opacity="0.38"/><line x1="148" y1="174" x2="278" y2="174" stroke="#D04030" stroke-width="4" stroke-linecap="round" opacity="0.28"/>` },
+      organizations: { bg: '#DDBBEE', accent: '#DDBBEE', text: '#2A0848', label: 'Organizations',     doodle: `<path d="M228,38 C233,18 255,18 255,38 C275,33 275,55 255,55 C255,75 233,75 233,55 C213,55 213,33 228,38Z" fill="none" stroke="#8840BB" stroke-width="7" opacity="0.4"/><path d="M194,100 C197,82 212,82 212,100 C230,97 230,115 212,115 C212,133 197,133 194,115 C176,115 176,97 194,100Z" fill="none" stroke="#8840BB" stroke-width="5" opacity="0.32"/><circle cx="222" cy="155" r="16" fill="none" stroke="#8840BB" stroke-width="5" opacity="0.28"/>` },
+      competition:   { bg: '#AACCEE', accent: '#AACCEE', text: '#082038', label: 'Competition',       doodle: `<line x1="160" y1="10" x2="160" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="192" y1="10" x2="192" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="224" y1="10" x2="224" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="256" y1="10" x2="256" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="35" x2="280" y2="35" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="70" x2="280" y2="70" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="105" x2="280" y2="105" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="140" x2="280" y2="140" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><circle cx="160" cy="35" r="5" fill="#2070A8" opacity="0.48"/><circle cx="192" cy="70" r="5" fill="#2070A8" opacity="0.48"/><circle cx="224" cy="105" r="5" fill="#2070A8" opacity="0.48"/><circle cx="256" cy="140" r="5" fill="#2070A8" opacity="0.48"/>` },
+      volunteering:  { bg: '#DDEEAA', accent: '#DDEEAA', text: '#2A4208', label: 'Volunteering',      doodle: `<path d="M150,15 L166,38 L182,15 L198,38 L214,15 L230,38 L246,15 L262,38 L276,15" fill="none" stroke="#8ABB40" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>` },
+      other:         { bg: '#E0E0E0', accent: '#E0E0E0', text: '#444',    label: 'Other',             doodle: `` },
+    };
+    const c = colorMap[cat] || colorMap.other;
+
+    const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,2);
+    const tagsHtml = kws.map(k => {
+      const short = k.length > 22 ? k.slice(0, 20) + '…' : k;
+      const tagBg = c.text === '#fff' ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.1)';
+      return `<span style="font-size:11px;color:${c.text};background:${tagBg};padding:4px 11px;border-radius:99px;font-family:var(--ff-head);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;">${escapeHtml(short)}</span>`;
+    }).join('');
+
+    const el = document.createElement('div');
+    el.className = 'blk-card dyn';
+    el.dataset.type = cat;
+    el.style.background = c.bg;
+    el.style.border = 'none';
+    el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+    el.innerHTML = `
+      <svg style="position:absolute;bottom:0;right:0;width:160px;height:160px;pointer-events:none;" viewBox="0 0 280 190">${c.doodle || ''}</svg>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:auto;position:relative;z-index:1;">
+        <div class="blk-cat-label" style="color:${c.text};opacity:0.65;font-weight:600;">
+          <i class="ti ti-file-text" style="font-size:14px;opacity:0.7;"></i>
+          ${escapeHtml(c.label)}
+        </div>
+        <button data-del-id="${row.id}" onclick="event.stopPropagation();confirmDeleteBlock(this.dataset.delId)" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.5);font-size:13px;padding:0;display:flex;align-items:center;transition:color 0.12s;" onmouseover="this.style.color='rgba(255,255,255,0.9)'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
+          <i class="ti ti-trash"></i>
+        </button>
+      </div>
+      <div class="blk-card-title" style="color:${c.text};position:relative;z-index:1;">${escapeHtml(row.title || 'Untitled')}</div>
+      <div class="blk-card-period" style="color:${c.text};opacity:0.5;position:relative;z-index:1;">${escapeHtml(period)}</div>
+      <div class="blk-card-tags" style="position:relative;z-index:1;">${tagsHtml}</div>
+    `;
+
+    el.addEventListener('click', e => {
+      if (e.target.closest('.blk-card-edit-btn')) {
+        openBlockDetail(row, false);
+        return;
+      }
+      openBlockDetail(row, false);
+    });
+    const editBtn = el.querySelector('.blk-card-edit-btn');
+    if (editBtn) editBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openBlockDetail(row, true);
+    });
+
+    return el;
+  }
+
+  // Build a single ongoing folder card (.blk-folder-card). Click opens modal.
+  function buildFolderCard(row, scribbleCount) {
+    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '—';
+    const dateStr = `${fmt(row.start_date)} – Present`;
+    const actType = (row.activity_type || '').toUpperCase();
+    const count   = scribbleCount || 0;
+
+    const FOLDER_SVG = `<svg width="18" height="18" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 10C3 8.34315 4.34315 7 6 7H14L17 11H30C31.6569 11 33 12.3431 33 14V28C33 29.6569 31.6569 31 30 31H6C4.34315 31 3 29.6569 3 28V10Z" fill="#e8e8e8" stroke="#aaaaaa" stroke-width="1.5"/>
+      <path d="M3 15H33" stroke="#aaaaaa" stroke-width="1" opacity=".5"/>
+    </svg>`;
+
+    const el = document.createElement('div');
+    el.className = 'blk-folder-card dyn';
+    el.dataset.type = activityTypeToCategory(row.activity_type);
+    el.innerHTML = `
+      <div class="blk-folder-card-top">
+        <div class="blk-folder-card-meta">
+          <i class="ti ti-file-text" style="font-size:14px;color:#3b82f6;opacity:0.8;"></i>
+          <span class="blk-folder-badge">${actType || 'Ongoing'}</span>
+        </div>
+        <div class="blk-pulse-dot"></div>
+      </div>
+      <div class="blk-folder-card-body">
+        <div class="blk-folder-card-title">${escapeHtml(row.title || 'Untitled')}</div>
+        <div class="blk-folder-card-date">${escapeHtml(dateStr)}</div>
+        <div class="blk-folder-card-footer">${count} scribble${count !== 1 ? 's' : ''} inside →</div>
+      </div>
+    `;
+
+    el.addEventListener('click', () => openFolderModal(row));
+    return el;
+  }
+
+  // ── FOLDER MODAL ────────────────────────────────────────────────────────────
+
+  const FOLDER_SVG_SM = `<svg width="26" height="26" viewBox="0 0 36 36" fill="none">
+    <path d="M3 10C3 8.34315 4.34315 7 6 7H14L17 11H30C31.6569 11 33 12.3431 33 14V28C33 29.6569 31.6569 31 30 31H6C4.34315 31 3 29.6569 3 28V10Z" fill="#DBEAFE" stroke="#3b82f6" stroke-width="1.2"/>
+    <path d="M3 15H33" stroke="#3b82f6" stroke-width="1" opacity=".4"/>
+  </svg>`;
+
+  const DOC_SVG_SM = `<svg width="16" height="16" viewBox="0 0 28 28" fill="none" style="opacity:0.4;flex-shrink:0;">
+    <path d="M6 3H17L23 9V25C23 25.55 22.55 26 22 26H6C5.45 26 5 25.55 5 25V4C5 3.45 5.45 3 6 3Z" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1.2"/>
+    <path d="M17 3L23 9H18C17.45 9 17 8.55 17 8V3Z" fill="#9CA3AF"/>
+    <line x1="9" y1="14" x2="19" y2="14" stroke="#9CA3AF" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="9" y1="18" x2="19" y2="18" stroke="#9CA3AF" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>`;
+
+  function buildFolderModalBodyHtml(scribbles) {
+    if (!scribbles.length) {
+      return `<div style="font-size:13px;color:var(--ink-4);padding:20px 0;text-align:center;">No scribbles yet.<br>Click "Keep scribbling" to add one.</div>`;
+    }
+    const label = `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-4);margin-bottom:12px;">SCRIBBLES · ${scribbles.length}</div>`;
+    const items = scribbles.map(s => {
+      const fmt = d => d ? d.slice(0, 10) : '';
+      const dateStr = fmt(s.created_at || s.start_date);
+      return `<div class="folder-scribble-wrap" id="scribble-wrap-${s.id}">
+        <div class="folder-scribble-item" onclick="toggleScribblePreview('${s.id}')">
+          ${DOC_SVG_SM}
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(s.title || 'Untitled scribble')}</div>
+            ${dateStr ? `<div style="font-size:11px;color:var(--ink-4);margin-top:2px;">${escapeHtml(dateStr)}</div>` : ''}
+          </div>
+          <div class="folder-scribble-actions">
+            <button class="folder-scribble-icon-btn" title="Edit" onclick="event.stopPropagation();editFolderScribble('${s.id}')"><i class="ti ti-pencil" style="font-size:14px;"></i></button>
+            <button class="folder-scribble-icon-btn delete" title="Delete" onclick="event.stopPropagation();deleteFolderScribble('${s.id}')"><i class="ti ti-trash" style="font-size:14px;"></i></button>
+          </div>
+          <span class="folder-scribble-chevron" id="scribble-chevron-${s.id}">▾</span>
+        </div>
+        <div class="folder-scribble-preview" id="scribble-preview-${s.id}"></div>
+      </div>`;
+    }).join('');
+    return label + items;
+  }
+
+  async function toggleScribblePreview(scribbleId) {
+    const preview = document.getElementById('scribble-preview-' + scribbleId);
+    const row     = document.querySelector(`#scribble-wrap-${scribbleId} .folder-scribble-item`);
+    const chevron = document.getElementById('scribble-chevron-' + scribbleId);
+    if (!preview) return;
+
+    const isOpen = preview.style.display === 'block';
+    if (isOpen) {
+      preview.style.display = 'none';
+      if (row)     row.classList.remove('open');
+      if (chevron) { chevron.style.transform = ''; chevron.textContent = '▾'; }
+      return;
+    }
+
+    // Open: show loading immediately
+    preview.style.display = 'block';
+    preview.textContent   = 'Loading…';
+    if (row)     row.classList.add('open');
+    if (chevron) { chevron.style.transform = 'rotate(180deg)'; chevron.textContent = '▴'; }
+
+    // Use cached row data if description is already loaded
+    const cached = _allBlockRows.find(r => r.id === scribbleId);
+    if (cached && cached.description != null) {
+      preview.textContent = cached.description || '(no content)';
+      return;
+    }
+
+    // Fallback: fetch from Supabase
+    const { data, error } = await supa.from('experience_blocks')
+      .select('description')
+      .eq('id', scribbleId)
+      .single();
+    if (error || !data) { preview.textContent = 'Failed to load content.'; return; }
+    preview.textContent = data.description || '(no content)';
+  }
+
+  function openFolderModal(folderRow) {
+    _activeFolderRow = folderRow;
+    const scribbles = _allBlockRows.filter(r => r.parent_id === folderRow.id);
+    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '—';
+    const dateStr = `${fmt(folderRow.start_date)} – Present`;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'folder-modal-overlay';
+    overlay.id = 'folder-modal-overlay';
+    overlay.innerHTML = `
+      <div class="folder-modal">
+        <div class="folder-modal-header">
+          ${FOLDER_SVG_SM}
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(folderRow.title || 'Untitled')}</div>
+            <div style="font-size:10px;color:var(--ink-4);margin-top:1px;">${escapeHtml(dateStr)} · ${escapeHtml(folderRow.activity_type || '')}</div>
+          </div>
+          <button onclick="closeFolderModal()" style="width:28px;height:28px;border:none;background:none;color:var(--ink-3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;line-height:1;">✕</button>
+        </div>
+        <div class="folder-modal-body" id="folder-modal-body">
+          ${buildFolderModalBodyHtml(scribbles)}
+        </div>
+        <div class="folder-modal-footer">
+          <button onclick="markFolderComplete('${folderRow.id}')" style="font-size:13px;font-weight:500;color:#1a1a1a;background:transparent;border:1px solid #cccccc;border-radius:999px;padding:10px 20px;cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Mark as complete</button>
+          <button onclick="keepScribbling('${folderRow.id}')" style="font-size:13px;font-weight:500;color:#fff;background:#1a1a1a;border:none;border-radius:999px;padding:10px 20px;cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='#333333'" onmouseout="this.style.background='#1a1a1a'">Keep scribbling</button>
+        </div>
+      </div>
+    `;
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeFolderModal(); });
+    document.body.appendChild(overlay);
+  }
+
+  function closeFolderModal() {
+    const overlay = document.getElementById('folder-modal-overlay');
+    if (overlay) overlay.remove();
+    _activeFolderRow = null;
+  }
+
+  function editFolderScribble(scribbleId) {
+    const row = _allBlockRows.find(r => r.id === scribbleId);
+    if (!row) return;
+    window.editingScribbleId = scribbleId;
+    closeFolderModal();
+    resetAddForm(row);
+    const ft = document.getElementById('exp-freetext');
+    if (ft) {
+      ft.innerText = row.description || '';
+      if (typeof updateExpCharCount === 'function') updateExpCharCount();
+    }
+    navigate('add');
+  }
+
+  async function deleteFolderScribble(scribbleId) {
+    if (!confirm('Delete this scribble?')) return;
+    const { error } = await supa.from('experience_blocks').delete().eq('id', scribbleId).eq('user_id', currentUser.id);
+    if (error) { showSaveToast('Delete failed: ' + error.message, true); return; }
+    _allBlockRows = _allBlockRows.filter(r => r.id !== scribbleId);
+    const body = document.getElementById('folder-modal-body');
+    if (body && _activeFolderRow) {
+      const updated = _allBlockRows.filter(r => r.parent_id === _activeFolderRow.id);
+      body.innerHTML = buildFolderModalBodyHtml(updated);
+    }
+    showSaveToast('Scribble deleted', false);
+  }
+
+  async function markFolderComplete(folderId) {
+    const { error } = await supa.from('experience_blocks').update({ is_current: false }).eq('id', folderId).eq('user_id', currentUser.id);
+    if (error) { showSaveToast('Update failed: ' + error.message, true); return; }
+    closeFolderModal();
+    showSaveToast('Marked as complete!', false);
+    loadUserBlocks();
+  }
+
+  function keepScribbling(folderId) {
+    const folderRow = _activeFolderRow;   // capture before closeFolderModal clears it
+    window.currentParentId = folderId;
+    closeFolderModal();
+    resetAddForm(folderRow);              // prefill from folder + clear stale state
+    navigate('add');
+  }
+
+  function resetAddForm(prefillRow) {
+    // Clear validation errors and stale border colours
+    document.querySelectorAll('#page-add .req-error-msg').forEach(e => e.remove());
+    document.querySelectorAll('#page-add .form-input').forEach(e => { e.style.borderColor = ''; e.style.boxShadow = ''; });
+    // Reset chips
+    document.querySelectorAll('#page-add .exp-chip').forEach(c => c.classList.remove('active'));
+    // Clear freetext
+    const ft = document.getElementById('exp-freetext');
+    if (ft) { ft.innerHTML = ''; }
+    if (typeof updateExpCharCount === 'function') updateExpCharCount();
+
+    if (!prefillRow) return;
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
+    setVal('exp-title',         prefillRow.title         || '');
+    setVal('exp-activity-type', prefillRow.activity_type || '');
+    setVal('exp-org',           prefillRow.organization  || '');
+    setVal('exp-start',         (prefillRow.start_date   || '').slice(0, 7));
+    setVal('exp-end',           (prefillRow.end_date     || '').slice(0, 7));
+    const curCb = document.getElementById('exp-current');
+    if (curCb) {
+      curCb.checked = !!prefillRow.is_current;
+      if (typeof handleExpCurrentChange === 'function') handleExpCurrentChange(curCb);
+    }
+  }
+
+  function updateAddModeUI() {
+    const analyzeBtn = document.getElementById('btn-analyze');
+    const folderBtn  = document.getElementById('btn-add-to-folder');
+    const saveBtn    = document.getElementById('btn-save-scribble');
+    if (!analyzeBtn || !folderBtn) return;
+    if (_addMode === 'edit-scribble') {
+      analyzeBtn.style.display = 'none';
+      folderBtn.style.display  = 'none';
+      if (saveBtn) saveBtn.style.display = 'inline-flex';
+    } else if (_addMode === 'scribble') {
+      analyzeBtn.style.display = 'none';
+      folderBtn.style.display  = 'inline-flex';
+      if (saveBtn) saveBtn.style.display = 'none';
+    } else {
+      analyzeBtn.style.display = 'flex';
+      folderBtn.style.display  = 'none';
+      if (saveBtn) saveBtn.style.display = 'none';
+      const cb = document.getElementById('exp-current');
+      _syncAnalyzeBtn(cb?.checked || false);
+    }
+  }
+
+  async function addToFolder() {
+    if (!currentUser) return;
+
+    // Validate required fields
+    const title    = (document.getElementById('exp-title')?.value || '').trim();
+    const freetext = (document.getElementById('exp-freetext')?.innerText || '').trim();
+    let hasError = false;
+
+    document.querySelectorAll('#page-add .req-error-msg').forEach(e => e.remove());
+
+    const markError = (id, msg) => {
+      hasError = true;
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.borderColor = '#EF4444';
+      const div = document.createElement('div');
+      div.className = 'req-error-msg';
+      div.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+      div.innerHTML = `<i class="ti ti-alert-circle"></i> ${msg}`;
+      el.parentNode.appendChild(div);
+    };
+
+    if (!title) markError('exp-title', 'Title is required');
+    if (!freetext) {
+      hasError = true;
+      const ft = document.getElementById('exp-freetext');
+      if (ft) {
+        ft.style.borderColor = '#EF4444';
+        const div = document.createElement('div');
+        div.className = 'req-error-msg';
+        div.style.cssText = 'font-size:12px;color:#EF4444;margin-top:5px;display:flex;align-items:center;gap:4px;';
+        div.innerHTML = '<i class="ti ti-alert-circle"></i> Please write something first';
+        ft.parentNode.appendChild(div);
+      }
+    }
+    if (hasError) return;
+
+    const btn = document.getElementById('btn-add-to-folder');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+    const val = id => (document.getElementById(id)?.value || '').trim();
+    const isCurrent = document.getElementById('exp-current')?.checked || false;
+    const monthToDate = m => m ? `${m}-01` : null;
+
+    const payload = {
+      user_id:       currentUser.id,
+      title,
+      activity_type: val('exp-activity-type'),
+      organization:  val('exp-org'),
+      start_date:    monthToDate(val('exp-start')),
+      end_date:      isCurrent ? null : monthToDate(val('exp-end')),
+      is_current:    true,
+      description:   freetext,
+    };
+    if (!window.currentParentId) {
+      showSaveToast('No folder selected — go back and open a folder first.', true);
+      if (btn) { btn.disabled = false; btn.textContent = 'Add to folder'; }
+      return;
+    }
+    payload.parent_id = window.currentParentId;
+
+    const { error } = await supa.from('experience_blocks').insert(payload);
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Add to folder'; }
+
+    if (error) {
+      if (/parent_id/.test(error.message || '')) {
+        showSaveToast('DB migration needed — run: ALTER TABLE experience_blocks ADD COLUMN parent_id UUID REFERENCES experience_blocks(id);', true);
+      } else {
+        showSaveToast('Save failed: ' + error.message, true);
+      }
+      return;
+    }
+
+    window.currentParentId = null;
+    _addMode = 'new';
+    showSaveToast('Added to folder!', false);
+    navigate('blocks');
+  }
+
+  async function saveScribbleEdit() {
+    if (!currentUser || !window.editingScribbleId) return;
+
+    const title    = (document.getElementById('exp-title')?.value || '').trim();
+    const freetext = (document.getElementById('exp-freetext')?.innerText || '').trim();
+    let hasError = false;
+
+    if (!title)    { showFieldError('exp-title',    'Title is required');   hasError = true; }
+    if (!freetext) { showFieldError('exp-freetext', 'Content is required'); hasError = true; }
+    if (hasError) return;
+
+    const val = id => document.getElementById(id)?.value || null;
+    const isCurrent   = document.getElementById('exp-current')?.checked || false;
+    const monthToDate = m => m ? `${m}-01` : null;
+
+    const btn = document.getElementById('btn-save-scribble');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+    const payload = {
+      title,
+      activity_type: val('exp-activity-type'),
+      organization:  val('exp-org'),
+      start_date:    monthToDate(val('exp-start')),
+      end_date:      isCurrent ? null : monthToDate(val('exp-end')),
+      is_current:    isCurrent,
+      description:   freetext,
+    };
+
+    const { error } = await supa.from('experience_blocks')
+      .update(payload)
+      .eq('id', window.editingScribbleId)
+      .eq('user_id', currentUser.id);
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Save changes'; }
+
+    if (error) { showSaveToast('Save failed: ' + error.message, true); return; }
+
+    window.editingScribbleId = null;
+    _addMode = 'new';
+    showSaveToast('Scribble updated!', false);
+    navigate('blocks');
+  }
+
+  // Distribute rows into ongoing folders and completed grid.
+  function renderBlocks(rows) {
+    clearDynamicBlocks();
+    _allBlockRows = rows;
+
+    // Group scribbles (rows with parent_id) by parent; top-level rows have no parent_id
+    const scribbleMap = {};
+    const topLevel = [];
+    rows.forEach(r => {
+      if (r.parent_id) {
+        if (!scribbleMap[r.parent_id]) scribbleMap[r.parent_id] = [];
+        scribbleMap[r.parent_id].push(r);
+      } else {
+        topLevel.push(r);
+      }
+    });
+
+    const ongoing   = topLevel.filter(r => r.is_current === true);
+    const completed = topLevel.filter(r => r.is_current !== true);
+
+    const ongoingList      = document.getElementById('blk-ongoing-list');
+    const completedGrid    = document.getElementById('blk-completed-grid');
+    const ongoingSection   = document.getElementById('blk-ongoing-section');
+    const completedSection = document.getElementById('blk-completed-section');
+    const divider          = document.getElementById('blk-sections-divider');
+    const ongoingCountEl   = document.getElementById('blk-ongoing-count');
+    const completedCountEl = document.getElementById('blk-completed-count');
+
+    if (ongoingList)   ongoing.forEach(row => ongoingList.appendChild(buildFolderCard(row, (scribbleMap[row.id] || []).length)));
+    if (completedGrid) completed.forEach(row => completedGrid.appendChild(buildBlockCard(row, activityTypeToCategory(row.activity_type))));
+
+    if (ongoingCountEl)   ongoingCountEl.textContent   = ongoing.length;
+    if (completedCountEl) completedCountEl.textContent = completed.length;
+
+    const showOngoing   = ongoing.length   > 0;
+    const showCompleted = completed.length > 0;
+    if (ongoingSection)   ongoingSection.style.display   = showOngoing   ? '' : 'none';
+    if (completedSection) completedSection.style.display = showCompleted ? '' : 'none';
+    if (divider) divider.style.display = (showOngoing && showCompleted) ? '' : 'none';
+  }
+
+  // Show a separator before each visible section that follows another visible section,
+  // regardless of how many hidden sections are between them.
+  function updateSectionSeparators() {
+    const container = document.getElementById('blocks-sections');
+    if (!container) return;
+    const children = [...container.children];
+
+    // Hide all separators first
+    children.forEach(child => {
+      if (child.classList.contains('blk-section-sep')) child.style.display = 'none';
+    });
+
+    // Collect indices of visible sections
+    const visibleIdxs = children.reduce((acc, child, i) => {
+      if (child.classList.contains('blk-section') && child.style.display !== 'none') acc.push(i);
+      return acc;
+    }, []);
+
+    // For each consecutive pair of visible sections, show the separator closest before the second section
+    for (let k = 0; k < visibleIdxs.length - 1; k++) {
+      const toIdx = visibleIdxs[k + 1];
+      for (let j = toIdx - 1; j > visibleIdxs[k]; j--) {
+        if (children[j].classList.contains('blk-section-sep')) {
+          children[j].style.display = '';
+          break;
+        }
+      }
+    }
+  }
+
+  // Entry point: called whenever the Blocks page is entered (see navigate()).
+  // Handles three states — signed-out, signed-in empty, signed-in with rows.
+  async function loadUserBlocks() {
+    const sectionsEl  = document.getElementById('blocks-sections');
+    const emptyEl     = document.getElementById('blocks-empty');
+    const signedOutEl = document.getElementById('blocks-signedout');
+    if (!sectionsEl || !emptyEl || !signedOutEl) return;
+
+    // Reset
+    sectionsEl.style.display  = 'none';
+    emptyEl.style.display     = 'none';
+    signedOutEl.style.display = 'none';
+
+    if (!currentUser) {
+      clearDynamicBlocks();
+      signedOutEl.style.display = '';
+      return;
+    }
+
+    const { data, error } = await supa
+      .from('experience_blocks')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      // Surface the error but keep sections visible so the user isn't lost.
+      console.error('loadUserBlocks failed:', error);
+      showSaveToast(`Failed to load blocks: ${error.message}`, true);
+      clearDynamicBlocks();
+      sectionsEl.style.display = '';
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      clearDynamicBlocks();
+      emptyEl.style.display = '';
+      return;
+    }
+
+    sectionsEl.style.display = '';
+    renderBlocks(data);
+  }
+
+  // Lightweight toast for save success/error.
+  function showSaveToast(msg, isError) {
+    const t = document.getElementById('save-toast');
+    if (!t) return;
+    const textEl = t.querySelector('.save-toast-text');
+    const icon   = t.querySelector('i');
+    if (textEl) textEl.textContent = msg;
+    if (icon) {
+      icon.className = isError ? 'ti ti-alert-circle' : 'ti ti-circle-check';
+      icon.style.color = isError ? '#FF7676' : 'var(--accent)';
+    }
+    t.style.display = 'flex';
+    clearTimeout(showSaveToast._t);
+    showSaveToast._t = setTimeout(() => { t.style.display = 'none'; }, 2400);
+  }
+
+  // ── BLOCK DETAIL / EDIT MODAL ──────────────────
+  // View + inline-edit for a single experience_blocks row. v1 edits text fields
+  // only — the AI arrays (work_activities, …) are shown read-only and untouched.
+  let _allBlockRows     = [];   // all experience_blocks rows (for modal scribble lookup)
+  window.currentParentId   = null; // set when "Keep scribbling" → carry parent_id into next save
+  window.editingScribbleId = null; // set when editing an existing scribble via pencil button
+  window._selectedFolderId = null; // set when user picks a folder in the ongoing select
+  window.newFolderName     = null; // set when user creates a new folder via inline input
+  let _activeFolderRow  = null; // folder row currently shown in modal
+  let _addMode          = 'new'; // 'new' | 'scribble' | 'edit-scribble'
+  let _bdRow = null;       // row currently displayed
+  let _bdEditing = false;  // false = view, true = edit
+
+  // Fixed activity_type choices (mirror activityTypeToCategory keys).
+  const BD_ACTIVITY_TYPES = [
+    'Project', 'Work Experience', 'Internship',
+    'Leadership', 'Education / Certification', 'Extracurricular',
+  ];
+  // PDCA text fields — [db column, label]. Drives both render and collect.
+  const BD_PDCA_FIELDS = [
+    ['goal',                'Goal'],
+    ['strategy',            'Strategy'],
+    ['actions',             'Actions'],
+    ['failure_improvement', 'Failure & Improvement'],
+    ['outcome_measurable',  'Measurable Outcome'],
+    ['takeaway',            'Takeaway'],
+    ['applied',             'Applied Elsewhere'],
+  ];
+  // AI result arrays — [db column, label]. Read-only in v1.
+  const BD_AI_FIELDS = [
+    ['work_activities',     'Work Activities'],
+    ['software_skills',     'Software Skills'],
+    ['transferable_skills', 'Transferable Skills'],
+    ['competency_keywords', 'Competency Keywords'],
+  ];
+
+  const _bdFmtMonth = d => d ? d.slice(0, 7).replace('-', '.') : null;
+
+  // "YYYY.MM – YYYY.MM" (or "… – Present"); null when no dates at all.
+  function bdPeriodStr(row) {
+    const start = _bdFmtMonth(row.start_date);
+    const end   = row.is_current ? 'Present' : _bdFmtMonth(row.end_date);
+    if (!start && !end) return null;
+    return `${start || '?'} – ${end || '?'}`;
+  }
+
+  // "{type} · {period} · {role}" header subtitle.
+  function bdSubtitle(row) {
+    const parts = [];
+    if (row.activity_type) parts.push(row.activity_type);
+    const period = bdPeriodStr(row);
+    if (period)            parts.push(period);
+    if (row.role)          parts.push(row.role);
+    return parts.join(' · ');
+  }
+
+  function setBdStatus(msg, isError) {
+    const el = document.getElementById('bd-status');
+    if (!el) return;
+    el.textContent = msg || '';
+    el.style.color = isError ? 'var(--danger)' : 'var(--ink-4)';
+  }
+
+  function openBlockDetail(row, startInEdit) {
+    if (!row) return;
+    _bdRow = row;
+    _bdEditing = !!startInEdit;
+    setBdStatus('');
+    renderBlockDetail();
+    const m = document.getElementById('block-detail-modal');
+    if (m) m.style.display = 'block';
+  }
+
+  function closeBlockDetail() {
+    const m = document.getElementById('block-detail-modal');
+    if (m) m.style.display = 'none';
+    document.body.style.overflow = '';
+    _bdRow = null;
+    _bdEditing = false;
+    setBdStatus('');
+  }
+
+  function enterBlockEdit()  { _bdEditing = true;  setBdStatus(''); renderBlockDetail(); }
+  function cancelBlockEdit() { _bdEditing = false; setBdStatus(''); renderBlockDetail(); }
+
+  // Read-only tag list (used in both view and edit modes for AI arrays).
+  function bdTagsHtml(arr) {
+    const items = Array.isArray(arr) ? arr.filter(Boolean) : [];
+    return items.length
+      ? `<div class="bd-tags">${items.map(t => `<span class="kw-tag" style="cursor:default;">${escapeHtml(t)}</span>`).join('')}</div>`
+      : `<div class="bd-field-value empty">None identified</div>`;
+  }
+
+  function bdViewHtml(row) {
+    const v = x => (x != null && String(x).trim()) ? String(x).trim() : null;
+    const period = bdPeriodStr(row);
+
+    const metaChip = (label, val) => val ? `
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);">${label}</span>
+        <span style="font-size:13px;font-weight:500;color:var(--ink);">${escapeHtml(val)}</span>
+      </div>` : '';
+
+    const starCard = (letter, title, content) => {
+      if (!content) return '';
+      const paras = content.split(/\n+/).filter(l => l.trim());
+      const html = paras.map(l => `<p style="margin:0 0 10px;font-size:13.5px;color:var(--ink-2);line-height:1.75;">${escapeHtml(l.trim())}</p>`).join('');
+      return `
+        <div style="padding:0 0 0 18px;border-left:2px solid #E5E7EB;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="width:20px;height:20px;border-radius:5px;background:var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;">${letter}</span>
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-3);">${title}</span>
+          </div>
+          <div>${html}</div>
+        </div>`;
+    };
+
+    const tagsRow = (label, arr) => {
+      const items = Array.isArray(arr) ? arr.filter(Boolean) : [];
+      if (!items.length) return '';
+      return `
+        <div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">${label}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">${items.map(t =>
+            `<span style="font-size:11.5px;color:var(--ink-2);background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:99px;">${escapeHtml(t)}</span>`
+          ).join('')}</div>
+        </div>`;
+    };
+
+    // STAR 매핑: goal+strategy → S/T, actions → A, outcome+failure → R
+    const situation = [v(row.goal), v(row.strategy)].filter(Boolean).join('\n\n');
+    const action    = v(row.actions);
+    const result    = [v(row.outcome_measurable), v(row.failure_improvement), v(row.takeaway)].filter(Boolean).join('\n\n');
+
+    return `
+      <!-- Meta -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:4px 0 18px;">
+        ${metaChip('Type', v(row.activity_type))}
+        ${metaChip('Organization', v(row.organization))}
+        ${metaChip('Period', period ? escapeHtml(period) : null)}
+        ${metaChip('Role', v(row.role))}
+      </div>
+      <div style="height:1px;background:var(--border);margin-bottom:18px;"></div>
+
+      <!-- STAR -->
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        ${starCard('S', 'Situation & Task', situation)}
+        ${starCard('A', 'Action', action)}
+        ${starCard('R', 'Result', result)}
+        ${v(row.applied) ? starCard('→', 'Applied Elsewhere', v(row.applied)) : ''}
+      </div>
+
+      <!-- Keywords -->
+      ${(row.competency_keywords?.length || row.job_keywords?.length) ? `
+      <div style="height:1px;background:var(--border);margin:18px 0;"></div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        ${tagsRow('Competency Keywords', row.competency_keywords)}
+        ${tagsRow('Job Keywords', row.job_keywords)}
+      </div>` : ''}
+    `;
+  }
+
+  function bdActivityOptions(current) {
+    const opts = BD_ACTIVITY_TYPES.slice();
+    if (current && !opts.includes(current)) opts.unshift(current); // keep legacy values
+    return opts.map(o => `<option value="${escapeHtml(o)}"${o === current ? ' selected' : ''}>${escapeHtml(o)}</option>`).join('');
+  }
+
+  function bdEditHtml(row) {
+    const month = d => d ? escapeHtml(d.slice(0, 7)) : '';
+    const txt = (id, val) => `<input id="${id}" class="form-input" type="text" value="${escapeHtml(val || '')}">`;
+    return `
+      <div class="bd-section-label">Overview</div>
+      <div class="bd-field">
+        <label class="bd-field-label" for="bd-title-input">Title</label>
+        ${txt('bd-title-input', row.title)}
+      </div>
+      <div class="bd-grid-2">
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-activity-type">Activity Type</label>
+          <select id="bd-activity-type" class="form-input form-select">${bdActivityOptions(row.activity_type)}</select>
+        </div>
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-org">Organization</label>
+          ${txt('bd-org', row.organization)}
+        </div>
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-start">Start</label>
+          <input id="bd-start" class="form-input" type="month" value="${month(row.start_date)}">
+        </div>
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-end">End</label>
+          <input id="bd-end" class="form-input" type="month" value="${row.is_current ? '' : month(row.end_date)}">
+        </div>
+      </div>
+      <div class="bd-field" style="display:flex;align-items:center;gap:8px;">
+        <input id="bd-current" type="checkbox" ${row.is_current ? 'checked' : ''} onchange="bdSyncCurrent()" style="width:15px;height:15px;cursor:pointer;accent-color:var(--accent-2);">
+        <label for="bd-current" style="font-size:12px;color:var(--ink-2);cursor:pointer;">Currently ongoing</label>
+      </div>
+      <div class="bd-field">
+        <label class="bd-field-label" for="bd-role">Role</label>
+        ${txt('bd-role', row.role)}
+      </div>
+
+      <div class="bd-section-label">PDCA Structured Experience</div>
+      ${BD_PDCA_FIELDS.map(([col, label]) => `
+        <div class="bd-field">
+          <label class="bd-field-label" for="bd-${col}">${label}</label>
+          <textarea id="bd-${col}" class="form-input form-textarea" rows="3" style="min-height:70px;">${escapeHtml(row[col] || '')}</textarea>
+        </div>`).join('')}
+
+      <div class="bd-section-label">AI Analysis Results</div>
+      ${BD_AI_FIELDS.map(([col, label]) =>
+        `<div class="bd-field"><span class="bd-field-label">${label}</span>${bdTagsHtml(row[col])}</div>`).join('')}
+    `;
+  }
+
+  // Disable the End input while "Currently ongoing" is checked.
+  function bdSyncCurrent() {
+    const cb = document.getElementById('bd-current');
+    const end = document.getElementById('bd-end');
+    if (!cb || !end) return;
+    end.disabled = cb.checked;
+    end.style.opacity = cb.checked ? '0.5' : '';
+  }
+
+  function renderBlockDetail() {
+    const row = _bdRow;
+    if (!row) return;
+    const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+    set('bd-title',    row.title || 'Untitled');
+    set('bd-eyebrow',  _bdEditing ? 'Editing Block' : 'Experience Block');
+    set('bd-subtitle', bdSubtitle(row));
+
+    const body = document.getElementById('bd-body');
+    if (body) body.innerHTML = _bdEditing ? bdEditHtml(row) : bdViewHtml(row);
+
+    const footer = document.getElementById('bd-footer');
+    if (footer) {
+      footer.innerHTML = _bdEditing
+        ? `<button onclick="cancelBlockEdit()" class="btn-secondary-lg">Cancel</button>
+           <button id="bd-save-btn" onclick="saveBlockEdit()" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'"><i class="ti ti-device-floppy" style="font-size:15px;"></i> Save changes</button>`
+        : `<button onclick="closeBlockDetail()" class="btn-secondary-lg">Close</button>
+           <button onclick="enterBlockEdit()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:5px;"><i class="ti ti-edit" style="font-size:14px;color:var(--accent);"></i> Edit</button>`;
+    }
+
+    if (_bdEditing) bdSyncCurrent();
+  }
+
+  // Persist edited text fields. AI arrays + user_id + created_at are left untouched.
+  async function saveBlockEdit() {
+    if (!currentUser || !_bdRow) { closeBlockDetail(); return; }
+
+    const val = id => (document.getElementById(id)?.value || '').trim();
+    const isCurrent = document.getElementById('bd-current')?.checked || false;
+    const m2d = m => m ? `${m}-01` : null;
+
+    // Validate.
+    const title = val('bd-title-input');
+    if (!title)                       { setBdStatus('Title is required', true); return; }
+    const activity_type = val('bd-activity-type');
+    if (!activity_type)               { setBdStatus('Activity type is required', true); return; }
+    const start = val('bd-start');
+    if (!start)                       { setBdStatus('Start date is required', true); return; }
+    if (!isCurrent && !val('bd-end')) { setBdStatus('End date is required (or mark as ongoing)', true); return; }
+
+    const patch = {
+      title,
+      activity_type,
+      organization: val('bd-org'),
+      start_date:   m2d(start),
+      end_date:     isCurrent ? null : m2d(val('bd-end')),
+      is_current:   isCurrent,
+      role:         val('bd-role'),
+    };
+    BD_PDCA_FIELDS.forEach(([col]) => { patch[col] = val('bd-' + col); });
+
+    const btn = document.getElementById('bd-save-btn');
+    setBdStatus('Saving…', false);
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; btn.style.cursor = 'wait'; }
+
+    const { error } = await supa
+      .from('experience_blocks')
+      .update(patch)
+      .eq('id', _bdRow.id)
+      .eq('user_id', currentUser.id);
+
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+
+    if (error) {
+      setBdStatus(`Save failed: ${error.message}`, true);
+      return;
+    }
+
+    closeBlockDetail();
+    showSaveToast('Experience block updated');
+    loadUserBlocks();
+  }
+
+  // ESC closes the detail modal (mirrors backdrop/X). Scoped to this modal only.
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' &&
+        document.getElementById('block-detail-modal')?.style.display === 'flex') {
+      closeBlockDetail();
+    }
+  });
+
+  // ── MIND MAP ──────────────────────────────
+  function renderMindmap() {
+    const wrap = document.getElementById('mindmap-wrap');
+    const svg  = document.getElementById('mindmap-svg');
+    if (!wrap || !svg) return;
+
+    const W = wrap.offsetWidth  || 700;
+    const H = wrap.offsetHeight || 420;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.setAttribute('width',  W);
+    svg.setAttribute('height', H);
+
+    // center node position (slightly left of center)
+    const cx = W * 0.5, cy = H * 0.5;
+
+    const branches = [
+      { label: 'GTM Strategy',    sub: ['B2B', 'Product Launch', 'OKR'],          angle: -150, color: 'var(--accent)', len: W*0.19 },
+      { label: 'Data & Analysis', sub: ['SQL', 'Tableau', 'Dashboard'],            angle:  -35, color: '#0099CC', len: W*0.20 },
+      { label: 'UX Research',     sub: ['User Interview', 'Prototyping', 'A/B Test'], angle:  25, color: 'var(--accent)', len: W*0.20 },
+      { label: 'Leadership',      sub: ['Cross-functional', 'OKR', 'Agile'],       angle:  140, color: '#1AB8B0', len: W*0.18 },
+      { label: 'Marketing',       sub: ['SNS', 'Content', 'Campaign'],             angle: -110, color: 'var(--accent)', len: W*0.17 },
+    ];
+
+    let html = `<defs>
+      <radialGradient id="cg" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="var(--accent)"/>
+        <stop offset="100%" stop-color="var(--accent)"/>
+      </radialGradient>
+      <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>`;
+
+    // dot-grid background
+    for (let x = 16; x < W; x += 30) for (let y = 16; y < H; y += 30)
+      html += `<circle cx="${x}" cy="${y}" r="1.4" fill="#D1D5DB" opacity="0.55"/>`;
+
+    branches.forEach(b => {
+      const rad = b.angle * Math.PI / 180;
+      const bx  = cx + Math.cos(rad) * b.len;
+      const by  = cy + Math.sin(rad) * b.len;
+      const qx  = cx + Math.cos(rad) * b.len * 0.45;
+      const qy  = cy + Math.sin(rad) * b.len * 0.45 - 18;
+
+      // main curved line
+      html += `<path d="M${cx},${cy} Q${qx},${qy} ${bx},${by}"
+        stroke="${b.color}" stroke-width="2.5" fill="none" opacity="0.75" stroke-linecap="round"/>`;
+
+      // branch pill
+      const tw = Math.max(b.label.length * 7 + 26, 80);
+      html += `<rect x="${bx-tw/2}" y="${by-15}" width="${tw}" height="30" rx="15"
+        fill="${b.color}" opacity="0.13"/>
+        <rect x="${bx-tw/2}" y="${by-15}" width="${tw}" height="30" rx="15"
+        fill="none" stroke="${b.color}" stroke-width="1.5" opacity="0.6"/>
+        <text x="${bx}" y="${by+5.5}" text-anchor="middle"
+        font-family="Pretendard,sans-serif" font-size="12.5" font-weight="700" fill="${b.color}">${b.label}</text>`;
+
+      // sub-keyword nodes
+      b.sub.forEach((kw, i) => {
+        const spread = (i - (b.sub.length - 1) / 2) * 40;
+        const sRad = rad + spread * Math.PI / 180;
+        const sLen = b.len * 0.52;
+        const sx = bx + Math.cos(sRad) * sLen;
+        const sy = by + Math.sin(sRad) * sLen;
+
+        html += `<line x1="${bx}" y1="${by}" x2="${sx}" y2="${sy}"
+          stroke="${b.color}" stroke-width="1.3" stroke-dasharray="4 3" opacity="0.45"/>`;
+
+        const sw = Math.max(kw.length * 6.4 + 18, 50);
+        html += `<rect x="${sx-sw/2}" y="${sy-12}" width="${sw}" height="24" rx="12"
+          fill="white" stroke="${b.color}" stroke-width="1.2" opacity="0.8"/>
+          <text x="${sx}" y="${sy+4.5}" text-anchor="middle"
+          font-family="Pretendard,sans-serif" font-size="11" font-weight="500" fill="${b.color}">${kw}</text>`;
+      });
+    });
+
+    // center node glow ring
+    html += `<circle cx="${cx}" cy="${cy}" r="54" fill="var(--accent)" opacity="0.08"/>`;
+    html += `<circle cx="${cx}" cy="${cy}" r="42" fill="url(#cg)" filter="url(#glow)"/>`;
+    html += `<circle cx="${cx}" cy="${cy}" r="42" fill="none" stroke="white" stroke-width="2" opacity="0.25"/>`;
+    html += `<text x="${cx}" y="${cy-8}" text-anchor="middle"
+      font-family="Pretendard,sans-serif" font-size="14" font-weight="800" fill="white">${currentUser ? getDisplayName(currentUser) : 'Me'}</text>`;
+    html += `<text x="${cx}" y="${cy+10}" text-anchor="middle"
+      font-family="Pretendard,sans-serif" font-size="10.5" font-weight="500" fill="rgba(255,255,255,0.8)">12 experiences</text>`;
+
+    // legend bottom-right
+    const lgx = W - 20, lgy = H - 58;
+    [['var(--accent)','Project'],['var(--accent)','Work Exp.'],['var(--accent)','UX / Research']].forEach(([c,l],i) => {
+      html += `<circle cx="${lgx - 110}" cy="${lgy + i*18}" r="5" fill="${c}"/>`;
+      html += `<text x="${lgx - 100}" y="${lgy + i*18 + 4.5}"
+        font-family="Pretendard,sans-serif" font-size="11" fill="#9CA3AF">${l}</text>`;
+    });
+
+    svg.innerHTML = html;
+  }
+
+  window.addEventListener('load', () => {
+    setTimeout(() => navigate('blocks'), 100); setTimeout(renderMindmap, 60); });
+  window.addEventListener('resize', renderMindmap);
+
+  // ── FILTER BLOCKS (dropdown) ─────────────────────────
+  function toggleBlkDropdown() {
+    const menu = document.getElementById('blk-type-menu');
+    if (!menu) return;
+    menu.style.display = menu.style.display === 'none' ? '' : 'none';
+  }
+
+  function filterBlocksBySearch(query) {
+    const q = query.trim().toLowerCase();
+    document.querySelectorAll('.blk-card.dyn').forEach(card => {
+      const title = (card.querySelector('.blk-card-title')?.textContent || '').toLowerCase();
+      const tags  = [...card.querySelectorAll('.blk-card-tags span')].map(s => s.textContent.toLowerCase()).join(' ');
+      const cat   = (card.dataset.type || '').toLowerCase();
+      const match = !q || title.includes(q) || tags.includes(q) || cat.includes(q);
+      card.style.display = match ? '' : 'none';
+    });
+    document.querySelectorAll('.blk-folder.dyn').forEach(folder => {
+      const title = (folder.querySelector('.blk-folder-title')?.textContent || '').toLowerCase();
+      const cat   = (folder.dataset.type || '').toLowerCase();
+      const match = !q || title.includes(q) || cat.includes(q);
+      folder.style.display = match ? '' : 'none';
+    });
+  }
+
+  function filterBlocksByDropdown(category, el) {
+    const menu = document.getElementById('blk-type-menu');
+    const label = document.getElementById('blk-type-label');
+    if (menu) menu.style.display = 'none';
+    document.querySelectorAll('.blk-dropdown-item').forEach(i => i.classList.remove('selected'));
+    if (el) el.classList.add('selected');
+    if (label) label.textContent = category === 'all' ? 'Activity Type' : (el ? el.textContent : 'Activity Type');
+    document.querySelectorAll('.blk-card.dyn').forEach(card => {
+      const match = category === 'all' || card.dataset.type === category;
+      card.style.display = match ? '' : 'none';
+    });
+    document.querySelectorAll('.blk-folder.dyn').forEach(folder => {
+      const match = category === 'all' || folder.dataset.type === category;
+      folder.style.display = match ? '' : 'none';
+    });
+  }
+
+  document.addEventListener('click', e => {
+    const wrap = document.getElementById('blk-type-dropdown-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      const menu = document.getElementById('blk-type-menu');
+      if (menu) menu.style.display = 'none';
+    }
+    // Close ongoing folder dropdown on outside click
+    const folderWrap = document.getElementById('ongoing-folder-select-wrap');
+    if (folderWrap && !folderWrap.contains(e.target)) closeFolderDropdown();
+  });
+
+  function navigate(target) {
+    // 비로그인 상태에서 보호된 페이지 접근 시 로그인 페이지로
+    const publicPages = ['login', 'signup', 'help'];
+    if (!currentUser && !publicPages.includes(target)) {
+      target = 'login';
+    }
+    // landing-mode: hide app nav/sidebar when on landing page
+    document.body.classList.remove('landing-mode');
+    pages.forEach(p => {
+      const el = document.getElementById('page-' + p);
+      if (el) el.classList.remove('active');
+      const nav = document.getElementById('nav-' + p);
+      const sb  = document.getElementById('sb-' + p);
+      if (nav) nav.classList.remove('active');
+      if (sb)  sb.classList.remove('active');
+    });
+
+    const page = document.getElementById('page-' + target);
+    if (page) page.classList.add('active');
+
+    const nav = document.getElementById('nav-' + target);
+    const sb  = document.getElementById('sb-' + target);
+    if (nav) nav.classList.add('active');
+    if (sb)  sb.classList.add('active');
+
+    // update breadcrumb
+    const bc = document.getElementById('nav-breadcrumb-page');
+    if (bc) bc.textContent = pageTitles[target] || target;
+
+    // scroll to top
+    window.scrollTo(0, 0);
+
+    // Refresh dynamic content when entering the Blocks page.
+    if (target === 'blocks') loadUserBlocks();
+    // matchstore 진입 시 기업 목록 로드
+    if (target === 'matchstore') initMatchStore();
+    if (target === 'profile') loadProfilePage();
+    // page-add 진입 시 mode 결정 (edit-scribble > scribble > new 우선순위)
+    if (target === 'add') {
+      _addMode = window.editingScribbleId ? 'edit-scribble' : (window.currentParentId ? 'scribble' : 'new');
+      // 새 입력 모드 진입 시 ongoing 선택 상태 초기화
+      if (_addMode === 'new') {
+        window._selectedFolderId = null;
+        const cb = document.getElementById('exp-current');
+        if (cb && cb.checked) { cb.checked = false; handleExpCurrentChange(cb); }
+      }
+      updateAddModeUI();
+    } else {
+      // add 페이지를 벗어나면 편집 상태 초기화
+      window.editingScribbleId = null;
+    }
+    // Help 페이지 진입 시 기본 탭(FAQ)으로 리셋
+    if (target === 'help') showHelpTab('faq');
+    // match-result 진입 시 분석 자동 실행
+    if (target === 'match-result') runMatchResultAnalysis();
+  }
+
+  /* ── MATCH STORE ── */
+  let _msCompanies = [];
+  let _msSelected  = null;
+
+  async function initMatchStore() {
+    let companies = [];
+    if (currentUser) {
+      const { data } = await _sb.from('companies').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+      companies = data || [];
+    }
+    _msCompanies = companies.length > 0 ? companies : _msSampleData;
+    msRenderList(_msCompanies);
+    if (_msCompanies.length > 0) msSelectCompany(_msCompanies[0]);
+  }
+
+  const _msSampleData = [
+    {
+      id: 'sample-1', company_name: 'Google', job_title: 'Product Manager · Search Division',
+      fit_score: 87, updated_at: new Date().toISOString(),
+      job_fit_score: 92, keyword_score: 85, experience_score: 88, period_score: 80,
+      matched_keywords: ['Strategic Planning', 'GTM', 'Data Analysis', 'OKR', 'B2B', 'Roadmap'],
+      missing_keywords: ['A/B Testing', 'SQL', 'Agile'],
+      company_keywords: ['Product Strategy', 'Cross-functional', 'Growth', 'Analytics', 'User Research'],
+      score_strategy: 92, score_data: 78, score_leadership: 65, score_marketing: 58, score_ux: 44,
+      ai_insights: {
+        strength: 'GTM + B2B strategy experience is a strong differentiator for PM roles. Cross-functional leadership adds significant weight.',
+        gap: 'A/B testing and SQL blocks are missing across all JDs. Adding these could boost match score by up to +12%.',
+        next: 'Add quantifiable metrics to your Data Analysis block. Google match score could reach 93%+ with DAU and retention metrics.'
+      }
+    },
+    {
+      id: 'sample-2', company_name: 'Apple', job_title: 'iOS Product Manager · App Division',
+      fit_score: 73, updated_at: new Date().toISOString(),
+      job_fit_score: 78, keyword_score: 70, experience_score: 72, period_score: 68,
+      matched_keywords: ['Product Strategy', 'User Research', 'Roadmap', 'Leadership'],
+      missing_keywords: ['Swift', 'iOS Development', 'Xcode', 'App Store Optimization'],
+      company_keywords: ['Design Thinking', 'Privacy', 'Hardware Integration', 'iOS Ecosystem'],
+      score_strategy: 75, score_data: 62, score_leadership: 70, score_marketing: 48, score_ux: 80,
+      ai_insights: {
+        strength: 'Strong UX research background aligns well with Apple\'s design-first culture.',
+        gap: 'Technical iOS development skills are expected even for PM roles. Consider adding relevant project experience.',
+        next: 'Highlight any mobile product experience and design collaboration in your blocks.'
+      }
+    },
+    {
+      id: 'sample-3', company_name: 'Kakao', job_title: 'Growth Lead · Platform Division',
+      fit_score: 68, updated_at: new Date().toISOString(),
+      job_fit_score: 70, keyword_score: 65, experience_score: 68, period_score: 72,
+      matched_keywords: ['Growth Strategy', 'B2C', 'Data Analysis', 'Marketing'],
+      missing_keywords: ['Python', 'CRM', 'Retention Marketing'],
+      company_keywords: ['Super App', 'Platform Strategy', 'Ecosystem', 'KakaoTalk'],
+      score_strategy: 68, score_data: 72, score_leadership: 60, score_marketing: 75, score_ux: 55,
+      ai_insights: {
+        strength: 'B2C marketing and growth experience directly maps to Kakao\'s platform expansion needs.',
+        gap: 'CRM and retention marketing keywords appear in 3 of 4 JDs but are missing from your blocks.',
+        next: 'Add a retention or lifecycle marketing project to significantly improve your score.'
+      }
+    }
+  ];
+
+  function msRenderList(companies) {
+    const list  = document.getElementById('ms-company-list');
+    const label = document.getElementById('ms-count-label');
+    if (!list) return;
+    label.textContent = companies.length + ' compan' + (companies.length === 1 ? 'y' : 'ies');
+    list.innerHTML = '';
+    if (companies.length === 0) {
+      list.innerHTML = '<div style="padding:24px 8px;text-align:center;font-size:12px;color:var(--ink-4);">No companies yet.<br>Add one to get started.</div>';
+      return;
+    }
+    companies.forEach(co => {
+      const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
+      const score    = co.fit_score != null ? co.fit_score + '%' : '—';
+      const scoreColor = co.fit_score >= 80 ? 'var(--success)' : co.fit_score >= 60 ? 'var(--warn)' : co.fit_score != null ? 'var(--danger)' : 'var(--ink-4)';
+      const isActive = _msSelected && _msSelected.id === co.id;
+      const el = document.createElement('div');
+      el.style.cssText = `display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;background:${isActive ? 'var(--accent-light)' : 'transparent'};border:1px solid ${isActive ? 'var(--accent)' : 'transparent'};transition:all 0.12s;`;
+      el.onmouseenter = () => { if (!isActive) { el.style.background = 'var(--surface)'; } };
+      el.onmouseleave = () => { if (!isActive) { el.style.background = 'transparent'; el.style.border = '1px solid transparent'; } };
+      el.onclick = () => msSelectCompany(co);
+      el.innerHTML = `
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.company_name || '')}</div>
+          <div style="font-size:11px;color:var(--ink-4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.job_title || '')}</div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:${scoreColor};flex-shrink:0;">${score}</div>
+      `;
+      list.appendChild(el);
+    });
+  }
+
+  function msSelectCompany(co) {
+    _msSelected = co;
+    msRenderList(_msCompanies);
+
+    const empty  = document.getElementById('ms-empty');
+    const detail = document.getElementById('ms-detail');
+    if (empty)  empty.style.display = 'none';
+    if (!detail) return;
+    detail.style.display = 'flex';
+    detail.style.flexDirection = 'column';
+
+    const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
+    const scoreRank = co.fit_score >= 80 ? '🎯 Strong match' : co.fit_score >= 60 ? '📈 Good foundation' : co.fit_score != null ? '⚡ Needs improvement' : 'Run analysis to see your score';
+    const breakdown = [
+      { label: 'Job Fit', val: co.job_fit_score },
+      { label: 'Keywords', val: co.keyword_score },
+      { label: 'Experience', val: co.experience_score },
+      { label: 'Period', val: co.period_score },
+    ];
+    const matched = co.matched_keywords || [];
+    const missing = co.missing_keywords || [];
+    const compKws = co.company_keywords || [];
+
+    detail.innerHTML = `
+      <!-- company header -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;background:var(--accent);">${initials}</div>
+        <div style="flex:1;">
+          <div style="font-size:18px;font-weight:700;color:var(--ink);">${escapeHtml(co.company_name||'')}</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:2px;">${escapeHtml(co.job_title||'')}</div>
+        </div>
+        <div style="font-size:11px;color:var(--ink-4);">${co.updated_at ? 'Last analyzed · ' + new Date(co.updated_at).toLocaleDateString() : ''}</div>
+      </div>
+
+      <!-- score card -->
+      <div style="background:var(--ink);border-radius:16px;padding:28px 32px;color:#fff;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;">MATCH SCORE</div>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
+          <span style="font-size:56px;font-weight:800;line-height:1;color:#fff;">${co.fit_score != null ? co.fit_score : '—'}</span>
+          <span style="font-size:20px;color:rgba(255,255,255,0.6);">%</span>
+        </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;">${scoreRank}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          ${breakdown.filter(b => b.val != null).map(b => `
+            <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;">
+              <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px;">${b.label}</div>
+              <div style="font-size:18px;font-weight:700;color:#fff;">${b.val}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- keyword match -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Keyword Match</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--success);margin-bottom:8px;">Matched ${matched.length}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${matched.map(k=>`<span style="font-size:11px;background:var(--success-light);color:var(--success);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--danger);margin-bottom:8px;">Missing ${missing.length}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${missing.map(k=>`<span style="font-size:11px;background:var(--danger-light);color:var(--danger);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:8px;">Company KW</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${compKws.map(k=>`<span style="font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--ink-3);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JD input -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Job Description <span style="background:rgba(239,68,68,0.1);color:var(--danger);padding:2px 8px;border-radius:99px;font-size:10px;margin-left:6px;">REQUIRED</span></div>
+        <textarea id="ms-jd-input" rows="6" placeholder="Paste job description to analyze fit..."
+          style="width:100%;resize:vertical;padding:12px 14px;font-size:13px;font-family:var(--ff-head);color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);outline:none;line-height:1.6;box-sizing:border-box;"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+          <button onclick="msRunAnalysis()" style="font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Analyze Fit</button>
+          <span id="ms-jd-status" style="font-size:12px;color:var(--ink-4);"></span>
+        </div>
+      </div>
+    `;
+
+    // right panel - competency
+    const compBars = document.getElementById('ms-competency-bars');
+    const cats = [
+      { label: 'Strategy & Planning', val: co.score_strategy },
+      { label: 'Data & Analysis',     val: co.score_data },
+      { label: 'Leadership & Org',    val: co.score_leadership },
+      { label: 'Marketing & Content', val: co.score_marketing },
+      { label: 'UX / Research',       val: co.score_ux },
+    ].filter(c => c.val != null);
+    compBars.innerHTML = cats.length ? cats.map(c => `
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span style="font-size:12px;color:var(--ink-2);">${c.label}</span>
+          <span style="font-size:12px;font-weight:600;color:var(--ink);">${c.val}%</span>
+        </div>
+        <div style="height:4px;background:var(--surface-2);border-radius:99px;overflow:hidden;">
+          <div style="width:${c.val}%;height:100%;background:var(--accent);border-radius:99px;"></div>
+        </div>
+      </div>`).join('') : '';
+
+    // right panel - comparison
+    const compList = document.getElementById('ms-comparison-list');
+    compList.innerHTML = _msCompanies.filter(c => c.fit_score != null).sort((a,b) => b.fit_score - a.fit_score).map(c => `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:${c.id===co.id?'var(--accent-light)':'var(--surface)'};border:1px solid ${c.id===co.id?'var(--accent)':'transparent'};">
+        <div style="width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;">${(c.company_name||'?').slice(0,2).toUpperCase()}</div>
+        <span style="font-size:12px;font-weight:500;color:var(--ink);flex:1;">${escapeHtml(c.company_name)}</span>
+        <span style="font-size:12px;font-weight:700;color:var(--ink);">${c.fit_score}%</span>
+        <div style="width:50px;height:3px;background:var(--surface-3);border-radius:99px;overflow:hidden;"><div style="width:${c.fit_score}%;height:100%;background:var(--accent);border-radius:99px;"></div></div>
+      </div>`).join('');
+
+    // AI insights
+    const insightsEl = document.getElementById('ms-insights');
+    const insights = co.ai_insights;
+    if (insights) {
+      insightsEl.innerHTML = `
+        ${insights.strength ? `<div style="background:var(--success-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--success);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">💪 Strength</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.strength)}</div></div>` : ''}
+        ${insights.gap ? `<div style="background:var(--warn-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--warn);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">⚠️ Gap</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.gap)}</div></div>` : ''}
+        ${insights.next ? `<div style="background:var(--accent-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">🎯 Next Step</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.next)}</div></div>` : ''}
+      `;
+    } else {
+      insightsEl.innerHTML = '';
+    }
+  }
+
+  function msFilterCompanies(q) {
+    const filtered = q.trim() === '' ? _msCompanies : _msCompanies.filter(c => (c.company_name||'').toLowerCase().includes(q.toLowerCase()) || (c.job_title||'').toLowerCase().includes(q.toLowerCase()));
+    msRenderList(filtered);
+  }
+
+  async function msRunAnalysis() {
+    if (!_msSelected) return;
+    const jd = (document.getElementById('ms-jd-input')?.value || '').trim();
+    const statusEl = document.getElementById('ms-jd-status');
+    if (!jd) { statusEl.textContent = 'Please paste a job description first.'; return; }
+    statusEl.textContent = 'Analyzing…';
+    // reuse existing analyzeFit logic via temp inputs
+    const cidEl  = document.getElementById('jd-company-input');
+    const roleEl = document.getElementById('jd-role-input');
+    const textEl = document.getElementById('jd-text-input');
+    if (cidEl)  cidEl.value  = _msSelected.company_name || '';
+    if (roleEl) roleEl.value = _msSelected.job_title    || '';
+    if (textEl) textEl.value = jd;
+    await extractJdKeywords();
+    statusEl.textContent = 'Done!';
+    setTimeout(() => { statusEl.textContent = ''; }, 2000);
+  }
+  async function confirmDeleteBlock(id) {
+    if (!confirm('Delete this block?')) return;
+    if (!currentUser) return;
+    // 자식 블럭 먼저 삭제 (FK constraint)
+    await supa.from('experience_blocks').delete().eq('parent_id', id).eq('user_id', currentUser.id);
+    const { error } = await supa.from('experience_blocks').delete().eq('id', id).eq('user_id', currentUser.id);
+    if (!error) loadUserBlocks();
+    else alert('Delete failed: ' + error.message);
+  }
+
+  function toggleSidebar() {
+    sidebarCollapsed = !sidebarCollapsed;
+    const sb = document.getElementById('sidebar');
+    const main = sb.nextElementSibling;
+    const icon = document.getElementById('sb-toggle-icon');
+    if (sidebarCollapsed) {
+      sb.classList.add('collapsed');
+      if (main) main.style.marginLeft = '56px';
+      icon.className = 'ti ti-layout-sidebar-left-expand';
+    } else {
+      sb.classList.remove('collapsed');
+      if (main) main.style.marginLeft = '220px';
+      icon.className = 'ti ti-layout-sidebar-left-collapse';
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // ── AUTH STATE & UI ───────────────────────────
+  // ═══════════════════════════════════════════════
+  let currentUser = null;  // { id, email, initials } when signed in, null otherwise
+
+  function getInitials(email) {
+    if (!email) return '?';
+    const local = email.split('@')[0] || '';
+    return (local.slice(0, 2) || '?').toUpperCase();
+  }
+
+  function normalizeUser(u) {
+    if (!u) return null;
+    const createdAt = u.created_at ? new Date(u.created_at) : null;
+    const isNew = createdAt ? (Date.now() - createdAt.getTime() < 5 * 60 * 1000) : false;
+    // 구글 로그인 시 user_metadata에서 실제 Name 가져오기
+    const meta = u.user_metadata || {};
+    const displayName = meta.full_name || meta.name || meta.given_name || (u.email ? u.email.split('@')[0] : 'there');
+    return { id: u.id, email: u.email || '', initials: getInitials(u.email), isNew, displayName };
+  }
+
+  function getDisplayName(emailOrUser) {
+    // currentUser 객체를 받으면 displayName 우선 사용
+    if (emailOrUser && typeof emailOrUser === 'object') return emailOrUser.displayName || 'there';
+    if (!emailOrUser) return 'there';
+    return emailOrUser.split('@')[0] || 'there';
+  }
+
+  function updateDashboardGreeting() {
+    const el = document.getElementById('dashboard-hero-title');
+    if (!el) return;
+    if (currentUser) {
+      const name = getDisplayName(currentUser);
+      el.innerHTML = `Welcome to Exppi, <em>${name}</em>!`;
+    } else {
+      el.innerHTML = `Welcome to Exppi`;
+    }
+  }
+
+  function renderAuthUI() {
+    const initialsEl = document.getElementById('nav-avatar-initials');
+    const dotEl      = document.getElementById('nav-avatar-dot');
+    const sbEmailEl  = document.getElementById('sb-profile-email');
+    const menuEmail  = document.getElementById('user-menu-email');
+
+    const profileNameEl   = document.getElementById('profile-display-name');
+    const profileEmailEl  = document.getElementById('profile-display-email');
+    const profileInitials = document.getElementById('profile-initials');
+    const uploadPhotoEl   = document.querySelector('[onclick="document.getElementById(\'profile-upload\').click()"]');
+
+    if (currentUser) {
+      const displayName = getDisplayName(currentUser);
+      if (initialsEl)     initialsEl.textContent = currentUser.initials;
+      if (dotEl)          dotEl.style.display = 'block';
+      if (sbEmailEl)      sbEmailEl.textContent = currentUser.email;
+      if (menuEmail)      menuEmail.textContent = currentUser.email;
+      if (profileInitials) profileInitials.textContent = currentUser.initials;
+      if (profileNameEl)  profileNameEl.textContent = displayName;
+      if (profileEmailEl) { profileEmailEl.textContent = currentUser.email; profileEmailEl.style.display = 'block'; }
+      if (uploadPhotoEl)  uploadPhotoEl.style.display = 'none';
+    } else {
+      if (initialsEl)     initialsEl.textContent = '?';
+      if (dotEl)          dotEl.style.display = 'none';
+      if (sbEmailEl)      sbEmailEl.textContent = 'Not signed in';
+      if (menuEmail)      menuEmail.textContent = '—';
+      if (profileInitials) profileInitials.textContent = 'JW';
+      if (profileNameEl)  profileNameEl.textContent = 'Ji-won';
+      if (profileEmailEl) profileEmailEl.style.display = 'none';
+      if (uploadPhotoEl)  uploadPhotoEl.style.display = 'block';
+      closeUserMenu();
+    }
+    updateDashboardGreeting();
+    checkShowOnboarding();
+  }
+
+  async function refreshAuthState() {
+    const { data: { session } } = await supa.auth.getSession();
+    currentUser = normalizeUser(session ? session.user : null);
+    renderAuthUI();
+    if (!currentUser) {
+      navigate('blocks');
+    }
+  }
+
+  // Listen for auth changes from other tabs / token refresh / signOut / OAuth callback
+  supa.auth.onAuthStateChange((event, session) => {
+    currentUser = normalizeUser(session ? session.user : null);
+    renderAuthUI();
+    // After Google OAuth redirect back, if we're still on the auth page, go to dashboard.
+    if (event === 'SIGNED_IN') {
+      const active = document.querySelector('.page.active');
+      if (active && (active.id === 'page-login' || active.id === 'page-signup' || active.id === 'page-landing')) {
+        navigate('blocks');
+      }
+    }
+    // If we're on the Blocks page when auth state changes (e.g. sign-out via
+    // the user menu), refresh it so we don't leave the previous user's cards
+    // visible in the DOM.
+    const activePage = document.querySelector('.page.active');
+    if (activePage && activePage.id === 'page-blocks') {
+      loadUserBlocks();
+    }
+  });
+
+  // ── ERROR & LOADING HELPERS ───────────────────
+  function showAuthError(form, msg) {
+    const el = document.getElementById(form + '-error');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  function clearAuthError(form) {
+    const el = document.getElementById(form + '-error');
+    if (!el) return;
+    el.textContent = '';
+    el.classList.remove('show');
+  }
+  function setAuthLoading(form, loading) {
+    const btn = document.getElementById(form + '-submit');
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.classList.toggle('loading', loading);
+  }
+
+  // ── AUTH ACTIONS ──────────────────────────────
+  async function signUpUser(email, password) {
+    const { data, error } = await supa.auth.signUp({ email, password });
+    if (error) return { ok: false, error: error.message };
+    // Confirm email is OFF in this project, so a session is returned immediately.
+    if (!data.session) return { ok: false, error: 'Account created but no session returned. Check email confirmation settings.' };
+    return { ok: true };
+  }
+
+  async function signInUser(email, password) {
+    const { error } = await supa.auth.signInWithPassword({ email, password });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  }
+
+  async function signOutUser() {
+    closeUserMenu();
+    await supa.auth.signOut();
+    // onAuthStateChange will fire → renderAuthUI clears UI.
+    navigate('blocks');
+  }
+
+  // ── GOOGLE OAUTH ──────────────────────────────
+  function setGoogleLoading(form, loading) {
+    const btn = document.getElementById(form + '-google');
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.classList.toggle('loading', loading);
+  }
+
+  async function signInWithGoogle(form) {
+    clearAuthError(form);
+    setGoogleLoading(form, true);
+    setAuthLoading(form, true);  // also disable email submit during redirect
+    const { error } = await supa.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin }
+    });
+    // On success, the browser navigates to Google — code below only runs on error.
+    if (error) {
+      setGoogleLoading(form, false);
+      setAuthLoading(form, false);
+      showAuthError(form, error.message);
+    }
+  }
+
+  // ── FORM HANDLERS (wired from page-login / page-signup forms) ──
+  async function handleLoginSubmit(event) {
+    event.preventDefault();
+    clearAuthError('login');
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    setAuthLoading('login', true);
+    const res = await signInUser(email, password);
+    setAuthLoading('login', false);
+    if (!res.ok) { showAuthError('login', res.error); return false; }
+    document.getElementById('login-password').value = '';
+    navigate('blocks');
+    return false;
+  }
+
+  async function handleSignupSubmit(event) {
+    event.preventDefault();
+    clearAuthError('signup');
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    setAuthLoading('signup', true);
+    const res = await signUpUser(email, password);
+    setAuthLoading('signup', false);
+    if (!res.ok) { showAuthError('signup', res.error); return false; }
+    document.getElementById('signup-password').value = '';
+    navigate('blocks');
+    return false;
+  }
+
+  // ── AVATAR + USER MENU ────────────────────────
+  function onAvatarClick(event) {
+    if (event) event.stopPropagation();
+    if (!currentUser) { navigate('login'); return; }
+    toggleUserMenu();
+  }
+
+
+  // ── 온보딩 ──
+  let _obStep = 1;
+  const _obTotal = 5;
+
+  function showOnboarding() {
+    const modal = document.getElementById('onboarding-modal');
+    if (modal) { modal.style.display = 'flex'; goObStep(1); }
+  }
+  function closeOnboarding() {
+    document.getElementById('onboarding-modal').style.display = 'none';
+    localStorage.setItem('scribbi_onboarded', '1');
+  }
+  function goObStep(n) {
+    _obStep = n;
+    for (let i = 1; i <= _obTotal; i++) {
+      const el = document.getElementById('ob-' + i);
+      if (el) el.style.display = i === n ? 'block' : 'none';
+    }
+    document.getElementById('ob-progress').style.width = (n / _obTotal * 100) + '%';
+    document.querySelectorAll('.ob-dot').forEach((d, i) => d.classList.toggle('active', i === n - 1));
+    const btn = document.getElementById('ob-next-btn');
+    const skip = document.getElementById('ob-skip-btn');
+    if (n === 1) { btn.textContent = 'Get started →'; }
+    else if (n === _obTotal) {
+      btn.textContent = 'Add first experience →';
+      btn.onclick = () => { saveObProfile().then(() => { closeOnboarding(); navigate('add'); }); };
+      if (skip) skip.style.display = 'none';
+    } else {
+      btn.textContent = 'Next →';
+      btn.onclick = obNext;
+    }
+  }
+  function obNext() {
+    if (_obStep < _obTotal) goObStep(_obStep + 1);
+  }
+  async function saveObProfile() {
+    if (!currentUser) return;
+    const profile = {
+      user_id: currentUser.id,
+      name: document.getElementById('ob-name')?.value || '',
+      birth: document.getElementById('ob-birth')?.value || '',
+      gender: document.getElementById('ob-gender')?.value || '',
+      school: document.getElementById('ob-school')?.value || '',
+      major: document.getElementById('ob-major')?.value || '',
+      grad_year: document.getElementById('ob-grad')?.value || '',
+      edu_status: document.getElementById('ob-status')?.value || '',
+      desired_role: document.getElementById('ob-role')?.value || '',
+      desired_industry: document.getElementById('ob-industry')?.value || '',
+      job_timeline: document.getElementById('ob-timeline')?.value || '',
+    };
+    await supa.from('user_profiles').upsert(profile, { onConflict: 'user_id' });
+  }
+
+  function checkShowOnboarding() {
+    if (!localStorage.getItem('scribbi_onboarded') && currentUser) {
+      setTimeout(showOnboarding, 600);
+    }
+  }
+
+  function updateDeleteBtn() {
+    const checked = document.querySelectorAll('.blk-card-check:checked');
+    const btn = document.getElementById('blk-delete-btn');
+    const count = document.getElementById('blk-delete-count');
+    if (!btn) return;
+    if (checked.length > 0) {
+      btn.style.display = 'flex';
+      count.textContent = checked.length;
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+
+  async function deleteSelectedBlocks() {
+    const checked = [...document.querySelectorAll('.blk-card-check:checked')];
+    if (!checked.length || !currentUser) return;
+    if (!confirm(`Delete ${checked.length} experience block${checked.length > 1 ? 's' : ''}?`)) return;
+    const ids = checked.map(c => c.dataset.id).filter(Boolean);
+    try {
+      const { error } = await supa.from('experience_blocks').delete().in('id', ids).eq('user_id', currentUser.id);
+      if (error) throw error;
+      checked.forEach(c => c.closest('.blk-card')?.remove());
+      updateDeleteBtn();
+      loadUserBlocks();
+    } catch(e) {
+      alert('Failed to delete. Please try again.');
+    }
+  }
+
+  function togglePageLock(pageId) {
+    const page = document.getElementById(pageId);
+    if (!page) return;
+    page.classList.toggle('unlocked');
+    const isUnlocked = page.classList.contains('unlocked');
+    if (isUnlocked) {
+      page.style.height = '';
+      page.style.overflow = '';
+    } else {
+      page.style.height = 'calc(100vh - 56px)';
+      page.style.overflow = 'hidden';
+    }
+  }
+
+  function initLockOverlays() {
+    // lock overlays removed
+  }
+  window.addEventListener('load', () => {
+    setTimeout(() => navigate('blocks'), 100);
+    setTimeout(initLockOverlays, 100);
+    setTimeout(initMatchStore, 800);
+  });
+
+  function onProfileClick() {
+    if (!currentUser) { navigate('login'); return; }
+    navigate('profile');
+  }
+
+  async function loadProfilePage() {
+    if (!currentUser) return;
+    const email = currentUser.email || '';
+    const initials = email.slice(0,2).toUpperCase();
+    const avEl = document.getElementById('profile-avatar-lg');
+    const nameEl = document.getElementById('profile-name-lg');
+    const emailEl = document.getElementById('profile-email-lg');
+    if (avEl) avEl.textContent = initials;
+    if (emailEl) emailEl.textContent = email;
+
+    const infoRow = (label, val) => val ? `
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);">${label}</span>
+        <span style="font-size:13.5px;font-weight:500;color:var(--ink);">${val}</span>
+      </div>` : '';
+
+    const { data: prof } = await supa.from('user_profiles').select('*').eq('user_id', currentUser.id).single();
+    if (prof) {
+      if (nameEl) nameEl.textContent = prof.name || email.split('@')[0];
+      const roleBadge = document.getElementById('profile-role-badge');
+      const indBadge = document.getElementById('profile-industry-badge');
+      const schoolBadge = document.getElementById('profile-school-badge');
+      if (roleBadge && prof.desired_role) { roleBadge.textContent = prof.desired_role; roleBadge.style.display = ''; }
+      if (indBadge && prof.desired_industry) { indBadge.textContent = prof.desired_industry; indBadge.style.display = ''; }
+      if (schoolBadge && prof.school) { schoolBadge.textContent = prof.school; schoolBadge.style.display = ''; }
+      let ageStr = '';
+      if (prof.birth) { const age = new Date().getFullYear() - new Date(prof.birth).getFullYear(); ageStr = age + ' years old'; }
+      const personalEl = document.getElementById('profile-personal-info');
+      if (personalEl) personalEl.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          ${infoRow('Name', prof.name)}${infoRow('Age', ageStr)}${infoRow('Gender', prof.gender)}${infoRow('Email', email)}
+        </div>
+        <div style="height:1px;background:var(--border);"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          ${infoRow('School', prof.school)}${infoRow('Major', prof.major)}${infoRow('Grad Year', prof.grad_year)}${infoRow('Status', prof.edu_status)}
+        </div>`;
+      const timelineMap = { now:'Actively job seeking', '6m':'Within 6 months', '1y':'Within 1 year', '2y':'In 1–2 years', exploring:'Just exploring' };
+      const careerEl = document.getElementById('profile-career-info');
+      if (careerEl) careerEl.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          ${infoRow('Desired Role', prof.desired_role)}${infoRow('Industry', prof.desired_industry)}${infoRow('Timeline', timelineMap[prof.job_timeline] || prof.job_timeline)}
+        </div>`;
+    } else {
+      if (nameEl) nameEl.textContent = email.split('@')[0];
+    }
+
+    const { data: blocks } = await supa.from('experience_blocks').select('activity_type, end_date').eq('user_id', currentUser.id);
+    const total = blocks?.length || 0;
+    const ongoing = blocks?.filter(b => !b.end_date).length || 0;
+    const statTotal = document.getElementById('stat-total');
+    const statOngoing = document.getElementById('stat-ongoing');
+    if (statTotal) statTotal.textContent = total;
+    if (statOngoing) statOngoing.textContent = ongoing;
+    if (blocks && blocks.length > 0) {
+      const cats = {};
+      blocks.forEach(b => { const c = b.activity_type || 'other'; cats[c] = (cats[c]||0) + 1; });
+      const colors = { work:'#FF9300', internship:'#FF9300', projects:'#10B981', education:'#6366F1', organizations:'#8B5CF6', competition:'#EF4444', volunteering:'#EC4899', other:'#9CA3AF' };
+      const breakdownEl = document.getElementById('profile-breakdown');
+      if (breakdownEl) breakdownEl.innerHTML = `<div style="display:flex;flex-direction:column;gap:10px;">${
+        Object.entries(cats).map(([cat, cnt]) => `
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:80px;font-size:12px;color:var(--ink-2);font-weight:500;text-transform:capitalize;">${cat}</div>
+            <div style="flex:1;height:6px;background:var(--surface);border-radius:99px;overflow:hidden;">
+              <div style="width:${Math.round(cnt/total*100)}%;height:100%;background:${colors[cat]||'var(--accent)'};border-radius:99px;"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink);width:20px;text-align:right;">${cnt}</div>
+          </div>`).join('')
+      }</div>`;
+    }
+    const { data: cos } = await supa.from('companies').select('fit_score').eq('user_id', currentUser.id);
+    const statCo = document.getElementById('stat-companies');
+    const statBest = document.getElementById('stat-best-match');
+    if (statCo) statCo.textContent = cos?.length || 0;
+    const best = cos?.reduce((mx, c) => (c.fit_score||0) > mx ? (c.fit_score||0) : mx, 0);
+    if (statBest) statBest.textContent = best ? best + '%' : '—';
+  }
+
+  function toggleUserMenu() {
+    const menu = document.getElementById('user-menu');
+    if (!menu) return;
+    menu.classList.toggle('show');
+  }
+  function closeUserMenu() {
+    const menu = document.getElementById('user-menu');
+    if (menu) menu.classList.remove('show');
+  }
+
+  // Close menu on outside click
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('user-menu');
+    const avatar = document.getElementById('nav-avatar');
+    if (!menu || !menu.classList.contains('show')) return;
+    if (menu.contains(e.target) || (avatar && avatar.contains(e.target))) return;
+    closeUserMenu();
+  });
+
+  // ── BOOTSTRAP ─────────────────────────────────
+  window.addEventListener('load', refreshAuthState);
+
+  // ═══════════════════════════════════════════════
+  // ── GATING (auth-required-modal + wrappers) ───
+  // ═══════════════════════════════════════════════
+  const AUTH_INTENT_COPY = {
+    save:    'Sign in to save your work and pick up where you left off.',
+    analyze: 'Sign in to run AI analysis on your experience.',
+    match:   'Sign in to start fit analysis with companies.',
+    default: 'Create a free account to keep your work.'
+  };
+
+  function openAuthRequiredModal(intent) {
+    closeUserMenu();
+    const sub = document.getElementById('auth-required-sub');
+    if (sub) sub.textContent = AUTH_INTENT_COPY[intent] || AUTH_INTENT_COPY.default;
+    const m = document.getElementById('auth-required-modal');
+    if (!m) return;
+    m.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
+  function closeAuthRequiredModal() {
+    const m = document.getElementById('auth-required-modal');
+    if (!m) return;
+    m.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function goAuthFromModal(target) {
+    closeAuthRequiredModal();
+    navigate(target);  // 'login' or 'signup'
+  }
+
+  // ── WRAP NAMED HANDLERS (Analyze Experience, Start Fit Analysis) ──
+  // openAnalysisModal / openBlockRecommendModal are top-level function declarations,
+  // so they live on window. Reassigning at top level updates the global binding,
+  // which inline onclick="openAnalysisModal()" handlers resolve through.
+  const _origOpenAnalysisModal = openAnalysisModal;
+  openAnalysisModal = function() {
+    if (!currentUser) return openAuthRequiredModal('analyze');
+    return _origOpenAnalysisModal();
+  };
+
+  const _origOpenBlockRecommendModal = openBlockRecommendModal;
+  openBlockRecommendModal = function() {
+    if (!currentUser) return openAuthRequiredModal('match');
+    return _origOpenBlockRecommendModal();
+  };
+
+  // ── DELEGATED GATING for "Save Draft" buttons ──
+  // These buttons currently have no onclick handlers (placeholder UI), so we
+  // can't wrap a function. Use document-level delegation to gate clicks
+  // without modifying the existing 5-page markup. When a save handler is
+  // added later, this delegation still runs first; if the user is signed in
+  // we fall through and let the button's own handler execute.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const txt = (btn.textContent || '').trim();
+    if (txt !== 'Save Draft') return;
+    if (!btn.closest('#page-add, #page-match')) return;
+    if (currentUser) return;  // signed in: don't interfere
+    e.preventDefault();
+    e.stopPropagation();
+    openAuthRequiredModal('save');
+  }, true);  // capture phase so we run before any future onclick handlers
+
+  // ── LANDING PAGE ──────────────────────────────
+  function switchTab(idx) {
+    document.querySelectorAll('.hiw-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.hiw-panel').forEach((p, i) => {
+      if (i === idx) { p.classList.add('active'); }
+      else { p.classList.remove('active'); }
+    });
+  }
+
+  // Scroll reveal for landing page
+  const _revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        _revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => _revealObserver.observe(el));
+</script>
+</body>
+</html>  async function openBlockRecommendModal() {
+    const modal = document.getElementById('block-recommend-modal');
+    const loadingEl = document.getElementById('brm-loading');
+    const contentEl = document.getElementById('brm-content');
+    const errorEl = document.getElementById('brm-error');
+    const countEl = document.getElementById('selected-count');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    if (loadingEl) loadingEl.style.display = 'flex';
+    if (contentEl) contentEl.style.display = 'none';
+    if (errorEl) errorEl.style.display = 'none';
+    try {
+      const { company, role, jdText } = _pendingAnalysis;
+      const { data: jdData, error: jdErr } = await supa.functions.invoke('extract-jd-keywords', { body: { company, role, jd_text: jdText } });
+      if (jdErr) throw jdErr;
+      const companyKeywords = (jdData && jdData.company_keywords) || [];
+      _pendingAnalysis.companyKeywords = companyKeywords;
+      const { data: blocksData, error: blocksErr } = await supa
+        .from('experience_blocks')
+        .select('id, title, competency_keywords')
+        .eq('user_id', currentUser.id)
+        .not('end_date', 'is', null)
+        .or('is_current.is.null,is_current.eq.false');
+      if (blocksErr) throw blocksErr;
+      const blocks = (blocksData || []).filter(b => b.competency_keywords && b.competency_keywords.length > 0);
+      const { data: ranked, error: rankErr } = await supa.functions.invoke('recommend-blocks', { body: { company_keywords: companyKeywords, blocks } });
+      if (rankErr) throw rankErr;
+      const blockMap = {};
+      blocks.forEach(b => { blockMap[b.id] = b; });
+      const rankedBlocks = (Array.isArray(ranked) ? ranked : [])
+        .filter(r => blockMap[r.id])
+        .map(r => ({ ...blockMap[r.id], score: r.score, reason: r.reason }))
+        .sort((a, b) => b.score - a.score);
+      _brmBlocks = rankedBlocks.slice(0, 5);
+      const recommended = _brmBlocks.slice(0, 3);
+      const others = _brmBlocks.slice(3, 5);
+      let html = '';
+      if (recommended.length) {
+        html += `<div style="margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">⭐ Recommended · Auto-selected</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
+        </div>`;
+      }
+      if (others.length) {
+        html += `<div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">${others.map(b => _renderBlockCard(b, false)).join('')}</div>
+        </div>`;
+      }
+      if (!_brmBlocks.length) {
+        html = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">No experience blocks found. Add experiences first.</div>';
+      }
+      if (contentEl) { contentEl.innerHTML = html; contentEl.style.display = 'flex'; }
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (countEl) countEl.textContent = recommended.length;
+    } catch (err) {
+      console.error('[openBlockRecommendModal] failed:', err);
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) { errorEl.textContent = 'Failed to load recommendations: ' + (err.message || 'check console'); errorEl.style.display = 'block'; }
+    }
+  }
+
+  function _renderBlockCard(block, selected) {
+    const pills = Array.isArray(block.competency_keywords)
+      ? block.competency_keywords.slice(0, 6).map(k => `<span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 9px;border-radius:99px;">${escapeHtml(String(k))}</span>`).join('')
+      : '';
+    const cls = selected ? 'rec-block selected' : 'rec-block';
+    return `<div class="${cls}" data-id="${escapeHtml(block.id)}" onclick="toggleBlock(this)">
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(block.title || '')}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;${block.reason ? 'margin-bottom:6px;' : ''}">${pills}</div>
+      ${block.reason ? `<div style="font-size:11px;color:var(--ink-4);">${escapeHtml(block.reason)}</div>` : ''}
+      <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
+    </div>`;
+  }
+
   function closeBlockRecommendModal() {
     document.getElementById('block-recommend-modal').style.display = 'none';
     document.body.style.overflow = '';
