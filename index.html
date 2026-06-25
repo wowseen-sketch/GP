@@ -2428,10 +2428,13 @@
           </div>
         </div>
 
+        <!-- toast -->
+        <div id="brm-toast" style="display:none;position:absolute;top:82px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:99px;white-space:nowrap;z-index:10;pointer-events:none;"></div>
+
         <!-- body -->
         <div style="padding:24px 28px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:20px;">
 
-          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">5</strong> to use in the analysis.</div>
+          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">3</strong> to use in the analysis.</div>
 
           <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:80px;">
             <div style="width:36px;height:36px;border:3px solid #f3f3f3;border-top:3px solid var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
@@ -2443,7 +2446,7 @@
 
         <!-- footer -->
         <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
-          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> blocks selected</div>
+          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> / 3 blocks selected</div>
           <button onclick="closeBlockRecommendModal()" class="btn-secondary-lg" style="margin-left:auto;">Cancel</button>
           <button onclick="(function(){ const selected = [...document.querySelectorAll('.rec-block.selected')]; const ids = selected.map(el => el.dataset.id); const allKw = []; (_brmBlocks || []).filter(b => ids.includes(b.id)).forEach(b => { (b.competency_keywords || []).forEach(k => { if (!allKw.includes(k)) allKw.push(k); }); }); _pendingAnalysis.selectedKeywords = allKw; closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <i class="ti ti-chart-bar" style="font-size:15px;"></i> Analyze with These Blocks
@@ -3802,7 +3805,7 @@
       let html = '';
       if (recommended.length) {
         html += `<div style="margin-bottom:16px;">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">⭐ Recommended · Auto-selected</div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px;">⭐ Recommended · Auto-selected<button onclick="" style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);border:1.5px solid var(--accent);color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">+</button></div>
           <div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
         </div>`;
       }
@@ -3841,7 +3844,23 @@
     document.getElementById('block-recommend-modal').style.display = 'none';
     document.body.style.overflow = '';
   }
+  function showBrmToast(msg) {
+    const toast = document.getElementById('brm-toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 2500);
+  }
   function toggleBlock(el) {
+    const isSelected = el.classList.contains('selected');
+    if (!isSelected) {
+      const currentCount = document.querySelectorAll('.rec-block.selected').length;
+      if (currentCount >= 3) {
+        showBrmToast('Please deselect one experience first');
+        return;
+      }
+    }
     el.classList.toggle('selected');
     const count = document.querySelectorAll('.rec-block.selected').length;
     const counter = document.getElementById('selected-count');
@@ -6757,7 +6776,7 @@ What I learned: Consistency matters more than quality of individual posts`;
       const others = _brmBlocks.slice(3, 5);
       let html = '';
       if (recommended.length) {
-        html += `<div style="margin-bottom:16px;"><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">⭐ Recommended · Auto-selected</div><div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div></div>`;
+        html += `<div style="margin-bottom:16px;"><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px;">⭐ Recommended · Auto-selected<button onclick="" style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);border:1.5px solid var(--accent);color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">+</button></div><div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div></div>`;
       }
       if (others.length) {
         html += `<div><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div><div style="display:flex;flex-direction:column;gap:8px;">${others.map(b => _renderBlockCard(b, false)).join('')}</div></div>`;
