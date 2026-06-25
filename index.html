@@ -4003,7 +4003,7 @@
     }
     if (errEl) errEl.style.display = 'none';
     _pendingAnalysis = { company, role, jdText: _jdRawText };
-    navigate('match-result');
+    openBlockRecommendModal();
   }
   function getScoreTier(score) {
     if (score <= 20) return { label: 'Not a Fit',    color: '#E24B4A', idx: 0 };
