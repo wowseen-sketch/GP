@@ -2344,7 +2344,7 @@
       <div id="mr-error" style="display:none;padding:24px 48px;font-size:14px;font-weight:600;color:var(--danger);"></div>
 
       <!-- Result state -->
-      <div id="mr-result" style="display:none;padding:0 48px 48px;">
+      <div id="mr-result" style="display:none;padding:32px 48px 48px;">
 
         <!-- Tier Score Card -->
         <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:28px 36px;margin-bottom:24px;">
@@ -2402,9 +2402,9 @@
         <!-- Tabs: Overall / By Experience -->
         <div style="margin-bottom:24px;">
           <div style="margin-bottom:16px;">
-            <div style="background:var(--surface);border-radius:99px;padding:4px;display:flex;width:fit-content;">
-              <button id="mr-tab-overall" onclick="mrSwitchTab('overall')" style="padding:8px 20px;font-size:13px;font-weight:700;border:none;cursor:pointer;border-radius:99px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.1);color:var(--ink);">Overall</button>
-              <button id="mr-tab-byexp" onclick="mrSwitchTab('byexp')" style="padding:8px 20px;font-size:13px;font-weight:500;border:none;cursor:pointer;border-radius:99px;background:transparent;color:var(--ink-4);">By Experience</button>
+            <div style="background:#F3F4F6;border-radius:99px;padding:4px;display:inline-flex;">
+              <button id="mr-tab-overall" onclick="mrSwitchTab('overall')" style="padding:8px 24px;font-size:13px;font-weight:700;border:none;cursor:pointer;border-radius:99px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.1);color:var(--ink);">Overall</button>
+              <button id="mr-tab-byexp" onclick="mrSwitchTab('byexp')" style="padding:8px 24px;font-size:13px;font-weight:500;border:none;cursor:pointer;border-radius:99px;background:transparent;color:var(--ink-4);">By Experience</button>
             </div>
           </div>
           <div id="mr-panel-overall">
@@ -2471,7 +2471,7 @@
               
               <div>
                 <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;">Block Recommendations</div>
-                <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Google · Product Manager</div>
+                <div id="brm-header-title" style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Analyzing…</div>
               </div>
             </div>
             <button onclick="closeBlockRecommendModal()" style="background:rgba(255,255,255,0.2);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button>
@@ -2481,13 +2481,13 @@
         <!-- body -->
         <div style="padding:24px 28px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:20px;">
 
-          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select the ones you want to use in the analysis.</div>
+          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong>3</strong> blocks to use in the analysis.</div>
 
           <!-- dynamic content injected by openBlockRecommendModal() -->
-          <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:40px 0;min-height:400px;">
+          <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:40px 0;min-height:420px;">
             <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
           </div>
-          <div id="brm-content" style="display:none;flex-direction:column;gap:20px;min-height:400px;"></div>
+          <div id="brm-content" style="display:none;flex-direction:column;gap:20px;min-height:420px;"></div>
           <div id="brm-error" style="display:none;font-size:13px;color:#e53e3e;padding:16px;border-radius:8px;background:#fff5f5;"></div>
 
         </div>
@@ -2523,7 +2523,7 @@
       </div>
 
       <!-- 3-col layout -->
-      <div style="display:grid;grid-template-columns:280px 1fr 260px;height:calc(100vh - 200px);overflow:hidden;">
+      <div style="display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 200px);overflow:hidden;">
 
         <!-- ── LEFT: Company List ── -->
         <div style="border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
@@ -2536,90 +2536,18 @@
           </div>
           <div style="padding:0 12px 6px;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);" id="ms-count-label">0 companies</div>
           <div id="ms-company-list" style="flex:1;overflow-y:auto;padding:0 8px 16px;display:flex;flex-direction:column;gap:4px;"></div>
-          <div style="padding:12px 16px;border-top:1px solid var(--border);">
-            <button onclick="navigate('match')" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:10px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">
-              <i class="ti ti-plus" style="font-size:14px;"></i> Add Company
-            </button>
-          </div>
         </div>
 
         <!-- ── CENTER: Match Detail ── -->
         <div id="ms-center" style="overflow-y:auto;display:flex;flex-direction:column;">
 
-          <!-- empty state -->
           <div id="ms-empty" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:48px;color:var(--ink-4);">
             <i class="ti ti-building" style="font-size:40px;opacity:0.3;"></i>
             <div style="font-size:14px;font-weight:500;">Select a company to view match details</div>
-            <div style="font-size:12px;">Your analyzed companies will appear on the left</div>
           </div>
-
-          <!-- detail (hidden until company selected) -->
-          <div id="ms-detail" style="display:none;padding:28px 32px;flex-direction:column;gap:20px;">
-
-            <!-- company header -->
-            <div style="display:flex;align-items:center;gap:14px;">
-              <div id="ms-co-avatar" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;background:var(--accent);"></div>
-              <div style="flex:1;">
-                <div id="ms-co-name" style="font-size:18px;font-weight:700;color:var(--ink);"></div>
-                <div id="ms-co-role" style="font-size:13px;color:var(--ink-3);margin-top:2px;"></div>
-              </div>
-              <div id="ms-co-analyzed" style="font-size:11px;color:var(--ink-4);"></div>
-            </div>
-
-            <!-- score card -->
-            <div style="background:var(--ink);border-radius:16px;padding:28px 32px;color:#fff;">
-              <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;">MATCH SCORE</div>
-              <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
-                <span id="ms-score-num" style="font-size:56px;font-weight:800;line-height:1;color:#fff;">—</span>
-                <span style="font-size:20px;color:rgba(255,255,255,0.6);">%</span>
-              </div>
-              <div id="ms-score-rank" style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;"></div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="ms-score-breakdown"></div>
-            </div>
-
-            <!-- keyword match -->
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
-              <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Keyword Match</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;" id="ms-kw-groups"></div>
-            </div>
-
-            <!-- JD input for new analysis -->
-            <div id="ms-jd-section" style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
-              <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Job Description <span style="background:rgba(239,68,68,0.1);color:var(--danger);padding:2px 8px;border-radius:99px;font-size:10px;margin-left:6px;">REQUIRED</span></div>
-              <textarea id="ms-jd-input" rows="6" placeholder="Paste job description to analyze fit..."
-                style="width:100%;resize:vertical;padding:12px 14px;font-size:13px;font-family:var(--ff-head);color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);outline:none;line-height:1.6;box-sizing:border-box;"
-                onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-              <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
-                <button onclick="msRunAnalysis()" style="font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Analyze Fit</button>
-                <span id="ms-jd-status" style="font-size:12px;color:var(--ink-4);"></span>
-              </div>
-            </div>
-
-          </div>
+          <div id="ms-result-container" style="display:none;padding:28px 32px;"></div>
         </div>
 
-        <!-- ── RIGHT: Stats Panel ── -->
-        <div style="border-left:1px solid var(--border);overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:24px;">
-
-          <!-- competency distribution -->
-          <div>
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Competency Distribution</div>
-            <div id="ms-competency-bars" style="display:flex;flex-direction:column;gap:10px;"></div>
-          </div>
-
-          <!-- company score comparison -->
-          <div>
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Score Comparison</div>
-            <div id="ms-comparison-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-          </div>
-
-          <!-- AI insights -->
-          <div>
-            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">AI Insights</div>
-            <div id="ms-insights" style="display:flex;flex-direction:column;gap:10px;"></div>
-          </div>
-
-        </div>
       </div>
     </div>
 
@@ -3837,13 +3765,15 @@
     if (errorEl) errorEl.style.display = 'none';
     try {
       const { company, role, jdText } = _pendingAnalysis;
+      const headerTitle = document.getElementById('brm-header-title');
+      if (headerTitle) headerTitle.textContent = (company || '') + (role ? ' · ' + role : '');
       const { data: jdData, error: jdErr } = await supa.functions.invoke('extract-jd-keywords', { body: { company, role, jd_text: jdText } });
       if (jdErr) throw jdErr;
       const companyKeywords = (jdData && jdData.company_keywords) || [];
       _pendingAnalysis.companyKeywords = companyKeywords;
       const { data: blocksData, error: blocksErr } = await supa
         .from('experience_blocks')
-        .select('id, title, competency_keywords')
+        .select('id, title, competency_keywords, start_date, end_date, activity_type')
         .eq('user_id', currentUser.id)
         .not('end_date', 'is', null)
         .or('is_current.is.null,is_current.eq.false');
@@ -3864,7 +3794,7 @@
       if (recommended.length) {
         html += `<div style="margin-bottom:16px;">
           <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">⭐ Recommended · Auto-selected</div>
-          <div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
+          <div id="brm-recommended-list" style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
         </div>`;
       }
       if (others.length) {
@@ -3890,11 +3820,15 @@
     const pills = Array.isArray(block.competency_keywords)
       ? block.competency_keywords.slice(0, 6).map(k => `<span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 9px;border-radius:99px;">${escapeHtml(String(k))}</span>`).join('')
       : '';
+    const fmtD = d => d ? d.slice(0, 7).replace('-', '.') : '';
+    const period = block.start_date
+      ? fmtD(block.start_date) + (block.end_date ? ' – ' + fmtD(block.end_date) : ' – present')
+      : '';
     const cls = selected ? 'rec-block selected' : 'rec-block';
     return `<div class="${cls}" data-id="${escapeHtml(block.id)}" onclick="toggleBlock(this)">
-      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(block.title || '')}</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;${block.reason ? 'margin-bottom:6px;' : ''}">${pills}</div>
-      ${block.reason ? `<div style="font-size:11px;color:var(--ink-4);">${escapeHtml(block.reason)}</div>` : ''}
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;">${escapeHtml(block.title || '')}</div>
+      ${period ? `<div style="font-size:11px;color:var(--ink-4);margin-bottom:6px;">${escapeHtml(period)}</div>` : ''}
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">${pills}</div>
       <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
     </div>`;
   }
@@ -3917,19 +3851,23 @@
     if (backdrop) backdrop.style.display = 'block';
     document.body.style.overflow = 'hidden';
     content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--ink-4);font-size:14px;">Loading...</div>';
-    const { data, error } = await supa.from('experience_blocks').select('*').eq('id', blockId).single();
+    const { data, error } = await supa.from('experience_blocks')
+      .select('id, title, activity_type, start_date, end_date, is_current, description, actions, outcome_measurable, competency_keywords')
+      .eq('id', blockId).single();
     if (error || !data) {
       content.innerHTML = '<div style="color:#DC2626;padding:20px;font-size:13px;">Failed to load block details.</div>';
       return;
     }
-    const period = (data.start_date || '') + (data.end_date ? ' – ' + data.end_date : ' – present');
-    const typeLabel = (data.type || '').toUpperCase();
+    const fmtD = d => d ? d.slice(0, 7).replace('-', '.') : '';
+    const period = data.start_date
+      ? fmtD(data.start_date) + (data.is_current || !data.end_date ? ' – present' : ' – ' + fmtD(data.end_date))
+      : '';
+    const typeLabel = (data.activity_type || '').toUpperCase();
     if (eyebrow) eyebrow.textContent = `EXPERIENCE BLOCK${typeLabel ? ' · ' + typeLabel : ''}${period ? ' · ' + period : ''}`;
-    const star = data.star_structured || {};
-    const starSection = (badge, label, text) => text ? `
+    const badge = (letter, label, text) => text ? `
       <div style="margin-bottom:18px;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span style="width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${badge}</span>
+          <span style="width:22px;height:22px;border-radius:4px;background:var(--ink);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${letter}</span>
           <span style="font-size:13px;font-weight:700;color:var(--ink);">${label}</span>
         </div>
         <div style="font-size:13px;color:var(--ink-3);line-height:1.65;padding-left:30px;">${escapeHtml(text)}</div>
@@ -3938,12 +3876,12 @@
     content.innerHTML = `
       <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:16px;">${escapeHtml(data.title || '')}</div>
       <div style="display:flex;gap:24px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);">
-        <div><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">Type</div><div style="font-size:13px;font-weight:600;color:var(--ink);">${escapeHtml(data.type || '—')}</div></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">Period</div><div style="font-size:13px;font-weight:600;color:var(--ink);">${escapeHtml(period)}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">Type</div><div style="font-size:13px;font-weight:600;color:var(--ink);">${escapeHtml(data.activity_type || '—')}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">Period</div><div style="font-size:13px;font-weight:600;color:var(--ink);">${escapeHtml(period || '—')}</div></div>
       </div>
-      ${starSection('S', 'Situation &amp; Task', [star.situation, star.task].filter(Boolean).join(' '))}
-      ${starSection('A', 'Action', star.action)}
-      ${starSection('R', 'Result', star.result)}
+      ${badge('S', 'Situation &amp; Task', data.description)}
+      ${badge('A', 'Action', data.actions)}
+      ${badge('R', 'Result', data.outcome_measurable)}
       ${chips ? `<div style="padding-top:4px;"><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Competency Keywords</div><div style="display:flex;flex-wrap:wrap;gap:6px;">${chips}</div></div>` : ''}
     `;
   }
@@ -3952,11 +3890,31 @@
     document.getElementById('block-recommend-modal').style.display = 'none';
     document.body.style.overflow = '';
   }
+  let _brmToastTimer = null;
   function toggleBlock(el) {
+    const alreadySelected = el.classList.contains('selected');
+    if (!alreadySelected) {
+      const count = document.querySelectorAll('.rec-block.selected').length;
+      if (count >= 3) {
+        // Show inline toast for 3 seconds
+        let toast = document.getElementById('brm-limit-toast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'brm-limit-toast';
+          toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;background:var(--ink);color:#fff;padding:11px 20px;border-radius:var(--rl);font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,0.22);white-space:nowrap;';
+          document.body.appendChild(toast);
+        }
+        toast.textContent = 'Maximum 3 blocks. Deselect one to choose another.';
+        toast.style.display = 'block';
+        clearTimeout(_brmToastTimer);
+        _brmToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        return;
+      }
+    }
     el.classList.toggle('selected');
-    const count = document.querySelectorAll('.rec-block.selected').length;
+    const newCount = document.querySelectorAll('.rec-block.selected').length;
     const counter = document.getElementById('selected-count');
-    if (counter) counter.textContent = count;
+    if (counter) counter.textContent = newCount;
   }
 
   let _brmArchiveBlocks = [];
@@ -4009,11 +3967,11 @@
     if (!block) return;
     if (!_brmBlocks) _brmBlocks = [];
     if (!_brmBlocks.find(b => b.id === block.id)) _brmBlocks.push(block);
-    const contentEl = document.getElementById('brm-content');
-    if (contentEl) {
+    const targetEl = document.getElementById('brm-recommended-list') || document.getElementById('brm-content');
+    if (targetEl) {
       const wrapper = document.createElement('div');
       wrapper.innerHTML = _renderBlockCard(block, false);
-      contentEl.appendChild(wrapper.firstChild);
+      targetEl.appendChild(wrapper.firstChild);
     }
     const count = document.querySelectorAll('.rec-block.selected').length;
     const counter = document.getElementById('selected-count');
@@ -4146,7 +4104,32 @@
       missingSection.style.display = (tab === 'overall' && hasContent) ? 'block' : 'none';
     }
   }
-  function saveToMatchArchive() { alert('Saved!'); }
+  async function saveToMatchArchive() {
+    if (!currentUser) { openAuthRequiredModal('match'); return; }
+    const { company, role } = _pendingAnalysis || {};
+    const matchData = window._lastMatchData;
+    if (!company || !matchData) { showSaveToast('No analysis data to save.', true); return; }
+    const overall = matchData.overall || [];
+    const matched = overall.filter(k => k.status === 'matched').map(k => k.keyword);
+    const missing = overall.filter(k => k.status === 'missing').map(k => k.keyword);
+    const score = Math.round((matched.length + overall.filter(k => k.status === 'partial').length * 0.5) / (overall.length || 1) * 100);
+    const payload = {
+      user_id: currentUser.id,
+      company_name: company,
+      job_title: role || '',
+      fit_score: score,
+      matched_keywords: matched,
+      missing_keywords: missing,
+      company_keywords: overall.map(k => k.keyword),
+      updated_at: new Date().toISOString(),
+    };
+    const { error } = await supa.from('companies').insert(payload);
+    if (error) {
+      showSaveToast('Failed to save: ' + error.message, true);
+    } else {
+      showSaveToast('Saved to Match Archive!', false);
+    }
+  }
   async function runMatchResultAnalysis() {
     if (!_pendingAnalysis) return;
     const { company, role, jdText } = _pendingAnalysis;
@@ -4187,8 +4170,43 @@
       if (errEl) { errEl.textContent = 'Analysis failed: ' + (err.message || 'check console'); errEl.style.display = 'block'; }
     }
   }
-  function renderMatchResult(score, matchData) {
+  function renderMatchResult(score, matchData, targetContainer) {
+    window._lastMatchData = matchData;
     const tier = getScoreTier(score);
+
+    // If a target container is provided, render self-contained HTML inline
+    if (targetContainer) {
+      const overall = (matchData && matchData.overall) || [];
+      const groups = { matched: [], partial: [], missing: [] };
+      for (const r of overall) { (groups[r.status] || groups.missing).push(r.keyword); }
+      const segColors = ['#E24B4A','#EF9F27','#EAB308','#84CC16','#22C55E'];
+      const segLabels = ['Not a Fit','Needs Work','Moderate Fit','Good Fit','Strong Fit'];
+      const segs = segColors.map((c, i) =>
+        `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:${c};visibility:${i===tier.idx?'visible':'hidden'};"></div>
+          <div style="width:100%;height:8px;border-radius:99px;background:${c};opacity:${i===tier.idx?'1':'0.25'};"></div>
+        </div>`).join('');
+      const chipSection = (list, label, color, bg) => !list.length ? '' :
+        `<div style="margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:6px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${list.map(k=>`<span style="background:${bg};color:${color};border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;">${escapeHtml(k)}</span>`).join('')}</div></div>`;
+      targetContainer.innerHTML = `
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px 28px;margin-bottom:20px;">
+          <div style="font-size:20px;font-weight:900;color:${tier.color};letter-spacing:-0.02em;margin-bottom:12px;">${tier.label}</div>
+          <div style="display:flex;gap:4px;margin-bottom:6px;">${segs}</div>
+          <div style="display:flex;gap:4px;margin-bottom:16px;">${segLabels.map(l=>`<div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">${l}</div>`).join('')}</div>
+          <div style="display:flex;gap:20px;">
+            <div style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:#16A34A;display:inline-block;"></span><span style="font-size:12px;color:var(--ink-4);">Matched</span><span style="font-size:15px;font-weight:800;color:var(--ink);">${groups.matched.length}</span></div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:#D97706;display:inline-block;"></span><span style="font-size:12px;color:var(--ink-4);">Partial</span><span style="font-size:15px;font-weight:800;color:var(--ink);">${groups.partial.length}</span></div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:#DC2626;display:inline-block;"></span><span style="font-size:12px;color:var(--ink-4);">Missing</span><span style="font-size:15px;font-weight:800;color:var(--ink);">${groups.missing.length}</span></div>
+          </div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px 28px;">
+          ${chipSection(groups.matched,'Matched','#16A34A','#DCFCE7')}
+          ${chipSection(groups.partial,'Partial Match','#D97706','#FEF3C7')}
+          ${chipSection(groups.missing,'Missing','#DC2626','#FEE2E2')}
+          ${!overall.length ? '<div style="font-size:13px;color:var(--ink-4);">No keyword data available.</div>' : ''}
+        </div>`;
+      return;
+    }
     const tierLabel = document.getElementById('mr-tier-label');
     if (tierLabel) { tierLabel.textContent = tier.label; tierLabel.style.color = tier.color; }
     document.querySelectorAll('[data-seg]').forEach(seg => {
@@ -4218,21 +4236,23 @@
     window._matchByBlock = (matchData && matchData.by_block) || [];
     const byexpEl = document.getElementById('mr-byexp-content');
     if (byexpEl) {
-      const chipGroup = (list, cls, label, color) =>
-        `<div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:5px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${list.length ? list.map(k=>`<span class="kw-pill ${cls}">${escapeHtml(k)}</span>`).join('') : '<span style="font-size:11px;color:var(--ink-4);">None</span>'}</div></div>`;
+      const chipCol = (list, label, bg, color) => {
+        const chips = list.length
+          ? list.map(k => `<span style="display:inline-block;background:${bg};color:${color};border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;">${escapeHtml(k)}</span>`).join('')
+          : `<span style="font-size:11px;color:var(--ink-4);">None</span>`;
+        return `<div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:5px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${chips}</div></div>`;
+      };
       byexpEl.innerHTML = window._matchByBlock.map(blk => {
         const matchedKws = (blk.results || []).filter(r => r.status === 'matched').map(r => r.keyword);
         const partialKws = (blk.results || []).filter(r => r.status === 'partial').map(r => r.keyword);
-        const missingKws = (blk.results || []).filter(r => r.status === 'missing').map(r => r.keyword);
         return `<div onclick="openBlockDetailPanel(this.dataset.id)" data-id="${escapeHtml(blk.block_id)}" style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px;">
-            <div style="font-size:14px;font-weight:700;color:var(--ink);">${escapeHtml(blk.block_title || '')}</div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;">${escapeHtml(blk.block_title || '')}</div>
             <div style="font-size:11px;color:var(--ink-4);">${escapeHtml(blk.block_period || '')}</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-            ${chipGroup(matchedKws,'matched','Matched','#16A34A')}
-            ${chipGroup(partialKws,'partial','Partial','#D97706')}
-            ${chipGroup(missingKws,'missing','Missing','#DC2626')}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            ${chipCol(matchedKws,'Matched','#DCFCE7','#16A34A')}
+            ${chipCol(partialKws,'Partial','#FEF3C7','#D97706')}
           </div>
         </div>`;
       }).join('');
@@ -4241,7 +4261,7 @@
     const missingCards   = document.getElementById('mr-missing-cards');
     if (missingCards) {
       if (groups.missing.length) {
-        missingCards.innerHTML = groups.missing.map(k => `<div style="padding:14px 16px;background:var(--white);border:1px solid #FECDD3;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This skill wasn't found in your selected experience blocks.</div></div><button onclick="navigate('blocks')" style="white-space:nowrap;font-size:12px;font-weight:600;color:#DC2626;background:none;border:1px solid #DC2626;padding:6px 14px;border-radius:var(--rl);cursor:pointer;">Add experience</button></div>`).join('');
+        missingCards.innerHTML = groups.missing.map(k => `<div style="padding:14px 16px;background:var(--white);border:1px solid #FECDD3;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This skill wasn't found in your selected experience blocks.</div></div><button onclick="navigate('blocks')" style="white-space:nowrap;font-size:12px;font-weight:600;color:#DC2626;background:none;border:1px solid #DC2626;padding:6px 14px;border-radius:var(--rl);cursor:pointer;">Improve This Experience</button></div>`).join('');
         if (missingSection) missingSection.style.display = 'block';
       } else {
         if (missingSection) missingSection.style.display = 'none';
@@ -5841,10 +5861,8 @@ What I learned: Consistency matters more than quality of individual posts`;
         </div>`;
     };
 
-    // STAR 매핑: goal+strategy → S/T, actions → A, outcome+failure → R
-    const situation = [v(row.goal), v(row.strategy)].filter(Boolean).join('\n\n');
-    const action    = v(row.actions);
-    const result    = [v(row.outcome_measurable), v(row.failure_improvement), v(row.takeaway)].filter(Boolean).join('\n\n');
+    // STAR 매핑: S/T/A/R 분리
+    const result = [v(row.outcome_measurable), v(row.failure_improvement), v(row.takeaway)].filter(Boolean).join('\n\n');
 
     return `
       <!-- Meta -->
@@ -5858,9 +5876,10 @@ What I learned: Consistency matters more than quality of individual posts`;
 
       <!-- STAR -->
       <div style="display:flex;flex-direction:column;gap:24px;">
-        ${starCard('S', 'Situation & Task', situation)}
-        ${starCard('A', 'Action', action)}
-        ${starCard('R', 'Result', result)}
+        ${v(row.goal) ? starCard('S', 'Situation', v(row.goal)) : ''}
+        ${v(row.strategy) ? starCard('T', 'Task', v(row.strategy)) : ''}
+        ${v(row.actions) ? starCard('A', 'Action', v(row.actions)) : ''}
+        ${result ? starCard('R', 'Result', result) : ''}
         ${v(row.applied) ? starCard('→', 'Applied Elsewhere', v(row.applied)) : ''}
       </div>
 
@@ -6178,6 +6197,12 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!currentUser && !publicPages.includes(target)) {
       target = 'login';
     }
+    // Close blocks detail panel when leaving blocks page
+    if (target !== 'blocks') {
+      const bdModal = document.getElementById('block-detail-modal');
+      if (bdModal && bdModal.style.display !== 'none') closeBlockDetail();
+    }
+
     // landing-mode: hide app nav/sidebar when on landing page
     document.body.classList.remove('landing-mode');
     pages.forEach(p => {
@@ -6315,137 +6340,28 @@ What I learned: Consistency matters more than quality of individual posts`;
           <div style="font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.company_name || '')}</div>
           <div style="font-size:11px;color:var(--ink-4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.job_title || '')}</div>
         </div>
-        <div style="font-size:13px;font-weight:700;color:${scoreColor};flex-shrink:0;">${score}</div>
       `;
       list.appendChild(el);
     });
   }
 
-  function msSelectCompany(co) {
-    _msSelected = co;
-    msRenderList(_msCompanies);
-
-    const empty  = document.getElementById('ms-empty');
-    const detail = document.getElementById('ms-detail');
-    if (empty)  empty.style.display = 'none';
-    if (!detail) return;
-    detail.style.display = 'flex';
-    detail.style.flexDirection = 'column';
-
-    const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
-    const scoreRank = co.fit_score >= 80 ? '🎯 Strong match' : co.fit_score >= 60 ? '📈 Good foundation' : co.fit_score != null ? '⚡ Needs improvement' : 'Run analysis to see your score';
-    const breakdown = [
-      { label: 'Job Fit', val: co.job_fit_score },
-      { label: 'Keywords', val: co.keyword_score },
-      { label: 'Experience', val: co.experience_score },
-      { label: 'Period', val: co.period_score },
+  function msSelectCompany(company) {
+    _msSelected = company;
+    document.querySelectorAll('.ms-co-item').forEach(el => el.classList.remove('active'));
+    const el = document.querySelector('.ms-co-item[data-id="' + company.id + '"]');
+    if (el) el.classList.add('active');
+    document.getElementById('ms-empty').style.display = 'none';
+    const container = document.getElementById('ms-result-container');
+    container.style.display = 'block';
+    const overall = [
+      ...(company.matched_keywords||[]).map(k => ({keyword:k, status:'matched'})),
+      ...(company.partial_keywords||[]).map(k => ({keyword:k, status:'partial'})),
+      ...(company.missing_keywords||[]).map(k => ({keyword:k, status:'missing'}))
     ];
-    const matched = co.matched_keywords || [];
-    const missing = co.missing_keywords || [];
-    const compKws = co.company_keywords || [];
-
-    detail.innerHTML = `
-      <!-- company header -->
-      <div style="display:flex;align-items:center;gap:14px;">
-        <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;background:var(--accent);">${initials}</div>
-        <div style="flex:1;">
-          <div style="font-size:18px;font-weight:700;color:var(--ink);">${escapeHtml(co.company_name||'')}</div>
-          <div style="font-size:13px;color:var(--ink-3);margin-top:2px;">${escapeHtml(co.job_title||'')}</div>
-        </div>
-        <div style="font-size:11px;color:var(--ink-4);">${co.updated_at ? 'Last analyzed · ' + new Date(co.updated_at).toLocaleDateString() : ''}</div>
-      </div>
-
-      <!-- score card -->
-      <div style="background:var(--ink);border-radius:16px;padding:28px 32px;color:#fff;">
-        <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;">MATCH SCORE</div>
-        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
-          <span style="font-size:56px;font-weight:800;line-height:1;color:#fff;">${co.fit_score != null ? co.fit_score : '—'}</span>
-          <span style="font-size:20px;color:rgba(255,255,255,0.6);">%</span>
-        </div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;">${scoreRank}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          ${breakdown.filter(b => b.val != null).map(b => `
-            <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;">
-              <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px;">${b.label}</div>
-              <div style="font-size:18px;font-weight:700;color:#fff;">${b.val}</div>
-            </div>`).join('')}
-        </div>
-      </div>
-
-      <!-- keyword match -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
-        <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Keyword Match</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
-          <div>
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--success);margin-bottom:8px;">Matched ${matched.length}</div>
-            <div style="display:flex;flex-wrap:wrap;gap:4px;">${matched.map(k=>`<span style="font-size:11px;background:var(--success-light);color:var(--success);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
-          </div>
-          <div>
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--danger);margin-bottom:8px;">Missing ${missing.length}</div>
-            <div style="display:flex;flex-wrap:wrap;gap:4px;">${missing.map(k=>`<span style="font-size:11px;background:var(--danger-light);color:var(--danger);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
-          </div>
-          <div>
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:8px;">Company KW</div>
-            <div style="display:flex;flex-wrap:wrap;gap:4px;">${compKws.map(k=>`<span style="font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--ink-3);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- JD input -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
-        <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Job Description <span style="background:rgba(239,68,68,0.1);color:var(--danger);padding:2px 8px;border-radius:99px;font-size:10px;margin-left:6px;">REQUIRED</span></div>
-        <textarea id="ms-jd-input" rows="6" placeholder="Paste job description to analyze fit..."
-          style="width:100%;resize:vertical;padding:12px 14px;font-size:13px;font-family:var(--ff-head);color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);outline:none;line-height:1.6;box-sizing:border-box;"
-          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-        <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
-          <button onclick="msRunAnalysis()" style="font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Analyze Fit</button>
-          <span id="ms-jd-status" style="font-size:12px;color:var(--ink-4);"></span>
-        </div>
-      </div>
-    `;
-
-    // right panel - competency
-    const compBars = document.getElementById('ms-competency-bars');
-    const cats = [
-      { label: 'Strategy & Planning', val: co.score_strategy },
-      { label: 'Data & Analysis',     val: co.score_data },
-      { label: 'Leadership & Org',    val: co.score_leadership },
-      { label: 'Marketing & Content', val: co.score_marketing },
-      { label: 'UX / Research',       val: co.score_ux },
-    ].filter(c => c.val != null);
-    compBars.innerHTML = cats.length ? cats.map(c => `
-      <div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-          <span style="font-size:12px;color:var(--ink-2);">${c.label}</span>
-          <span style="font-size:12px;font-weight:600;color:var(--ink);">${c.val}%</span>
-        </div>
-        <div style="height:4px;background:var(--surface-2);border-radius:99px;overflow:hidden;">
-          <div style="width:${c.val}%;height:100%;background:var(--accent);border-radius:99px;"></div>
-        </div>
-      </div>`).join('') : '';
-
-    // right panel - comparison
-    const compList = document.getElementById('ms-comparison-list');
-    compList.innerHTML = _msCompanies.filter(c => c.fit_score != null).sort((a,b) => b.fit_score - a.fit_score).map(c => `
-      <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:${c.id===co.id?'var(--accent-light)':'var(--surface)'};border:1px solid ${c.id===co.id?'var(--accent)':'transparent'};">
-        <div style="width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;">${(c.company_name||'?').slice(0,2).toUpperCase()}</div>
-        <span style="font-size:12px;font-weight:500;color:var(--ink);flex:1;">${escapeHtml(c.company_name)}</span>
-        <span style="font-size:12px;font-weight:700;color:var(--ink);">${c.fit_score}%</span>
-        <div style="width:50px;height:3px;background:var(--surface-3);border-radius:99px;overflow:hidden;"><div style="width:${c.fit_score}%;height:100%;background:var(--accent);border-radius:99px;"></div></div>
-      </div>`).join('');
-
-    // AI insights
-    const insightsEl = document.getElementById('ms-insights');
-    const insights = co.ai_insights;
-    if (insights) {
-      insightsEl.innerHTML = `
-        ${insights.strength ? `<div style="background:var(--success-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--success);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">💪 Strength</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.strength)}</div></div>` : ''}
-        ${insights.gap ? `<div style="background:var(--warn-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--warn);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">⚠️ Gap</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.gap)}</div></div>` : ''}
-        ${insights.next ? `<div style="background:var(--accent-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">🎯 Next Step</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.next)}</div></div>` : ''}
-      `;
-    } else {
-      insightsEl.innerHTML = '';
-    }
+    const score = company.fit_score || 0;
+    window._pendingAnalysis = { company: company.company_name, role: company.job_title };
+    container.innerHTML = '';
+    renderMatchResult(score, { overall, by_block: [] }, container);
   }
 
   function msFilterCompanies(q) {
