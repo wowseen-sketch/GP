@@ -6360,9 +6360,23 @@ What I learned: Consistency matters more than quality of individual posts`;
     ];
     const score = company.fit_score || 0;
     window._pendingAnalysis = { company: company.company_name, role: company.job_title };
-    container.innerHTML = company.jd_summary
-      ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:6px;">ABOUT THIS ROLE</div><div style="font-size:13px;color:var(--ink-2);line-height:1.6;">${escapeHtml(company.jd_summary)}</div></div><div id="ms-result-inner"></div>`
-      : `<div id="ms-result-inner"></div>`;
+    const initials = (company.company_name || '?').slice(0, 2).toUpperCase();
+    const analyzedDate = company.updated_at ? 'Last analyzed · ' + new Date(company.updated_at).toLocaleDateString() : '';
+    const aboutHtml = company.jd_summary
+      ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:16px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:6px;">ABOUT THIS ROLE</div><div style="font-size:13px;color:var(--ink-2);line-height:1.6;">${escapeHtml(company.jd_summary)}</div></div>`
+      : '';
+    container.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+        <div style="width:48px;height:48px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
+        <div style="flex:1;">
+          <div style="font-size:18px;font-weight:700;color:var(--ink);">${escapeHtml(company.company_name||'')}</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:2px;">${escapeHtml(company.job_title||'')}</div>
+        </div>
+        <div style="font-size:11px;color:var(--ink-4);">${analyzedDate}</div>
+      </div>
+      ${aboutHtml}
+      <div id="ms-result-inner"></div>
+    `;
     renderMatchResult(score, { overall, by_block: [] }, document.getElementById('ms-result-inner'));
   }
 
