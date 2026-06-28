@@ -6330,6 +6330,8 @@ What I learned: Consistency matters more than quality of individual posts`;
       const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
       const isActive = _msSelected && _msSelected.id === co.id;
       const el = document.createElement('div');
+      el.className = 'ms-co-item';
+      el.dataset.id = co.id;
       el.style.cssText = `display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;background:${isActive ? 'var(--accent-light)' : 'transparent'};border:1.5px solid ${isActive ? 'var(--accent)' : 'transparent'};transition:all 0.12s;`;
       el.onmouseenter = () => { if (!isActive) { el.style.background = 'var(--surface)'; } };
       el.onmouseleave = () => { if (!isActive) { el.style.background = 'transparent'; el.style.border = '1.5px solid transparent'; } };
@@ -6347,9 +6349,7 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function msSelectCompany(company) {
     _msSelected = company;
-    document.querySelectorAll('.ms-co-item').forEach(el => el.classList.remove('active'));
-    const el = document.querySelector('.ms-co-item[data-id="' + company.id + '"]');
-    if (el) el.classList.add('active');
+    msRenderList(_msCompanies);
     document.getElementById('ms-empty').style.display = 'none';
     const container = document.getElementById('ms-result-container');
     container.style.display = 'block';
