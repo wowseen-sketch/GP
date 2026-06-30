@@ -4287,15 +4287,9 @@
     const div = document.getElementById('exp-freetext');
     const prompt = btn.dataset.prompt;
     const chipId = prompt.replace(/[^a-zA-Z0-9]/g, '_');
-    const hasContent = div.innerHTML.trim() !== '';
-    if (hasContent) {
-      const hr = document.createElement('hr');
-      hr.style.cssText = 'border:none;border-top:1px solid var(--border);margin:8px 0;';
-      div.appendChild(hr);
-    }
     const p = document.createElement('p');
     p.dataset.chip = chipId;
-    p.style.cssText = 'margin:4px 0;';
+    p.style.cssText = 'margin:0;';
     p.textContent = prompt;
     div.appendChild(p);
     btn.dataset.used = 'true';
