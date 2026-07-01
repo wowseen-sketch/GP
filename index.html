@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1440">
-<meta name="theme-color" content="#ffffff">
 <title>GOalign — Career Matching Platform</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -66,9 +65,8 @@
   .nav-logo {
     display: flex; align-items: center; gap: 9px;
     font-size: 16px; font-weight: 700; color: var(--ink);
-    letter-spacing: -0.01em; cursor: pointer;
+    letter-spacing: -0.01em; margin-right: 24px; cursor: pointer;
     text-decoration: none;
-    width: 220px; flex-shrink: 0;
   }
   .nav-logo-icon {
     width: 26px; height: 26px; border-radius: 6px;
@@ -122,23 +120,22 @@
   /* ── SIDEBAR ── */
   .sidebar {
     width: 220px; flex-shrink: 0; background: var(--white);
-    border-right: 1px solid var(--border); padding: 16px 0 14px;
+    border-right: 1px solid var(--border); padding: 16px 0 8px;
     position: fixed; top: 52px; left: 0; bottom: 0;
-    display: flex; flex-direction: column;
-    overflow: hidden; z-index: 100;
+    overflow-y: auto; z-index: 100;
   }
   .sb-section { margin-bottom: 2px; }
   .sb-label {
-    font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+    font-size: 10.5px; font-weight: 500; letter-spacing: 0.07em;
     color: var(--ink-4); text-transform: uppercase;
-    padding: 18px 18px 8px;
+    padding: 16px 16px 6px;
     border-top: 1px solid var(--border);
-    margin-top: 6px;
+    margin-top: 4px;
   }
   .sb-item {
     display: flex; align-items: center; gap: 10px;
-    padding: 9px 14px; margin: 0 10px;
-    font-size: 12.5px; font-weight: 400;
+    padding: 9px 12px; margin: 0 8px;
+    font-size: 13.5px; font-weight: 400;
     color: var(--ink-3); border-left: none;
     cursor: pointer; transition: all 0.12s;
     border-radius: 8px; white-space: nowrap;
@@ -164,7 +161,7 @@
   .sb-divider { display: none; }
 
   /* ── MAIN ── */
-  .main { margin-left: 220px; flex: 1; min-height: calc(100vh - 52px); display: flex; flex-direction: column; background: #FBFBFA; }
+  .main { margin-left: 220px; flex: 1; min-height: calc(100vh - 52px); display: flex; flex-direction: column; }
 
   /* ════════════════════════════════════════
      PAGE 1 · DASHBOARD
@@ -329,9 +326,9 @@
   .exp-chip.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
   .exp-chip:hover:not(.active) { border-color: var(--border-strong); color: var(--ink); background: var(--white); }
 
-  #exp-freetext:empty::before { content: "Just start writing... a project, a meeting, a small win, anything."; color: var(--ink-4); pointer-events: none; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; }
+  #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; font-family: var(--ff-head); }
 
-  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 52px); overflow: hidden; background: #FBFBFA; }
+  #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 52px); overflow: hidden; background: var(--white); }
 
   .add-columns {
     display: grid;
@@ -371,13 +368,12 @@
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .add-right-icon i { font-size: 15px; color: var(--accent); }
-  .add-right-title { font-size: 22px; font-weight: 600; color: var(--ink); font-family: 'Caveat', cursive; }
+  .add-right-title { font-size: 15px; font-weight: 600; color: var(--ink); font-family: var(--ff-head); }
   .add-right-sub { font-size: 11.5px; color: var(--ink-4); margin-top: 1px; font-family: var(--ff-head); }
   .add-right #exp-freetext {
     flex: 1; overflow-y: auto;
-    background-color: #fff;
     background-image: repeating-linear-gradient(
-      to bottom, transparent, transparent 29px, #ECEDF0 29px, #ECEDF0 30px
+      to bottom, transparent, transparent 29px, #f0f1f3 29px, #f0f1f3 30px
     );
     background-position: 0 18px;
   }
@@ -516,10 +512,10 @@
     background: var(--accent-light); border-color: var(--accent); color: var(--accent);
   }
   .exp-chip:hover:not(.active) { background: var(--white); }
-  #exp-freetext:empty::before { content: "Just start writing... a project, a meeting, a small win, anything."; color: var(--ink-4); pointer-events: none; font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.5; }
+  #exp-freetext:empty::before { content: "Tap a chip on the left to add a prompt, or just start writing..."; color: var(--ink-4); pointer-events: none; }
   #page-add.active { display: flex; flex-direction: column; height: calc(100vh - 52px); overflow: hidden; }
   .add-columns { display: flex; flex-direction: row; flex: 1; overflow: hidden; }
-  .add-left { flex: 0 0 33%; max-width: 33%; overflow-y: auto; border-right: 0.5px solid var(--border); padding: 24px; background: var(--white); }
+  .add-left { flex: 0 0 28%; max-width: 28%; overflow-y: auto; border-right: 0.5px solid var(--border); padding: 24px; background: var(--white); }
   .add-right { flex: 1; display: flex; flex-direction: column; padding: 24px; overflow: hidden; }
   .add-right #exp-freetext { flex: 1; }
   @media (max-width: 768px) {
@@ -697,10 +693,10 @@
   .kw-match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .kw-col-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px; }
   .kw-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
-  .kw-pill { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 99px; border: none; }
-  .kw-pill.matched { background: #DCFCE7; color: #16A34A; }
-  .kw-pill.partial  { background: #FEF3C7; color: #D97706; }
-  .kw-pill.missing  { background: #FEE2E2; color: #DC2626; }
+  .kw-pill { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 99px; border: 1px solid; }
+  .kw-pill.matched { background: #F0F9FF; color: #0369A1; border-color: #BAE6FD; }
+  .kw-pill.partial  { background: #FFFBEB; color: #92400E; border-color: #FDE68A; }
+  .kw-pill.missing  { background: #FFF1F2; color: #9F1239; border-color: #FECDD3; }
 
   .exp-match-list { display: flex; flex-direction: column; gap: 7px; }
   .exp-match-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r); border: 1px solid var(--border); background: var(--white); box-shadow: var(--shadow-sm); }
@@ -938,7 +934,6 @@
   .sidebar.collapsed .sb-label { display: none; }
   .sidebar.collapsed .sb-divider { margin: 8px; }
   .sidebar.collapsed .sb-item { justify-content: center; padding: 9px 0; }
-
   .sidebar.collapsed .sb-section { margin-bottom: 8px; }
   .sidebar.collapsed + .main { margin-left: 56px; }
   .sidebar.collapsed ~ .status-bar { left: 56px; }
@@ -949,7 +944,7 @@
   }
   .sb-toggle-btn:hover { color: var(--accent); }
   .sidebar.collapsed .sb-toggle-btn { justify-content: center; padding: 0; height: 24px; }
-  .sb-content { padding-top: 0; flex: 1; overflow-y: auto; min-height: 0; }
+  .sb-content { padding-top: 0; }
   .sb-text { display: inline; }
 
   /* ── NAV LINKS hidden ── */
@@ -1035,9 +1030,10 @@
     margin-bottom: auto;
   }
   .blk-card-title {
-    font-size: 20px; font-weight: 700;
-    line-height: 1.3; font-family: var(--ff-head);
+    font-size: 22px; font-weight: 900;
+    line-height: 1.2; font-family: var(--ff-head);
     margin-top: 24px; margin-bottom: 10px;
+    letter-spacing: -0.5px;
     display: -webkit-box; -webkit-line-clamp: 2;
     -webkit-box-orient: vertical; overflow: hidden;
   }
@@ -1614,8 +1610,8 @@
 
 <!-- ═══════════ NAV ═══════════ -->
 <nav class="nav">
-  <div class="nav-logo" onclick="navigate('blocks')">
-    <img src="assets/logo.png" alt="Scribbi" style="height:28px;width:auto;display:block;">
+  <div class="nav-logo" onclick="navigate('blocks')" style="padding:0;">
+    <img src="data:image/png;base64,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" alt="Exppi" style="height:28px;width:auto;display:block;">
   </div>
   <div class="nav-breadcrumb" id="nav-breadcrumb">
     <span>Resume</span>
@@ -1977,11 +1973,10 @@
     <!-- ════ PAGE: ADD EXPERIENCE ════ -->
     <div id="page-add" class="page">
 
-      <div class="page-header" style="position:relative;overflow:hidden;">
+      <div class="page-header">
         <div class="page-eyebrow">NEW EXPERIENCE</div>
         <div class="page-title">Add Experience</div>
         <div class="page-sub">Fill in the basics, then use chips to guide your story.</div>
-        <img src="assets/folder-illustration.png" alt="" style="position:absolute;right:24px;bottom:0;width:340px;height:auto;pointer-events:none;">
       </div>
 
       <div class="add-columns">
@@ -2093,26 +2088,20 @@
         <!-- Right Panel: Scribble -->
         <div class="add-right">
 
-          <div class="add-right-head" style="align-items:flex-start;">
-            <div style="display:flex;align-items:flex-start;gap:9px;">
-              <i class="ti ti-pencil" style="font-size:18px;color:var(--accent);margin-top:5px;flex-shrink:0;"></i>
-              <div>
-                <div class="add-right-title">Scribble your experience</div>
-                <div style="font-size:12px;color:var(--ink-4);margin-top:3px;">Just write. Don't organize. Don't overthink.</div>
-              </div>
-            </div>
+          <div class="add-right-head">
+            <span class="add-right-title">Scribble your experience</span>
             <span id="exp-char-count" style="font-size:12px;color:var(--ink-4);">0 characters</span>
           </div>
 
           <div id="exp-freetext" contenteditable="true"
-            style="flex:1;padding:18px 22px;border:none;color:var(--ink);font-family:var(--ff-head);font-size:14px;line-height:30px;outline:none;cursor:text;overflow-y:auto;caret-color:var(--accent);"
+            style="flex:1;padding:18px 22px;font-size:18px;border:none;background:#fff;color:var(--ink);font-family:var(--ff-head);font-size:14px;line-height:1.75;outline:none;cursor:text;overflow-y:auto;caret-color:var(--accent);"
             oninput="updateExpCharCount()"></div>
 
           <div class="add-right-foot">
-            <button onclick="fillFreetextExample()" style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3);border:1px solid var(--border);border-radius:var(--r);padding:7px 14px;background:var(--surface);cursor:pointer;font-family:var(--ff-head);transition:all 0.12s;" onmouseover="this.style.borderColor=getComputedStyle(document.documentElement).getPropertyValue('--border-strong')" onmouseout="this.style.borderColor=getComputedStyle(document.documentElement).getPropertyValue('--border')"><i class="ti ti-sparkles" style="font-size:13px;"></i> Fill with example</button>
+            <button onclick="fillFreetextExample()" style="font-size:12.5px;color:var(--ink-3);border:1px solid var(--border);border-radius:var(--r);padding:7px 14px;background:var(--surface);cursor:pointer;font-family:var(--ff-head);transition:all 0.12s;" onmouseover="this.style.borderColor=getComputedStyle(document.documentElement).getPropertyValue('--border-strong')" onmouseout="this.style.borderColor=getComputedStyle(document.documentElement).getPropertyValue('--border')">Fill with example</button>
             <div style="display:flex;align-items:center;gap:8px;">
               <button id="btn-analyze" onclick="openAnalysisModal()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;transition:background 0.15s;font-family:var(--ff-head);" onmouseover="this.style.background='var(--accent-dark)'" onmouseout="this.style.background='var(--accent)'">
-                <i class="ti ti-sparkles" style="font-size:14px;"></i> Analyze Experience
+                Analyze Experience
               </button>
               <button id="btn-add-to-folder" onclick="addToFolder()" style="display:none;font-size:13px;font-weight:500;color:#fff;background:var(--ink);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Add to folder</button>
               <button id="btn-save-scribble" onclick="saveScribbleEdit()" style="display:none;font-size:13px;font-weight:500;color:#fff;background:var(--ink);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Save changes</button>
@@ -2356,99 +2345,63 @@
       <div id="mr-error" style="display:none;padding:24px 48px;font-size:14px;font-weight:600;color:var(--danger);"></div>
 
       <!-- Result state -->
-      <div id="mr-result" style="display:none;padding:32px 48px 48px;">
+      <div id="mr-result" style="display:none;padding:0 48px 48px;">
 
-        <!-- Tier Score Card -->
-        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:28px 36px;margin-bottom:24px;">
-          <div id="mr-tier-label" style="font-size:22px;font-weight:900;color:var(--ink);margin-bottom:14px;letter-spacing:-0.02em;">—</div>
-          <div style="margin-bottom:16px;">
-            <div style="display:flex;gap:4px;margin-bottom:6px;">
-              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
-                <div data-seg-marker="0" style="display:none;width:6px;height:6px;border-radius:50%;background:#E24B4A;"></div>
-                <div data-seg="0" style="width:100%;height:8px;border-radius:99px;background:#E24B4A;opacity:0.25;transition:opacity 0.3s;"></div>
-              </div>
-              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
-                <div data-seg-marker="1" style="display:none;width:6px;height:6px;border-radius:50%;background:#EF9F27;"></div>
-                <div data-seg="1" style="width:100%;height:8px;border-radius:99px;background:#EF9F27;opacity:0.25;transition:opacity 0.3s;"></div>
-              </div>
-              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
-                <div data-seg-marker="2" style="display:none;width:6px;height:6px;border-radius:50%;background:#EAB308;"></div>
-                <div data-seg="2" style="width:100%;height:8px;border-radius:99px;background:#EAB308;opacity:0.25;transition:opacity 0.3s;"></div>
-              </div>
-              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
-                <div data-seg-marker="3" style="display:none;width:6px;height:6px;border-radius:50%;background:#84CC16;"></div>
-                <div data-seg="3" style="width:100%;height:8px;border-radius:99px;background:#84CC16;opacity:0.25;transition:opacity 0.3s;"></div>
-              </div>
-              <div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;">
-                <div data-seg-marker="4" style="display:none;width:6px;height:6px;border-radius:50%;background:#22C55E;"></div>
-                <div data-seg="4" style="width:100%;height:8px;border-radius:99px;background:#22C55E;opacity:0.25;transition:opacity 0.3s;"></div>
-              </div>
-            </div>
-            <div style="display:flex;gap:4px;">
-              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Not a Fit</div>
-              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Needs Work</div>
-              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Moderate Fit</div>
-              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Good Fit</div>
-              <div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">Strong Fit</div>
-            </div>
+        <!-- Score card -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:32px 36px;margin-bottom:24px;display:flex;align-items:center;gap:36px;">
+          <div style="text-align:center;flex-shrink:0;">
+            <div id="mr-score" style="font-size:64px;font-weight:900;line-height:1;letter-spacing:-0.03em;color:var(--ink);">0</div>
+            <div style="font-size:13px;color:var(--ink-4);font-weight:600;margin-top:4px;">/ 100 Job Fit Score</div>
           </div>
-          <div style="display:flex;gap:24px;">
-            <div style="display:flex;align-items:center;gap:7px;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#16A34A;flex-shrink:0;display:inline-block;"></span>
-              <span style="font-size:13px;color:var(--ink-4);">Matched</span>
-              <span id="mr-cnt-matched" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
+          <div style="flex:1;">
+            <div style="height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:18px;">
+              <div id="mr-score-bar" style="height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width 0.6s ease;"></div>
             </div>
-            <div style="display:flex;align-items:center;gap:7px;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#D97706;flex-shrink:0;display:inline-block;"></span>
-              <span style="font-size:13px;color:var(--ink-4);">Partial</span>
-              <span id="mr-cnt-partial" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:7px;">
-              <span style="width:10px;height:10px;border-radius:50%;background:#DC2626;flex-shrink:0;display:inline-block;"></span>
-              <span style="font-size:13px;color:var(--ink-4);">Missing</span>
-              <span id="mr-cnt-missing" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
+            <div style="display:flex;gap:24px;">
+              <div style="display:flex;align-items:center;gap:7px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:#0369A1;flex-shrink:0;display:inline-block;"></span>
+                <span style="font-size:13px;color:var(--ink-4);">Matched</span>
+                <span id="mr-cnt-matched" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:7px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:#92400E;flex-shrink:0;display:inline-block;"></span>
+                <span style="font-size:13px;color:var(--ink-4);">Partial</span>
+                <span id="mr-cnt-partial" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:7px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:#9F1239;flex-shrink:0;display:inline-block;"></span>
+                <span style="font-size:13px;color:var(--ink-4);">Missing</span>
+                <span id="mr-cnt-missing" style="font-size:16px;font-weight:800;color:var(--ink);">0</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Tabs: Overall / By Experience -->
-        <div style="margin-bottom:24px;">
-          <div style="margin-bottom:16px;">
-            <div style="background:#F3F4F6;border-radius:99px;padding:4px;display:inline-flex;">
-              <button id="mr-tab-overall" onclick="mrSwitchTab('overall')" style="padding:8px 24px;font-size:13px;font-weight:700;border:none;cursor:pointer;border-radius:99px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.1);color:var(--ink);">Overall</button>
-              <button id="mr-tab-byexp" onclick="mrSwitchTab('byexp')" style="padding:8px 24px;font-size:13px;font-weight:500;border:none;cursor:pointer;border-radius:99px;background:transparent;color:var(--ink-4);">By Experience</button>
-            </div>
+        <!-- Keyword groups -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px;">
+          <div style="background:var(--white);border:1px solid #BAE6FD;border-radius:var(--rl);padding:18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#0369A1;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-check"></i> Matched</div>
+            <div id="mr-group-matched" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
           </div>
-          <div id="mr-panel-overall">
-            <div style="display:flex;flex-direction:column;gap:16px;">
-              <div>
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#16A34A;margin-bottom:8px;">Matched</div>
-                <div id="mr-group-matched" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-              </div>
-              <div>
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#D97706;margin-bottom:8px;">Partial Match</div>
-                <div id="mr-group-partial" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-              </div>
-              <div>
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#DC2626;margin-bottom:8px;">Missing</div>
-                <div id="mr-group-missing" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
-              </div>
-            </div>
+          <div style="background:var(--white);border:1px solid #FDE68A;border-radius:var(--rl);padding:18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#92400E;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-adjustments"></i> Partial</div>
+            <div id="mr-group-partial" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
           </div>
-          <div id="mr-panel-byexp" style="display:none;">
-            <div id="mr-byexp-content"></div>
+          <div style="background:var(--white);border:1px solid #FECDD3;border-radius:var(--rl);padding:18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9F1239;margin-bottom:12px;display:flex;align-items:center;gap:5px;"><i class="ti ti-x"></i> Missing</div>
+            <div id="mr-group-missing" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
           </div>
         </div>
 
-        <!-- Missing keyword cards -->
-        <div id="mr-missing-section" style="margin-bottom:24px;display:none;">
-          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><i class="ti ti-alert-triangle" style="color:#DC2626;"></i> How to Improve</div>
-          <div id="mr-missing-cards"></div>
+        <!-- How to improve -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px;margin-bottom:24px;">
+          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;"><i class="ti ti-bulb" style="color:var(--accent);"></i> How to Improve</div>
+          <div id="mr-improve-list" style="display:flex;flex-direction:column;gap:10px;"></div>
         </div>
 
         <!-- Bottom actions -->
         <div style="display:flex;gap:10px;padding-top:8px;border-top:1px solid var(--border);align-items:center;">
-          <button onclick="saveToMatchArchive()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:6px;"><i class="ti ti-device-floppy" style="font-size:14px;"></i> Save to archive</button>
+          <button onclick="navigate('match')" class="btn-secondary-lg" style="display:flex;align-items:center;gap:6px;"><i class="ti ti-arrow-left" style="font-size:14px;"></i> Back</button>
           <button disabled style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:12px 28px;border-radius:var(--rl);cursor:not-allowed;opacity:0.45;letter-spacing:-0.01em;">
             <i class="ti ti-file-description" style="font-size:16px;"></i> Build Tailored Resume
           </button>
@@ -2457,24 +2410,10 @@
       </div>
     </div>
 
-    <!-- ════ BLOCK DETAIL SIDE PANEL ════ -->
-    <div id="mr-block-panel" style="position:fixed;top:0;right:-52vw;width:50vw;min-width:360px;height:100vh;background:var(--white);box-shadow:-8px 0 40px rgba(0,0,0,0.15);z-index:400;transition:right 0.3s ease;display:flex;flex-direction:column;">
-      <div style="padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-        <div id="mr-bp-eyebrow" style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.07em;"></div>
-        <button onclick="closeBlockDetailPanel()" style="background:none;border:none;cursor:pointer;color:var(--ink-3);font-size:20px;line-height:1;padding:4px;"><i class="ti ti-x"></i></button>
-      </div>
-      <div id="mr-bp-content" style="overflow-y:auto;flex:1;padding:28px 24px;"></div>
-      <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;background:var(--white);">
-        <button onclick="closeBlockDetailPanel()" class="btn-secondary-lg">Close</button>
-        <button onclick="navigate('blocks')" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;">Improve This Experience</button>
-      </div>
-    </div>
-    <div id="mr-block-panel-backdrop" onclick="closeBlockDetailPanel()" style="display:none;position:fixed;inset:0;z-index:399;background:rgba(17,24,39,0.3);"></div>
-
     <!-- ════ BLOCK RECOMMEND MODAL ════ -->
     <div id="block-recommend-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;">
       <div onclick="closeBlockRecommendModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
-      <div style="position:relative;width:860px;max-width:95vw;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.22s ease;max-height:92vh;">
+      <div style="position:relative;width:680px;max-width:92vw;min-height:600px;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.22s ease;max-height:88vh;">
 
         <!-- header -->
         <div style="background:var(--accent);padding:22px 28px;flex-shrink:0;">
@@ -2483,44 +2422,36 @@
               
               <div>
                 <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;">Block Recommendations</div>
-                <div id="brm-header-title" style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Analyzing…</div>
+                <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Google · Product Manager</div>
               </div>
             </div>
             <button onclick="closeBlockRecommendModal()" style="background:rgba(255,255,255,0.2);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button>
           </div>
         </div>
 
+        <!-- toast -->
+        <div id="brm-toast" style="display:none;position:absolute;top:82px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:99px;white-space:nowrap;z-index:10;pointer-events:none;"></div>
+
         <!-- body -->
         <div style="padding:24px 28px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:20px;">
 
-          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong>3</strong> blocks to use in the analysis.</div>
+          <div style="font-size:13px;color:var(--ink-3);">Based on JD analysis, the following blocks are highly relevant. Select up to <strong style="color:var(--ink);">3</strong> to use in the analysis.</div>
 
-          <!-- dynamic content injected by openBlockRecommendModal() -->
-          <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:40px 0;min-height:420px;">
-            <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+          <div id="brm-loading" style="display:flex;align-items:center;justify-content:center;padding:80px;">
+            <div style="width:36px;height:36px;border:3px solid #f3f3f3;border-top:3px solid var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
           </div>
-          <div id="brm-content" style="display:none;flex-direction:column;gap:20px;min-height:420px;"></div>
-          <div id="brm-error" style="display:none;font-size:13px;color:#e53e3e;padding:16px;border-radius:8px;background:#fff5f5;"></div>
+          <div id="brm-content" style="display:none;flex-direction:column;gap:8px;overflow-y:auto;max-height:480px;"></div>
+          <div id="brm-error" style="display:none;padding:16px;font-size:13px;color:#dc2626;"></div>
 
         </div>
 
         <!-- footer -->
         <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
-          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">0</span> blocks selected</div>
-          <button onclick="openBrmArchivePanel()" title="Add block from archive" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:var(--white);cursor:pointer;color:var(--ink-2);font-size:18px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-2)'"><i class="ti ti-plus"></i></button>
+          <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">3</span> / 3 blocks selected</div>
           <button onclick="closeBlockRecommendModal()" class="btn-secondary-lg" style="margin-left:auto;">Cancel</button>
-          <button onclick="(function(){ const selected=[...document.querySelectorAll('.rec-block.selected')]; const ids=selected.map(el=>el.dataset.id); const allKw=[]; const selBlocks=(_brmBlocks||[]).filter(b=>ids.includes(b.id)); selBlocks.forEach(b=>{(b.competency_keywords||[]).forEach(k=>{if(!allKw.includes(k))allKw.push(k);})}); _pendingAnalysis.selectedKeywords=allKw; _pendingAnalysis.selectedBlocks=selBlocks.map(b=>({id:b.id,title:b.title,keywords:b.competency_keywords||[],period:(b.start_date||'')+(b.end_date?' – '+b.end_date:' – present')})); closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <button onclick="(function(){ const selected = [...document.querySelectorAll('.rec-block.selected')]; const ids = selected.map(el => el.dataset.id); const allKw = []; (_brmBlocks || []).filter(b => ids.includes(b.id)).forEach(b => { (b.competency_keywords || []).forEach(k => { if (!allKw.includes(k)) allKw.push(k); }); }); _pendingAnalysis.selectedKeywords = allKw; closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <i class="ti ti-chart-bar" style="font-size:15px;"></i> Analyze with These Blocks
           </button>
-        </div>
-
-        <!-- archive sub-panel: slides over the modal body -->
-        <div id="brm-archive-panel" style="display:none;position:absolute;inset:0;z-index:20;background:var(--white);flex-direction:column;">
-          <div style="background:var(--accent);padding:18px 28px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
-            <div style="font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.01em;">Add from Archive</div>
-            <button onclick="closeBrmArchivePanel()" style="background:rgba(255,255,255,0.2);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-x"></i></button>
-          </div>
-          <div id="brm-archive-list" style="overflow-y:auto;flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:8px;"></div>
         </div>
 
       </div>
@@ -2535,31 +2466,103 @@
       </div>
 
       <!-- 3-col layout -->
-      <div style="display:grid;grid-template-columns:1fr 3fr;height:calc(100vh - 200px);overflow:hidden;">
+      <div style="display:grid;grid-template-columns:280px 1fr 260px;height:calc(100vh - 200px);overflow:hidden;">
 
         <!-- ── LEFT: Company List ── -->
-        <div style="border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:var(--white);">
-          <div style="padding:16px 40px 10px 40px;">
+        <div style="border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
+          <div style="padding:16px 16px 10px;">
             <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:0 12px;">
               <i class="ti ti-search" style="font-size:13px;color:var(--ink-4);"></i>
               <input type="text" id="ms-search" placeholder="Search companies..." oninput="msFilterCompanies(this.value)"
                 style="border:none;background:none;outline:none;padding:9px 8px;font-size:13px;font-family:var(--ff-head);color:var(--ink);width:100%;">
             </div>
           </div>
-          <div style="padding:0 40px 6px 40px;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);" id="ms-count-label">0 companies</div>
-          <div id="ms-company-list" style="flex:1;overflow-y:auto;padding:0 40px 16px 40px;display:flex;flex-direction:column;gap:4px;"></div>
+          <div style="padding:0 12px 6px;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);" id="ms-count-label">0 companies</div>
+          <div id="ms-company-list" style="flex:1;overflow-y:auto;padding:0 8px 16px;display:flex;flex-direction:column;gap:4px;"></div>
+          <div style="padding:12px 16px;border-top:1px solid var(--border);">
+            <button onclick="navigate('match')" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:10px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">
+              <i class="ti ti-plus" style="font-size:14px;"></i> Add Company
+            </button>
+          </div>
         </div>
 
         <!-- ── CENTER: Match Detail ── -->
         <div id="ms-center" style="overflow-y:auto;display:flex;flex-direction:column;">
 
+          <!-- empty state -->
           <div id="ms-empty" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:48px;color:var(--ink-4);">
             <i class="ti ti-building" style="font-size:40px;opacity:0.3;"></i>
             <div style="font-size:14px;font-weight:500;">Select a company to view match details</div>
+            <div style="font-size:12px;">Your analyzed companies will appear on the left</div>
           </div>
-          <div id="ms-result-container" style="display:none;padding:28px 32px;"></div>
+
+          <!-- detail (hidden until company selected) -->
+          <div id="ms-detail" style="display:none;padding:28px 32px;flex-direction:column;gap:20px;">
+
+            <!-- company header -->
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div id="ms-co-avatar" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;background:var(--accent);"></div>
+              <div style="flex:1;">
+                <div id="ms-co-name" style="font-size:18px;font-weight:700;color:var(--ink);"></div>
+                <div id="ms-co-role" style="font-size:13px;color:var(--ink-3);margin-top:2px;"></div>
+              </div>
+              <div id="ms-co-analyzed" style="font-size:11px;color:var(--ink-4);"></div>
+            </div>
+
+            <!-- score card -->
+            <div style="background:var(--ink);border-radius:16px;padding:28px 32px;color:#fff;">
+              <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;">MATCH SCORE</div>
+              <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
+                <span id="ms-score-num" style="font-size:56px;font-weight:800;line-height:1;color:#fff;">—</span>
+                <span style="font-size:20px;color:rgba(255,255,255,0.6);">%</span>
+              </div>
+              <div id="ms-score-rank" style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="ms-score-breakdown"></div>
+            </div>
+
+            <!-- keyword match -->
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+              <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Keyword Match</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;" id="ms-kw-groups"></div>
+            </div>
+
+            <!-- JD input for new analysis -->
+            <div id="ms-jd-section" style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+              <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Job Description <span style="background:rgba(239,68,68,0.1);color:var(--danger);padding:2px 8px;border-radius:99px;font-size:10px;margin-left:6px;">REQUIRED</span></div>
+              <textarea id="ms-jd-input" rows="6" placeholder="Paste job description to analyze fit..."
+                style="width:100%;resize:vertical;padding:12px 14px;font-size:13px;font-family:var(--ff-head);color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);outline:none;line-height:1.6;box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+                <button onclick="msRunAnalysis()" style="font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Analyze Fit</button>
+                <span id="ms-jd-status" style="font-size:12px;color:var(--ink-4);"></span>
+              </div>
+            </div>
+
+          </div>
         </div>
 
+        <!-- ── RIGHT: Stats Panel ── -->
+        <div style="border-left:1px solid var(--border);overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:24px;">
+
+          <!-- competency distribution -->
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Competency Distribution</div>
+            <div id="ms-competency-bars" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+
+          <!-- company score comparison -->
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Score Comparison</div>
+            <div id="ms-comparison-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+
+          <!-- AI insights -->
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">AI Insights</div>
+            <div id="ms-insights" style="display:flex;flex-direction:column;gap:10px;"></div>
+          </div>
+
+        </div>
       </div>
     </div>
 
@@ -3777,15 +3780,13 @@
     if (errorEl) errorEl.style.display = 'none';
     try {
       const { company, role, jdText } = _pendingAnalysis;
-      const headerTitle = document.getElementById('brm-header-title');
-      if (headerTitle) headerTitle.textContent = (company || '') + (role ? ' · ' + role : '');
       const { data: jdData, error: jdErr } = await supa.functions.invoke('extract-jd-keywords', { body: { company, role, jd_text: jdText } });
       if (jdErr) throw jdErr;
       const companyKeywords = (jdData && jdData.company_keywords) || [];
       _pendingAnalysis.companyKeywords = companyKeywords;
       const { data: blocksData, error: blocksErr } = await supa
         .from('experience_blocks')
-        .select('id, title, competency_keywords, start_date, end_date, activity_type')
+        .select('id, title, competency_keywords')
         .eq('user_id', currentUser.id)
         .not('end_date', 'is', null)
         .or('is_current.is.null,is_current.eq.false');
@@ -3805,8 +3806,8 @@
       let html = '';
       if (recommended.length) {
         html += `<div style="margin-bottom:16px;">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">⭐ Recommended · Auto-selected</div>
-          <div id="brm-recommended-list" style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px;">⭐ Recommended · Auto-selected<button onclick="" style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);border:1.5px solid var(--accent);color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">+</button></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div>
         </div>`;
       }
       if (others.length) {
@@ -3832,165 +3833,40 @@
     const pills = Array.isArray(block.competency_keywords)
       ? block.competency_keywords.slice(0, 6).map(k => `<span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 9px;border-radius:99px;">${escapeHtml(String(k))}</span>`).join('')
       : '';
-    const fmtD = d => d ? d.slice(0, 7).replace('-', '.') : '';
-    const period = block.start_date
-      ? fmtD(block.start_date) + (block.end_date ? ' – ' + fmtD(block.end_date) : ' – present')
-      : '';
     const cls = selected ? 'rec-block selected' : 'rec-block';
     return `<div class="${cls}" data-id="${escapeHtml(block.id)}" onclick="toggleBlock(this)">
-      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;">${escapeHtml(block.title || '')}</div>
-      ${period ? `<div style="font-size:11px;color:var(--ink-4);margin-bottom:6px;">${escapeHtml(period)}</div>` : ''}
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(block.title || '')}</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;">${pills}</div>
       <div class="rec-check"><i class="ti ti-check" style="font-size:14px;color:#fff;"></i></div>
     </div>`;
-  }
-
-  function closeBlockDetailPanel() {
-    const panel = document.getElementById('mr-block-panel');
-    const backdrop = document.getElementById('mr-block-panel-backdrop');
-    if (panel) panel.style.right = '-52vw';
-    if (backdrop) backdrop.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-
-  async function openBlockDetailPanel(blockId) {
-    const panel = document.getElementById('mr-block-panel');
-    const backdrop = document.getElementById('mr-block-panel-backdrop');
-    const content = document.getElementById('mr-bp-content');
-    const eyebrow = document.getElementById('mr-bp-eyebrow');
-    if (!panel || !content) return;
-    panel.style.right = '0';
-    if (backdrop) backdrop.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    content.innerHTML = '<div style="padding:40px;text-align:center;color:var(--ink-4);font-size:14px;">Loading...</div>';
-    const { data, error } = await supa.from('experience_blocks')
-      .select('id, title, activity_type, start_date, end_date, is_current, description, actions, outcome_measurable, competency_keywords')
-      .eq('id', blockId).single();
-    if (error || !data) {
-      content.innerHTML = '<div style="color:#DC2626;padding:20px;font-size:13px;">Failed to load block details.</div>';
-      return;
-    }
-    const fmtD = d => d ? d.slice(0, 7).replace('-', '.') : '';
-    const period = data.start_date
-      ? fmtD(data.start_date) + (data.is_current || !data.end_date ? ' – present' : ' – ' + fmtD(data.end_date))
-      : '';
-    const typeLabel = (data.activity_type || '').toUpperCase();
-    if (eyebrow) eyebrow.textContent = `EXPERIENCE BLOCK${typeLabel ? ' · ' + typeLabel : ''}${period ? ' · ' + period : ''}`;
-    const badge = (letter, label, text) => text ? `
-      <div style="margin-bottom:18px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <span style="width:22px;height:22px;border-radius:4px;background:var(--ink);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${letter}</span>
-          <span style="font-size:13px;font-weight:700;color:var(--ink);">${label}</span>
-        </div>
-        <div style="font-size:13px;color:var(--ink-3);line-height:1.65;padding-left:30px;">${escapeHtml(text)}</div>
-      </div>` : '';
-    const chips = (data.competency_keywords || []).map(k => `<span class="kw-pill matched">${escapeHtml(k)}</span>`).join('');
-    content.innerHTML = `
-      <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:16px;">${escapeHtml(data.title || '')}</div>
-      <div style="display:flex;gap:24px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);">
-        <div><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">Type</div><div style="font-size:13px;font-weight:600;color:var(--ink);">${escapeHtml(data.activity_type || '—')}</div></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;">Period</div><div style="font-size:13px;font-weight:600;color:var(--ink);">${escapeHtml(period || '—')}</div></div>
-      </div>
-      ${badge('S', 'Situation &amp; Task', data.description)}
-      ${badge('A', 'Action', data.actions)}
-      ${badge('R', 'Result', data.outcome_measurable)}
-      ${chips ? `<div style="padding-top:4px;"><div style="font-size:10px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Competency Keywords</div><div style="display:flex;flex-wrap:wrap;gap:6px;">${chips}</div></div>` : ''}
-    `;
   }
 
   function closeBlockRecommendModal() {
     document.getElementById('block-recommend-modal').style.display = 'none';
     document.body.style.overflow = '';
   }
-  let _brmToastTimer = null;
+  function showBrmToast(msg) {
+    const toast = document.getElementById('brm-toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 2500);
+  }
   function toggleBlock(el) {
-    const alreadySelected = el.classList.contains('selected');
-    if (!alreadySelected) {
-      const count = document.querySelectorAll('.rec-block.selected').length;
-      if (count >= 3) {
-        // Show inline toast for 3 seconds
-        let toast = document.getElementById('brm-limit-toast');
-        if (!toast) {
-          toast = document.createElement('div');
-          toast.id = 'brm-limit-toast';
-          toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;background:var(--ink);color:#fff;padding:11px 20px;border-radius:var(--rl);font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,0.22);white-space:nowrap;';
-          document.body.appendChild(toast);
-        }
-        toast.textContent = 'Maximum 3 blocks. Deselect one to choose another.';
-        toast.style.display = 'block';
-        clearTimeout(_brmToastTimer);
-        _brmToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    const isSelected = el.classList.contains('selected');
+    if (!isSelected) {
+      const currentCount = document.querySelectorAll('.rec-block.selected').length;
+      if (currentCount >= 3) {
+        showBrmToast('Please deselect one experience first');
         return;
       }
     }
     el.classList.toggle('selected');
-    const newCount = document.querySelectorAll('.rec-block.selected').length;
-    const counter = document.getElementById('selected-count');
-    if (counter) counter.textContent = newCount;
-  }
-
-  let _brmArchiveBlocks = [];
-
-  async function openBrmArchivePanel() {
-    const panel = document.getElementById('brm-archive-panel');
-    const list = document.getElementById('brm-archive-list');
-    if (!panel || !list) return;
-    panel.style.display = 'flex';
-    list.innerHTML = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">Loading...</div>';
-
-    const shownIds = new Set((_brmBlocks || []).map(b => b.id));
-    const { data, error } = await supa.from('experience_blocks')
-      .select('id, title, competency_keywords, start_date, end_date')
-      .eq('user_id', currentUser.id)
-      .order('created_at', { ascending: false });
-
-    if (error || !data) {
-      list.innerHTML = '<div style="font-size:13px;color:#e53e3e;padding:16px;">Failed to load blocks.</div>';
-      return;
-    }
-
-    _brmArchiveBlocks = data.filter(b => !shownIds.has(b.id) && b.competency_keywords && b.competency_keywords.length > 0);
-
-    if (!_brmArchiveBlocks.length) {
-      list.innerHTML = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">No additional blocks available.</div>';
-      return;
-    }
-
-    list.innerHTML = _brmArchiveBlocks.map(b => {
-      const pills = (b.competency_keywords || []).slice(0, 5).map(k =>
-        `<span style="font-size:11px;font-weight:600;color:var(--accent-2);background:var(--accent-light);padding:3px 9px;border-radius:99px;">${escapeHtml(String(k))}</span>`
-      ).join('');
-      const period = (b.start_date || '') + (b.end_date ? ' – ' + b.end_date : ' – present');
-      return `<div onclick="addBlockFromArchive('${escapeHtml(b.id)}')" style="padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--rl);cursor:pointer;transition:border-color 0.15s,background 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='var(--accent-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.background=''">
-        <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(b.title || '')}</div>
-        <div style="font-size:11px;color:var(--ink-4);margin-bottom:6px;">${escapeHtml(period)}</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;">${pills}</div>
-      </div>`;
-    }).join('');
-  }
-
-  function closeBrmArchivePanel() {
-    const panel = document.getElementById('brm-archive-panel');
-    if (panel) panel.style.display = 'none';
-  }
-
-  function addBlockFromArchive(id) {
-    const block = _brmArchiveBlocks.find(b => b.id === id);
-    if (!block) return;
-    if (!_brmBlocks) _brmBlocks = [];
-    if (!_brmBlocks.find(b => b.id === block.id)) _brmBlocks.push(block);
-    const targetEl = document.getElementById('brm-recommended-list') || document.getElementById('brm-content');
-    if (targetEl) {
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = _renderBlockCard(block, false);
-      targetEl.appendChild(wrapper.firstChild);
-    }
     const count = document.querySelectorAll('.rec-block.selected').length;
     const counter = document.getElementById('selected-count');
     if (counter) counter.textContent = count;
-    closeBrmArchivePanel();
   }
-
   function filterSuggest(val) {
     const box = document.getElementById('company-suggest');
     if (!box) return;
@@ -4088,65 +3964,9 @@
     _pendingAnalysis = { company, role, jdText: _jdRawText };
     openBlockRecommendModal();
   }
-  function getScoreTier(score) {
-    if (score <= 20) return { label: 'Not a Fit',    color: '#E24B4A', idx: 0 };
-    if (score <= 40) return { label: 'Needs Work',   color: '#EF9F27', idx: 1 };
-    if (score <= 60) return { label: 'Moderate Fit', color: '#EAB308', idx: 2 };
-    if (score <= 80) return { label: 'Good Fit',     color: '#84CC16', idx: 3 };
-    return             { label: 'Strong Fit',        color: '#22C55E', idx: 4 };
-  }
-  function mrSwitchTab(tab) {
-    ['overall','byexp'].forEach(t => {
-      const btn   = document.getElementById('mr-tab-' + t);
-      const panel = document.getElementById('mr-panel-' + t);
-      const active = t === tab;
-      if (btn) {
-        btn.style.background = active ? '#fff' : 'transparent';
-        btn.style.boxShadow  = active ? '0 1px 4px rgba(0,0,0,0.1)' : 'none';
-        btn.style.color      = active ? 'var(--ink)' : 'var(--ink-4)';
-        btn.style.fontWeight = active ? '700' : '500';
-      }
-      if (panel) panel.style.display = active ? 'block' : 'none';
-    });
-    // Show "How to Improve" only in Overall tab
-    const missingSection = document.getElementById('mr-missing-section');
-    if (missingSection) {
-      const cards = document.getElementById('mr-missing-cards');
-      const hasContent = cards && cards.children.length > 0;
-      missingSection.style.display = (tab === 'overall' && hasContent) ? 'block' : 'none';
-    }
-  }
-  async function saveToMatchArchive() {
-    if (!currentUser) { openAuthRequiredModal('match'); return; }
-    const { company, role } = _pendingAnalysis || {};
-    const matchData = window._lastMatchData;
-    if (!company || !matchData) { showSaveToast('No analysis data to save.', true); return; }
-    const overall = matchData.overall || [];
-    const matched = overall.filter(k => k.status === 'matched').map(k => k.keyword);
-    const missing = overall.filter(k => k.status === 'missing').map(k => k.keyword);
-    const score = Math.round((matched.length + overall.filter(k => k.status === 'partial').length * 0.5) / (overall.length || 1) * 100);
-    const payload = {
-      user_id: currentUser.id,
-      company_name: company,
-      job_title: role || '',
-      fit_score: score,
-      matched_keywords: matched,
-      missing_keywords: missing,
-      company_keywords: overall.map(k => k.keyword),
-      jd_summary: (window._lastJdText || '').slice(0, 300),
-      updated_at: new Date().toISOString(),
-    };
-    const { error } = await supa.from('companies').insert(payload);
-    if (error) {
-      showSaveToast('Failed to save: ' + error.message, true);
-    } else {
-      showSaveToast('Saved to Match Archive!', false);
-    }
-  }
   async function runMatchResultAnalysis() {
     if (!_pendingAnalysis) return;
     const { company, role, jdText } = _pendingAnalysis;
-    window._lastJdText = jdText;
     const eyebrow = document.getElementById('mr-eyebrow');
     if (eyebrow) eyebrow.textContent = company.toUpperCase() + ' · ' + role.toUpperCase();
     document.getElementById('mr-loading').style.display = 'flex';
@@ -4158,23 +3978,17 @@
       });
       if (jdErr) throw jdErr;
       const companyKeywords = (jdData && jdData.company_keywords) || [];
-      let blocksForMatch = (_pendingAnalysis.selectedBlocks && _pendingAnalysis.selectedBlocks.length > 0)
-        ? _pendingAnalysis.selectedBlocks
-        : null;
-      if (!blocksForMatch) {
-        const myKeywords = await gatherMyKeywords();
-        blocksForMatch = [{ id: 'all', title: 'All Experiences', keywords: myKeywords }];
-      }
+      const myKeywords = (_pendingAnalysis.selectedKeywords && _pendingAnalysis.selectedKeywords.length > 0) ? _pendingAnalysis.selectedKeywords : await gatherMyKeywords();
       const { data: matchData, error: matchErr } = await supa.functions.invoke('match-keywords', {
-        body: { company_keywords: companyKeywords, blocks: blocksForMatch },
+        body: { company_keywords: companyKeywords, my_keywords: myKeywords },
       });
       if (matchErr) throw matchErr;
-      const overall = (matchData && matchData.overall) || [];
+      const results = (matchData && matchData.results) || [];
       const counts = { matched: 0, partial: 0, missing: 0 };
-      for (const r of overall) { if (counts[r.status] !== undefined) counts[r.status]++; }
-      const total = overall.length || 1;
+      for (const r of results) { if (counts[r.status] !== undefined) counts[r.status]++; }
+      const total = results.length || 1;
       const score = Math.round((counts.matched * 1 + counts.partial * PARTIAL_WEIGHT) / total * 100);
-      renderMatchResult(score, matchData);
+      renderMatchResult(score, counts, results);
       document.getElementById('mr-loading').style.display = 'none';
       document.getElementById('mr-result').style.display  = 'block';
     } catch (err) {
@@ -4184,59 +3998,17 @@
       if (errEl) { errEl.textContent = 'Analysis failed: ' + (err.message || 'check console'); errEl.style.display = 'block'; }
     }
   }
-  function renderMatchResult(score, matchData, targetContainer) {
-    window._lastMatchData = matchData;
-    const tier = getScoreTier(score);
-
-    // If a target container is provided, render self-contained HTML inline
-    if (targetContainer) {
-      const overall = (matchData && matchData.overall) || [];
-      const groups = { matched: [], partial: [], missing: [] };
-      for (const r of overall) { (groups[r.status] || groups.missing).push(r.keyword); }
-      const segColors = ['#E24B4A','#EF9F27','#EAB308','#84CC16','#22C55E'];
-      const segLabels = ['Not a Fit','Needs Work','Moderate Fit','Good Fit','Strong Fit'];
-      const segs = segColors.map((c, i) =>
-        `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:6px;height:6px;border-radius:50%;background:${c};visibility:${i===tier.idx?'visible':'hidden'};"></div>
-          <div style="width:100%;height:8px;border-radius:99px;background:${c};opacity:${i===tier.idx?'1':'0.25'};"></div>
-        </div>`).join('');
-      const chipSection = (list, label, color, bg) => !list.length ? '' :
-        `<div style="margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:6px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${list.map(k=>`<span style="background:${bg};color:${color};border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;">${escapeHtml(k)}</span>`).join('')}</div></div>`;
-      targetContainer.innerHTML = `
-        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px 28px;margin-bottom:20px;">
-          <div style="font-size:20px;font-weight:900;color:${tier.color};letter-spacing:-0.02em;margin-bottom:12px;">${tier.label}</div>
-          <div style="display:flex;gap:4px;margin-bottom:6px;">${segs}</div>
-          <div style="display:flex;gap:4px;margin-bottom:16px;">${segLabels.map(l=>`<div style="flex:1;font-size:10px;color:var(--ink-4);text-align:center;">${l}</div>`).join('')}</div>
-          <div style="display:flex;gap:20px;">
-            <div style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:#16A34A;display:inline-block;"></span><span style="font-size:12px;color:var(--ink-4);">Matched</span><span style="font-size:15px;font-weight:800;color:var(--ink);">${groups.matched.length}</span></div>
-            <div style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:#D97706;display:inline-block;"></span><span style="font-size:12px;color:var(--ink-4);">Partial</span><span style="font-size:15px;font-weight:800;color:var(--ink);">${groups.partial.length}</span></div>
-            <div style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:#DC2626;display:inline-block;"></span><span style="font-size:12px;color:var(--ink-4);">Missing</span><span style="font-size:15px;font-weight:800;color:var(--ink);">${groups.missing.length}</span></div>
-          </div>
-        </div>
-        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px 28px;">
-          ${chipSection(groups.matched,'Matched','#16A34A','#DCFCE7')}
-          ${chipSection(groups.partial,'Partial Match','#D97706','#FEF3C7')}
-          ${chipSection(groups.missing,'Missing','#DC2626','#FEE2E2')}
-          ${!overall.length ? '<div style="font-size:13px;color:var(--ink-4);">No keyword data available.</div>' : ''}
-        </div>`;
-      return;
-    }
-    const tierLabel = document.getElementById('mr-tier-label');
-    if (tierLabel) { tierLabel.textContent = tier.label; tierLabel.style.color = tier.color; }
-    document.querySelectorAll('[data-seg]').forEach(seg => {
-      seg.style.opacity = parseInt(seg.dataset.seg) === tier.idx ? '1' : '0.25';
-    });
-    document.querySelectorAll('[data-seg-marker]').forEach(marker => {
-      marker.style.display = parseInt(marker.dataset.segMarker) === tier.idx ? 'block' : 'none';
-    });
-    const overall = (matchData && matchData.overall) || [];
-    const counts = { matched: 0, partial: 0, missing: 0 };
-    for (const r of overall) { if (counts[r.status] !== undefined) counts[r.status]++; }
+  function renderMatchResult(score, counts, results) {
+    const scoreEl = document.getElementById('mr-score');
+    scoreEl.textContent = score;
+    scoreEl.style.color = score >= 70 ? 'var(--success)' : score >= 45 ? 'var(--warn)' : 'var(--danger)';
     document.getElementById('mr-cnt-matched').textContent = counts.matched;
     document.getElementById('mr-cnt-partial').textContent = counts.partial;
     document.getElementById('mr-cnt-missing').textContent = counts.missing;
+    const bar = document.getElementById('mr-score-bar');
+    if (bar) setTimeout(() => { bar.style.width = score + '%'; }, 50);
     const groups = { matched: [], partial: [], missing: [] };
-    for (const r of overall) { (groups[r.status] || groups.missing).push(r.keyword); }
+    for (const r of results) { (groups[r.status] || groups.missing).push(r.keyword); }
     const fill = (id, list, cls) => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -4247,39 +4019,11 @@
     fill('mr-group-matched', groups.matched, 'matched');
     fill('mr-group-partial', groups.partial, 'partial');
     fill('mr-group-missing', groups.missing, 'missing');
-    window._matchByBlock = (matchData && matchData.by_block) || [];
-    const byexpEl = document.getElementById('mr-byexp-content');
-    if (byexpEl) {
-      const chipCol = (list, label, bg, color) => {
-        const chips = list.length
-          ? list.map(k => `<span style="display:inline-block;background:${bg};color:${color};border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;">${escapeHtml(k)}</span>`).join('')
-          : `<span style="font-size:11px;color:var(--ink-4);">None</span>`;
-        return `<div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:5px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${chips}</div></div>`;
-      };
-      byexpEl.innerHTML = window._matchByBlock.map(blk => {
-        const matchedKws = (blk.results || []).filter(r => r.status === 'matched').map(r => r.keyword);
-        const partialKws = (blk.results || []).filter(r => r.status === 'partial').map(r => r.keyword);
-        return `<div onclick="openBlockDetailPanel(this.dataset.id)" data-id="${escapeHtml(blk.block_id)}" style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-          <div style="margin-bottom:12px;">
-            <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;">${escapeHtml(blk.block_title || '')}</div>
-            <div style="font-size:11px;color:var(--ink-4);">${escapeHtml(blk.block_period || '')}</div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-            ${chipCol(matchedKws,'Matched','#DCFCE7','#16A34A')}
-            ${chipCol(partialKws,'Partial','#FEF3C7','#D97706')}
-          </div>
-        </div>`;
-      }).join('');
-    }
-    const missingSection = document.getElementById('mr-missing-section');
-    const missingCards   = document.getElementById('mr-missing-cards');
-    if (missingCards) {
-      if (groups.missing.length) {
-        missingCards.innerHTML = groups.missing.map(k => `<div style="padding:14px 16px;background:var(--white);border:1px solid #FECDD3;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This skill wasn't found in your selected experience blocks.</div></div><button onclick="navigate('blocks')" style="white-space:nowrap;font-size:12px;font-weight:600;color:#DC2626;background:none;border:1px solid #DC2626;padding:6px 14px;border-radius:var(--rl);cursor:pointer;">Improve This Experience</button></div>`).join('');
-        if (missingSection) missingSection.style.display = 'block';
-      } else {
-        if (missingSection) missingSection.style.display = 'none';
-      }
+    const improveEl = document.getElementById('mr-improve-list');
+    if (improveEl) {
+      improveEl.innerHTML = groups.missing.length
+        ? groups.missing.map(k => `<div style="padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;gap:4px;"><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This competency wasn't found in your experiences. Consider adding relevant experiences or highlighting transferable skills.</div></div>`).join('')
+        : '<div style="font-size:13px;color:var(--success);font-weight:600;">Great news — no missing keywords!</div>';
     }
   }
   function removeFile(type) {
@@ -4293,9 +4037,15 @@
     const div = document.getElementById('exp-freetext');
     const prompt = btn.dataset.prompt;
     const chipId = prompt.replace(/[^a-zA-Z0-9]/g, '_');
+    const hasContent = div.innerHTML.trim() !== '';
+    if (hasContent) {
+      const hr = document.createElement('hr');
+      hr.style.cssText = 'border:none;border-top:1px solid var(--border);margin:8px 0;';
+      div.appendChild(hr);
+    }
     const p = document.createElement('p');
     p.dataset.chip = chipId;
-    p.style.cssText = 'margin:0;';
+    p.style.cssText = 'margin:4px 0;';
     p.textContent = prompt;
     div.appendChild(p);
     btn.dataset.used = 'true';
@@ -4872,11 +4622,8 @@ What I learned: Consistency matters more than quality of individual posts`;
     const map = {
       'Work Experience':           'work',
       'Internship':                'internship',
-      'Education':                 'education',
-      'Certification':             'education',
       'Education & Certification': 'education',
       'Education / Certification': 'education',
-      'Certification':             'education',
       'Projects':                  'projects',
       'Project':                   'projects',
       'Organizations':             'organizations',
@@ -5195,28 +4942,28 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
 
     const colorMap = {
-      work:          { bg: '#D4DAF8', accent: '#D4DAF8', text: '#2A3080', label: 'Work Experience',   doodle: `<line x1="220" y1="20" x2="220" y2="52" stroke="rgba(255,255,255,0.6)" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="204" y1="36" x2="236" y2="36" stroke="rgba(255,255,255,0.6)" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="248" y1="55" x2="262" y2="42" stroke="rgba(255,255,255,0.6)" stroke-width="6" stroke-linecap="round" opacity="0.4"/><line x1="248" y1="42" x2="262" y2="55" stroke="rgba(255,255,255,0.6)" stroke-width="6" stroke-linecap="round" opacity="0.4"/><circle cx="192" cy="72" r="18" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="7" opacity="0.42"/><circle cx="192" cy="72" r="8" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" opacity="0.32"/>` },
-      internship:    { bg: '#C4F0E0', accent: '#C4F0E0', text: '#0A3828', label: 'Internship',        doodle: `<path d="M170,15 L186,36 L202,15 L218,36 L234,15 L250,36 L264,15" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.48"/><path d="M178,52 L194,70 L210,52 L226,70 L244,52 L260,70" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><path d="M174,86 L190,102 L208,86 L226,102 L244,86 L262,102" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.32"/>` },
-      projects:      { bg: '#FAF5C8', accent: '#FAF5C8', text: '#4A3A00', label: 'Projects',          doodle: `<circle cx="238" cy="128" r="78" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="9" opacity="0.4"/><circle cx="238" cy="128" r="54" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="7" opacity="0.32"/><circle cx="238" cy="128" r="32" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="6" opacity="0.26"/><circle cx="238" cy="128" r="14" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" opacity="0.22"/>` },
-      education:     { bg: '#FAD0DC', accent: '#FAD0DC', text: '#5A1030',    label: 'Education',         doodle: `<path d="M148,168 L174,126 L194,152 L218,92 L240,118 L264,62 L278,82" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.42"/><circle cx="174" cy="126" r="6" fill="rgba(255,255,255,0.6)" opacity="0.42"/><circle cx="218" cy="92" r="6" fill="rgba(255,255,255,0.6)" opacity="0.42"/><circle cx="264" cy="62" r="6" fill="rgba(255,255,255,0.6)" opacity="0.42"/><line x1="148" y1="174" x2="278" y2="174" stroke="rgba(255,255,255,0.6)" stroke-width="4" stroke-linecap="round" opacity="0.3"/>` },
-      organizations: { bg: '#E4D8F8', accent: '#E4D8F8', text: '#301858', label: 'Organizations',     doodle: `<path d="M228,38 C233,18 255,18 255,38 C275,33 275,55 255,55 C255,75 233,75 233,55 C213,55 213,33 228,38Z" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="7" opacity="0.42"/><path d="M194,100 C197,82 214,82 214,100 C232,97 232,115 214,115 C214,133 197,133 194,115 C176,115 176,97 194,100Z" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" opacity="0.34"/><circle cx="222" cy="155" r="16" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="5" opacity="0.3"/>` },
-      competition:   { bg: '#D0E8FA', accent: '#D0E8FA', text: '#0A2848', label: 'Competition',       doodle: `<line x1="160" y1="10" x2="160" y2="190" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" opacity="0.32"/><line x1="192" y1="10" x2="192" y2="190" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" opacity="0.32"/><line x1="224" y1="10" x2="224" y2="190" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" opacity="0.32"/><line x1="256" y1="10" x2="256" y2="190" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="35" x2="280" y2="35" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="70" x2="280" y2="70" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="105" x2="280" y2="105" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" opacity="0.32"/><line x1="150" y1="140" x2="280" y2="140" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" opacity="0.32"/><circle cx="160" cy="35" r="5" fill="rgba(255,255,255,0.6)" opacity="0.5"/><circle cx="192" cy="70" r="5" fill="rgba(255,255,255,0.6)" opacity="0.5"/><circle cx="224" cy="105" r="5" fill="rgba(255,255,255,0.6)" opacity="0.5"/><circle cx="256" cy="140" r="5" fill="rgba(255,255,255,0.6)" opacity="0.5"/>` },
-      volunteering:  { bg: '#C4F0E0', accent: '#C4F0E0', text: '#0A3828', label: 'Volunteering',      doodle: `<path d="M170,15 L186,36 L202,15 L218,36 L234,15 L250,36 L264,15" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.48"/>` },
-      other:         { bg: '#C8C8C8', accent: '#C8C8C8', text: '#333',    label: 'Other',             doodle: `` },
+      work:          { bg: '#AEEEDD', accent: '#AEEEDD', text: '#0D4030', label: 'Work Experience',   doodle: `<line x1="220" y1="20" x2="220" y2="55" stroke="#4ABBA0" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="203" y1="37" x2="238" y2="37" stroke="#4ABBA0" stroke-width="7" stroke-linecap="round" opacity="0.45"/><line x1="248" y1="65" x2="263" y2="50" stroke="#4ABBA0" stroke-width="6" stroke-linecap="round" opacity="0.38"/><line x1="248" y1="50" x2="263" y2="65" stroke="#4ABBA0" stroke-width="6" stroke-linecap="round" opacity="0.38"/><circle cx="185" cy="105" r="22" fill="none" stroke="#4ABBA0" stroke-width="7" opacity="0.4"/><circle cx="185" cy="105" r="10" fill="none" stroke="#4ABBA0" stroke-width="5" opacity="0.3"/>` },
+      internship:    { bg: '#DDEEAA', accent: '#DDEEAA', text: '#2A4208', label: 'Internship',        doodle: `<path d="M150,15 L166,38 L182,15 L198,38 L214,15 L230,38 L246,15 L262,38 L276,15" fill="none" stroke="#8ABB40" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/><path d="M155,58 L171,78 L187,58 L203,78 L220,58 L237,78 L253,58" fill="none" stroke="#8ABB40" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.36"/><path d="M160,98 L176,116 L193,98 L210,116 L227,98 L244,116" fill="none" stroke="#8ABB40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/>` },
+      projects:      { bg: '#FFE0A0', accent: '#FFE0A0', text: '#5A3000', label: 'Projects',          doodle: `<circle cx="238" cy="128" r="80" fill="none" stroke="#E0A030" stroke-width="9" opacity="0.38"/><circle cx="238" cy="128" r="56" fill="none" stroke="#E0A030" stroke-width="7" opacity="0.3"/><circle cx="238" cy="128" r="34" fill="none" stroke="#E0A030" stroke-width="6" opacity="0.24"/><circle cx="238" cy="128" r="15" fill="none" stroke="#E0A030" stroke-width="5" opacity="0.2"/>` },
+      education:     { bg: '#FFAAA0', accent: '#FFAAA0', text: '#5A1000', label: 'Education',         doodle: `<path d="M148,168 L174,126 L194,152 L218,92 L240,118 L264,62 L278,82" fill="none" stroke="#D04030" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="174" cy="126" r="6" fill="#D04030" opacity="0.38"/><circle cx="218" cy="92" r="6" fill="#D04030" opacity="0.38"/><circle cx="264" cy="62" r="6" fill="#D04030" opacity="0.38"/><line x1="148" y1="174" x2="278" y2="174" stroke="#D04030" stroke-width="4" stroke-linecap="round" opacity="0.28"/>` },
+      organizations: { bg: '#DDBBEE', accent: '#DDBBEE', text: '#2A0848', label: 'Organizations',     doodle: `<path d="M228,38 C233,18 255,18 255,38 C275,33 275,55 255,55 C255,75 233,75 233,55 C213,55 213,33 228,38Z" fill="none" stroke="#8840BB" stroke-width="7" opacity="0.4"/><path d="M194,100 C197,82 212,82 212,100 C230,97 230,115 212,115 C212,133 197,133 194,115 C176,115 176,97 194,100Z" fill="none" stroke="#8840BB" stroke-width="5" opacity="0.32"/><circle cx="222" cy="155" r="16" fill="none" stroke="#8840BB" stroke-width="5" opacity="0.28"/>` },
+      competition:   { bg: '#AACCEE', accent: '#AACCEE', text: '#082038', label: 'Competition',       doodle: `<line x1="160" y1="10" x2="160" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="192" y1="10" x2="192" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="224" y1="10" x2="224" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="256" y1="10" x2="256" y2="190" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="35" x2="280" y2="35" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="70" x2="280" y2="70" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="105" x2="280" y2="105" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><line x1="150" y1="140" x2="280" y2="140" stroke="#2070A8" stroke-width="2.5" opacity="0.3"/><circle cx="160" cy="35" r="5" fill="#2070A8" opacity="0.48"/><circle cx="192" cy="70" r="5" fill="#2070A8" opacity="0.48"/><circle cx="224" cy="105" r="5" fill="#2070A8" opacity="0.48"/><circle cx="256" cy="140" r="5" fill="#2070A8" opacity="0.48"/>` },
+      volunteering:  { bg: '#DDEEAA', accent: '#DDEEAA', text: '#2A4208', label: 'Volunteering',      doodle: `<path d="M150,15 L166,38 L182,15 L198,38 L214,15 L230,38 L246,15 L262,38 L276,15" fill="none" stroke="#8ABB40" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>` },
+      other:         { bg: '#E0E0E0', accent: '#E0E0E0', text: '#fff',    label: 'Other',             doodle: `` },
     };
     const c = colorMap[cat] || colorMap.other;
 
     const kws = (row.competency_keywords||[]).concat(row.job_keywords||[]).filter(Boolean).slice(0,2);
     const tagsHtml = kws.map(k => {
       const short = k.length > 22 ? k.slice(0, 20) + '…' : k;
-      const tagBg = c.text === '#fff' ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.1)';
-      return `<span style="font-size:11px;color:${c.text};background:${tagBg};padding:4px 11px;border-radius:99px;font-family:var(--ff-head);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;">${escapeHtml(short)}</span>`;
+      return `<span style="font-size:11px;color:${c.text};background:rgba(255,255,255,0.35);padding:4px 11px;border-radius:99px;font-family:var(--ff-head);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;">${escapeHtml(short)}</span>`;
     }).join('');
 
     const el = document.createElement('div');
     el.className = 'blk-card dyn';
     el.dataset.type = cat;
     el.style.background = c.bg;
+    el.style.color = c.text;
     el.style.border = 'none';
     el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
     el.innerHTML = `
@@ -5226,7 +4973,7 @@ What I learned: Consistency matters more than quality of individual posts`;
           <i class="ti ti-file-text" style="font-size:14px;opacity:0.7;"></i>
           ${escapeHtml(c.label)}
         </div>
-        <button data-del-id="${row.id}" onclick="event.stopPropagation();confirmDeleteBlock(this.dataset.delId)" style="background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:13px;padding:0;display:flex;align-items:center;transition:color 0.12s;" onmouseover="this.style.color='rgba(0,0,0,0.7)'" onmouseout="this.style.color='rgba(0,0,0,0.3)'">
+        <button data-del-id="${row.id}" onclick="event.stopPropagation();confirmDeleteBlock(this.dataset.delId)" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.5);font-size:13px;padding:0;display:flex;align-items:center;transition:color 0.12s;" onmouseover="this.style.color='rgba(255,255,255,0.9)'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
           <i class="ti ti-trash"></i>
         </button>
       </div>
@@ -5872,8 +5619,10 @@ What I learned: Consistency matters more than quality of individual posts`;
         </div>`;
     };
 
-    // STAR 매핑: S/T/A/R 분리
-    const result = [v(row.outcome_measurable), v(row.failure_improvement), v(row.takeaway)].filter(Boolean).join('\n\n');
+    // STAR 매핑: goal+strategy → S/T, actions → A, outcome+failure → R
+    const situation = [v(row.goal), v(row.strategy)].filter(Boolean).join('\n\n');
+    const action    = v(row.actions);
+    const result    = [v(row.outcome_measurable), v(row.failure_improvement), v(row.takeaway)].filter(Boolean).join('\n\n');
 
     return `
       <!-- Meta -->
@@ -5887,10 +5636,9 @@ What I learned: Consistency matters more than quality of individual posts`;
 
       <!-- STAR -->
       <div style="display:flex;flex-direction:column;gap:24px;">
-        ${v(row.goal) ? starCard('S', 'Situation', v(row.goal)) : ''}
-        ${v(row.strategy) ? starCard('T', 'Task', v(row.strategy)) : ''}
-        ${v(row.actions) ? starCard('A', 'Action', v(row.actions)) : ''}
-        ${result ? starCard('R', 'Result', result) : ''}
+        ${starCard('S', 'Situation & Task', situation)}
+        ${starCard('A', 'Action', action)}
+        ${starCard('R', 'Result', result)}
         ${v(row.applied) ? starCard('→', 'Applied Elsewhere', v(row.applied)) : ''}
       </div>
 
@@ -6208,12 +5956,6 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!currentUser && !publicPages.includes(target)) {
       target = 'login';
     }
-    // Close blocks detail panel when leaving blocks page
-    if (target !== 'blocks') {
-      const bdModal = document.getElementById('block-detail-modal');
-      if (bdModal && bdModal.style.display !== 'none') closeBlockDetail();
-    }
-
     // landing-mode: hide app nav/sidebar when on landing page
     document.body.classList.remove('landing-mode');
     pages.forEach(p => {
@@ -6337,56 +6079,151 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
     companies.forEach(co => {
       const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
+      const score    = co.fit_score != null ? co.fit_score + '%' : '—';
+      const scoreColor = co.fit_score >= 80 ? 'var(--success)' : co.fit_score >= 60 ? 'var(--warn)' : co.fit_score != null ? 'var(--danger)' : 'var(--ink-4)';
       const isActive = _msSelected && _msSelected.id === co.id;
       const el = document.createElement('div');
-      el.className = 'ms-co-item';
-      el.dataset.id = co.id;
-      el.style.cssText = `display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;background:${isActive ? 'var(--accent-light)' : 'transparent'};border:1.5px solid ${isActive ? 'var(--accent)' : 'transparent'};transition:all 0.12s;`;
+      el.style.cssText = `display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;background:${isActive ? 'var(--accent-light)' : 'transparent'};border:1px solid ${isActive ? 'var(--accent)' : 'transparent'};transition:all 0.12s;`;
       el.onmouseenter = () => { if (!isActive) { el.style.background = 'var(--surface)'; } };
-      el.onmouseleave = () => { if (!isActive) { el.style.background = 'transparent'; el.style.border = '1.5px solid transparent'; } };
+      el.onmouseleave = () => { if (!isActive) { el.style.background = 'transparent'; el.style.border = '1px solid transparent'; } };
       el.onclick = () => msSelectCompany(co);
       el.innerHTML = `
-        <div style="width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.company_name || '')}</div>
           <div style="font-size:11px;color:var(--ink-4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.job_title || '')}</div>
         </div>
+        <div style="font-size:13px;font-weight:700;color:${scoreColor};flex-shrink:0;">${score}</div>
       `;
       list.appendChild(el);
     });
   }
 
-  function msSelectCompany(company) {
-    _msSelected = company;
+  function msSelectCompany(co) {
+    _msSelected = co;
     msRenderList(_msCompanies);
-    document.getElementById('ms-empty').style.display = 'none';
-    const container = document.getElementById('ms-result-container');
-    container.style.display = 'block';
-    const overall = [
-      ...(company.matched_keywords||[]).map(k => ({keyword:k, status:'matched'})),
-      ...(company.partial_keywords||[]).map(k => ({keyword:k, status:'partial'})),
-      ...(company.missing_keywords||[]).map(k => ({keyword:k, status:'missing'}))
+
+    const empty  = document.getElementById('ms-empty');
+    const detail = document.getElementById('ms-detail');
+    if (empty)  empty.style.display = 'none';
+    if (!detail) return;
+    detail.style.display = 'flex';
+    detail.style.flexDirection = 'column';
+
+    const initials = (co.company_name || '?').slice(0, 2).toUpperCase();
+    const scoreRank = co.fit_score >= 80 ? '🎯 Strong match' : co.fit_score >= 60 ? '📈 Good foundation' : co.fit_score != null ? '⚡ Needs improvement' : 'Run analysis to see your score';
+    const breakdown = [
+      { label: 'Job Fit', val: co.job_fit_score },
+      { label: 'Keywords', val: co.keyword_score },
+      { label: 'Experience', val: co.experience_score },
+      { label: 'Period', val: co.period_score },
     ];
-    const score = company.fit_score || 0;
-    window._pendingAnalysis = { company: company.company_name, role: company.job_title };
-    const initials = (company.company_name || '?').slice(0, 2).toUpperCase();
-    const analyzedDate = company.updated_at ? 'Last analyzed · ' + new Date(company.updated_at).toLocaleDateString() : '';
-    const aboutHtml = company.jd_summary
-      ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:16px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:6px;">ABOUT THIS ROLE</div><div style="font-size:13px;color:var(--ink-2);line-height:1.6;">${escapeHtml(company.jd_summary)}</div></div>`
-      : '';
-    container.innerHTML = `
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
-        <div style="width:48px;height:48px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0;">${initials}</div>
+    const matched = co.matched_keywords || [];
+    const missing = co.missing_keywords || [];
+    const compKws = co.company_keywords || [];
+
+    detail.innerHTML = `
+      <!-- company header -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;background:var(--accent);">${initials}</div>
         <div style="flex:1;">
-          <div style="font-size:18px;font-weight:700;color:var(--ink);">${escapeHtml(company.company_name||'')}</div>
-          <div style="font-size:13px;color:var(--ink-3);margin-top:2px;">${escapeHtml(company.job_title||'')}</div>
+          <div style="font-size:18px;font-weight:700;color:var(--ink);">${escapeHtml(co.company_name||'')}</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:2px;">${escapeHtml(co.job_title||'')}</div>
         </div>
-        <div style="font-size:11px;color:var(--ink-4);">${analyzedDate}</div>
+        <div style="font-size:11px;color:var(--ink-4);">${co.updated_at ? 'Last analyzed · ' + new Date(co.updated_at).toLocaleDateString() : ''}</div>
       </div>
-      ${aboutHtml}
-      <div id="ms-result-inner"></div>
+
+      <!-- score card -->
+      <div style="background:var(--ink);border-radius:16px;padding:28px 32px;color:#fff;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;">MATCH SCORE</div>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
+          <span style="font-size:56px;font-weight:800;line-height:1;color:#fff;">${co.fit_score != null ? co.fit_score : '—'}</span>
+          <span style="font-size:20px;color:rgba(255,255,255,0.6);">%</span>
+        </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;">${scoreRank}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          ${breakdown.filter(b => b.val != null).map(b => `
+            <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;">
+              <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px;">${b.label}</div>
+              <div style="font-size:18px;font-weight:700;color:#fff;">${b.val}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- keyword match -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Keyword Match</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--success);margin-bottom:8px;">Matched ${matched.length}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${matched.map(k=>`<span style="font-size:11px;background:var(--success-light);color:var(--success);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--danger);margin-bottom:8px;">Missing ${missing.length}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${missing.map(k=>`<span style="font-size:11px;background:var(--danger-light);color:var(--danger);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-4);margin-bottom:8px;">Company KW</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${compKws.map(k=>`<span style="font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--ink-3);border-radius:99px;padding:2px 9px;">${escapeHtml(k)}</span>`).join('')}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JD input -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 24px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Job Description <span style="background:rgba(239,68,68,0.1);color:var(--danger);padding:2px 8px;border-radius:99px;font-size:10px;margin-left:6px;">REQUIRED</span></div>
+        <textarea id="ms-jd-input" rows="6" placeholder="Paste job description to analyze fit..."
+          style="width:100%;resize:vertical;padding:12px 14px;font-size:13px;font-family:var(--ff-head);color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);outline:none;line-height:1.6;box-sizing:border-box;"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:12px;">
+          <button onclick="msRunAnalysis()" style="font-size:13px;font-weight:500;color:#fff;background:var(--accent);border:none;padding:9px 20px;border-radius:var(--r);cursor:pointer;font-family:var(--ff-head);">Analyze Fit</button>
+          <span id="ms-jd-status" style="font-size:12px;color:var(--ink-4);"></span>
+        </div>
+      </div>
     `;
-    renderMatchResult(score, { overall, by_block: [] }, document.getElementById('ms-result-inner'));
+
+    // right panel - competency
+    const compBars = document.getElementById('ms-competency-bars');
+    const cats = [
+      { label: 'Strategy & Planning', val: co.score_strategy },
+      { label: 'Data & Analysis',     val: co.score_data },
+      { label: 'Leadership & Org',    val: co.score_leadership },
+      { label: 'Marketing & Content', val: co.score_marketing },
+      { label: 'UX / Research',       val: co.score_ux },
+    ].filter(c => c.val != null);
+    compBars.innerHTML = cats.length ? cats.map(c => `
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span style="font-size:12px;color:var(--ink-2);">${c.label}</span>
+          <span style="font-size:12px;font-weight:600;color:var(--ink);">${c.val}%</span>
+        </div>
+        <div style="height:4px;background:var(--surface-2);border-radius:99px;overflow:hidden;">
+          <div style="width:${c.val}%;height:100%;background:var(--accent);border-radius:99px;"></div>
+        </div>
+      </div>`).join('') : '';
+
+    // right panel - comparison
+    const compList = document.getElementById('ms-comparison-list');
+    compList.innerHTML = _msCompanies.filter(c => c.fit_score != null).sort((a,b) => b.fit_score - a.fit_score).map(c => `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:${c.id===co.id?'var(--accent-light)':'var(--surface)'};border:1px solid ${c.id===co.id?'var(--accent)':'transparent'};">
+        <div style="width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;">${(c.company_name||'?').slice(0,2).toUpperCase()}</div>
+        <span style="font-size:12px;font-weight:500;color:var(--ink);flex:1;">${escapeHtml(c.company_name)}</span>
+        <span style="font-size:12px;font-weight:700;color:var(--ink);">${c.fit_score}%</span>
+        <div style="width:50px;height:3px;background:var(--surface-3);border-radius:99px;overflow:hidden;"><div style="width:${c.fit_score}%;height:100%;background:var(--accent);border-radius:99px;"></div></div>
+      </div>`).join('');
+
+    // AI insights
+    const insightsEl = document.getElementById('ms-insights');
+    const insights = co.ai_insights;
+    if (insights) {
+      insightsEl.innerHTML = `
+        ${insights.strength ? `<div style="background:var(--success-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--success);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">💪 Strength</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.strength)}</div></div>` : ''}
+        ${insights.gap ? `<div style="background:var(--warn-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--warn);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">⚠️ Gap</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.gap)}</div></div>` : ''}
+        ${insights.next ? `<div style="background:var(--accent-light);border-radius:10px;padding:14px 16px;"><div style="font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;">🎯 Next Step</div><div style="font-size:12px;color:var(--ink-2);line-height:1.6;">${escapeHtml(insights.next)}</div></div>` : ''}
+      `;
+    } else {
+      insightsEl.innerHTML = '';
+    }
   }
 
   function msFilterCompanies(q) {
@@ -6421,6 +6258,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     else alert('Delete failed: ' + error.message);
   }
 
+  let sidebarCollapsed = false;
   function toggleSidebar() {
     sidebarCollapsed = !sidebarCollapsed;
     const sb = document.getElementById('sidebar');
@@ -6470,9 +6308,9 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!el) return;
     if (currentUser) {
       const name = getDisplayName(currentUser);
-      el.innerHTML = `Welcome to Scribbi, <em>${name}</em>!`;
+      el.innerHTML = `Welcome to Exppi, <em>${name}</em>!`;
     } else {
-      el.innerHTML = `Welcome to Scribbi`;
+      el.innerHTML = `Welcome to Exppi`;
     }
   }
 
@@ -6899,10 +6737,64 @@ What I learned: Consistency matters more than quality of individual posts`;
     return _origOpenAnalysisModal();
   };
 
-  const _origOpenBlockRecommendModal = openBlockRecommendModal;
   openBlockRecommendModal = async function() {
+    console.log('[modal] called, currentUser:', currentUser, '_pendingAnalysis:', _pendingAnalysis);
     if (!currentUser) return openAuthRequiredModal('match');
-    return await _origOpenBlockRecommendModal();
+    const modal = document.getElementById('block-recommend-modal');
+    const loadingEl = document.getElementById('brm-loading');
+    const contentEl = document.getElementById('brm-content');
+    const errorEl = document.getElementById('brm-error');
+    const countEl = document.getElementById('selected-count');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    if (loadingEl) loadingEl.style.display = 'flex';
+    if (contentEl) contentEl.style.display = 'none';
+    if (errorEl) errorEl.style.display = 'none';
+    try {
+      const { company, role, jdText } = _pendingAnalysis;
+      const { data: jdData, error: jdErr } = await supa.functions.invoke('extract-jd-keywords', { body: { company, role, jd_text: jdText } });
+      if (jdErr) throw jdErr;
+      const companyKeywords = (jdData && jdData.company_keywords) || [];
+      _pendingAnalysis.companyKeywords = companyKeywords;
+      const { data: blocksData, error: blocksErr } = await supa
+        .from('experience_blocks')
+        .select('id, title, competency_keywords')
+        .eq('user_id', currentUser.id)
+        .not('end_date', 'is', null)
+        .or('is_current.is.null,is_current.eq.false');
+      if (blocksErr) throw blocksErr;
+      const blocks = (blocksData || []).filter(b => b.competency_keywords && b.competency_keywords.length > 0);
+      const { data: ranked, error: rankErr } = await supa.functions.invoke('recommend-blocks', { body: { company_keywords: companyKeywords, blocks } });
+      if (rankErr) throw rankErr;
+      const blockMap = {};
+      blocks.forEach(b => { blockMap[b.id] = b; });
+      const rankedBlocks = (Array.isArray(ranked) ? ranked : [])
+        .filter(r => blockMap[r.id])
+        .map(r => ({ ...blockMap[r.id], score: r.score, reason: r.reason }))
+        .sort((a, b) => b.score - a.score);
+      _brmBlocks = rankedBlocks.slice(0, 5);
+      const recommended = _brmBlocks.slice(0, 3);
+      const others = _brmBlocks.slice(3, 5);
+      let html = '';
+      if (recommended.length) {
+        html += `<div style="margin-bottom:16px;"><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px;">⭐ Recommended · Auto-selected<button onclick="" style="width:20px;height:20px;border-radius:50%;background:var(--accent-light);border:1.5px solid var(--accent);color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">+</button></div><div style="display:flex;flex-direction:column;gap:8px;">${recommended.map(b => _renderBlockCard(b, true)).join('')}</div></div>`;
+      }
+      if (others.length) {
+        html += `<div><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;">Other Blocks · Optional</div><div style="display:flex;flex-direction:column;gap:8px;">${others.map(b => _renderBlockCard(b, false)).join('')}</div></div>`;
+      }
+      if (!_brmBlocks.length) {
+        html = '<div style="font-size:13px;color:var(--ink-4);text-align:center;padding:32px;">No experience blocks found. Add experiences first.</div>';
+      }
+      if (contentEl) { contentEl.innerHTML = html; contentEl.style.display = 'flex'; }
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (countEl) countEl.textContent = recommended.length;
+    } catch (err) {
+      console.error('[modal catch]', err);
+      console.error('[openBlockRecommendModal] failed:', err);
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) { errorEl.textContent = 'Failed to load recommendations: ' + (err.message || 'check console'); errorEl.style.display = 'block'; }
+    }
   };
 
   // ── DELEGATED GATING for "Save Draft" buttons ──
