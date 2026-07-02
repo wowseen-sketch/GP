@@ -6421,6 +6421,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     else alert('Delete failed: ' + error.message);
   }
 
+  let sidebarCollapsed = false;
   function toggleSidebar() {
     sidebarCollapsed = !sidebarCollapsed;
     const sb = document.getElementById('sidebar');
