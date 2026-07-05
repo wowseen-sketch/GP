@@ -5251,7 +5251,6 @@ What I learned: Consistency matters more than quality of individual posts`;
     el.style.border = '1px solid #EBEBEB';
     el.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
     el.innerHTML = `
-      <svg style="position:absolute;bottom:0;right:0;width:160px;height:160px;pointer-events:none;" viewBox="0 0 280 190">${c.doodleSvg(c.doodle) || ''}</svg>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:auto;position:relative;z-index:1;">
         <div class="blk-cat-label" style="color:${c.text};font-weight:600;">
           <i class="ti ${c.icon}" style="font-size:14px;"></i>
@@ -5698,8 +5697,8 @@ What I learned: Consistency matters more than quality of individual posts`;
 
   function renderBlkTimeline(rows) {
     _blkTimelineRows = (rows || []).slice().sort((a, b) => {
-      const da = a.start_date || a.created_at || '';
-      const db = b.start_date || b.created_at || '';
+      const da = a.created_at || a.start_date || '';
+      const db = b.created_at || b.start_date || '';
       return db.localeCompare(da);
     });
     _blkTimelineExpanded = false;
