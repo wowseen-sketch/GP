@@ -242,6 +242,8 @@
   .exp-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
   .exp-meta { font-size: 11px; color: var(--ink-4); margin-bottom: 7px; }
   .exp-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .exp-desc { font-size: 11.5px; color: var(--ink-3); background: var(--surface); border-radius: 8px; padding: 8px 10px; margin-top: 8px; line-height: 1.5; }
+  .blk-timeline-side { width: 300px; flex-shrink: 0; }
   .tag {
     font-size: 11px; font-weight: 500; padding: 3px 9px;
     border-radius: 99px; border: 1px solid var(--border-strong);
@@ -2163,27 +2165,47 @@
         </div>
       </div>
 
-      <div id="blocks-sections" style="padding:28px 40px 56px;">
+      <div id="blk-body-flex" style="display:flex;align-items:flex-start;gap:28px;padding:28px 40px 56px;">
 
-        <!-- ONGOING -->
-        <div id="blk-ongoing-section" style="display:none;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-            <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);">Ongoing</span>
-            <span id="blk-ongoing-count" style="font-size:11px;font-weight:600;color:var(--ink-4);background:var(--surface-2);border-radius:99px;padding:1px 8px;">0</span>
+        <div id="blocks-sections" style="flex:1;min-width:0;">
+
+          <!-- ONGOING -->
+          <div id="blk-ongoing-section" style="display:none;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);">Ongoing</span>
+              <span id="blk-ongoing-count" style="font-size:11px;font-weight:600;color:var(--ink-4);background:var(--surface-2);border-radius:99px;padding:1px 8px;">0</span>
+            </div>
+            <div id="blk-ongoing-list" class="blk-ongoing-grid"></div>
           </div>
-          <div id="blk-ongoing-list" class="blk-ongoing-grid"></div>
+
+          <hr id="blk-sections-divider" style="border:none;border-top:0.5px solid var(--border);margin:24px 0;display:none;">
+
+          <!-- COMPLETED -->
+          <div id="blk-completed-section" style="display:none;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);">Completed</span>
+              <span id="blk-completed-count" style="font-size:11px;font-weight:600;color:var(--ink-4);background:var(--surface-2);border-radius:99px;padding:1px 8px;">0</span>
+            </div>
+            <div id="blk-completed-grid" class="blk-grid"></div>
+          </div>
+
         </div>
 
-        <hr id="blk-sections-divider" style="border:none;border-top:0.5px solid var(--border);margin:24px 0;display:none;">
-
-        <!-- COMPLETED -->
-        <div id="blk-completed-section" style="display:none;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-            <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);">Completed</span>
-            <span id="blk-completed-count" style="font-size:11px;font-weight:600;color:var(--ink-4);background:var(--surface-2);border-radius:99px;padding:1px 8px;">0</span>
+        <!-- Experience Timeline sidebar -->
+        <aside class="blk-timeline-side" id="blk-timeline-side" style="position:sticky;top:112px;">
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><i class="ti ti-chart-line"></i> Experience Timeline</div>
+              <div class="card-link" id="blk-timeline-toggle" onclick="toggleBlkTimelineExpand()">전체보기 →</div>
+            </div>
+            <div class="card-body" id="blk-timeline-list" style="padding:14px 16px;">
+              <div style="font-size:12px;color:var(--ink-4);text-align:center;padding:16px 0;">No experience yet</div>
+            </div>
+            <div style="padding:0 16px 16px;">
+              <button onclick="viewAllBlkExperience()" style="width:100%;font-size:12.5px;font-weight:600;color:var(--ink-3);background:var(--white);border:1px solid var(--border-strong);border-radius:var(--r);padding:10px;cursor:pointer;font-family:var(--ff-head);">전체 경험 보기</button>
+            </div>
           </div>
-          <div id="blk-completed-grid" class="blk-grid"></div>
-        </div>
+        </aside>
 
       </div>
 
@@ -5653,6 +5675,119 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (ongoingSection)   ongoingSection.style.display   = showOngoing   ? '' : 'none';
     if (completedSection) completedSection.style.display = showCompleted ? '' : 'none';
     if (divider) divider.style.display = (showOngoing && showCompleted) ? '' : 'none';
+
+    renderBlkTimeline(topLevel);
+  }
+
+  // ── EXPERIENCE TIMELINE SIDEBAR (Blocks page) ─────
+  const BLK_TIMELINE_ACCENT = {
+    work: '#3FA084', internship: '#7AA82E', projects: '#C98A1E',
+    education: '#C2402C', organizations: '#7A38A8', competition: '#1E6B9E',
+    volunteering: '#7AA82E', other: '#999999',
+  };
+  let _blkTimelineRows     = [];
+  let _blkTimelineExpanded = false;
+
+  function renderBlkTimeline(rows) {
+    _blkTimelineRows = (rows || []).slice().sort((a, b) => {
+      const da = a.start_date || a.created_at || '';
+      const db = b.start_date || b.created_at || '';
+      return db.localeCompare(da);
+    });
+    _blkTimelineExpanded = false;
+    paintBlkTimeline();
+  }
+
+  function paintBlkTimeline() {
+    const list   = document.getElementById('blk-timeline-list');
+    const toggle = document.getElementById('blk-timeline-toggle');
+    if (!list) return;
+    const rows = _blkTimelineRows;
+
+    if (!rows.length) {
+      list.innerHTML = `<div style="font-size:12px;color:var(--ink-4);text-align:center;padding:16px 0;">No experience yet</div>`;
+      if (toggle) toggle.style.display = 'none';
+      return;
+    }
+
+    const shown = _blkTimelineExpanded ? rows : rows.slice(0, 3);
+    if (toggle) {
+      toggle.style.display = rows.length > 3 ? '' : 'none';
+      toggle.textContent   = _blkTimelineExpanded ? '접기 ↑' : '전체보기 →';
+    }
+
+    const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '';
+
+    list.innerHTML = shown.map((row, i) => {
+      const cat   = activityTypeToCategory(row.activity_type);
+      const color = BLK_TIMELINE_ACCENT[cat] || BLK_TIMELINE_ACCENT.other;
+
+      const dateLabel = row.is_current
+        ? `${fmt(row.start_date)} –`
+        : (fmt(row.start_date) || fmt(row.end_date) || '');
+
+      let durLabel = '';
+      if (row.start_date && (row.end_date || row.is_current)) {
+        const s = new Date(row.start_date);
+        const e = row.is_current ? new Date() : new Date(row.end_date);
+        if (!isNaN(s) && !isNaN(e)) {
+          const months = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth()) + 1;
+          if (months > 0) {
+            const yrs = Math.floor(months / 12), mos = months % 12;
+            const parts = [];
+            if (yrs) parts.push(`${yrs}년`);
+            if (mos) parts.push(`${mos}개월`);
+            durLabel = parts.join(' ');
+          }
+        }
+      }
+
+      const kws = (row.competency_keywords || []).concat(row.job_keywords || []).filter(Boolean).slice(0, 3);
+      const tagsHtml = kws.map(k => {
+        const short = k.length > 14 ? k.slice(0, 12) + '…' : k;
+        return `<span style="font-size:10.5px;font-weight:600;color:${color};background:${color}1F;padding:3px 9px;border-radius:99px;white-space:nowrap;">${escapeHtml(short)}</span>`;
+      }).join('');
+
+      const snippet = (row.outcome_measurable || row.actions || row.goal || '').trim().replace(/\s+/g, ' ');
+      const snippetShort = snippet.length > 62 ? snippet.slice(0, 60) + '…' : snippet;
+
+      const isLast = i === shown.length - 1;
+
+      return `
+        <div class="exp-item" style="cursor:pointer;${isLast ? 'border-bottom:none;padding-bottom:0;' : ''}" onclick="openBlkTimelineItem('${row.id}')">
+          <div class="exp-dot-wrap">
+            <div class="exp-dot" style="background:${color};"></div>
+            ${isLast ? '' : '<div class="exp-line"></div>'}
+          </div>
+          <div class="exp-content">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;">
+              <div class="exp-title" style="margin-bottom:0;">${escapeHtml(row.title || 'Untitled')}</div>
+              <div style="font-size:10.5px;color:var(--ink-4);white-space:nowrap;flex-shrink:0;">${escapeHtml(dateLabel)}</div>
+            </div>
+            <div class="exp-meta">${escapeHtml(row.activity_type || '')}${durLabel ? ' · ' + durLabel : ''}</div>
+            ${tagsHtml ? `<div class="exp-tags" style="margin-bottom:${snippetShort ? '8px' : '0'};">${tagsHtml}</div>` : ''}
+            ${snippetShort ? `<div class="exp-desc">${escapeHtml(snippetShort)}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function toggleBlkTimelineExpand() {
+    _blkTimelineExpanded = !_blkTimelineExpanded;
+    paintBlkTimeline();
+  }
+
+  function viewAllBlkExperience() {
+    _blkTimelineExpanded = true;
+    paintBlkTimeline();
+    const searchInput = document.getElementById('blk-search-input');
+    if (searchInput && searchInput.value) { searchInput.value = ''; filterBlocksBySearch(''); }
+    document.getElementById('blocks-sections')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function openBlkTimelineItem(id) {
+    const row = _blkTimelineRows.find(r => r.id === id) || _allBlockRows.find(r => r.id === id);
+    if (row) openBlockDetail(row, false);
   }
 
   // Show a separator before each visible section that follows another visible section,
@@ -5688,18 +5823,20 @@ What I learned: Consistency matters more than quality of individual posts`;
   // Entry point: called whenever the Blocks page is entered (see navigate()).
   // Handles three states — signed-out, signed-in empty, signed-in with rows.
   async function loadUserBlocks() {
+    const bodyFlexEl  = document.getElementById('blk-body-flex');
     const sectionsEl  = document.getElementById('blocks-sections');
     const emptyEl     = document.getElementById('blocks-empty');
     const signedOutEl = document.getElementById('blocks-signedout');
     if (!sectionsEl || !emptyEl || !signedOutEl) return;
 
     // Reset
-    sectionsEl.style.display  = 'none';
+    if (bodyFlexEl) bodyFlexEl.style.display = 'none';
     emptyEl.style.display     = 'none';
     signedOutEl.style.display = 'none';
 
     if (!currentUser) {
       clearDynamicBlocks();
+      renderBlkTimeline([]);
       signedOutEl.style.display = '';
       return;
     }
@@ -5714,17 +5851,18 @@ What I learned: Consistency matters more than quality of individual posts`;
       console.error('loadUserBlocks failed:', error);
       showSaveToast(`Failed to load blocks: ${error.message}`, true);
       clearDynamicBlocks();
-      sectionsEl.style.display = '';
+      if (bodyFlexEl) bodyFlexEl.style.display = 'flex';
       return;
     }
 
     if (!data || data.length === 0) {
       clearDynamicBlocks();
+      renderBlkTimeline([]);
       emptyEl.style.display = '';
       return;
     }
 
-    sectionsEl.style.display = '';
+    if (bodyFlexEl) bodyFlexEl.style.display = 'flex';
     renderBlocks(data);
   }
 
