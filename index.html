@@ -2181,7 +2181,7 @@
         </div>
 
         <!-- Experience Timeline sidebar -->
-        <aside class="blk-timeline-side" id="blk-timeline-side" style="position:sticky;top:112px;">
+        <aside class="blk-timeline-side" id="blk-timeline-side">
           <div class="card">
             <div class="card-head">
               <div class="card-title"><i class="ti ti-chart-line"></i> Experience Timeline</div>
@@ -5433,11 +5433,7 @@ What I learned: Consistency matters more than quality of individual posts`;
   }
 
   // ── EXPERIENCE TIMELINE SIDEBAR (Blocks page) ─────
-  const BLK_TIMELINE_ACCENT = {
-    work: '#3FA084', internship: '#7AA82E', projects: '#C98A1E',
-    education: '#C2402C', organizations: '#7A38A8', competition: '#1E6B9E',
-    volunteering: '#7AA82E', other: '#999999',
-  };
+  const BLK_TIMELINE_COLOR = '#FF9300'; // single accent color (var(--accent))
   let _blkTimelineRows     = [];
   let _blkTimelineExpanded = false;
 
@@ -5470,11 +5466,9 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
 
     const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '';
+    const color = BLK_TIMELINE_COLOR;
 
     list.innerHTML = shown.map((row, i) => {
-      const cat   = activityTypeToCategory(row.activity_type);
-      const color = BLK_TIMELINE_ACCENT[cat] || BLK_TIMELINE_ACCENT.other;
-
       const dateLabel = row.is_current
         ? `${fmt(row.start_date)} –`
         : (fmt(row.start_date) || fmt(row.end_date) || '');
@@ -5496,9 +5490,12 @@ What I learned: Consistency matters more than quality of individual posts`;
       }
 
       const kws = (row.competency_keywords || []).concat(row.job_keywords || []).filter(Boolean).slice(0, 3);
-      const tagsHtml = kws.map(k => {
+      const tagsHtml = kws.map((k, ti) => {
         const short = k.length > 14 ? k.slice(0, 12) + '…' : k;
-        return `<span style="font-size:10.5px;font-weight:600;color:${color};background:${color}1F;padding:3px 9px;border-radius:99px;white-space:nowrap;">${escapeHtml(short)}</span>`;
+        const isPrimary = ti === 0;
+        const bg  = isPrimary ? `${color}1F` : 'var(--surface)';
+        const txt = isPrimary ? color : 'var(--ink-3)';
+        return `<span style="font-size:10.5px;font-weight:600;color:${txt};background:${bg};padding:3px 9px;border-radius:99px;white-space:nowrap;">${escapeHtml(short)}</span>`;
       }).join('');
 
       const snippet = (row.outcome_measurable || row.actions || row.goal || '').trim().replace(/\s+/g, ' ');
