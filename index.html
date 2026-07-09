@@ -4274,6 +4274,9 @@
       showSaveToast('Failed to save: ' + error.message, true);
     } else {
       showSaveToast('Saved to Match Archive!', false);
+      if (typeof gtag === 'function') {
+        gtag('event', 'save_to_archive_click', { company_name: company || '', fit_score: score });
+      }
     }
   }
 
@@ -4290,6 +4293,9 @@
     if (!modal) return;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    if (typeof gtag === 'function') {
+      gtag('event', 'build_resume_click', { company_name: companyName || '', job_title: jobTitle || '' });
+    }
     loadingEl.style.display = 'flex';
     errorEl.style.display = 'none';
     previewEl.style.display = 'none';
@@ -4511,6 +4517,9 @@
       renderMatchResult(score, matchData);
       document.getElementById('mr-loading').style.display = 'none';
       document.getElementById('mr-result').style.display  = 'block';
+      if (typeof gtag === 'function') {
+        gtag('event', 'jd_analysis_run', { company_name: company || '', job_title: role || '' });
+      }
     } catch (err) {
       console.error('[runMatchResultAnalysis] failed:', err);
       document.getElementById('mr-loading').style.display = 'none';
@@ -7158,14 +7167,24 @@ What I learned: Consistency matters more than quality of individual posts`;
   async function closeOnboarding() {
     document.getElementById('onboarding-modal').style.display = 'none';
     if (currentUser) {
-      await supa.from('user_profiles').upsert(
+      const { error } = await supa.from('user_profiles').upsert(
         { user_id: currentUser.id, onboarding_completed: true },
         { onConflict: 'user_id' }
       );
+      // Fired here only (not also in saveObProfile()) — closeOnboarding() is the
+      // single point both the Skip button and the "finish last step" flow funnel
+      // through, so firing in both places would double-count completions.
+      if (!error && typeof gtag === 'function') {
+        gtag('event', 'onboarding_completed', {});
+      }
     }
   }
   function goObStep(n) {
     _obStep = n;
+    if (typeof gtag === 'function') {
+      const stepNames = { 1: 'intro', 2: 'basic_info', 3: 'education', 4: 'career_goals', 5: 'complete' };
+      gtag('event', 'onboarding_step_viewed', { step_number: n, step_name: stepNames[n] || 'complete' });
+    }
     for (let i = 1; i <= _obTotal; i++) {
       const el = document.getElementById('ob-' + i);
       if (el) el.style.display = i === n ? 'block' : 'none';
