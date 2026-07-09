@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RCDGPV0C39"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RCDGPV0C39');
+</script>
 <meta name="viewport" content="width=1440">
 <meta name="theme-color" content="#ffffff">
 <title>GOalign — Career Matching Platform</title>
@@ -6676,6 +6684,15 @@ What I learned: Consistency matters more than quality of individual posts`;
 
     const page = document.getElementById('page-' + target);
     if (page) page.classList.add('active');
+
+    // GA4 manual pageview — Scribbi is an SPA, so navigate() is the only place a
+    // "page view" actually happens; the browser never does a real navigation.
+    if (page && typeof gtag === 'function') {
+      gtag('event', 'page_view', {
+        page_title: pageTitles[target] || target,
+        page_path: '/' + target,
+      });
+    }
 
     const nav = document.getElementById('nav-' + target);
     const sb  = document.getElementById('sb-' + target);
