@@ -7109,9 +7109,15 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (!select) return;
     const currentYear = new Date().getFullYear();
     let html = '<option value="">Select</option>';
-    for (let i = 0; i < 10; i++) {
+    // Future + current year (still-enrolled students picking an expected graduation year)
+    for (let i = 4; i >= 0; i--) {
+      const year = currentYear + i;
+      html += `<option value="${year}">${year} (예정)</option>`;
+    }
+    // Past years
+    for (let i = 1; i <= 9; i++) {
       const year = currentYear - i;
-      html += `<option value="${year}">${year}${i === 0 ? ' (예정)' : ''}</option>`;
+      html += `<option value="${year}">${year}</option>`;
     }
     html += '<option value="2015">2015 or earlier</option>';
     select.innerHTML = html;

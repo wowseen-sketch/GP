@@ -95,7 +95,7 @@ function titlePeriodRow(title: string, period: string): Table {
             margins: ZERO_CELL_MARGINS,
             verticalAlign: VerticalAlign.TOP,
             children: [new Paragraph({
-              spacing: { before: 240, after: 40 },
+              spacing: { after: 40 },
               children: [new TextRun({ text: title, bold: true, size: 21, color: COLOR.ink, font: "Georgia" })],
             })],
           }),
@@ -105,7 +105,7 @@ function titlePeriodRow(title: string, period: string): Table {
             margins: ZERO_CELL_MARGINS,
             verticalAlign: VerticalAlign.TOP,
             children: [new Paragraph({
-              spacing: { before: 240, after: 40 },
+              spacing: { after: 40 },
               alignment: AlignmentType.RIGHT,
               children: [new TextRun({ text: period, size: 18, color: COLOR.ink3, font: "Georgia" })],
             })],
@@ -114,6 +114,15 @@ function titlePeriodRow(title: string, period: string): Table {
       }),
     ],
   });
+}
+
+// A standalone paragraph (not inside a table cell) used purely to force a visible
+// gap between experience blocks. `spacing.before` set on the first paragraph inside
+// a table cell is unreliable in Word — it's routinely collapsed to zero — so the
+// gap between one block's table and the next has to come from a real paragraph
+// sitting between them instead.
+function spacerParagraph(afterTwips: number): Paragraph {
+  return new Paragraph({ spacing: { after: afterTwips }, children: [] });
 }
 
 function educationParagraphs(p: Profile): Paragraph[] {
@@ -177,7 +186,8 @@ function buildDocument(payload: ResumePayload): Document {
       children: [new TextRun({ text: "No experience data.", size: 20, color: COLOR.ink4, font: "Georgia" })],
     }));
   }
-  experiences.forEach((exp) => {
+  experiences.forEach((exp, idx) => {
+    if (idx > 0) children.push(spacerParagraph(260));
     const titleText = [exp.title, exp.activity_type].filter(Boolean).join(" · ");
     children.push(titlePeriodRow(titleText, exp.period || ""));
     (exp.bullets || []).forEach((b) => children.push(bulletParagraph(b)));
