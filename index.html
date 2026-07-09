@@ -2471,7 +2471,7 @@
         <!-- Bottom actions -->
         <div style="display:flex;gap:10px;padding-top:8px;border-top:1px solid var(--border);align-items:center;">
           <button onclick="saveToMatchArchive()" class="btn-secondary-lg" style="display:flex;align-items:center;gap:6px;"><i class="ti ti-device-floppy" style="font-size:14px;"></i> Save to archive</button>
-          <button disabled style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:12px 28px;border-radius:var(--rl);cursor:not-allowed;opacity:0.45;letter-spacing:-0.01em;">
+          <button onclick="openResumeBuildModal(_pendingAnalysis.selectedBlocks, _pendingAnalysis.company, _pendingAnalysis.role, window._lastMatchData)" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:12px 28px;border-radius:var(--rl);cursor:pointer;letter-spacing:-0.01em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <i class="ti ti-file-description" style="font-size:16px;"></i> Build Tailored Resume
           </button>
         </div>
@@ -2531,7 +2531,7 @@
           <div style="font-size:13px;color:var(--ink-3);"><span id="selected-count" style="font-weight:700;color:var(--ink);">0</span> blocks selected</div>
           <button onclick="openBrmArchivePanel()" title="Add block from archive" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:var(--white);cursor:pointer;color:var(--ink-2);font-size:18px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-2)'"><i class="ti ti-plus"></i></button>
           <button onclick="closeBlockRecommendModal()" class="btn-secondary-lg" style="margin-left:auto;">Cancel</button>
-          <button onclick="(function(){ const selected=[...document.querySelectorAll('.rec-block.selected')]; const ids=selected.map(el=>el.dataset.id); const allKw=[]; const selBlocks=(_brmBlocks||[]).filter(b=>ids.includes(b.id)); selBlocks.forEach(b=>{(b.competency_keywords||[]).forEach(k=>{if(!allKw.includes(k))allKw.push(k);})}); _pendingAnalysis.selectedKeywords=allKw; _pendingAnalysis.selectedBlocks=selBlocks.map(b=>({id:b.id,title:b.title,keywords:b.competency_keywords||[],period:(b.start_date||'')+(b.end_date?' – '+b.end_date:' – present')})); closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <button onclick="(function(){ const selected=[...document.querySelectorAll('.rec-block.selected')]; const ids=selected.map(el=>el.dataset.id); const allKw=[]; const selBlocks=(_brmBlocks||[]).filter(b=>ids.includes(b.id)); selBlocks.forEach(b=>{(b.competency_keywords||[]).forEach(k=>{if(!allKw.includes(k))allKw.push(k);})}); _pendingAnalysis.selectedKeywords=allKw; _pendingAnalysis.selectedBlocks=selBlocks.map(b=>({id:b.id,title:b.title,activity_type:b.activity_type||'',keywords:b.competency_keywords||[],period:(b.start_date||'')+(b.end_date?' – '+b.end_date:' – present')})); closeBlockRecommendModal(); navigate('match-result'); })()" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
             <i class="ti ti-chart-bar" style="font-size:15px;"></i> Analyze with These Blocks
           </button>
         </div>
@@ -2978,6 +2978,16 @@
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                   </select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                  <label class="form-label">Phone</label>
+                  <input class="form-input" type="tel" id="ob-phone" placeholder="e.g. 010-1234-5678">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">City</label>
+                  <input class="form-input" type="text" id="ob-city" placeholder="e.g. Seoul, Korea">
                 </div>
               </div>
             </div>
@@ -3466,6 +3476,31 @@
     <span class="status-readiness">READINESS</span>
     <div class="status-readiness-bar"><div class="status-readiness-fill" style="width:78%"></div></div>
     <span class="status-readiness-val">78%</span>
+  </div>
+</div>
+
+<!-- ═══════════ RESUME BUILD MODAL ═══════════ -->
+<div id="resume-build-modal" style="display:none;position:fixed;inset:0;z-index:700;align-items:center;justify-content:center;">
+  <div onclick="closeResumeBuildModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
+  <div style="position:relative;width:720px;max-width:95vw;background:var(--white);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;animation:modalIn 0.22s ease;max-height:92vh;">
+    <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div style="font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-0.01em;">Tailored Resume</div>
+      <button onclick="closeResumeBuildModal()" style="background:none;border:none;cursor:pointer;color:var(--ink-4);font-size:18px;padding:2px;line-height:1;"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:28px;overflow-y:auto;flex:1;background:var(--surface);">
+      <div id="rb-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;gap:14px;">
+        <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+        <div style="font-size:13px;color:var(--ink-4);">Generating your resume…</div>
+      </div>
+      <div id="rb-error" style="display:none;font-size:13px;color:#DC2626;padding:16px;border-radius:8px;background:#FEF2F2;"></div>
+      <div id="rb-preview" style="display:none;"></div>
+    </div>
+    <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;">
+      <button onclick="closeResumeBuildModal()" class="btn-secondary-lg" style="margin-left:auto;">Close</button>
+      <button id="rb-download-btn" onclick="downloadResumeDocx()" disabled style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:11px 22px;border-radius:var(--rl);cursor:not-allowed;opacity:0.5;transition:opacity 0.15s;">
+        <i class="ti ti-download" style="font-size:15px;"></i> Download as Word
+      </button>
+    </div>
   </div>
 </div>
 
@@ -3962,7 +3997,7 @@
 
     const shownIds = new Set((_brmBlocks || []).map(b => b.id));
     const { data, error } = await supa.from('experience_blocks')
-      .select('id, title, competency_keywords, start_date, end_date')
+      .select('id, title, competency_keywords, start_date, end_date, activity_type')
       .eq('user_id', currentUser.id)
       .order('created_at', { ascending: false });
 
@@ -4117,10 +4152,11 @@
     if (score <= 80) return { label: 'Good Fit',     color: '#84CC16', idx: 3 };
     return             { label: 'Strong Fit',        color: '#22C55E', idx: 4 };
   }
-  function mrSwitchTab(tab) {
+  function mrSwitchTab(tab, prefix) {
+    prefix = prefix || 'mr';
     ['overall','byexp'].forEach(t => {
-      const btn   = document.getElementById('mr-tab-' + t);
-      const panel = document.getElementById('mr-panel-' + t);
+      const btn   = document.getElementById(prefix + '-tab-' + t);
+      const panel = document.getElementById(prefix + '-panel-' + t);
       const active = t === tab;
       if (btn) {
         btn.style.background = active ? '#fff' : 'transparent';
@@ -4131,12 +4167,63 @@
       if (panel) panel.style.display = active ? 'block' : 'none';
     });
     // Show "How to Improve" only in Overall tab
-    const missingSection = document.getElementById('mr-missing-section');
+    const missingSection = document.getElementById(prefix + '-missing-section');
     if (missingSection) {
-      const cards = document.getElementById('mr-missing-cards');
+      const cards = document.getElementById(prefix + '-missing-cards');
       const hasContent = cards && cards.children.length > 0;
       missingSection.style.display = (tab === 'overall' && hasContent) ? 'block' : 'none';
     }
+  }
+  // Renders "By Experience" block cards. Accepts either raw match-keywords shape
+  // (block_id/block_title/block_period/results) or normalized shape (id/title/period/matched/partial).
+  function _renderByExpBlocks(byBlock, clickable) {
+    return (byBlock || []).map(_normalizeMatchBlock).map(blk => {
+      const chipCol = (list, label, bg, color) => {
+        const chips = list.length
+          ? list.map(k => `<span style="display:inline-block;background:${bg};color:${color};border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;">${escapeHtml(k)}</span>`).join('')
+          : `<span style="font-size:11px;color:var(--ink-4);">None</span>`;
+        return `<div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:5px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${chips}</div></div>`;
+      };
+      const canClick = clickable && blk.id;
+      const style = 'background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;transition:border-color 0.15s,box-shadow 0.15s;' + (canClick ? 'cursor:pointer;' : '');
+      const interactionAttrs = canClick
+        ? ` onclick="openBlockDetailPanel('${escapeHtml(blk.id)}')" onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'"`
+        : '';
+      return `<div style="${style}"${interactionAttrs}>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;">${escapeHtml(blk.title || '')}</div>
+          <div style="font-size:11px;color:var(--ink-4);">${escapeHtml(blk.period || '')}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          ${chipCol(blk.matched,'Matched','#DCFCE7','#16A34A')}
+          ${chipCol(blk.partial,'Partial','#FEF3C7','#D97706')}
+        </div>
+      </div>`;
+    }).join('');
+  }
+  function _renderMissingCards(missingList) {
+    return (missingList || []).map(k => `<div style="padding:14px 16px;background:var(--white);border:1px solid #FECDD3;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This skill wasn't found in your selected experience blocks.</div></div><button onclick="navigate('blocks')" style="white-space:nowrap;font-size:12px;font-weight:600;color:#DC2626;background:none;border:1px solid #DC2626;padding:6px 14px;border-radius:var(--rl);cursor:pointer;">Improve This Experience</button></div>`).join('');
+  }
+  // Normalizes a by-block match entry into { id, title, period, matched, partial }.
+  // Accepts either the raw match-keywords Edge Function shape (block_id/block_title/block_period/results)
+  // or the already-normalized shape read back from companies.by_block_result.
+  function _normalizeMatchBlock(blk) {
+    if (blk.results) {
+      return {
+        id: blk.block_id,
+        title: blk.block_title || '',
+        period: blk.block_period || '',
+        matched: (blk.results || []).filter(r => r.status === 'matched').map(r => r.keyword),
+        partial: (blk.results || []).filter(r => r.status === 'partial').map(r => r.keyword),
+      };
+    }
+    return {
+      id: blk.id,
+      title: blk.title || '',
+      period: blk.period || '',
+      matched: blk.matched || [],
+      partial: blk.partial || [],
+    };
   }
   async function saveToMatchArchive() {
     if (!currentUser) { openAuthRequiredModal('match'); return; }
@@ -4156,6 +4243,9 @@
       missing_keywords: missing,
       company_keywords: overall.map(k => k.keyword),
       jd_summary: (window._lastJdText || '').slice(0, 300),
+      overall_result: overall,
+      by_block_result: (window._matchByBlock || []).map(_normalizeMatchBlock),
+      used_blocks: (_pendingAnalysis && _pendingAnalysis.selectedBlocks) || [],
       updated_at: new Date().toISOString(),
     };
     const { error } = await supa.from('companies').insert(payload);
@@ -4165,6 +4255,201 @@
       showSaveToast('Saved to Match Archive!', false);
     }
   }
+
+  // ── RESUME BUILD ──
+  let _rbData = null; // assembled resume data, used by downloadResumeDocx()
+
+  async function openResumeBuildModal(usedBlocks, companyName, jobTitle, matchData) {
+    if (!currentUser) { openAuthRequiredModal('resume'); return; }
+    const modal      = document.getElementById('resume-build-modal');
+    const loadingEl  = document.getElementById('rb-loading');
+    const errorEl    = document.getElementById('rb-error');
+    const previewEl  = document.getElementById('rb-preview');
+    const downloadBtn = document.getElementById('rb-download-btn');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    loadingEl.style.display = 'flex';
+    errorEl.style.display = 'none';
+    previewEl.style.display = 'none';
+    downloadBtn.disabled = true;
+    downloadBtn.style.opacity = '0.5';
+    downloadBtn.style.cursor = 'not-allowed';
+    _rbData = null;
+
+    try {
+      const { data: profile, error: profErr } = await supa.from('user_profiles')
+        .select('name, phone, city, school, major, grad_year, edu_status, desired_role')
+        .eq('user_id', currentUser.id).single();
+      if (profErr && profErr.code !== 'PGRST116') throw profErr;
+
+      let blockMeta = (usedBlocks || []).filter(b => b && b.id);
+      if (!blockMeta.length) {
+        const { data: allBlocks, error: allErr } = await supa.from('experience_blocks')
+          .select('id, title, activity_type, start_date, end_date, is_current')
+          .eq('user_id', currentUser.id)
+          .not('end_date', 'is', null);
+        if (allErr) throw allErr;
+        blockMeta = (allBlocks || []).map(b => ({
+          id: b.id, title: b.title, activity_type: b.activity_type || '',
+          period: (b.start_date || '') + (b.is_current || !b.end_date ? ' – present' : ' – ' + b.end_date),
+        }));
+      }
+      if (!blockMeta.length) throw new Error('No experience blocks available to build a resume.');
+
+      const { data: blockRows, error: blockErr } = await supa.from('experience_blocks')
+        .select('id, title, activity_type, goal, strategy, actions, outcome_measurable, failure_improvement, takeaway')
+        .in('id', blockMeta.map(b => b.id));
+      if (blockErr) throw blockErr;
+      const blockMap = {};
+      (blockRows || []).forEach(b => { blockMap[b.id] = b; });
+
+      const experiences = blockMeta.filter(m => blockMap[m.id]).map(m => {
+        const row = blockMap[m.id];
+        return {
+          id: m.id,
+          title: row.title || m.title || '',
+          activity_type: row.activity_type || m.activity_type || '',
+          period: m.period || '',
+          goal: row.goal || '', strategy: row.strategy || '', actions: row.actions || '',
+          outcome_measurable: row.outcome_measurable || '', failure_improvement: row.failure_improvement || '', takeaway: row.takeaway || '',
+        };
+      });
+
+      const overall = (matchData && matchData.overall) || [];
+      const skills = [];
+      overall.forEach(k => {
+        if ((k.status === 'matched' || k.status === 'partial') && k.keyword && !skills.includes(k.keyword)) skills.push(k.keyword);
+      });
+
+      const { data: genData, error: genErr } = await supa.functions.invoke('generate-resume-content', {
+        body: {
+          profile: {
+            name: profile?.name || '', school: profile?.school || '', major: profile?.major || '',
+            grad_year: profile?.grad_year || '', edu_status: profile?.edu_status || '', desired_role: profile?.desired_role || '',
+          },
+          experiences: experiences.map(e => ({
+            id: e.id, title: e.title, activity_type: e.activity_type, period: e.period,
+            goal: e.goal, strategy: e.strategy, actions: e.actions,
+            outcome_measurable: e.outcome_measurable, failure_improvement: e.failure_improvement, takeaway: e.takeaway,
+          })),
+          company_name: companyName || '',
+          job_title: jobTitle || '',
+        },
+      });
+      if (genErr) throw genErr;
+
+      const summary = (genData && genData.summary) || '';
+      const bulletsByBlock = (genData && genData.experience_bullets) || {};
+
+      _rbData = {
+        profile: {
+          name: profile?.name || '', phone: profile?.phone || '', city: profile?.city || '',
+          email: currentUser.email || '', school: profile?.school || '', major: profile?.major || '',
+          grad_year: profile?.grad_year || '', desired_role: profile?.desired_role || '',
+        },
+        summary,
+        experiences: experiences.map(e => ({
+          id: e.id, title: e.title, activity_type: e.activity_type, period: e.period,
+          bullets: bulletsByBlock[e.id] || [],
+        })),
+        skills,
+        company_name: companyName || '',
+        job_title: jobTitle || '',
+      };
+
+      renderResumePreview(_rbData, previewEl);
+      loadingEl.style.display = 'none';
+      previewEl.style.display = 'block';
+      downloadBtn.disabled = false;
+      downloadBtn.style.opacity = '1';
+      downloadBtn.style.cursor = 'pointer';
+    } catch (err) {
+      console.error('[openResumeBuildModal] failed:', err);
+      loadingEl.style.display = 'none';
+      errorEl.textContent = 'Failed to build resume: ' + (err.message || 'check console');
+      errorEl.style.display = 'block';
+    }
+  }
+
+  function closeResumeBuildModal() {
+    const modal = document.getElementById('resume-build-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function renderResumePreview(data, container) {
+    const p = data.profile;
+    const contactLine = [p.city, p.phone, p.email].filter(Boolean).join('  |  ');
+    const sectionTitle = (label) =>
+      `<div style="font-size:11px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);border-bottom:1.5px solid var(--border);padding-bottom:6px;margin:20px 0 12px;">${label}</div>`;
+    const expHtml = data.experiences.map(e => `
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px;">
+          <div style="font-size:13.5px;font-weight:700;color:var(--ink);">${escapeHtml(e.title)}${e.activity_type ? ' · ' + escapeHtml(e.activity_type) : ''}</div>
+          <div style="font-size:11.5px;color:var(--ink-3);white-space:nowrap;">${escapeHtml(e.period || '')}</div>
+        </div>
+        <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;">
+          ${(e.bullets || []).map(b => `<li style="font-size:12.5px;color:var(--ink-2);line-height:1.55;">${escapeHtml(b)}</li>`).join('')}
+        </ul>
+      </div>`).join('');
+    const skillsHtml = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;">
+      ${data.skills.map(k => `<div style="font-size:12.5px;color:var(--ink-2);">•  ${escapeHtml(k)}</div>`).join('')}
+    </div>`;
+    container.innerHTML = `
+      <div style="font-family:Georgia,'Times New Roman',serif;background:var(--white);border:1px solid var(--border);border-radius:6px;padding:36px 40px;color:var(--ink);">
+        <div style="font-size:10.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:4px;">${escapeHtml(p.desired_role || '')}</div>
+        <div style="font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-0.01em;margin-bottom:6px;">${escapeHtml(p.name || '')}</div>
+        <div style="font-size:12px;color:var(--ink-3);">${escapeHtml(contactLine)}</div>
+        <div style="border-top:1.5px solid var(--border);margin-top:14px;"></div>
+        ${sectionTitle('Summary')}
+        <div style="font-size:12.5px;color:var(--ink-2);line-height:1.6;">${escapeHtml(data.summary)}</div>
+        ${sectionTitle('Experience')}
+        ${expHtml || '<div style="font-size:12.5px;color:var(--ink-4);">No experience data.</div>'}
+        ${sectionTitle('Education')}
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;">
+          <div style="font-size:13px;color:var(--ink-2);">${escapeHtml(p.school || '')}${p.major ? ' · ' + escapeHtml(p.major) : ''}</div>
+          <div style="font-size:11.5px;color:var(--ink-3);">${escapeHtml(String(p.grad_year || ''))}</div>
+        </div>
+        ${sectionTitle('Skills')}
+        ${skillsHtml}
+      </div>`;
+  }
+
+  async function downloadResumeDocx() {
+    if (!_rbData) return;
+    const btn = document.getElementById('rb-download-btn');
+    const origHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader-2" style="font-size:15px;"></i> Generating…';
+    try {
+      const { data, error } = await supa.functions.invoke('generate-resume-docx', { body: _rbData });
+      if (error) throw error;
+      const base64 = data && data.docx_base64;
+      if (!base64) throw new Error('No document data returned.');
+      const byteChars = atob(base64);
+      const byteNumbers = new Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) byteNumbers[i] = byteChars.charCodeAt(i);
+      const blob = new Blob([new Uint8Array(byteNumbers)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const fileName = `${(_rbData.profile.name || 'Resume').replace(/[^a-zA-Z0-9]+/g, '_')}_${(_rbData.company_name || 'Company').replace(/[^a-zA-Z0-9]+/g, '_')}_Resume.docx`;
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('[downloadResumeDocx] failed:', err);
+      showSaveToast('Failed to generate Word file: ' + (err.message || 'check console'), true);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = origHtml;
+    }
+  }
+
   async function runMatchResultAnalysis() {
     if (!_pendingAnalysis) return;
     const { company, role, jdText } = _pendingAnalysis;
@@ -4224,6 +4509,11 @@
         </div>`).join('');
       const chipSection = (list, label, color, bg) => !list.length ? '' :
         `<div style="margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:6px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${list.map(k=>`<span style="background:${bg};color:${color};border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;">${escapeHtml(k)}</span>`).join('')}</div></div>`;
+      const byBlock = (matchData && matchData.by_block) || [];
+      const byExpHtml = byBlock.length
+        ? _renderByExpBlocks(byBlock, true)
+        : '<div style="font-size:13px;color:var(--ink-4);">No block-level data available.</div>';
+      const missingCardsHtml = _renderMissingCards(groups.missing);
       targetContainer.innerHTML = `
         <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px 28px;margin-bottom:20px;">
           <div style="font-size:20px;font-weight:900;color:${tier.color};letter-spacing:-0.02em;margin-bottom:12px;">${tier.label}</div>
@@ -4235,12 +4525,26 @@
             <div style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:#DC2626;display:inline-block;"></span><span style="font-size:12px;color:var(--ink-4);">Missing</span><span style="font-size:15px;font-weight:800;color:var(--ink);">${groups.missing.length}</span></div>
           </div>
         </div>
-        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px 28px;">
-          ${chipSection(groups.matched,'Matched','#16A34A','#DCFCE7')}
-          ${chipSection(groups.partial,'Partial Match','#D97706','#FEF3C7')}
-          ${chipSection(groups.missing,'Missing','#DC2626','#FEE2E2')}
-          ${!overall.length ? '<div style="font-size:13px;color:var(--ink-4);">No keyword data available.</div>' : ''}
+        <div style="margin-bottom:20px;">
+          <div style="margin-bottom:16px;">
+            <div style="background:#F3F4F6;border-radius:99px;padding:4px;display:inline-flex;">
+              <button id="ms-mr-tab-overall" onclick="mrSwitchTab('overall','ms-mr')" style="padding:8px 24px;font-size:13px;font-weight:700;border:none;cursor:pointer;border-radius:99px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.1);color:var(--ink);">Overall</button>
+              <button id="ms-mr-tab-byexp" onclick="mrSwitchTab('byexp','ms-mr')" style="padding:8px 24px;font-size:13px;font-weight:500;border:none;cursor:pointer;border-radius:99px;background:transparent;color:var(--ink-4);">By Experience</button>
+            </div>
+          </div>
+          <div id="ms-mr-panel-overall" style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px 28px;">
+            ${chipSection(groups.matched,'Matched','#16A34A','#DCFCE7')}
+            ${chipSection(groups.partial,'Partial Match','#D97706','#FEF3C7')}
+            ${chipSection(groups.missing,'Missing','#DC2626','#FEE2E2')}
+            ${!overall.length ? '<div style="font-size:13px;color:var(--ink-4);">No keyword data available.</div>' : ''}
+          </div>
+          <div id="ms-mr-panel-byexp" style="display:none;">${byExpHtml}</div>
+        </div>
+        <div id="ms-mr-missing-section" style="margin-bottom:4px;display:none;">
+          <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px;"><i class="ti ti-alert-triangle" style="color:#DC2626;"></i> How to Improve</div>
+          <div id="ms-mr-missing-cards">${missingCardsHtml}</div>
         </div>`;
+      mrSwitchTab('overall', 'ms-mr');
       return;
     }
     const tierLabel = document.getElementById('mr-tier-label');
@@ -4272,32 +4576,15 @@
     window._matchByBlock = (matchData && matchData.by_block) || [];
     const byexpEl = document.getElementById('mr-byexp-content');
     if (byexpEl) {
-      const chipCol = (list, label, bg, color) => {
-        const chips = list.length
-          ? list.map(k => `<span style="display:inline-block;background:${bg};color:${color};border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600;">${escapeHtml(k)}</span>`).join('')
-          : `<span style="font-size:11px;color:var(--ink-4);">None</span>`;
-        return `<div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:5px;">${label}</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${chips}</div></div>`;
-      };
-      byexpEl.innerHTML = window._matchByBlock.map(blk => {
-        const matchedKws = (blk.results || []).filter(r => r.status === 'matched').map(r => r.keyword);
-        const partialKws = (blk.results || []).filter(r => r.status === 'partial').map(r => r.keyword);
-        return `<div onclick="openBlockDetailPanel(this.dataset.id)" data-id="${escapeHtml(blk.block_id)}" style="background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-          <div style="margin-bottom:12px;">
-            <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;">${escapeHtml(blk.block_title || '')}</div>
-            <div style="font-size:11px;color:var(--ink-4);">${escapeHtml(blk.block_period || '')}</div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-            ${chipCol(matchedKws,'Matched','#DCFCE7','#16A34A')}
-            ${chipCol(partialKws,'Partial','#FEF3C7','#D97706')}
-          </div>
-        </div>`;
-      }).join('');
+      byexpEl.innerHTML = window._matchByBlock.length
+        ? _renderByExpBlocks(window._matchByBlock, true)
+        : '<div style="font-size:13px;color:var(--ink-4);">No block-level data available.</div>';
     }
     const missingSection = document.getElementById('mr-missing-section');
     const missingCards   = document.getElementById('mr-missing-cards');
     if (missingCards) {
       if (groups.missing.length) {
-        missingCards.innerHTML = groups.missing.map(k => `<div style="padding:14px 16px;background:var(--white);border:1px solid #FECDD3;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(k)}</div><div style="font-size:12px;color:var(--ink-4);">This skill wasn't found in your selected experience blocks.</div></div><button onclick="navigate('blocks')" style="white-space:nowrap;font-size:12px;font-weight:600;color:#DC2626;background:none;border:1px solid #DC2626;padding:6px 14px;border-radius:var(--rl);cursor:pointer;">Improve This Experience</button></div>`).join('');
+        missingCards.innerHTML = _renderMissingCards(groups.missing);
         if (missingSection) missingSection.style.display = 'block';
       } else {
         if (missingSection) missingSection.style.display = 'none';
@@ -6505,11 +6792,12 @@ What I learned: Consistency matters more than quality of individual posts`;
     document.getElementById('ms-empty').style.display = 'none';
     const container = document.getElementById('ms-result-container');
     container.style.display = 'block';
-    const overall = [
+    const overall = (company.overall_result && company.overall_result.length) ? company.overall_result : [
       ...(company.matched_keywords||[]).map(k => ({keyword:k, status:'matched'})),
       ...(company.partial_keywords||[]).map(k => ({keyword:k, status:'partial'})),
       ...(company.missing_keywords||[]).map(k => ({keyword:k, status:'missing'}))
     ];
+    const byBlock = company.by_block_result || [];
     const score = company.fit_score || 0;
     window._pendingAnalysis = { company: company.company_name, role: company.job_title };
     const initials = (company.company_name || '?').slice(0, 2).toUpperCase();
@@ -6528,8 +6816,13 @@ What I learned: Consistency matters more than quality of individual posts`;
       </div>
       ${aboutHtml}
       <div id="ms-result-inner"></div>
+      <div style="display:flex;gap:10px;padding-top:16px;margin-top:8px;border-top:1px solid var(--border);align-items:center;">
+        <button onclick="openResumeBuildModal(_msSelected.used_blocks, _msSelected.company_name, _msSelected.job_title, {overall:_msSelected.overall_result, by_block:_msSelected.by_block_result})" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:12px 28px;border-radius:var(--rl);cursor:pointer;letter-spacing:-0.01em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+          <i class="ti ti-file-description" style="font-size:16px;"></i> Build Tailored Resume
+        </button>
+      </div>
     `;
-    renderMatchResult(score, { overall, by_block: [] }, document.getElementById('ms-result-inner'));
+    renderMatchResult(score, { overall, by_block: byBlock }, document.getElementById('ms-result-inner'));
   }
 
   function msFilterCompanies(q) {
@@ -6830,6 +7123,8 @@ What I learned: Consistency matters more than quality of individual posts`;
       name: document.getElementById('ob-name')?.value || '',
       birth: document.getElementById('ob-birth')?.value || '',
       gender: document.getElementById('ob-gender')?.value || '',
+      phone: document.getElementById('ob-phone')?.value || '',
+      city: document.getElementById('ob-city')?.value || '',
       school: document.getElementById('ob-school')?.value || '',
       major: document.getElementById('ob-major')?.value || '',
       grad_year: document.getElementById('ob-grad')?.value || '',
@@ -7010,6 +7305,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     save:    'Sign in to save your work and pick up where you left off.',
     analyze: 'Sign in to run AI analysis on your experience.',
     match:   'Sign in to start fit analysis with companies.',
+    resume:  'Sign in to build a tailored resume from your experience.',
     default: 'Create a free account to keep your work.'
   };
 
