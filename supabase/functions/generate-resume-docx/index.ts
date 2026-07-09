@@ -83,7 +83,9 @@ const ZERO_CELL_MARGINS = { top: 0, bottom: 0, left: 0, right: 0 };
 // title wraps to a second line the period gets dragged down onto that second line
 // (or crowds right up against the wrapped text). A table cell keeps the period's
 // paragraph independent of how much the title wraps.
-function titlePeriodRow(title: string, period: string): Table {
+// `spacingBefore` puts the gap between this block and the previous one directly on
+// the title paragraph (0 for the first block) instead of an empty spacer paragraph.
+function titlePeriodRow(title: string, period: string, spacingBefore: number): Table {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
     rows: [
@@ -95,7 +97,7 @@ function titlePeriodRow(title: string, period: string): Table {
             margins: ZERO_CELL_MARGINS,
             verticalAlign: VerticalAlign.TOP,
             children: [new Paragraph({
-              spacing: { after: 40 },
+              spacing: { before: spacingBefore, after: 40 },
               children: [new TextRun({ text: title, bold: true, size: 21, color: COLOR.ink, font: "Georgia" })],
             })],
           }),
@@ -105,7 +107,7 @@ function titlePeriodRow(title: string, period: string): Table {
             margins: ZERO_CELL_MARGINS,
             verticalAlign: VerticalAlign.TOP,
             children: [new Paragraph({
-              spacing: { after: 40 },
+              spacing: { before: spacingBefore, after: 40 },
               alignment: AlignmentType.RIGHT,
               children: [new TextRun({ text: period, size: 18, color: COLOR.ink3, font: "Georgia" })],
             })],
@@ -114,15 +116,6 @@ function titlePeriodRow(title: string, period: string): Table {
       }),
     ],
   });
-}
-
-// A standalone paragraph (not inside a table cell) used purely to force a visible
-// gap between experience blocks. `spacing.before` set on the first paragraph inside
-// a table cell is unreliable in Word — it's routinely collapsed to zero — so the
-// gap between one block's table and the next has to come from a real paragraph
-// sitting between them instead.
-function spacerParagraph(afterTwips: number): Paragraph {
-  return new Paragraph({ spacing: { after: afterTwips }, children: [] });
 }
 
 function educationParagraphs(p: Profile): Paragraph[] {
@@ -187,9 +180,8 @@ function buildDocument(payload: ResumePayload): Document {
     }));
   }
   experiences.forEach((exp, idx) => {
-    if (idx > 0) children.push(spacerParagraph(260));
     const titleText = [exp.title, exp.activity_type].filter(Boolean).join(" · ");
-    children.push(titlePeriodRow(titleText, exp.period || ""));
+    children.push(titlePeriodRow(titleText, exp.period || "", idx > 0 ? 240 : 0));
     (exp.bullets || []).forEach((b) => children.push(bulletParagraph(b)));
   });
 
