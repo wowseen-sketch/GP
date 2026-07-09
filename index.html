@@ -7089,9 +7089,14 @@ What I learned: Consistency matters more than quality of individual posts`;
     const modal = document.getElementById('onboarding-modal');
     if (modal) { modal.style.display = 'flex'; goObStep(1); }
   }
-  function closeOnboarding() {
+  async function closeOnboarding() {
     document.getElementById('onboarding-modal').style.display = 'none';
-    localStorage.setItem('scribbi_onboarded', '1');
+    if (currentUser) {
+      await supa.from('user_profiles').upsert(
+        { user_id: currentUser.id, onboarding_completed: true },
+        { onConflict: 'user_id' }
+      );
+    }
   }
   function goObStep(n) {
     _obStep = n;
@@ -7132,12 +7137,21 @@ What I learned: Consistency matters more than quality of individual posts`;
       desired_role: document.getElementById('ob-role')?.value || '',
       desired_industry: document.getElementById('ob-industry')?.value || '',
       job_timeline: document.getElementById('ob-timeline')?.value || '',
+      onboarding_completed: true,
     };
     await supa.from('user_profiles').upsert(profile, { onConflict: 'user_id' });
   }
 
-  function checkShowOnboarding() {
-    if (!localStorage.getItem('scribbi_onboarded') && currentUser) {
+  async function checkShowOnboarding() {
+    if (!currentUser) return;
+    const modal = document.getElementById('onboarding-modal');
+    if (modal && modal.style.display === 'flex') return; // already open — don't reset an in-progress flow
+    const { data, error } = await supa.from('user_profiles')
+      .select('onboarding_completed')
+      .eq('user_id', currentUser.id)
+      .maybeSingle();
+    if (error) { console.error('[checkShowOnboarding] failed:', error); return; }
+    if (!data || !data.onboarding_completed) {
       setTimeout(showOnboarding, 600);
     }
   }
