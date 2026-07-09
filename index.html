@@ -3899,6 +3899,9 @@
       if (contentEl) { contentEl.innerHTML = html; contentEl.style.display = 'flex'; }
       if (loadingEl) loadingEl.style.display = 'none';
       if (countEl) countEl.textContent = recommended.length;
+      if (typeof gtag === 'function') {
+        gtag('event', 'block_recommend_modal_viewed', { company_name: company || '', job_title: role || '' });
+      }
     } catch (err) {
       console.error('[openBlockRecommendModal] failed:', err);
       if (loadingEl) loadingEl.style.display = 'none';
@@ -4474,6 +4477,9 @@
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      if (typeof gtag === 'function') {
+        gtag('event', 'resume_downloaded', { company_name: _rbData.company_name || '' });
+      }
     } catch (err) {
       console.error('[downloadResumeDocx] failed:', err);
       showSaveToast('Failed to generate Word file: ' + (err.message || 'check console'), true);
@@ -5472,6 +5478,9 @@ What I learned: Consistency matters more than quality of individual posts`;
     }
 
     // 5. Success.
+    if (typeof gtag === 'function') {
+      gtag('event', 'experience_block_saved', { activity_type: data.activity_type || '' });
+    }
     setAnalysisModalStatus('Ready to save this experience?', false);
     closeAnalysisModal();
     showSaveToast('Experience block saved');
@@ -7114,6 +7123,9 @@ What I learned: Consistency matters more than quality of individual posts`;
     setAuthLoading('signup', false);
     if (!res.ok) { showAuthError('signup', res.error); return false; }
     document.getElementById('signup-password').value = '';
+    if (typeof gtag === 'function') {
+      gtag('event', 'signup_completed', {});
+    }
     navigate('blocks');
     return false;
   }
