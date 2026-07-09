@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 import {
+  AlignmentType,
   BorderStyle,
   Document,
   Packer,
@@ -8,8 +9,8 @@ import {
   Table,
   TableCell,
   TableRow,
-  TabStopType,
   TextRun,
+  VerticalAlign,
   WidthType,
 } from "npm:docx@8.5.0";
 
@@ -34,8 +35,6 @@ const COLOR = {
   border: "D1D5DB",
 };
 
-const PAGE_WIDTH_TWIPS = 9026; // usable width inside 1in margins on a Letter page
-
 interface Profile {
   name?: string;
   phone?: string;
@@ -44,6 +43,8 @@ interface Profile {
   school?: string;
   major?: string;
   grad_year?: string | number;
+  degree_level?: string;
+  start_year?: string | number;
   desired_role?: string;
 }
 
@@ -66,7 +67,7 @@ interface ResumePayload {
 
 function sectionHeading(label: string): Paragraph {
   return new Paragraph({
-    spacing: { before: 280, after: 140 },
+    spacing: { before: 340, after: 180 },
     border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: COLOR.border } },
     children: [
       new TextRun({ text: label.toUpperCase(), bold: true, size: 18, color: COLOR.ink, font: "Georgia" }),
@@ -74,22 +75,58 @@ function sectionHeading(label: string): Paragraph {
   });
 }
 
-function titlePeriodLine(title: string, period: string): Paragraph {
-  return new Paragraph({
-    tabStops: [{ type: TabStopType.RIGHT, position: PAGE_WIDTH_TWIPS }],
-    spacing: { after: 60 },
-    children: [
-      new TextRun({ text: title, bold: true, size: 21, color: COLOR.ink, font: "Georgia" }),
-      new TextRun({ text: "\t" + period, size: 18, color: COLOR.ink3, font: "Georgia" }),
+const ZERO_CELL_MARGINS = { top: 0, bottom: 0, left: 0, right: 0 };
+
+// Title on the left, period pinned to the top-right — implemented as a 2-column
+// borderless table (same pattern as the Skills table) instead of a tab stop.
+// A tab stop only resolves against the line the cursor is currently on, so if the
+// title wraps to a second line the period gets dragged down onto that second line
+// (or crowds right up against the wrapped text). A table cell keeps the period's
+// paragraph independent of how much the title wraps.
+function titlePeriodRow(title: string, period: string): Table {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 72, type: WidthType.PERCENTAGE },
+            borders: noBorders(),
+            margins: ZERO_CELL_MARGINS,
+            verticalAlign: VerticalAlign.TOP,
+            children: [new Paragraph({
+              spacing: { before: 240, after: 40 },
+              children: [new TextRun({ text: title, bold: true, size: 21, color: COLOR.ink, font: "Georgia" })],
+            })],
+          }),
+          new TableCell({
+            width: { size: 28, type: WidthType.PERCENTAGE },
+            borders: noBorders(),
+            margins: ZERO_CELL_MARGINS,
+            verticalAlign: VerticalAlign.TOP,
+            children: [new Paragraph({
+              spacing: { before: 240, after: 40 },
+              alignment: AlignmentType.RIGHT,
+              children: [new TextRun({ text: period, size: 18, color: COLOR.ink3, font: "Georgia" })],
+            })],
+          }),
+        ],
+      }),
     ],
   });
 }
 
 function educationParagraphs(p: Profile): Paragraph[] {
+  const degreeMajor = [p.degree_level, p.major].filter(Boolean).join(", ");
+  let yearRange = "";
+  if (p.start_year && p.grad_year) yearRange = `${p.start_year} – ${p.grad_year}`;
+  else if (p.grad_year) yearRange = String(p.grad_year);
+  else if (p.start_year) yearRange = String(p.start_year);
+
   const runs: TextRun[] = [];
-  if (p.major) runs.push(new TextRun({ text: p.major, bold: true, size: 21, color: COLOR.ink, font: "Georgia" }));
-  if (p.grad_year) {
-    runs.push(new TextRun({ text: (runs.length ? " — " : "") + String(p.grad_year), size: 18, color: COLOR.ink3, font: "Georgia" }));
+  if (degreeMajor) runs.push(new TextRun({ text: degreeMajor, bold: true, size: 21, color: COLOR.ink, font: "Georgia" }));
+  if (yearRange) {
+    runs.push(new TextRun({ text: (runs.length ? " — " : "") + yearRange, size: 18, color: COLOR.ink3, font: "Georgia" }));
   }
   return [
     new Paragraph({ spacing: { after: 40 }, children: runs.length ? runs : [new TextRun({ text: "", size: 20 })] }),
@@ -100,7 +137,7 @@ function educationParagraphs(p: Profile): Paragraph[] {
 function bulletParagraph(text: string): Paragraph {
   return new Paragraph({
     bullet: { level: 0 },
-    spacing: { after: 40 },
+    spacing: { after: 90, line: 280 },
     children: [new TextRun({ text, size: 20, color: COLOR.ink2, font: "Georgia" })],
   });
 }
@@ -109,7 +146,7 @@ function buildDocument(payload: ResumePayload): Document {
   const p = payload.profile || {};
   const contactLine = [p.city, p.phone, p.email].filter(Boolean).join("   |   ");
 
-  const children: Paragraph[] = [];
+  const children: (Paragraph | Table)[] = [];
 
   if (p.desired_role) {
     children.push(new Paragraph({
@@ -142,7 +179,7 @@ function buildDocument(payload: ResumePayload): Document {
   }
   experiences.forEach((exp) => {
     const titleText = [exp.title, exp.activity_type].filter(Boolean).join(" · ");
-    children.push(titlePeriodLine(titleText, exp.period || ""));
+    children.push(titlePeriodRow(titleText, exp.period || ""));
     (exp.bullets || []).forEach((b) => children.push(bulletParagraph(b)));
   });
 

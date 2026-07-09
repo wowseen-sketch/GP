@@ -3012,6 +3012,23 @@
                   <select class="form-input form-select" id="ob-grad"></select>
                 </div>
               </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                  <label class="form-label">Degree Level</label>
+                  <select class="form-input form-select" id="ob-degree">
+                    <option value="">Select</option>
+                    <option value="Associate's">Associate's</option>
+                    <option value="Bachelor's">Bachelor's</option>
+                    <option value="Master's">Master's</option>
+                    <option value="PhD">PhD</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Start Year</label>
+                  <select class="form-input form-select" id="ob-start-year"></select>
+                </div>
+              </div>
               <div class="form-group">
                 <label class="form-label">Enrollment Status</label>
                 <select class="form-input form-select" id="ob-status">
@@ -4275,7 +4292,7 @@
 
     try {
       const { data: profile, error: profErr } = await supa.from('user_profiles')
-        .select('name, phone, city, school, major, grad_year, edu_status, desired_role')
+        .select('name, phone, city, school, major, grad_year, degree_level, start_year, edu_status, desired_role')
         .eq('user_id', currentUser.id).single();
       if (profErr && profErr.code !== 'PGRST116') throw profErr;
 
@@ -4342,7 +4359,8 @@
         profile: {
           name: profile?.name || '', phone: profile?.phone || '', city: profile?.city || '',
           email: currentUser.email || '', school: profile?.school || '', major: profile?.major || '',
-          grad_year: profile?.grad_year || '', desired_role: profile?.desired_role || '',
+          grad_year: profile?.grad_year || '', degree_level: profile?.degree_level || '', start_year: profile?.start_year || '',
+          desired_role: profile?.desired_role || '',
         },
         summary,
         experiences: experiences.map(e => ({
@@ -4378,6 +4396,11 @@
   function renderResumePreview(data, container) {
     const p = data.profile;
     const contactLine = [p.city, p.phone, p.email].filter(Boolean).join('  |  ');
+    const degreeMajor = [p.degree_level, p.major].filter(Boolean).join(', ');
+    let eduYearRange = '';
+    if (p.start_year && p.grad_year) eduYearRange = `${p.start_year} – ${p.grad_year}`;
+    else if (p.grad_year) eduYearRange = String(p.grad_year);
+    else if (p.start_year) eduYearRange = String(p.start_year);
     const sectionTitle = (label) =>
       `<div style="font-size:11px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);border-bottom:1.5px solid var(--border);padding-bottom:6px;margin:20px 0 12px;">${label}</div>`;
     const expHtml = data.experiences.map(e => `
@@ -4405,7 +4428,7 @@
         ${expHtml || '<div style="font-size:12.5px;color:var(--ink-4);">No experience data.</div>'}
         ${sectionTitle('Education')}
         <div style="margin-bottom:3px;">
-          <span style="font-size:13.5px;font-weight:700;color:var(--ink);">${escapeHtml(p.major || '')}</span>${p.grad_year ? `<span style="font-size:11.5px;color:var(--ink-3);"> — ${escapeHtml(String(p.grad_year))}</span>` : ''}
+          <span style="font-size:13.5px;font-weight:700;color:var(--ink);">${escapeHtml(degreeMajor)}</span>${eduYearRange ? `<span style="font-size:11.5px;color:var(--ink-3);"> — ${escapeHtml(eduYearRange)}</span>` : ''}
         </div>
         <div style="font-size:12.5px;color:var(--ink-2);">${escapeHtml(p.school || '')}</div>
         ${sectionTitle('Skills')}
@@ -7093,9 +7116,21 @@ What I learned: Consistency matters more than quality of individual posts`;
     html += '<option value="2015">2015 or earlier</option>';
     select.innerHTML = html;
   }
+  function populateStartYearOptions() {
+    const select = document.getElementById('ob-start-year');
+    if (!select) return;
+    const currentYear = new Date().getFullYear();
+    let html = '<option value="">Select</option>';
+    for (let i = 0; i < 15; i++) {
+      const year = currentYear - i;
+      html += `<option value="${year}">${year}</option>`;
+    }
+    html += `<option value="${currentYear - 15}">${currentYear - 15} or earlier</option>`;
+    select.innerHTML = html;
+  }
   function showOnboarding() {
     const modal = document.getElementById('onboarding-modal');
-    if (modal) { populateGradYearOptions(); modal.style.display = 'flex'; goObStep(1); }
+    if (modal) { populateGradYearOptions(); populateStartYearOptions(); modal.style.display = 'flex'; goObStep(1); }
   }
   async function closeOnboarding() {
     document.getElementById('onboarding-modal').style.display = 'none';
@@ -7141,6 +7176,8 @@ What I learned: Consistency matters more than quality of individual posts`;
       school: document.getElementById('ob-school')?.value || '',
       major: document.getElementById('ob-major')?.value || '',
       grad_year: document.getElementById('ob-grad')?.value || '',
+      degree_level: document.getElementById('ob-degree')?.value || '',
+      start_year: document.getElementById('ob-start-year')?.value || '',
       edu_status: document.getElementById('ob-status')?.value || '',
       desired_role: document.getElementById('ob-role')?.value || '',
       desired_industry: document.getElementById('ob-industry')?.value || '',
