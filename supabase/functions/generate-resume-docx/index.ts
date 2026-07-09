@@ -85,6 +85,18 @@ function titlePeriodLine(title: string, period: string): Paragraph {
   });
 }
 
+function educationParagraphs(p: Profile): Paragraph[] {
+  const runs: TextRun[] = [];
+  if (p.major) runs.push(new TextRun({ text: p.major, bold: true, size: 21, color: COLOR.ink, font: "Georgia" }));
+  if (p.grad_year) {
+    runs.push(new TextRun({ text: (runs.length ? " — " : "") + String(p.grad_year), size: 18, color: COLOR.ink3, font: "Georgia" }));
+  }
+  return [
+    new Paragraph({ spacing: { after: 40 }, children: runs.length ? runs : [new TextRun({ text: "", size: 20 })] }),
+    new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: p.school || "", size: 20, color: COLOR.ink2, font: "Georgia" })] }),
+  ];
+}
+
 function bulletParagraph(text: string): Paragraph {
   return new Paragraph({
     bullet: { level: 0 },
@@ -135,10 +147,7 @@ function buildDocument(payload: ResumePayload): Document {
   });
 
   children.push(sectionHeading("Education"));
-  children.push(titlePeriodLine(
-    [p.school, p.major].filter(Boolean).join(" · "),
-    p.grad_year ? String(p.grad_year) : "",
-  ));
+  children.push(...educationParagraphs(p));
 
   children.push(sectionHeading("Skills"));
   const skills = payload.skills || [];

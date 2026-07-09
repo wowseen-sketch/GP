@@ -3009,11 +3009,7 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label">Graduation Year</label>
-                  <select class="form-input form-select" id="ob-grad">
-                    <option value="">Select</option>
-                    ${Array.from({length:10},(_,i)=>`<option value="${2026-i}">${2026-i} ${i===0?'(예정)':''}</option>`).join('')}
-                    <option value="2015">2015 or earlier</option>
-                  </select>
+                  <select class="form-input form-select" id="ob-grad"></select>
                 </div>
               </div>
               <div class="form-group">
@@ -4408,10 +4404,10 @@
         ${sectionTitle('Experience')}
         ${expHtml || '<div style="font-size:12.5px;color:var(--ink-4);">No experience data.</div>'}
         ${sectionTitle('Education')}
-        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;">
-          <div style="font-size:13px;color:var(--ink-2);">${escapeHtml(p.school || '')}${p.major ? ' · ' + escapeHtml(p.major) : ''}</div>
-          <div style="font-size:11.5px;color:var(--ink-3);">${escapeHtml(String(p.grad_year || ''))}</div>
+        <div style="margin-bottom:3px;">
+          <span style="font-size:13.5px;font-weight:700;color:var(--ink);">${escapeHtml(p.major || '')}</span>${p.grad_year ? `<span style="font-size:11.5px;color:var(--ink-3);"> — ${escapeHtml(String(p.grad_year))}</span>` : ''}
         </div>
+        <div style="font-size:12.5px;color:var(--ink-2);">${escapeHtml(p.school || '')}</div>
         ${sectionTitle('Skills')}
         ${skillsHtml}
       </div>`;
@@ -7085,9 +7081,21 @@ What I learned: Consistency matters more than quality of individual posts`;
   let _obStep = 1;
   const _obTotal = 5;
 
+  function populateGradYearOptions() {
+    const select = document.getElementById('ob-grad');
+    if (!select) return;
+    const currentYear = new Date().getFullYear();
+    let html = '<option value="">Select</option>';
+    for (let i = 0; i < 10; i++) {
+      const year = currentYear - i;
+      html += `<option value="${year}">${year}${i === 0 ? ' (예정)' : ''}</option>`;
+    }
+    html += '<option value="2015">2015 or earlier</option>';
+    select.innerHTML = html;
+  }
   function showOnboarding() {
     const modal = document.getElementById('onboarding-modal');
-    if (modal) { modal.style.display = 'flex'; goObStep(1); }
+    if (modal) { populateGradYearOptions(); modal.style.display = 'flex'; goObStep(1); }
   }
   async function closeOnboarding() {
     document.getElementById('onboarding-modal').style.display = 'none';
