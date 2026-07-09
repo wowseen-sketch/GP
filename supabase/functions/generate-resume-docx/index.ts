@@ -83,9 +83,14 @@ const ZERO_CELL_MARGINS = { top: 0, bottom: 0, left: 0, right: 0 };
 // title wraps to a second line the period gets dragged down onto that second line
 // (or crowds right up against the wrapped text). A table cell keeps the period's
 // paragraph independent of how much the title wraps.
-// `spacingBefore` puts the gap between this block and the previous one directly on
-// the title paragraph (0 for the first block) instead of an empty spacer paragraph.
-function titlePeriodRow(title: string, period: string, spacingBefore: number): Table {
+//
+// NOTE: this table's cell paragraphs intentionally do NOT carry `spacing.before`.
+// That was tried (see git history) as a way to create the gap between experience
+// blocks, but Word does not honor `spacing.before` on the first paragraph of a
+// table cell — it's silently dropped. The gap between blocks is created instead by
+// `spacing.after` on the *previous* block's last bullet, a normal body paragraph,
+// where before/after spacing is reliably respected.
+function titlePeriodRow(title: string, period: string): Table {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
     rows: [
@@ -97,7 +102,7 @@ function titlePeriodRow(title: string, period: string, spacingBefore: number): T
             margins: ZERO_CELL_MARGINS,
             verticalAlign: VerticalAlign.TOP,
             children: [new Paragraph({
-              spacing: { before: spacingBefore, after: 40 },
+              spacing: { after: 40 },
               children: [new TextRun({ text: title, bold: true, size: 21, color: COLOR.ink, font: "Georgia" })],
             })],
           }),
@@ -107,7 +112,7 @@ function titlePeriodRow(title: string, period: string, spacingBefore: number): T
             margins: ZERO_CELL_MARGINS,
             verticalAlign: VerticalAlign.TOP,
             children: [new Paragraph({
-              spacing: { before: spacingBefore, after: 40 },
+              spacing: { after: 40 },
               alignment: AlignmentType.RIGHT,
               children: [new TextRun({ text: period, size: 18, color: COLOR.ink3, font: "Georgia" })],
             })],
@@ -136,10 +141,10 @@ function educationParagraphs(p: Profile): Paragraph[] {
   ];
 }
 
-function bulletParagraph(text: string): Paragraph {
+function bulletParagraph(text: string, spacingAfter = 90): Paragraph {
   return new Paragraph({
     bullet: { level: 0 },
-    spacing: { after: 90, line: 280 },
+    spacing: { after: spacingAfter, line: 280 },
     children: [new TextRun({ text, size: 20, color: COLOR.ink2, font: "Georgia" })],
   });
 }
@@ -181,8 +186,16 @@ function buildDocument(payload: ResumePayload): Document {
   }
   experiences.forEach((exp, idx) => {
     const titleText = [exp.title, exp.activity_type].filter(Boolean).join(" · ");
-    children.push(titlePeriodRow(titleText, exp.period || "", idx > 0 ? 240 : 0));
-    (exp.bullets || []).forEach((b) => children.push(bulletParagraph(b)));
+    children.push(titlePeriodRow(titleText, exp.period || ""));
+    const bullets = exp.bullets || [];
+    const isLastBlock = idx === experiences.length - 1;
+    bullets.forEach((b, bIdx) => {
+      const isLastBullet = bIdx === bullets.length - 1;
+      // Extra breathing room after the last bullet of every block except the final
+      // one — that gap is what visually separates one experience block from the next.
+      const spacingAfter = isLastBullet && !isLastBlock ? 280 : 90;
+      children.push(bulletParagraph(b, spacingAfter));
+    });
   });
 
   children.push(sectionHeading("Education"));
