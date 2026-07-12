@@ -6808,9 +6808,35 @@ What I learned: Consistency matters more than quality of individual posts`;
           <div style="font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.company_name || '')}</div>
           <div style="font-size:11px;color:var(--ink-4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(co.job_title || '')}</div>
         </div>
+        <button onclick="event.stopPropagation(); deleteMsCompany('${co.id}')" title="Delete" style="background:none;border:none;cursor:pointer;color:var(--ink-4);padding:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:6px;transition:color 0.12s,background 0.12s;" onmouseover="this.style.color='#DC2626';this.style.background='rgba(220,38,38,0.08)'" onmouseout="this.style.color='var(--ink-4)';this.style.background='none'">
+          <i class="ti ti-trash" style="font-size:16px;"></i>
+        </button>
       `;
       list.appendChild(el);
     });
+  }
+
+  async function deleteMsCompany(id) {
+    if (!currentUser) return;
+    const { error } = await supa.from('companies').delete().eq('id', id).eq('user_id', currentUser.id);
+    if (error) { showSaveToast('Failed to delete: ' + error.message, true); return; }
+
+    _msCompanies = _msCompanies.filter(c => c.id !== id);
+
+    if (_msCompanies.length === 0) {
+      _msSelected = null;
+      const layoutEl = document.getElementById('ms-layout');
+      const pageEmptyEl = document.getElementById('ms-page-empty');
+      if (layoutEl) layoutEl.style.display = 'none';
+      if (pageEmptyEl) pageEmptyEl.style.display = 'flex';
+      return;
+    }
+
+    if (_msSelected && _msSelected.id === id) {
+      msSelectCompany(_msCompanies[0]); // also re-renders the list
+    } else {
+      msRenderList(_msCompanies);
+    }
   }
 
   function msSelectCompany(company) {
