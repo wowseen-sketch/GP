@@ -6083,25 +6083,10 @@ What I learned: Consistency matters more than quality of individual posts`;
     const color = BLK_TIMELINE_COLOR;
 
     list.innerHTML = shown.map((row, i) => {
-      const dateLabel = row.is_current
-        ? `${fmt(row.start_date)} –`
-        : (fmt(row.start_date) || fmt(row.end_date) || '');
-
-      let durLabel = '';
-      if (row.start_date && (row.end_date || row.is_current)) {
-        const s = new Date(row.start_date);
-        const e = row.is_current ? new Date() : new Date(row.end_date);
-        if (!isNaN(s) && !isNaN(e)) {
-          const months = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth()) + 1;
-          if (months > 0) {
-            const yrs = Math.floor(months / 12), mos = months % 12;
-            const parts = [];
-            if (yrs) parts.push(`${yrs} year${yrs > 1 ? 's' : ''}`);
-            if (mos) parts.push(`${mos} month${mos > 1 ? 's' : ''}`);
-            durLabel = parts.join(' ');
-          }
-        }
-      }
+      // renderBlkTimeline() already filters out ongoing rows, so every row here
+      // has a real end_date — show the full start–end range once, no duplicate
+      // duration/activity-type line.
+      const period = `${fmt(row.start_date) || '—'} – ${fmt(row.end_date) || '—'}`;
 
       const kws = (row.competency_keywords || []).concat(row.job_keywords || []).filter(Boolean).slice(0, 3);
       const tagsHtml = kws.map((k, ti) => {
@@ -6120,11 +6105,8 @@ What I learned: Consistency matters more than quality of individual posts`;
             ${isLast ? '' : '<div class="exp-line"></div>'}
           </div>
           <div class="exp-content">
-            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;">
-              <div class="exp-title" style="margin-bottom:0;">${escapeHtml(row.title || 'Untitled')}</div>
-              <div style="font-size:10.5px;color:var(--ink-4);white-space:nowrap;flex-shrink:0;">${escapeHtml(dateLabel)}</div>
-            </div>
-            <div class="exp-meta">${escapeHtml(row.activity_type || '')}${durLabel ? ' · ' + durLabel : ''}</div>
+            <div class="exp-title" style="margin-bottom:0;">${escapeHtml(row.title || 'Untitled')}</div>
+            <div class="exp-meta">${escapeHtml(period)}</div>
             ${tagsHtml ? `<div class="exp-tags">${tagsHtml}</div>` : ''}
           </div>
         </div>`;
