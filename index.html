@@ -2564,11 +2564,12 @@
         <div class="page-sub">View job fit scores and keyword analysis results by company</div>
       </div>
 
-      <!-- Page-level empty state — shown instead of the whole 2-col layout when no companies are saved -->
-      <div id="ms-page-empty" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:calc(100vh - 200px);color:var(--ink-4);">
-        <i class="ti ti-folder-off" style="font-size:40px;opacity:0.3;"></i>
-        <div style="font-size:15px;font-weight:700;color:var(--ink);">No saved matches yet</div>
-        <div style="font-size:13px;color:var(--ink-4);max-width:280px;text-align:center;line-height:1.5;">Analyze a job and save it to see it here.</div>
+      <!-- Page-level empty state — shown instead of the whole 2-col layout when no companies are saved.
+           Visual style matches the Experience Archiving empty state (#blocks-empty), minus its CTA button. -->
+      <div id="ms-page-empty" style="display:none;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 200px);text-align:center;">
+        <i class="ti ti-folder-off" style="font-size:48px;color:var(--ink-4);"></i>
+        <div style="font-size:18px;font-weight:700;color:var(--ink);margin-top:16px;">No saved matches yet</div>
+        <div style="font-size:13px;color:var(--ink-4);margin-top:8px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.5;">Analyze a job and save it to see it here.</div>
       </div>
 
       <!-- 3-col layout -->
