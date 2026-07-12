@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    { "source": "/gsu",  "destination": "/?utm_source=gsu&utm_medium=careercenter&utm_campaign=launch&code=GSU",  "permanent": false },
+    { "source": "/fiu",  "destination": "/?utm_source=fiu&utm_medium=careercenter&utm_campaign=launch&code=FIU",  "permanent": false },
+    { "source": "/utep", "destination": "/?utm_source=utep&utm_medium=careercenter&utm_campaign=launch&code=UTEP", "permanent": false },
+    { "source": "/hcc",  "destination": "/?utm_source=hcc&utm_medium=careercenter&utm_campaign=launch&code=HCC",  "permanent": false },
+    { "source": "/mdc",  "destination": "/?utm_source=mdc&utm_medium=careercenter&utm_campaign=launch&code=MDC",  "permanent": false }
+  ]
+}
