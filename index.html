@@ -2564,8 +2564,15 @@
         <div class="page-sub">View job fit scores and keyword analysis results by company</div>
       </div>
 
+      <!-- Page-level empty state — shown instead of the whole 2-col layout when no companies are saved -->
+      <div id="ms-page-empty" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:calc(100vh - 200px);color:var(--ink-4);">
+        <i class="ti ti-folder-off" style="font-size:40px;opacity:0.3;"></i>
+        <div style="font-size:15px;font-weight:700;color:var(--ink);">No saved matches yet</div>
+        <div style="font-size:13px;color:var(--ink-4);max-width:280px;text-align:center;line-height:1.5;">Analyze a job and save it to see it here.</div>
+      </div>
+
       <!-- 3-col layout -->
-      <div style="display:grid;grid-template-columns:1fr 3fr;height:calc(100vh - 200px);overflow:hidden;">
+      <div id="ms-layout" style="display:grid;grid-template-columns:1fr 3fr;height:calc(100vh - 200px);overflow:hidden;">
 
         <!-- ── LEFT: Company List ── -->
         <div style="border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:var(--white);">
@@ -6783,21 +6790,17 @@ What I learned: Consistency matters more than quality of individual posts`;
       companies = data || [];
     }
     _msCompanies = companies;
-    msRenderList(_msCompanies);
+    const layoutEl = document.getElementById('ms-layout');
+    const pageEmptyEl = document.getElementById('ms-page-empty');
     if (_msCompanies.length > 0) {
+      if (pageEmptyEl) pageEmptyEl.style.display = 'none';
+      if (layoutEl) layoutEl.style.display = 'grid';
+      msRenderList(_msCompanies);
       msSelectCompany(_msCompanies[0]);
     } else {
       _msSelected = null;
-      document.getElementById('ms-result-container').style.display = 'none';
-      const emptyEl = document.getElementById('ms-empty');
-      if (emptyEl) {
-        emptyEl.style.display = 'flex';
-        emptyEl.innerHTML = `
-          <i class="ti ti-folder-off" style="font-size:40px;opacity:0.3;"></i>
-          <div style="font-size:15px;font-weight:700;color:var(--ink);">No saved matches yet</div>
-          <div style="font-size:13px;color:var(--ink-4);max-width:280px;text-align:center;line-height:1.5;">Analyze a job and save it to see it here.</div>
-        `;
-      }
+      if (layoutEl) layoutEl.style.display = 'none';
+      if (pageEmptyEl) pageEmptyEl.style.display = 'flex';
     }
   }
 
