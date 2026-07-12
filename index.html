@@ -6047,11 +6047,13 @@ What I learned: Consistency matters more than quality of individual posts`;
   let _blkTimelineExpanded = false;
 
   function renderBlkTimeline(rows) {
-    _blkTimelineRows = (rows || []).slice().sort((a, b) => {
-      const da = a.created_at || a.start_date || '';
-      const db = b.created_at || b.start_date || '';
-      return db.localeCompare(da);
-    });
+    // Timeline only shows completed experiences (ongoing/is_current or missing
+    // end_date is excluded), sorted by end_date descending (most recently
+    // finished first). This does not affect the Ongoing/Completed grouping
+    // rendered by renderBlocks() — that split is untouched.
+    _blkTimelineRows = (rows || [])
+      .filter(r => !r.is_current && r.end_date)
+      .sort((a, b) => (b.end_date || '').localeCompare(a.end_date || ''));
     _blkTimelineExpanded = false;
     paintBlkTimeline();
   }
