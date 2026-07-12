@@ -2197,13 +2197,13 @@
           <div class="card">
             <div class="card-head">
               <div class="card-title"><i class="ti ti-chart-line"></i> Experience Timeline</div>
-              <div class="card-link" id="blk-timeline-toggle" onclick="toggleBlkTimelineExpand()">전체보기 →</div>
+              <div class="card-link" id="blk-timeline-toggle" onclick="toggleBlkTimelineExpand()">View all →</div>
             </div>
             <div class="card-body" id="blk-timeline-list" style="padding:14px 16px;">
               <div style="font-size:12px;color:var(--ink-4);text-align:center;padding:16px 0;">No experience yet</div>
             </div>
             <div style="padding:0 16px 16px;">
-              <button onclick="viewAllBlkExperience()" style="width:100%;font-size:12.5px;font-weight:600;color:var(--ink-3);background:var(--white);border:1px solid var(--border-strong);border-radius:var(--r);padding:10px;cursor:pointer;font-family:var(--ff-head);">전체 경험 보기</button>
+              <button onclick="viewAllBlkExperience()" style="width:100%;font-size:12.5px;font-weight:600;color:var(--ink-3);background:var(--white);border:1px solid var(--border-strong);border-radius:var(--r);padding:10px;cursor:pointer;font-family:var(--ff-head);">View all experiences</button>
             </div>
           </div>
         </aside>
@@ -6073,7 +6073,7 @@ What I learned: Consistency matters more than quality of individual posts`;
     const shown = _blkTimelineExpanded ? rows : rows.slice(0, 3);
     if (toggle) {
       toggle.style.display = rows.length > 3 ? '' : 'none';
-      toggle.textContent   = _blkTimelineExpanded ? '접기 ↑' : '전체보기 →';
+      toggle.textContent   = _blkTimelineExpanded ? 'Collapse ↑' : 'View all →';
     }
 
     const fmt = d => d ? d.slice(0, 7).replace('-', '.') : '';
@@ -6093,8 +6093,8 @@ What I learned: Consistency matters more than quality of individual posts`;
           if (months > 0) {
             const yrs = Math.floor(months / 12), mos = months % 12;
             const parts = [];
-            if (yrs) parts.push(`${yrs}년`);
-            if (mos) parts.push(`${mos}개월`);
+            if (yrs) parts.push(`${yrs} year${yrs > 1 ? 's' : ''}`);
+            if (mos) parts.push(`${mos} month${mos > 1 ? 's' : ''}`);
             durLabel = parts.join(' ');
           }
         }
@@ -6102,11 +6102,10 @@ What I learned: Consistency matters more than quality of individual posts`;
 
       const kws = (row.competency_keywords || []).concat(row.job_keywords || []).filter(Boolean).slice(0, 3);
       const tagsHtml = kws.map((k, ti) => {
-        const short = k.length > 14 ? k.slice(0, 12) + '…' : k;
         const isPrimary = ti === 0;
         const bg  = isPrimary ? `${color}1F` : 'var(--surface)';
         const txt = isPrimary ? color : 'var(--ink-3)';
-        return `<span style="font-size:10.5px;font-weight:600;color:${txt};background:${bg};padding:3px 9px;border-radius:99px;white-space:nowrap;">${escapeHtml(short)}</span>`;
+        return `<span style="font-size:11px;font-weight:600;color:${txt};background:${bg};padding:3px 8px;border-radius:99px;white-space:normal;">${escapeHtml(k)}</span>`;
       }).join('');
 
       const snippet = (row.outcome_measurable || row.actions || row.goal || '').trim().replace(/\s+/g, ' ');
