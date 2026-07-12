@@ -3525,6 +3525,29 @@
   </div>
 </div>
 
+<!-- ═══════════ INVITE CODE MODAL ═══════════ -->
+<div id="invite-code-modal" style="display:none;position:fixed;inset:0;z-index:690;align-items:center;justify-content:center;">
+  <div style="position:absolute;inset:0;background:rgba(17,24,39,0.5);backdrop-filter:blur(6px);"></div>
+  <div style="position:relative;width:420px;max-width:92vw;background:var(--white);border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.16);overflow:hidden;animation:modalIn 0.22s ease;padding:32px 28px 28px;text-align:center;">
+    <div id="ic-icon-box" style="width:56px;height:56px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;transition:background 0.15s;">
+      <i id="ic-icon" class="ti ti-ticket" style="font-size:26px;color:var(--accent);"></i>
+    </div>
+    <div style="font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:8px;">Have an invite code?</div>
+    <div style="font-size:13px;color:var(--ink-3);line-height:1.55;margin-bottom:22px;">If you have a code, you can try every feature with no limits.</div>
+    <div style="text-align:left;margin-bottom:2px;">
+      <label class="form-label" for="ic-input">Invite code</label>
+      <input id="ic-input" type="text" class="form-input" placeholder="Enter your code"
+        style="text-align:center;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;"
+        oninput="onInviteCodeInputChange()">
+    </div>
+    <div id="ic-feedback" style="display:flex;align-items:center;gap:6px;justify-content:center;min-height:16px;font-size:12px;color:var(--ink-4);margin:10px 0 20px;"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button id="ic-apply-btn" onclick="applyInviteCode()" style="width:100%;font-size:14px;font-weight:700;color:#fff;background:var(--accent);border:none;padding:12px;border-radius:var(--rl);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Apply code</button>
+      <button id="ic-skip-btn" onclick="skipInviteCode()" style="width:100%;font-size:13px;font-weight:600;color:var(--ink-3);background:none;border:none;padding:10px;cursor:pointer;">Skip for now</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════ AUTH REQUIRED MODAL ═══════════ -->
 <div id="auth-required-modal" style="display:none;position:fixed;inset:0;z-index:650;align-items:center;justify-content:center;">
   <div onclick="closeAuthRequiredModal()" style="position:absolute;inset:0;background:rgba(17,24,39,0.45);backdrop-filter:blur(5px);"></div>
@@ -6969,7 +6992,7 @@ What I learned: Consistency matters more than quality of individual posts`;
       closeUserMenu();
     }
     updateDashboardGreeting();
-    checkShowOnboarding();
+    checkInviteCodePrompt();
   }
 
   async function refreshAuthState() {
@@ -7208,6 +7231,150 @@ What I learned: Consistency matters more than quality of individual posts`;
       onboarding_completed: true,
     };
     await supa.from('user_profiles').upsert(profile, { onConflict: 'user_id' });
+  }
+
+  // ── INVITE CODE PROMPT ──
+  // Shown once per user, right after login and before the onboarding check.
+  // Not a real access gate — every user already has full access — this only
+  // records which acquisition channel (e.g. a university career center) a
+  // user came in through.
+  const VALID_INVITE_CODES = ['UNIV'];
+  let _icApplied = false;
+
+  async function checkInviteCodePrompt() {
+    if (!currentUser) return;
+    const modal = document.getElementById('invite-code-modal');
+    if (modal && modal.style.display === 'flex') return; // already open — don't reset an in-progress flow
+    const { data, error } = await supa.from('user_profiles')
+      .select('invite_code_prompt_seen')
+      .eq('user_id', currentUser.id)
+      .maybeSingle();
+    if (error) { console.error('[checkInviteCodePrompt] failed:', error); checkShowOnboarding(); return; }
+    if (!data || !data.invite_code_prompt_seen) {
+      setTimeout(showInviteCodeModal, 600);
+    } else {
+      checkShowOnboarding();
+    }
+  }
+
+  function resetInviteCodeModal() {
+    const input    = document.getElementById('ic-input');
+    const feedback = document.getElementById('ic-feedback');
+    const iconBox  = document.getElementById('ic-icon-box');
+    const icon     = document.getElementById('ic-icon');
+    const applyBtn = document.getElementById('ic-apply-btn');
+    const skipBtn  = document.getElementById('ic-skip-btn');
+    _icApplied = false;
+    if (input)    { input.value = ''; input.disabled = false; }
+    if (feedback) { feedback.innerHTML = ''; feedback.style.color = 'var(--ink-4)'; }
+    if (iconBox)  iconBox.style.background = 'var(--accent-light)';
+    if (icon)     { icon.className = 'ti ti-ticket'; icon.style.color = 'var(--accent)'; }
+    if (applyBtn) { applyBtn.textContent = 'Apply code'; applyBtn.disabled = false; applyBtn.onclick = applyInviteCode; }
+    if (skipBtn)  { skipBtn.style.display = 'block'; skipBtn.disabled = false; }
+  }
+
+  function showInviteCodeModal() {
+    const modal = document.getElementById('invite-code-modal');
+    if (!modal) { checkShowOnboarding(); return; }
+    resetInviteCodeModal();
+    modal.style.display = 'flex';
+  }
+
+  function closeInviteCodeModal() {
+    const modal = document.getElementById('invite-code-modal');
+    if (modal) modal.style.display = 'none';
+    checkShowOnboarding();
+  }
+
+  function onInviteCodeInputChange() {
+    if (_icApplied) return; // input is disabled after a successful apply, nothing to reset
+    const feedback = document.getElementById('ic-feedback');
+    const iconBox  = document.getElementById('ic-icon-box');
+    const icon     = document.getElementById('ic-icon');
+    if (feedback) { feedback.innerHTML = ''; feedback.style.color = 'var(--ink-4)'; }
+    if (iconBox)  iconBox.style.background = 'var(--accent-light)';
+    if (icon)     { icon.className = 'ti ti-ticket'; icon.style.color = 'var(--accent)'; }
+  }
+
+  function setInviteFeedback(text, color, iconClass) {
+    const feedback = document.getElementById('ic-feedback');
+    if (!feedback) return;
+    feedback.style.color = color;
+    feedback.innerHTML = iconClass
+      ? `<i class="${iconClass}" style="font-size:13px;"></i><span>${escapeHtml(text)}</span>`
+      : `<span>${escapeHtml(text)}</span>`;
+  }
+
+  async function applyInviteCode() {
+    const input = document.getElementById('ic-input');
+    const code  = (input?.value || '').trim();
+    if (!code) {
+      setInviteFeedback('Enter a code, or skip for now.', 'var(--ink-4)', 'ti ti-info-circle');
+      return;
+    }
+    const applyBtn = document.getElementById('ic-apply-btn');
+    const skipBtn  = document.getElementById('ic-skip-btn');
+    const iconBox  = document.getElementById('ic-icon-box');
+    const icon     = document.getElementById('ic-icon');
+    const origText = applyBtn.textContent;
+    applyBtn.disabled = true;
+    applyBtn.textContent = 'Checking...';
+
+    // Small artificial delay so "Checking..." is actually perceivable —
+    // the lookup itself is a synchronous array check.
+    await new Promise(r => setTimeout(r, 400));
+
+    const isValid = VALID_INVITE_CODES.includes(code.toUpperCase());
+    if (!isValid) {
+      applyBtn.disabled = false;
+      applyBtn.textContent = origText;
+      if (iconBox) iconBox.style.background = '#FEE2E2';
+      if (icon)    { icon.className = 'ti ti-x'; icon.style.color = '#DC2626'; }
+      setInviteFeedback("That code isn't valid.", '#DC2626', null);
+      return;
+    }
+
+    if (!currentUser) return;
+    const { error } = await supa.from('user_profiles').upsert(
+      { user_id: currentUser.id, invite_code: code.toUpperCase(), invite_code_applied_at: new Date().toISOString(), invite_code_prompt_seen: true },
+      { onConflict: 'user_id' }
+    );
+    if (error) {
+      applyBtn.disabled = false;
+      applyBtn.textContent = origText;
+      setInviteFeedback('Something went wrong. Try again.', '#DC2626', null);
+      return;
+    }
+
+    _icApplied = true;
+    if (iconBox) iconBox.style.background = '#DCFCE7';
+    if (icon)    { icon.className = 'ti ti-check'; icon.style.color = '#16A34A'; }
+    setInviteFeedback('Code applied. Full access unlocked.', '#16A34A', null);
+    if (input)   input.disabled = true;
+    if (skipBtn) skipBtn.style.display = 'none';
+    applyBtn.disabled = false;
+    applyBtn.textContent = 'Continue';
+    applyBtn.onclick = closeInviteCodeModal;
+
+    if (typeof gtag === 'function') {
+      gtag('event', 'invite_code_applied', { code: code.toUpperCase() });
+    }
+  }
+
+  async function skipInviteCode() {
+    if (!currentUser) { closeInviteCodeModal(); return; }
+    const skipBtn = document.getElementById('ic-skip-btn');
+    if (skipBtn) skipBtn.disabled = true;
+    const { error } = await supa.from('user_profiles').upsert(
+      { user_id: currentUser.id, invite_code_prompt_seen: true },
+      { onConflict: 'user_id' }
+    );
+    if (skipBtn) skipBtn.disabled = false;
+    if (!error && typeof gtag === 'function') {
+      gtag('event', 'invite_code_skipped', {});
+    }
+    setInviteFeedback('Skipped — you can enter a code anytime from your profile.', 'var(--ink-4)', null);
+    setTimeout(closeInviteCodeModal, 700);
   }
 
   async function checkShowOnboarding() {
