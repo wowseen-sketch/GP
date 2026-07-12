@@ -6111,9 +6111,6 @@ What I learned: Consistency matters more than quality of individual posts`;
         return `<span style="font-size:11px;font-weight:600;color:${txt};background:${bg};padding:3px 8px;border-radius:99px;white-space:normal;">${escapeHtml(k)}</span>`;
       }).join('');
 
-      const snippet = (row.outcome_measurable || row.actions || row.goal || '').trim().replace(/\s+/g, ' ');
-      const snippetShort = snippet.length > 62 ? snippet.slice(0, 60) + '…' : snippet;
-
       const isLast = i === shown.length - 1;
 
       return `
@@ -6128,8 +6125,7 @@ What I learned: Consistency matters more than quality of individual posts`;
               <div style="font-size:10.5px;color:var(--ink-4);white-space:nowrap;flex-shrink:0;">${escapeHtml(dateLabel)}</div>
             </div>
             <div class="exp-meta">${escapeHtml(row.activity_type || '')}${durLabel ? ' · ' + durLabel : ''}</div>
-            ${tagsHtml ? `<div class="exp-tags" style="margin-bottom:${snippetShort ? '8px' : '0'};">${tagsHtml}</div>` : ''}
-            ${snippetShort ? `<div class="exp-desc">${escapeHtml(snippetShort)}</div>` : ''}
+            ${tagsHtml ? `<div class="exp-tags">${tagsHtml}</div>` : ''}
           </div>
         </div>`;
     }).join('');
