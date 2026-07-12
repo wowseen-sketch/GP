@@ -5828,6 +5828,10 @@ What I learned: Consistency matters more than quality of individual posts`;
     navigate('add');
   }
 
+  // Resets the Add Experience form. Call with no argument for a completely
+  // blank form (fresh entry); pass a row to prefill it instead (folder
+  // "continue writing" / scribble edit). Either way every field is touched,
+  // so stale values from a previous session never survive.
   function resetAddForm(prefillRow) {
     // Clear validation errors and stale border colours
     document.querySelectorAll('#page-add .req-error-msg').forEach(e => e.remove());
@@ -5839,16 +5843,15 @@ What I learned: Consistency matters more than quality of individual posts`;
     if (ft) { ft.innerHTML = ''; }
     if (typeof updateExpCharCount === 'function') updateExpCharCount();
 
-    if (!prefillRow) return;
     const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
-    setVal('exp-title',         prefillRow.title         || '');
-    setVal('exp-activity-type', prefillRow.activity_type || '');
-    setVal('exp-org',           prefillRow.organization  || '');
-    setVal('exp-start',         (prefillRow.start_date   || '').slice(0, 7));
-    setVal('exp-end',           (prefillRow.end_date     || '').slice(0, 7));
+    setVal('exp-title',         prefillRow?.title         || '');
+    setVal('exp-activity-type', prefillRow?.activity_type || '');
+    setVal('exp-org',           prefillRow?.organization  || '');
+    setVal('exp-start',         (prefillRow?.start_date   || '').slice(0, 7));
+    setVal('exp-end',           (prefillRow?.end_date     || '').slice(0, 7));
     const curCb = document.getElementById('exp-current');
     if (curCb) {
-      curCb.checked = !!prefillRow.is_current;
+      curCb.checked = !!prefillRow?.is_current;
       if (typeof handleExpCurrentChange === 'function') handleExpCurrentChange(curCb);
     }
   }
@@ -6756,11 +6759,14 @@ What I learned: Consistency matters more than quality of individual posts`;
     // page-add 진입 시 mode 결정 (edit-scribble > scribble > new 우선순위)
     if (target === 'add') {
       _addMode = window.editingScribbleId ? 'edit-scribble' : (window.currentParentId ? 'scribble' : 'new');
-      // 새 입력 모드 진입 시 ongoing 선택 상태 초기화
+      // Fresh entry (not a folder "keep scribbling" or scribble edit) — always
+      // start from a blank form. The two prefill paths (editFolderScribble(),
+      // keepScribbling()) already call resetAddForm(row) themselves before
+      // navigate('add'), and set editingScribbleId/currentParentId beforehand,
+      // so _addMode won't be 'new' for them and this won't clobber their prefill.
       if (_addMode === 'new') {
         window._selectedFolderId = null;
-        const cb = document.getElementById('exp-current');
-        if (cb && cb.checked) { cb.checked = false; handleExpCurrentChange(cb); }
+        resetAddForm();
       }
       updateAddModeUI();
     } else {
